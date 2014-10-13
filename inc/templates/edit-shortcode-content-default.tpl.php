@@ -1,10 +1,8 @@
 <script type="text/html" id="tmpl-edit-shortcode-content-default">
 
 	<form class="edit-shortcode-form">
-		<h4 class="edit-shortcode-form-title">Edit {{ data.name }}</h4>
-
+		<h2 class="edit-shortcode-form-title">Edit {{ data.label }}</h2>
 		<div class="edit-shortcode-form-fields"></div>
-
 	</form>
 
 </script>

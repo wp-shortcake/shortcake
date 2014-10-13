@@ -49,13 +49,23 @@ class Shortcode_UI {
 
 	function register_shortcode_ui( $shortcode, $args = array() ) {
 
-		$args = wp_parse_args( $args, array(
-			'shortcode'               => '',
-			'name'               => '',
+		$defaults = array(
+			'label'              => '',
+			'image'              => '',
 			'attributes'         => array(),
-			'js_init_callback'   => null,
-			'js_submit_callback' => null,
-		) );
+		);
+
+		// Parse args.
+		$args = wp_parse_args( $args, $defaults );
+
+		// strip invalid
+		foreach ( $args as $key => $value ) {
+			if ( ! array_key_exists( $key, $defaults ) ) {
+				unsert( $args[ $key ] );
+			}
+		}
+
+		$args['shortcode'] = $shortcode;
 
 		$this->shortcodes[ $shortcode ] = $args;
 
@@ -87,7 +97,7 @@ class Shortcode_UI {
     		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 
     		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
-    			'shortcodes' => $this->shortcodes,
+    			'shortcodes' => array_values( $this->shortcodes ),
     			'modalOptions' => array(
     				'media_frame_title' => 'Insert Shortcode',
 					'insert_into_button_label' => 'Button',
@@ -134,10 +144,27 @@ add_action( 'init', function() {
 	$instance = new Shortcode_UI();
 
 	$args = array(
-		'name' => 'Test Shortcode',
-		'attributes' => array( 'id', 'align' )
+		'label' => 'Test Shortcode',
+		'image' => 'dashicons-carrot',
+		'attributes' => array(
+			array( 'label' => 'ID', 'id' => 'id' ),
+			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
+		)
 	);
 
-	$instance->register_shortcode_ui( 'test', $args );
+	$instance->register_shortcode_ui( 'test_shortcode', $args );
+
+	$args = array(
+		'label' => 'Blockquote',
+		'image' => 'dashicons-editor-quote',
+		'attributes' => array(
+			array( 'label' => 'Background Color', 'id' => 'bg_color' ),
+			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
+			array( 'label' => 'Font Size', 'id' => 'font-size', 'value' => 'large' ),
+		)
+	);
+
+	$instance->register_shortcode_ui( 'blockquote', $args );
+
 
 } );

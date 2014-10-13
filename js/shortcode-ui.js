@@ -25,18 +25,57 @@ jQuery(document).ready(function(){
 	// Single Shortcode Model.
 	t.model.Shortcode = Backbone.Model.extend({
 		defaults: {
-			name: '', // Name
+			label: '',
 			shortcode: '',
 			attributes: [
-				{ id: 'id', label: 'This is the Label', value: '' },
-				{ id: 'test', label: 'Test 2', value: 'wat' }
-			]
+				{ label: '', id: '', value: '' },
+			],
+			content: '',
+		},
+
+		formatShortcode: function() {
+
+			var template, atts, _atts;
+
+			atts = this.get( 'attributes' );
+			_atts = [];
+
+			for ( var i = 0; i < atts.length; i++ ) {
+				_atts.push( atts[i].id + '="' + atts[i].value + '"' );
+			}
+
+			var content = this.get( 'content' );
+
+			if ( content && content.length > 1 ) {
+				template = "[{{shortcode}} {{attributes}}]{{content}}[/{{shortcode}}]"
+			} else {
+				template = "[{{shortcode}} {{attributes}}]"
+			}
+
+			template = template.replace( /{{shortcode}}/g, this.get('shortcode') );
+			template = template.replace( /{{attributes}}/g, _atts.join( ' ' ) );
+			template = template.replace( /{{content}}/g, content );
+
+			return template;
+
+		}
+	});
+
+	t.model.ShortcodeAtts = Backbone.Model.extend({
+		defaults: {
+			label: '',
+			id: '',
+			value: '',
 		},
 	});
 
 	// Shortcode Collection
 	t.collection.Shortcodes = Backbone.Collection.extend({
 		model: t.model.Shortcode
+	});
+
+	t.collection.ShortcodeAtts = Backbone.Collection.extend({
+		model: t.model.ShortcodeAtts
 	});
 
 	/**
@@ -46,7 +85,12 @@ jQuery(document).ready(function(){
 	t.view.insertModalListItem = Backbone.View.extend({
 		tagName: 'li',
 		template:  wp.template('add-shortcode-list-item'),
-		render: function( data ){
+		className: 'shortcode-list-item',
+		render: function(){
+
+			var data = this.model.toJSON();
+
+			this.$el.attr( 'data-shortcode', data.shortcode );
 
 			if ( ( 'image' in data ) && 0 === data.image.indexOf( 'dashicons-' ) ) {
 				data.image = '<div class="dashicons ' + data.image + '"></div>';
@@ -66,12 +110,16 @@ jQuery(document).ready(function(){
 		singleInputTemplate:  wp.template('edit-shortcode-content-default-single-input'),
 
 		events: {
-			 'keyup .edit-shortcode-form-fields input[type=text]': 'inputValueChanged'
+			'keyup .edit-shortcode-form-fields input[type=text]': 'inputValueChanged'
 		},
 
+		// @todo don't like this. slow.
 		inputValueChanged: function( e ) {
 			var $el = $( e.target );
-			this.model.set( $el.attr('name'), $el.val() );
+			var attributes = this.model.get('attributes');
+			var attribute  = $.grep( attributes, function(e){ return e.id == $el.attr('name'); });
+			attribute[0].value = $el.val();
+			this.model.set( $el.attr('attributes'), attributes );
 		},
 
 		render: function(){
@@ -104,21 +152,19 @@ jQuery(document).ready(function(){
 				action: 'add',
 				events: {
 					"click .add-shortcode-list li": "selectEditShortcode",
-					"click .media-button-insert": "alert"
+					"click .media-button-insert": "insertShortcode",
+					"submit .edit-shortcode-form": "insertShortcode",
 				},
-
-				alert: function() { alert(1); },
 
 				action: 'add',
 				currentShortcode: {},
 
+
 				initialize: function() {
 
+					console.log( shortcodeUIData.shortcodes );
 					 // @todo for testing.
-		            this.shortcodes = [
-		            	{ shortcode: 'test', name: 'Test', image: 'dashicons-carrot' },
-		            	{ shortcode: 'test2', name: 'Test2', image: 'dashicons-carrot' }
-		            ];
+		            this.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
 
 					this.options = this.model.attributes;
 					wp.media.view.Frame.prototype.initialize.apply( this, arguments );
@@ -171,14 +217,10 @@ jQuery(document).ready(function(){
 
 		 			var list = $('<ul class="add-shortcode-list">');
 
-		            for ( var i = 0; i < this.shortcodes.length ; i++ ) {
-		            	var view = new t.view.insertModalListItem();
-		            	var data = {
-		        			name:  this.shortcodes[i].name,
-		        			image: this.shortcodes[i].image
-		            	};
-		            	list.append( view.render( data ) );
-		            };
+		 			this.shortcodes.each( function( shortcode ) {
+		 				var view = new t.view.insertModalListItem( { model: shortcode } );
+		 				list.append( view.render( shortcode.toJSON() ) );
+		 			} );
 
 		            this.$contentEl.append( list );
 
@@ -212,12 +254,25 @@ jQuery(document).ready(function(){
 
 		        },
 
-		        selectEditShortcode: function() {
+		        selectEditShortcode: function(e) {
+
 		        	this.action = 'edit';
-		        	this.currentShortcode = new t.model.Shortcode;
-		        	this.render();
+
+		        	var target = $(e.currentTarget).closest( '.shortcode-list-item' );
+
+		        	var type = target.attr( 'data-shortcode' );
+		        	this.currentShortcode = this.shortcodes.findWhere( { shortcode: type } ).clone();;
+
+					this.render();
+
 		        },
 
+		        insertShortcode: function() {
+
+		        	send_to_editor( '<p>' + this.currentShortcode.formatShortcode() + '<p>' );
+		        	this.close();
+
+		        }
 			});
 
 			// Map some of the modal's methods to the frame.
