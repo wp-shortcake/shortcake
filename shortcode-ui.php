@@ -52,7 +52,7 @@ class Shortcode_UI {
 		$defaults = array(
 			'label'              => '',
 			'image'              => '',
-			'attributes'         => array(),
+			'shortcodeAtts'      => array(),
 		);
 
 		// Parse args.
@@ -61,7 +61,7 @@ class Shortcode_UI {
 		// strip invalid
 		foreach ( $args as $key => $value ) {
 			if ( ! array_key_exists( $key, $defaults ) ) {
-				unsert( $args[ $key ] );
+				unset( $args[ $key ] );
 			}
 		}
 
@@ -146,7 +146,7 @@ add_action( 'init', function() {
 	$args = array(
 		'label' => 'Test Shortcode',
 		'image' => 'dashicons-carrot',
-		'attributes' => array(
+		'shortcodeAtts' => array(
 			array( 'label' => 'ID', 'id' => 'id' ),
 			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
 		)
@@ -157,7 +157,7 @@ add_action( 'init', function() {
 	$args = array(
 		'label' => 'Blockquote',
 		'image' => 'dashicons-editor-quote',
-		'attributes' => array(
+		'shortcodeAtts' => array(
 			array( 'label' => 'Background Color', 'id' => 'bg_color' ),
 			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
 			array( 'label' => 'Font Size', 'id' => 'font-size', 'value' => 'large' ),

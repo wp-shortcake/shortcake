@@ -13,52 +13,10 @@ jQuery(document).ready(function(){
 	// Controller Model
 	t.model.Shortcode_UI = Backbone.Model.extend({
 		_this: this,
-		initialize: function() {
-			// this.set( 'action', this.get('action') ? this.get('action') : 'add' );
-		},
 		openInsertModal: function() {
 			frame = new t.view.insertModal.frame( this );
 			frame.open();
 		},
-	});
-
-	// Single Shortcode Model.
-	t.model.Shortcode = Backbone.Model.extend({
-		defaults: {
-			label: '',
-			shortcode: '',
-			attributes: [
-				{ label: '', id: '', value: '' },
-			],
-			content: '',
-		},
-
-		formatShortcode: function() {
-
-			var template, atts, _atts;
-
-			atts = this.get( 'attributes' );
-			_atts = [];
-
-			for ( var i = 0; i < atts.length; i++ ) {
-				_atts.push( atts[i].id + '="' + atts[i].value + '"' );
-			}
-
-			var content = this.get( 'content' );
-
-			if ( content && content.length > 1 ) {
-				template = "[{{shortcode}} {{attributes}}]{{content}}[/{{shortcode}}]"
-			} else {
-				template = "[{{shortcode}} {{attributes}}]"
-			}
-
-			template = template.replace( /{{shortcode}}/g, this.get('shortcode') );
-			template = template.replace( /{{attributes}}/g, _atts.join( ' ' ) );
-			template = template.replace( /{{content}}/g, content );
-
-			return template;
-
-		}
 	});
 
 	t.model.ShortcodeAtts = Backbone.Model.extend({
@@ -69,13 +27,63 @@ jQuery(document).ready(function(){
 		},
 	});
 
+	t.collection.ShortcodeAtts = Backbone.Collection.extend({
+		model: t.model.ShortcodeAtts
+	});
+
+	// Single Shortcode Model.
+	t.model.Shortcode = Backbone.Model.extend({
+
+		defaults: {
+			label: '',
+			shortcode: '',
+			shortcodeAtts: new t.model.ShortcodeAtts,
+			content: '',
+		},
+
+		/**
+		 * Custom set method
+		 * Used to set shortcodeAtts collection.
+		 */
+		set: function( attributes, options ) {
+
+			if ( ( 'shortcodeAtts' in attributes ) && ! ( attributes.shortcodeAtts instanceof t.collection.ShortcodeAtts ) ) {
+				attributes.shortcodeAtts = new t.collection.ShortcodeAtts( attributes.shortcodeAtts );
+			}
+
+			return Backbone.Model.prototype.set.call( this, attributes, options );
+
+		},
+
+		formatShortcode: function() {
+
+			var template, atts = [];
+
+			this.get( 'shortcodeAtts' ).each( function( attribute ) {
+				atts.push( attribute.get('id') + '="' + attribute.get('value') + '"' );
+			} );
+
+			var content = this.get( 'content' );
+
+			if ( content && content.length > 1 ) {
+				template = "[{{shortcode}} {{attributes}}]{{content}}[/{{shortcode}}]"
+			} else {
+				template = "[{{shortcode}} {{attributes}}]"
+			}
+
+			template = template.replace( /{{shortcode}}/g, this.get('shortcode') );
+			template = template.replace( /{{attributes}}/g, atts.join( ' ' ) );
+			template = template.replace( /{{content}}/g, content );
+
+			return template;
+
+		}
+
+	});
+
 	// Shortcode Collection
 	t.collection.Shortcodes = Backbone.Collection.extend({
 		model: t.model.Shortcode
-	});
-
-	t.collection.ShortcodeAtts = Backbone.Collection.extend({
-		model: t.model.ShortcodeAtts
 	});
 
 	/**
@@ -113,23 +121,23 @@ jQuery(document).ready(function(){
 			'keyup .edit-shortcode-form-fields input[type=text]': 'inputValueChanged'
 		},
 
-		// @todo don't like this. slow.
-		inputValueChanged: function( e ) {
+		inputValueChanged: _.debounce( function( e ) {
 			var $el = $( e.target );
-			var attributes = this.model.get('attributes');
-			var attribute  = $.grep( attributes, function(e){ return e.id == $el.attr('name'); });
-			attribute[0].value = $el.val();
-			this.model.set( $el.attr('attributes'), attributes );
-		},
+			var attribute  = this.model.get('shortcodeAtts').findWhere( { id: $el.attr('name') } );
+			attribute.set( 'value', $el.val() );
+		}, 500 ),
 
 		render: function(){
 
+			var t = this;
             var view = this.$el.html( this.template( this.model.toJSON() ) );
-            var atts = this.model.get( 'attributes' );
 
-            for ( var i = 0; i < atts.length; i++ ) {
-            	view.find( '.edit-shortcode-form-fields' ).append( '<div>' + this.singleInputTemplate( atts[i] ) + '</div>' );
-            }
+            this.model.get( 'shortcodeAtts' ).each( function( attribute ) {
+            	console.log( attribute.toJSON() );
+            	view.find( '.edit-shortcode-form-fields' ).append(
+            		'<div>' + t.singleInputTemplate( attribute.toJSON() ) + '</div>'
+            	);
+            } );
 
             return view;
 
@@ -162,8 +170,7 @@ jQuery(document).ready(function(){
 
 				initialize: function() {
 
-					console.log( shortcodeUIData.shortcodes );
-					 // @todo for testing.
+					// Set Shortcodes
 		            this.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
 
 					this.options = this.model.attributes;
@@ -257,22 +264,18 @@ jQuery(document).ready(function(){
 		        selectEditShortcode: function(e) {
 
 		        	this.action = 'edit';
-
-		        	var target = $(e.currentTarget).closest( '.shortcode-list-item' );
-
-		        	var type = target.attr( 'data-shortcode' );
-		        	this.currentShortcode = this.shortcodes.findWhere( { shortcode: type } ).clone();;
-
+		        	var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
+		        	var shortcode = target.attr( 'data-shortcode' );
+		        	this.currentShortcode = this.shortcodes.findWhere( { shortcode: shortcode } ).clone();
 					this.render();
 
 		        },
 
 		        insertShortcode: function() {
-
 		        	send_to_editor( '<p>' + this.currentShortcode.formatShortcode() + '<p>' );
 		        	this.close();
-
 		        }
+
 			});
 
 			// Map some of the modal's methods to the frame.
