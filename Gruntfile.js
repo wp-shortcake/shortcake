@@ -12,7 +12,7 @@ module.exports = function( grunt ) {
 		sass: {
 			dist: {
 				files: {
-					'css/shortcode-ui.css' : 'css/sass/shortcode-ui.sass',
+					'css/shortcode-ui.css' : 'css/sass/shortcode-ui.scss',
 				},
 				options: {
 					sourceMap: true
