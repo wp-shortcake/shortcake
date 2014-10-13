@@ -9,8 +9,6 @@
 
 	<div class="media-frame-toolbar" style="left: 0;">
 
-	<div class="media-frame-toolbar"></div>
-
 	<div class="media-frame-uploader"></div>
 
 </script>

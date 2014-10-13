@@ -28,7 +28,8 @@ jQuery(document).ready(function(){
 			name: '', // Name
 			shortcode: '',
 			attributes: [
-				{ id: 'id', label: 'This is the Label', value: '' }
+				{ id: 'id', label: 'This is the Label', value: '' },
+				{ id: 'test', label: 'Test 2', value: 'wat' }
 			]
 		},
 	});
@@ -79,79 +80,11 @@ jQuery(document).ready(function(){
             var atts = this.model.get( 'attributes' );
 
             for ( var i = 0; i < atts.length; i++ ) {
-            	view.find( '.edit-shortcode-form-fields' ).append( this.singleInputTemplate( atts[i] ) );
+            	view.find( '.edit-shortcode-form-fields' ).append( '<div>' + this.singleInputTemplate( atts[i] ) + '</div>' );
             }
 
             return view;
 
-        }
-
-	});
-
-	t.view.insertModalContent = Backbone.View.extend({
-
-		action: 'add',
-		currentShortcode: {},
-
- 		initialize: function(){
-            this.render();
-        },
-
-        events: {
-        	"click .add-shortcode-list li": "selectEditShortcode"
-        },
-
-        selectEditShortcode: function() {
-        	this.action = 'edit';
-        	this.currentShortcode = new t.model.Shortcode;
-        	this.render();
-        },
-
-        render: function(){
-
-            // @todo for testing.
-            this.shortcodes = [
-            	{ shortcode: 'test', name: 'Test', image: 'dashicons-carrot' }
-            ];
-
-            this.$el.html('');
-
-            switch( this.action ) {
-            	case 'add' :
-            		this.renderAddShortcodeList();
-            		break;
-                case 'edit' :
-            		this.renderEditShortcodeList( this.currentShortcode );
-            		break;
-            }
-
-        },
-
-        renderAddShortcodeList: function() {
-
- 			var list = $('<ul class="add-shortcode-list">');
-
-            // @todo for testing.
-            this.shortcodes = [
-            	{ shortcode: 'test', name: 'Test', image: 'dashicons-carrot' }
-            ];
-
-            for ( var i = 0; i < this.shortcodes.length ; i++ ) {
-            	var view = new t.view.insertModalListItem();
-            	var data = {
-        			name:  this.shortcodes[i].name,
-        			image: this.shortcodes[i].image
-            	};
-            	list.append( view.render( data ) );
-            };
-
-            this.$el.append( list );
-
-        },
-
-        renderEditShortcodeList: function() {
-        	var view = new t.view.editModalListItem( { model: this.currentShortcode } );
-        	this.$el.append( view.render() );
         }
 
 	});
@@ -164,13 +97,28 @@ jQuery(document).ready(function(){
 				return this._frame;
 
 			var _frame = wp.media.view.Frame.extend({
+
 				className: 'media-frame',
 				template:  wp.media.template('shortcode-ui-media-frame'),
 				model: delegate,
+				action: 'add',
 				events: {
+					"click .add-shortcode-list li": "selectEditShortcode",
+					"click .media-button-insert": "alert"
 				},
 
+				alert: function() { alert(1); },
+
+				action: 'add',
+				currentShortcode: {},
+
 				initialize: function() {
+
+					 // @todo for testing.
+		            this.shortcodes = [
+		            	{ shortcode: 'test', name: 'Test', image: 'dashicons-carrot' },
+		            	{ shortcode: 'test2', name: 'Test2', image: 'dashicons-carrot' }
+		            ];
 
 					this.options = this.model.attributes;
 					wp.media.view.Frame.prototype.initialize.apply( this, arguments );
@@ -190,7 +138,7 @@ jQuery(document).ready(function(){
 
 					this.activeRichTextEditors = Array();
 
-					this.modal.$el.addClass('shortcode-ui-insert-modal');
+					this.modal.$el.addClass('shortcode-ui-insert-modal')
 
 				},
 
@@ -198,13 +146,77 @@ jQuery(document).ready(function(){
 
 					var r = wp.media.view.Frame.prototype.render.apply( this, arguments );
 
-					var contentView = new t.view.insertModalContent({
-						// model: 'this.lib',
-						el: this.$el.find( '.media-frame-content' ).get(0)
-					} )
+					this.$toolbarEl  = this.$el.find( '.media-frame-toolbar' );
+					this.$contentEl = this.$el.find( '.media-frame-content' );
+
+					this.$contentEl.html('');
+					this.$toolbarEl.html('');
+
+					switch( this.action ) {
+						case 'add' :
+							this.renderAddShortcodeList();
+							break;
+						case 'edit' :
+						case 'update' :
+							this.renderEditShortcodeForm();
+							break;
+					}
+
+		            this.renderFooter();
 
 					return r;
-				}
+				},
+
+		        renderAddShortcodeList: function() {
+
+		 			var list = $('<ul class="add-shortcode-list">');
+
+		            for ( var i = 0; i < this.shortcodes.length ; i++ ) {
+		            	var view = new t.view.insertModalListItem();
+		            	var data = {
+		        			name:  this.shortcodes[i].name,
+		        			image: this.shortcodes[i].image
+		            	};
+		            	list.append( view.render( data ) );
+		            };
+
+		            this.$contentEl.append( list );
+
+		        },
+
+		        renderEditShortcodeForm: function() {
+		        	var view = new t.view.editModalListItem( { model: this.currentShortcode } );
+		        	this.$contentEl.append( view.render() );
+		        },
+
+		        // @todo make this nicer.
+		        renderFooter: function() {
+
+		        	var toolbar = $( '<div class="media-toolbar" />' );
+		        	var el = $( '<div class="media-toolbar-primary" />' );
+		        	var buttonSubmit = $('<button href="#" class="button media-button button-primary button-large media-button-insert" disabled="disabled">Insert into post</button>');
+
+		        	buttonSubmit.appendTo( el );
+		        	el.appendTo( toolbar );
+		        	toolbar.appendTo( this.$toolbarEl );
+
+					switch( this.action ) {
+		            	case 'add' :
+		            		buttonSubmit.attr( 'disabled', 'disabled' );
+		            		break;
+		                case 'edit' :
+		                case 'update' :
+		                	buttonSubmit.removeAttr( 'disabled' );
+		            		break;
+		            }
+
+		        },
+
+		        selectEditShortcode: function() {
+		        	this.action = 'edit';
+		        	this.currentShortcode = new t.model.Shortcode;
+		        	this.render();
+		        },
 
 			});
 

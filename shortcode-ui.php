@@ -83,8 +83,8 @@ class Shortcode_UI {
 
     	if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
 
-    		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . '/js/shortcode-ui.js', array( 'jquery', 'backbone' ), $this->plugin_version );
-    		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . '/css/shortcode-ui.css', array(), $this->plugin_version );
+    		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone' ), $this->plugin_version );
+    		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 
     		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
     			'shortcodes' => $this->shortcodes,
