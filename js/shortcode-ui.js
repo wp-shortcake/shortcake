@@ -41,23 +41,20 @@ jQuery(document).ready(function(){
 
 		/**
 		 * Get the shortcode as... well a shortcode!
+		 * Also - pro JS templates ;)
 		 *
 		 * @return string eg [shortcode attr1=value]
 		 */
 		formatShortcode: function() {
 
-			var template, _attrs = [];
+			var template, shortcodeAttributes, _attrs = [], content;
 
-			var shortcodeAttributes = this.get( 'attrs' );
+			shortcodeAttributes = this.get( 'attrs' );
 			for ( var id in shortcodeAttributes ) {
-				console.log( id );
-				console.log( shortcodeAttributes[ id ] )
 				_attrs.push( id + '="' + shortcodeAttributes[id] + '"' );
 			}
 
-			console.log( _attrs );
-
-			var content = this.get( 'content' );
+			content = this.get( 'content' );
 
 			if ( content && content.length > 1 ) {
 				template = "[shortcode attributes]content[/shortcode]"
@@ -109,8 +106,7 @@ jQuery(document).ready(function(){
 	 */
 	t.view.editModalListItem = Backbone.View.extend({
 
-		template:  wp.template('edit-shortcode-content-default'),
-		singleInputTemplate:  wp.template('edit-shortcode-content-default-single-input'),
+		template: wp.template('edit-shortcode-content-default'),
 
 		events: {
 			'keyup .edit-shortcode-form-fields input[type="text"]': 'inputValueChanged',
@@ -120,16 +116,8 @@ jQuery(document).ready(function(){
 
 		// Handle custom params passed to view.
 		initialize: function(options) {
-
 		    this.options = {};
 		    this.options.action = options.action;
-		    this.options.customTemplate = false;
-
-			if ( this.model.get('templateEditForm') ) {
-				this.options.customTemplate = true;
-				this.template = wp.template( this.model.get('templateEditForm') );
-			}
-
 		},
 
 		/**
@@ -160,32 +148,28 @@ jQuery(document).ready(function(){
 
 			}
 
-		}, 200 ),
+		}, 100 ),
 
+		/**
+		 * Render the Edit form.
+		 * Uses custom template passed by model if available
+		 * Otherwise - displays functional default.
+		 */
 		render: function(){
 
-			return this.$el.html( this.template( this.model.toJSON() ) );
+			var template;
+
+			// If the model has provided its own template - use that.
+			// @todo - this would be better set as a default on the model?
+			if ( templateEditForm = this.model.get('templateEditForm') ) {
+				templateEditForm = wp.template( templateEditForm );
+			} else {
+				templateEditForm = this.template;
+			}
+
+			return this.$el.html( templateEditForm( this.model.toJSON() ) );
 
 		},
-
-		// renderDefaultTemplate: function() {
-
-		// 	var t = this;
-		// 	var view = this.$el.html( this.template( this.model.toJSON() ) );
-
-		// 	view.find('.edit-shortcode-form-cancel').toggle( this.options.action === 'edit' ? true : false );
-
-		// 	// @todo change this.
-		// 	var shortcodeAttributes = this.model.get('attrs');
-		// 	for ( var id in shortcodeAttributes ) {
-		// 		view.find( '.edit-shortcode-form-fields' ).append(
-		// 			'<div>' + t.singleInputTemplate( { id: id, value: shortcodeAttributes[ id ] } ) + '</div>'
-		// 		);
-		// 	}
-
-		// 	return view;
-
-		// }
 
 	});
 
