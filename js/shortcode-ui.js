@@ -335,14 +335,14 @@ jQuery(document).ready(function(){
 						}
 
 						if ( editor && ! editor.isHidden() ) {
-							var shortcode = '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '<p>';
+							var shortcode = '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '</p>';
 							editor.execCommand( 'Shortcode_UI_Update', shortcode, this.options.markerEl );
 						}
 
 						this.close();
 
 					} else {
-						send_to_editor( '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '<p>' );
+						send_to_editor( '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '</p>' );
 						this.close();
 					}
 
