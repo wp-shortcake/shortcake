@@ -262,7 +262,6 @@ jQuery(document).ready(function(){
 				},
 
 				renderEditShortcodeForm: function() {
-					console.log( this.options.currentShortcode.toJSON() );
 					var view = new t.view.editModalListItem( {
 						model:  this.options.currentShortcode,
 						action: this.options.action
