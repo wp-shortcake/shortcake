@@ -14,7 +14,7 @@ jQuery(document).ready(function(){
 	t.model.Shortcode_UI = Backbone.Model.extend({
 		_this: this,
 		openInsertModal: function() {
-			this.set( 'action', 'add' );
+			this.set( 'action', 'select' );
 			this.set( 'currentShortcode', null );
 			this.set( 'markerEl', null );
 			frame = new t.view.insertModal.frame( this );
@@ -199,7 +199,7 @@ jQuery(document).ready(function(){
 					this.options = this.model.attributes;
 
 					if ( ! this.options.action ) {
-						this.options.action = 'add';
+						this.options.action = 'select';
 					}
 
 					wp.media.view.Frame.prototype.initialize.apply( this, arguments );
@@ -234,11 +234,11 @@ jQuery(document).ready(function(){
 					this.$toolbarEl.html('');
 
 					switch( this.options.action ) {
-						case 'add' :
+						case 'select' :
 							this.renderAddShortcodeList();
 							break;
 						case 'update' :
-						case 'edit' :
+						case 'insert' :
 							this.renderEditShortcodeForm();
 							break;
 					}
@@ -287,10 +287,10 @@ jQuery(document).ready(function(){
 					toolbar.appendTo( this.$toolbarEl );
 
 					switch( this.options.action ) {
-						case 'add' :
+						case 'select' :
 							buttonSubmit.attr( 'disabled', 'disabled' );
 							break;
-						case 'edit' :
+						case 'insert' :
 							buttonSubmit.removeAttr( 'disabled' );
 							break;
 						case 'update' :
@@ -302,13 +302,13 @@ jQuery(document).ready(function(){
 				},
 
 				cancelInsert: function() {
-					this.options.action = 'add';
+					this.options.action = 'select';
 					this.options.currentShortcode = null;
 					this.render();
 				},
 
 				selectEditShortcode: function(e) {
-					this.options.action = 'edit';
+					this.options.action = 'insert';
 					var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 					var shortcode = this.shortcodes.findWhere( { shortcode: target.attr( 'data-shortcode' ) } );
 					this.options.currentShortcode = shortcode.clone();
