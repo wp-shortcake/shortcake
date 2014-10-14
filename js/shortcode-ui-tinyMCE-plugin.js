@@ -32,7 +32,7 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 			return;
 		}
 
-		model = Shortcode_UI.shortcodes.findWhere( {shortcode: matches[1] } );
+		model = Shortcode_UI.shortcodes.findWhere( { shortcode: matches[1] } ).clone();
 
 		if ( ! model ) {
 			return;
