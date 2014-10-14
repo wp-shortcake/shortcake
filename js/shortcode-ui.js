@@ -57,7 +57,11 @@ jQuery(document).ready(function(){
 		 */
 		set: function( attributes, options ) {
 
-			if ( ( 'shortcodeAtts' in attributes ) && ! ( attributes.shortcodeAtts instanceof t.collection.ShortcodeAtts ) ) {
+			if ( typeof( attributes ) === 'string' && attributes === 'shortcodeAtts' && ! ( options instanceof t.collection.ShortcodeAtts ) ) {
+				options = new t.collection.ShortcodeAtts( options );
+			}
+
+			if ( typeof( attributes ) === 'object' && ( 'shortcodeAtts' in attributes ) && ! ( attributes.shortcodeAtts instanceof t.collection.ShortcodeAtts ) ) {
 				attributes.shortcodeAtts = new t.collection.ShortcodeAtts( attributes.shortcodeAtts );
 			}
 
@@ -131,16 +135,37 @@ jQuery(document).ready(function(){
 			'keyup .edit-shortcode-form-fields input[type=text]': 'inputValueChanged'
 		},
 
+		// Handle custom params passed to view.
+		initialize: function(options) {
+		    this.options = {};
+		    this.options.action = options.action;
+		},
+
 		inputValueChanged: _.debounce( function( e ) {
 			var $el = $( e.target );
-			var attribute  = this.model.get('shortcodeAtts').findWhere( { id: $el.attr('name') } );
-			attribute.set( 'value', $el.val() );
+
+			if ( 'content' === $el.attr('name') ) {
+
+				this.model.set( 'content', $el.val() );
+
+			} else {
+
+				var attribute  = this.model.get('shortcodeAtts').findWhere( { id: $el.attr('name') } );
+
+				if ( attribute ) {
+					attribute.set( 'value', $el.val() );
+				}
+
+			}
+
 		}, 500 ),
 
 		render: function(){
 
 			var t = this;
 			var view = this.$el.html( this.template( this.model.toJSON() ) );
+
+			view.find('.edit-shortcode-form-cancel').toggle( this.options.action === 'edit' ? true : false );
 
 			this.model.get( 'shortcodeAtts' ).each( function( attribute ) {
 				view.find( '.edit-shortcode-form-fields' ).append(
@@ -243,7 +268,10 @@ jQuery(document).ready(function(){
 				},
 
 				renderEditShortcodeForm: function() {
-					var view = new t.view.editModalListItem( { model: this.options.currentShortcode } );
+					var view = new t.view.editModalListItem( {
+						model:  this.options.currentShortcode,
+						action: this.options.action
+					} );
 					this.$contentEl.append( view.render() );
 				},
 
@@ -269,7 +297,6 @@ jQuery(document).ready(function(){
 							buttonSubmit.removeAttr( 'disabled' );
 							buttonSubmit.html( 'Update' );
 							break;
-
 					}
 
 				},
@@ -281,13 +308,11 @@ jQuery(document).ready(function(){
 				},
 
 				selectEditShortcode: function(e) {
-
 					this.options.action = 'edit';
 					var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
-					var shortcode = target.attr( 'data-shortcode' );
-					this.options.currentShortcode = this.shortcodes.findWhere( { shortcode: shortcode } ).clone();
+					var shortcode = this.shortcodes.findWhere( { shortcode: target.attr( 'data-shortcode' ) } );
+					this.options.currentShortcode = shortcode.clone();
 					this.render();
-
 				},
 
 				insertShortcode: function() {
@@ -349,7 +374,7 @@ jQuery(document).ready(function(){
 
 	};
 
-	t.shortcodes =  new t.collection.Shortcodes( shortcodeUIData.shortcodes )
+	t.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
 	t.modal      = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
 
 	jQuery('.shortcode-editor-open-insert-modal').click( function(e) {
