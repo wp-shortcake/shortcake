@@ -25,127 +25,11 @@
  *	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-class Shortcode_UI {
+require_once( 'inc/class-shortcode-ui.php' );
 
-	private $plugin_dir;
-	private $plugin_url;
-
-	private $shortcodes = array();
-
-
-	function __construct() {
-
-		$this->plugin_version = '0.1';
-		$this->plugin_dir     = plugin_dir_path( __FILE__ );
-		$this->plugin_url     = plugin_dir_url( __FILE__ );
-
-		add_action( 'media_buttons', array( $this, 'action_media_buttons' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
-		add_action( 'admin_footer-post.php', array( $this, 'print_templates' ) );
-		add_action( 'admin_footer-post-new.php', array( $this, 'print_templates' ) );
-
-		add_filter( 'mce_external_plugins', array( $this, 'add_tinymce_plugin' ) );
-
-	}
-
-	function register_shortcode_ui( $shortcode, $args = array() ) {
-
-		$defaults = array(
-			'label'              => '',
-			'image'              => '',
-			'shortcodeAtts'      => array(),
-		);
-
-		// Parse args.
-		$args = wp_parse_args( $args, $defaults );
-
-		// strip invalid
-		foreach ( $args as $key => $value ) {
-			if ( ! array_key_exists( $key, $defaults ) ) {
-				unset( $args[ $key ] );
-			}
-		}
-
-		$args['shortcode'] = $shortcode;
-
-		$this->shortcodes[ $shortcode ] = $args;
-
-	}
-
-	public function action_media_buttons() {
-
-		$post = get_post();
-
-		if ( ! $post && ! empty( $GLOBALS['post_ID'] ) )
-			$post = $GLOBALS['post_ID'];
-
-		$img = '<span class="wp-media-buttons-icon"></span> ';
-
-		printf(
-			'<button class="%s" title="%s">%s</button>',
-			'button shortcode-editor-open-insert-modal add_media',
-			esc_attr__( 'Add Shortcode', 'shortcode-ui' ),
-			$img . __( 'Add Shortcode', 'shortcode-ui' )
-		);
-
-	}
-
-	function enqueue_scripts( $hook ) {
-
-    	if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
-
-    		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone' ), $this->plugin_version );
-    		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
-
-    		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
-    			'shortcodes' => array_values( $this->shortcodes ),
-    			'modalOptions' => array(
-    				'media_frame_title' => 'Insert Shortcode',
-					'insert_into_button_label' => 'Button',
-					'media_toolbar_secondary_button_label' => 'Secondary Button',
-					'default_title' => 'Default Title',
-				)
-    		) );
-
-    	}
-
-	}
-
-	public function print_templates() {
-		$this->get_view( 'media-frame', array() );
-		$this->get_view( 'add-shortcode-list-item', array() );
-		$this->get_view( 'edit-shortcode-content-default', array() );
-	}
-
-	public function add_tinymce_plugin( $plugin_array ) {
-		$plugin_array['shortcodeui'] = $this->plugin_url . '/js/shortcode-ui-tinyMCE-plugin.js';
-		return $plugin_array;
-	}
-
-	public function get_view( $template, $template_args = array(), $echo = true ) {
-
- 		$template_dir  = $this->plugin_dir . '/inc/templates/';
-		$template_file = $template_dir . $template . '.tpl.php';
-
-		if ( ! file_exists( $template_file ) ) {
-			return '';
-		}
-
-		extract( $template_args, EXTR_SKIP );
-		ob_start();
-		include $template_file;
-
-		if ( ! $echo ) {
-			return ob_get_clean();
-		}
-
-		echo ob_get_clean();
-
-	}
-
-}
-
+/**
+ * For Developement.
+ */
 add_action( 'init', function() {
 
 	$instance = new Shortcode_UI();
@@ -168,6 +52,12 @@ add_action( 'init', function() {
 			array( 'label' => 'Background Color', 'id' => 'bg_color' ),
 			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
 			array( 'label' => 'Font Size', 'id' => 'font-size', 'value' => 'large' ),
+		),
+		// Expected - string - the template ID passed to wp.template
+		// Autoloads file from templates 'shortcode-$shortcode-$part.tpl.php'
+		'templates' => array(
+			'render'   => 'shortcode-blockquote-ui-render',
+			'editForm' => 'shortcode-blockquote-edit-form',
 		)
 	);
 

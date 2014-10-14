@@ -108,6 +108,11 @@ jQuery(document).ready(function(){
 		tagName: 'li',
 		template:  wp.template('add-shortcode-list-item'),
 		className: 'shortcode-list-item',
+
+		initialize: function( options ) {
+			console.log( this.model.get('templates') );
+		},
+
 		render: function(){
 
 			var data = this.model.toJSON();
