@@ -45,6 +45,8 @@ class Shortcode_UI {
 
 		$args['shortcode'] = $shortcode;
 
+		add_shortcode( $shortcode, array( $this, 'render_shortcode' ) );
+
 		$this->shortcodes[ $shortcode ] = $args;
 
 	}
@@ -119,6 +121,7 @@ class Shortcode_UI {
 		}
 
 		extract( $template_args, EXTR_SKIP );
+
 		ob_start();
 		include $template_file;
 
@@ -127,6 +130,22 @@ class Shortcode_UI {
 		}
 
 		echo ob_get_clean();
+
+	}
+
+	function render_shortcode( $atts, $content = null, $shortcode ) {
+
+		if ( ! array_key_exists( $shortcode, $this->shortcodes ) ) {
+			return;
+		}
+
+		$args            = $this->shortcodes[ $shortcode ];
+		$atts['content'] = $content;
+		$atts            = apply_filters( "shortcode_ui_render_atts_$shortcode", $atts );
+
+		if ( $args['templateRender'] ) {
+			return $this->get_view( $args['templateRender'], $atts, false );
+		}
 
 	}
 
