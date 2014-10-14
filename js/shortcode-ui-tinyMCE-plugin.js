@@ -2,8 +2,12 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 	ed.addCommand( 'Shortcode_UI_Edit', function( shortcode ) {
 		if ( typeof Shortcode_UI !== 'undefined' && Shortcode_UI.modal ) {
-			Shortcode_UI.modal.openEditModal( shortcodeToModel( shortcode ) );
+			Shortcode_UI.modal.openEditModal( shortcodeToModel( shortcode.html() ), shortcode );
 		}
+	});
+
+	ed.addCommand( 'Shortcode_UI_Update', function( shortcode, markerEl ) {
+		markerEl.replaceWith( shortcode );
 	});
 
 	ed.on( 'BeforeSetContent', function( event ) {
@@ -12,16 +16,19 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 		ed.on( "click", clickShortcodeCallback );
 	});
 
-	ed.on( 'PostProcess', function( event ) {
-	});
+	ed.on( 'PostProcess', function( event ) {});
 
 	var shortcodeToModel = function( shortcodeString ) {
 
-		var model = {}, attributes = [];
+		var model, attributes = [];
 
 		var matches = shortcodeString.match( /\[([^\s\]\/]+) ?([^\]]+)?\]/ );
 
-		model.shortcode = matches[1];
+		model = Shortcode_UI.shortcodes.findWhere( {shortcode: matches[1] } );
+
+		if ( ! model ) {
+			return;
+		}
 
 		if ( typeof( matches[2] ) != undefined ) {
 
@@ -29,18 +36,22 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 			// convert attribute strings to object.
 			for ( var i = 0; i < attributes.length; i++ ) {
-				var bits = attributes[i].split('=');
-				attributes[i] = { id: bits[0], value: bits[1] };
-			}
 
-			model.attributes = attributes;
+				var bits = attributes[i].split('=');
+				var attr = model.get( 'shortcodeAtts').findWhere( { id: bits[0] } );
+
+				if ( attr ) {
+					attr.set( 'value', bits[1].slice(1,-1) ); // note slice - remove ". @todo - make more robust.
+				}
+
+			}
 
 		}
 
 		// Try and match content field.
 		var matches2 = shortcodeString.match( /\[test_shortcode([^\]]+)?\]([^\[]+)?\[\/test_shortcode\]/ );
 		if ( matches2 ) {
-			model.content = matches2[2];
+			model.set( 'content', matches2[2] );
 		}
 
 		return model;
@@ -51,7 +62,7 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
         var shortcode = jQuery( e.target ).closest( '.shortcode-ui' );
         if ( shortcode.length > 0 ) {
-        	ed.execCommand( "Shortcode_UI_Edit", shortcode.html() );
+        	ed.execCommand( "Shortcode_UI_Edit", shortcode );
         }
 
     }

@@ -14,11 +14,16 @@ jQuery(document).ready(function(){
 	t.model.Shortcode_UI = Backbone.Model.extend({
 		_this: this,
 		openInsertModal: function() {
+			this.set( 'action', 'add' );
+			this.set( 'currentShortcode', null );
+			this.set( 'markerEl', null );
 			frame = new t.view.insertModal.frame( this );
 			frame.open();
 		},
-		openEditModal: function() {
-			this.attributes.test = 'test'
+		openEditModal: function( shortcodeModel, markerEl ) {
+			this.set( 'action', 'update' );
+			this.set( 'currentShortcode', shortcodeModel );
+			this.set( 'markerEl', markerEl );
 			frame = new t.view.insertModal.frame( this );
 			frame.open();
 		},
@@ -161,25 +166,21 @@ jQuery(document).ready(function(){
 				className: 'media-frame',
 				template:  wp.media.template('shortcode-ui-media-frame'),
 				model: delegate,
-				action: 'add',
 				events: {
 					"click .add-shortcode-list li": "selectEditShortcode",
 					"click .media-button-insert": "insertShortcode",
 					"submit .edit-shortcode-form": "insertShortcode",
 				},
 
-				action: 'add',
-				currentShortcode: {},
-
 				initialize: function( a ) {
 
-					console.log( this );
-					// console.log( this );
-
-					// Set Shortcodes
-					this.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
+					this.shortcodes = Shortcode_UI.shortcodes;
 
 					this.options = this.model.attributes;
+
+					if ( ! this.options.action ) {
+						this.options.action = 'add';
+					}
 
 					wp.media.view.Frame.prototype.initialize.apply( this, arguments );
 
@@ -212,7 +213,7 @@ jQuery(document).ready(function(){
 					this.$contentEl.html('');
 					this.$toolbarEl.html('');
 
-					switch( this.action ) {
+					switch( this.options.action ) {
 						case 'add' :
 							this.renderAddShortcodeList();
 							break;
@@ -241,7 +242,7 @@ jQuery(document).ready(function(){
 				},
 
 				renderEditShortcodeForm: function() {
-					var view = new t.view.editModalListItem( { model: this.currentShortcode } );
+					var view = new t.view.editModalListItem( { model: this.options.currentShortcode } );
 					this.$contentEl.append( view.render() );
 				},
 
@@ -256,31 +257,63 @@ jQuery(document).ready(function(){
 					el.appendTo( toolbar );
 					toolbar.appendTo( this.$toolbarEl );
 
-					switch( this.action ) {
+					switch( this.options.action ) {
 						case 'add' :
 							buttonSubmit.attr( 'disabled', 'disabled' );
 							break;
 						case 'edit' :
-						case 'update' :
 							buttonSubmit.removeAttr( 'disabled' );
 							break;
+						case 'update' :
+							buttonSubmit.removeAttr( 'disabled' );
+							buttonSubmit.html( 'Update' );
+							break;
+
 					}
 
 				},
 
 				selectEditShortcode: function(e) {
 
-					this.action = 'edit';
+					this.options.action = 'edit';
 					var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 					var shortcode = target.attr( 'data-shortcode' );
-					this.currentShortcode = this.shortcodes.findWhere( { shortcode: shortcode } ).clone();
+					this.options.currentShortcode = this.shortcodes.findWhere( { shortcode: shortcode } ).clone();
 					this.render();
 
 				},
 
 				insertShortcode: function() {
-					send_to_editor( '<p class="shortcode-ui">' + this.currentShortcode.formatShortcode() + '<p>' );
-					this.close();
+
+					if ( this.options.action === 'update' ) {
+
+						var editor,
+						    hasTinymce = typeof tinymce !== 'undefined',
+						    hasQuicktags = typeof QTags !== 'undefined';
+
+						if ( ! wpActiveEditor ) {
+							if ( hasTinymce && tinymce.activeEditor ) {
+								editor = tinymce.activeEditor;
+								wpActiveEditor = editor.id;
+							} else if ( ! hasQuicktags ) {
+								return false;
+							}
+						} else if ( hasTinymce ) {
+							editor = tinymce.get( wpActiveEditor );
+						}
+
+						if ( editor && ! editor.isHidden() ) {
+							var shortcode = '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '<p>';
+							editor.execCommand( 'Shortcode_UI_Update', shortcode, this.options.markerEl );
+						}
+
+						this.close();
+
+					} else {
+						send_to_editor( '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '<p>' );
+						this.close();
+					}
+
 				}
 
 			});
@@ -309,6 +342,7 @@ jQuery(document).ready(function(){
 
 	};
 
+	t.shortcodes =  new t.collection.Shortcodes( shortcodeUIData.shortcodes )
 	t.modal = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
 
 	jQuery('.shortcode-editor-open-insert-modal').click( function(e) {
