@@ -109,10 +109,6 @@ jQuery(document).ready(function(){
 		template:  wp.template('add-shortcode-list-item'),
 		className: 'shortcode-list-item',
 
-		initialize: function( options ) {
-			console.log( this.model.get('templates') );
-		},
-
 		render: function(){
 
 			var data = this.model.toJSON();
@@ -144,6 +140,15 @@ jQuery(document).ready(function(){
 		initialize: function(options) {
 		    this.options = {};
 		    this.options.action = options.action;
+		    this.options.customTemplate = false;
+
+			var templates = this.model.get('templates');
+			if ( 'editForm' in templates ) {
+				this.options.customTemplate = true;
+				console.log( templates.editForm );
+				this.template = wp.template( templates.editForm );
+			}
+
 		},
 
 		inputValueChanged: _.debounce( function( e ) {
@@ -166,6 +171,16 @@ jQuery(document).ready(function(){
 		}, 500 ),
 
 		render: function(){
+
+			if ( ! this.options.customTemplate ) {
+				return this.renderDefaultTemplate();
+			} else {
+				return this.$el.html( this.template( this.model.toJSON() ) );
+			}
+
+		},
+
+		renderDefaultTemplate: function() {
 
 			var t = this;
 			var view = this.$el.html( this.template( this.model.toJSON() ) );

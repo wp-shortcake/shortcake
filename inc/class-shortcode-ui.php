@@ -97,7 +97,7 @@ class Shortcode_UI {
 		foreach ( $this->shortcodes as $shortcode => $args ) {
 			// Load shortcode edit form template.
 			if ( ! empty( $args['templates']['editForm'] ) ) {
-				$this->get_view( $args['templates']['editForm'] );
+				$this->get_view( 'shortcode-' . $shortcode . '-editForm' );
 			}
 		}
 
