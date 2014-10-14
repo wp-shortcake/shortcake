@@ -37,9 +37,9 @@ add_action( 'init', function() {
 	$args = array(
 		'label' => 'Test Shortcode',
 		'image' => 'dashicons-carrot',
-		'shortcodeAtts' => array(
-			array( 'label' => 'ID', 'id' => 'id' ),
-			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
+		'attrs' => array(
+			'id'    => null,
+			'align' => 'left',
 		)
 	);
 
@@ -48,10 +48,13 @@ add_action( 'init', function() {
 	$args = array(
 		'label' => 'Blockquote',
 		'image' => 'dashicons-editor-quote',
-		'shortcodeAtts' => array(
-			array( 'label' => 'Source', 'id' => 'source' ),
-			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
+
+		// Attributes. Format 'id' => 'default value'
+		'attrs' => array(
+			'align'  => 'left',
+			'source' => '',
 		),
+
 		// Expected - string - the template ID passed to wp.template
 		// Autoloads file from templates 'shortcode-$shortcode-$part.tpl.php'
 		'templateEditForm' => 'shortcode-blockquote-edit-form',

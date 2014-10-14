@@ -26,9 +26,9 @@ class Shortcode_UI {
 	function register_shortcode_ui( $shortcode, $args = array() ) {
 
 		$defaults = array(
-			'label'         => '',
-			'image'         => '',
-			'shortcodeAtts' => array(),
+			'label' => '',
+			'image' => '',
+			'attrs' => array(),
 			'templateEditForm' => null,
 			'templateRender'   => null,
 		);

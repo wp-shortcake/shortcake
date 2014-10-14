@@ -23,7 +23,7 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 	var shortcodeToModel = function( shortcodeString ) {
 
-		var model, attributes = [];
+		var model, attrs;
 
 		var matches = shortcodeString.match( /\[([^\s\]\/]+) ?([^\]]+)?\]/ );
 
@@ -37,36 +37,27 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 			return;
 		}
 
+		attrs = model.get( 'attrs' );
+
 		if ( typeof( matches[2] ) != undefined ) {
 
-			attributes = matches[2].match(/(\S+?=".*?")/g );
+			attributeMatches = matches[2].match(/(\S+?=".*?")/g );
 
 			// convert attribute strings to object.
-			for ( var i = 0; i < attributes.length; i++ ) {
+			for ( var i = 0; i < attributeMatches.length; i++ ) {
 
 				var bitsRegEx = /(\S+?)="(.*?)"/g;
-				var bits = bitsRegEx.exec( attributes[i] );
+				var bits = bitsRegEx.exec( attributeMatches[i] );
 
-				// var bits = attributes[i].match( /(\S+?)="(.*?)"/g )
-				// console.log( bits );
-
-				// console.log( bits );
-				var attr = model.get( 'shortcodeAtts').findWhere( { id: bits[1] } );
-
-				if ( attr ) {
-					// attr.set( 'value', bits[2].slice(1,-1) ); // note slice - remove ". @todo - make more robust.
-					attr.set( 'value', bits[2] ); // note slice - remove ". @todo - make more robust.
-
+				if ( bits[1] in attrs ) {
+					attrs[ bits[1] ] = bits[2];
 				}
 
 			}
 
 		}
 
-		// Try and match content field.
-		//
-		// var contentRegEx = "/\\[" + matches[1] + "([^\\]]+)?\\]([^\\[]+)?\\[\/" + matches[1] + "\\]/";
-
+		model.set( 'attrs', attrs ); // note slice - remove ". @todo - make more robust.
 
 		var bitsRegExp = new RegExp( "\\[" + matches[1] + "([^\\]]+)?\\]([^\\[]*)?(\\[/" + matches[1] + "\\])?" );
 		var bits       = bitsRegExp.exec( shortcodeString );

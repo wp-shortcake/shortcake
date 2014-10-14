@@ -15,15 +15,15 @@
 
 			<div>
 				<label for="shortcode-blockquote-source">Source</label>
-				<input type="text" id="shortcode-blockquote-source" name="source" value="{{ data.shortcodeAtts.source }}"/>
+				<input type="text" id="shortcode-blockquote-source" name="source" value="{{ data.attrs.source }}"/>
 			</div>
 
 			<div>
 				<label for="shortcode-blockquote-align">Alignment</label>
 				<select id="shortcode-blockquote-align" name="align">
-					<option value="left" {{ data.shortcodeAtts.align === 'left' ? 'selected="selected"' : void 0 }}>Left</option>
-					<option value="center" {{ data.shortcodeAtts.align === 'center' ? 'selected="selected"' : void 0 }}>Center</option>
-					<option value="right" {{ data.shortcodeAtts.align === 'right' ? 'selected="selected"' : void 0 }}>Right</option>
+					<option value="left" {{ data.attrs.align === 'left' ? 'selected="selected"' : void 0 }}>Left</option>
+					<option value="center" {{ data.attrs.align === 'center' ? 'selected="selected"' : void 0 }}>Center</option>
+					<option value="right" {{ data.attrs.align === 'right' ? 'selected="selected"' : void 0 }}>Right</option>
 				</select>
 			</div>
 
