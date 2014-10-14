@@ -170,6 +170,7 @@ jQuery(document).ready(function(){
 					"click .add-shortcode-list li": "selectEditShortcode",
 					"click .media-button-insert": "insertShortcode",
 					"submit .edit-shortcode-form": "insertShortcode",
+					"click .edit-shortcode-form-cancel": 'cancelInsert'
 				},
 
 				initialize: function( a ) {
@@ -273,6 +274,12 @@ jQuery(document).ready(function(){
 
 				},
 
+				cancelInsert: function() {
+					this.options.action = 'add';
+					this.options.currentShortcode = null;
+					this.render();
+				},
+
 				selectEditShortcode: function(e) {
 
 					this.options.action = 'edit';
@@ -343,7 +350,7 @@ jQuery(document).ready(function(){
 	};
 
 	t.shortcodes =  new t.collection.Shortcodes( shortcodeUIData.shortcodes )
-	t.modal = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
+	t.modal      = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
 
 	jQuery('.shortcode-editor-open-insert-modal').click( function(e) {
 		e && e.preventDefault();
