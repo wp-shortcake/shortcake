@@ -14,7 +14,7 @@ jQuery(document).ready(function(){
 	t.model.Shortcode_UI = Backbone.Model.extend({
 		_this: this,
 		openInsertModal: function() {
-			this.set( 'action', 'add' );
+			this.set( 'action', 'select' );
 			this.set( 'currentShortcode', null );
 			this.set( 'markerEl', null );
 			frame = new t.view.insertModal.frame( this );
@@ -29,65 +29,42 @@ jQuery(document).ready(function(){
 		},
 	});
 
-	t.model.ShortcodeAtts = Backbone.Model.extend({
-		defaults: {
-			label: '',
-			id: '',
-			value: '',
-		},
-	});
-
-	t.collection.ShortcodeAtts = Backbone.Collection.extend({
-		model: t.model.ShortcodeAtts
-	});
-
 	// Single Shortcode Model.
 	t.model.Shortcode = Backbone.Model.extend({
 
 		defaults: {
 			label: '',
 			shortcode: '',
-			shortcodeAtts: new t.model.ShortcodeAtts,
+			attrs: {},
 			content: '',
 		},
 
 		/**
-		 * Custom set method
-		 * Used to set shortcodeAtts collection.
+		 * Get the shortcode as... well a shortcode!
+		 * Also - pro JS templates ;)
+		 *
+		 * @return string eg [shortcode attr1=value]
 		 */
-		set: function( attributes, options ) {
-
-			if ( typeof( attributes ) === 'string' && attributes === 'shortcodeAtts' && ! ( options instanceof t.collection.ShortcodeAtts ) ) {
-				options = new t.collection.ShortcodeAtts( options );
-			}
-
-			if ( typeof( attributes ) === 'object' && ( 'shortcodeAtts' in attributes ) && ! ( attributes.shortcodeAtts instanceof t.collection.ShortcodeAtts ) ) {
-				attributes.shortcodeAtts = new t.collection.ShortcodeAtts( attributes.shortcodeAtts );
-			}
-
-			return Backbone.Model.prototype.set.call( this, attributes, options );
-
-		},
-
 		formatShortcode: function() {
 
-			var template, atts = [];
+			var template, shortcodeAttributes, _attrs = [], content;
 
-			this.get( 'shortcodeAtts' ).each( function( attribute ) {
-				atts.push( attribute.get('id') + '="' + attribute.get('value') + '"' );
-			} );
-
-			var content = this.get( 'content' );
-
-			if ( content && content.length > 1 ) {
-				template = "[{{shortcode}} {{attributes}}]{{content}}[/{{shortcode}}]"
-			} else {
-				template = "[{{shortcode}} {{attributes}}]"
+			shortcodeAttributes = this.get( 'attrs' );
+			for ( var id in shortcodeAttributes ) {
+				_attrs.push( id + '="' + shortcodeAttributes[id] + '"' );
 			}
 
-			template = template.replace( /{{shortcode}}/g, this.get('shortcode') );
-			template = template.replace( /{{attributes}}/g, atts.join( ' ' ) );
-			template = template.replace( /{{content}}/g, content );
+			content = this.get( 'content' );
+
+			if ( content && content.length > 1 ) {
+				template = "[shortcode attributes]content[/shortcode]"
+			} else {
+				template = "[shortcode attributes]"
+			}
+
+			template = template.replace( /shortcode/g, this.get('shortcode') );
+			template = template.replace( /attributes/g, _attrs.join( ' ' ) );
+			template = template.replace( /content/g, content );
 
 			return template;
 
@@ -109,10 +86,6 @@ jQuery(document).ready(function(){
 		template:  wp.template('add-shortcode-list-item'),
 		className: 'shortcode-list-item',
 
-		initialize: function( options ) {
-			console.log( this.model.get('templates') );
-		},
-
 		render: function(){
 
 			var data = this.model.toJSON();
@@ -133,11 +106,12 @@ jQuery(document).ready(function(){
 	 */
 	t.view.editModalListItem = Backbone.View.extend({
 
-		template:  wp.template('edit-shortcode-content-default'),
-		singleInputTemplate:  wp.template('edit-shortcode-content-default-single-input'),
+		template: wp.template('edit-shortcode-content-default'),
 
 		events: {
-			'keyup .edit-shortcode-form-fields input[type=text]': 'inputValueChanged'
+			'keyup .edit-shortcode-form-fields input[type="text"]': 'inputValueChanged',
+			'keyup .edit-shortcode-form-fields textarea': 'inputValueChanged',
+			'change .edit-shortcode-form-fields select': 'inputValueChanged',
 		},
 
 		// Handle custom params passed to view.
@@ -146,7 +120,14 @@ jQuery(document).ready(function(){
 		    this.options.action = options.action;
 		},
 
+		/**
+		 * Input Changed Update Callback.
+		 *
+		 * If the input field that has changed is for content or a valid attribute,
+		 * then it should update the model.
+		 */
 		inputValueChanged: _.debounce( function( e ) {
+
 			var $el = $( e.target );
 
 			if ( 'content' === $el.attr('name') ) {
@@ -155,32 +136,40 @@ jQuery(document).ready(function(){
 
 			} else {
 
-				var attribute  = this.model.get('shortcodeAtts').findWhere( { id: $el.attr('name') } );
+				var shortcodeAttributes = this.model.get( 'attrs' );
 
-				if ( attribute ) {
-					attribute.set( 'value', $el.val() );
+				// Note - check this is a valid attribute first.
+				var id = $el.attr('name');
+				if ( id in shortcodeAttributes ) {
+					shortcodeAttributes[ id ] = $el.val();
 				}
+
+				this.model.set( 'attrs', shortcodeAttributes );
 
 			}
 
-		}, 500 ),
+		}, 100 ),
 
+		/**
+		 * Render the Edit form.
+		 * Uses custom template passed by model if available
+		 * Otherwise - displays functional default.
+		 */
 		render: function(){
 
-			var t = this;
-			var view = this.$el.html( this.template( this.model.toJSON() ) );
+			var template;
 
-			view.find('.edit-shortcode-form-cancel').toggle( this.options.action === 'edit' ? true : false );
+			// If the model has provided its own template - use that.
+			// @todo - this would be better set as a default on the model?
+			if ( templateEditForm = this.model.get('templateEditForm') ) {
+				templateEditForm = wp.template( templateEditForm );
+			} else {
+				templateEditForm = this.template;
+			}
 
-			this.model.get( 'shortcodeAtts' ).each( function( attribute ) {
-				view.find( '.edit-shortcode-form-fields' ).append(
-					'<div>' + t.singleInputTemplate( attribute.toJSON() ) + '</div>'
-				);
-			} );
+			return this.$el.html( templateEditForm( this.model.toJSON() ) );
 
-			return view;
-
-		}
+		},
 
 	});
 
@@ -210,7 +199,7 @@ jQuery(document).ready(function(){
 					this.options = this.model.attributes;
 
 					if ( ! this.options.action ) {
-						this.options.action = 'add';
+						this.options.action = 'select';
 					}
 
 					wp.media.view.Frame.prototype.initialize.apply( this, arguments );
@@ -245,11 +234,11 @@ jQuery(document).ready(function(){
 					this.$toolbarEl.html('');
 
 					switch( this.options.action ) {
-						case 'add' :
+						case 'select' :
 							this.renderAddShortcodeList();
 							break;
-						case 'edit' :
 						case 'update' :
+						case 'insert' :
 							this.renderEditShortcodeForm();
 							break;
 					}
@@ -277,7 +266,13 @@ jQuery(document).ready(function(){
 						model:  this.options.currentShortcode,
 						action: this.options.action
 					} );
+
 					this.$contentEl.append( view.render() );
+
+					if ( this.options.action === 'update' ) {
+						this.$contentEl.find( '.edit-shortcode-form-cancel' ).remove();
+					}
+
 				},
 
 				// @todo make this nicer.
@@ -292,10 +287,10 @@ jQuery(document).ready(function(){
 					toolbar.appendTo( this.$toolbarEl );
 
 					switch( this.options.action ) {
-						case 'add' :
+						case 'select' :
 							buttonSubmit.attr( 'disabled', 'disabled' );
 							break;
-						case 'edit' :
+						case 'insert' :
 							buttonSubmit.removeAttr( 'disabled' );
 							break;
 						case 'update' :
@@ -307,13 +302,13 @@ jQuery(document).ready(function(){
 				},
 
 				cancelInsert: function() {
-					this.options.action = 'add';
+					this.options.action = 'select';
 					this.options.currentShortcode = null;
 					this.render();
 				},
 
 				selectEditShortcode: function(e) {
-					this.options.action = 'edit';
+					this.options.action = 'insert';
 					var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 					var shortcode = this.shortcodes.findWhere( { shortcode: target.attr( 'data-shortcode' ) } );
 					this.options.currentShortcode = shortcode.clone();

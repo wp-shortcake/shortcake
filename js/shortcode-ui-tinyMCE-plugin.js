@@ -2,7 +2,10 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 	ed.addCommand( 'Shortcode_UI_Edit', function( shortcode ) {
 		if ( typeof Shortcode_UI !== 'undefined' && Shortcode_UI.modal ) {
-			Shortcode_UI.modal.openEditModal( shortcodeToModel( shortcode.html() ), shortcode );
+			var model = shortcodeToModel( shortcode.html() );
+			if ( model ) {
+				Shortcode_UI.modal.openEditModal( model, shortcode );
+			}
 		}
 	});
 
@@ -20,9 +23,14 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 	var shortcodeToModel = function( shortcodeString ) {
 
-		var model, attributes = [];
+		var model, attrs;
 
-		var matches = shortcodeString.match( /\[([^\s\]\/]+) ?([^\]]+)?\]/ );
+		var megaRegex = /\[(\S+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
+		var matches = shortcodeString.match( megaRegex );
+
+		if ( ! matches ) {
+			return;
+		}
 
 		model = Shortcode_UI.shortcodes.findWhere( {shortcode: matches[1] } );
 
@@ -30,28 +38,30 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 			return;
 		}
 
+		attrs = model.get( 'attrs' );
+
 		if ( typeof( matches[2] ) != undefined ) {
 
-			attributes = matches[2].split( ' ' );
+			attributeMatches = matches[2].match(/(\S+?=".*?")/g );
 
 			// convert attribute strings to object.
-			for ( var i = 0; i < attributes.length; i++ ) {
+			for ( var i = 0; i < attributeMatches.length; i++ ) {
 
-				var bits = attributes[i].split('=');
-				var attr = model.get( 'shortcodeAtts').findWhere( { id: bits[0] } );
+				var bitsRegEx = /(\S+?)="(.*?)"/g;
+				var bits = bitsRegEx.exec( attributeMatches[i] );
 
-				if ( attr ) {
-					attr.set( 'value', bits[1].slice(1,-1) ); // note slice - remove ". @todo - make more robust.
+				if ( bits[1] in attrs ) {
+					attrs[ bits[1] ] = bits[2];
 				}
 
 			}
 
 		}
 
-		// Try and match content field.
-		var matches2 = shortcodeString.match( /\[test_shortcode([^\]]+)?\]([^\[]+)?\[\/test_shortcode\]/ );
-		if ( matches2 ) {
-			model.set( 'content', matches2[2] );
+		model.set( 'attrs', attrs ); // note slice - remove ". @todo - make more robust.
+
+		if ( matches[3] ) {
+			model.set( 'content', matches[3] );
 		}
 
 		return model;
