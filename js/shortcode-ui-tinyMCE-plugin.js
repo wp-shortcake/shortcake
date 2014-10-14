@@ -2,7 +2,10 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 	ed.addCommand( 'Shortcode_UI_Edit', function( shortcode ) {
 		if ( typeof Shortcode_UI !== 'undefined' && Shortcode_UI.modal ) {
-			Shortcode_UI.modal.openEditModal( shortcodeToModel( shortcode.html() ), shortcode );
+			var model = shortcodeToModel( shortcode.html() );
+			if ( model ) {
+				Shortcode_UI.modal.openEditModal( model, shortcode );
+			}
 		}
 	});
 
@@ -24,6 +27,10 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 		var matches = shortcodeString.match( /\[([^\s\]\/]+) ?([^\]]+)?\]/ );
 
+		if ( ! matches ) {
+			return;
+		}
+
 		model = Shortcode_UI.shortcodes.findWhere( {shortcode: matches[1] } );
 
 		if ( ! model ) {
@@ -32,16 +39,24 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 		if ( typeof( matches[2] ) != undefined ) {
 
-			attributes = matches[2].split( ' ' );
+			attributes = matches[2].match(/(\S+?=".*?")/g );
 
 			// convert attribute strings to object.
 			for ( var i = 0; i < attributes.length; i++ ) {
 
-				var bits = attributes[i].split('=');
-				var attr = model.get( 'shortcodeAtts').findWhere( { id: bits[0] } );
+				var bitsRegEx = /(\S+?)="(.*?)"/g;
+				var bits = bitsRegEx.exec( attributes[i] );
+
+				// var bits = attributes[i].match( /(\S+?)="(.*?)"/g )
+				// console.log( bits );
+
+				// console.log( bits );
+				var attr = model.get( 'shortcodeAtts').findWhere( { id: bits[1] } );
 
 				if ( attr ) {
-					attr.set( 'value', bits[1].slice(1,-1) ); // note slice - remove ". @todo - make more robust.
+					// attr.set( 'value', bits[2].slice(1,-1) ); // note slice - remove ". @todo - make more robust.
+					attr.set( 'value', bits[2] ); // note slice - remove ". @todo - make more robust.
+
 				}
 
 			}
@@ -49,9 +64,15 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 		}
 
 		// Try and match content field.
-		var matches2 = shortcodeString.match( /\[test_shortcode([^\]]+)?\]([^\[]+)?\[\/test_shortcode\]/ );
-		if ( matches2 ) {
-			model.set( 'content', matches2[2] );
+		//
+		// var contentRegEx = "/\\[" + matches[1] + "([^\\]]+)?\\]([^\\[]+)?\\[\/" + matches[1] + "\\]/";
+
+
+		var bitsRegExp = new RegExp( "\\[" + matches[1] + "([^\\]]+)?\\]([^\\[]*)?(\\[/" + matches[1] + "\\])?" );
+		var bits       = bitsRegExp.exec( shortcodeString );
+
+		if ( bits && bits[2] ) {
+			model.set( 'content', bits[2] );
 		}
 
 		return model;

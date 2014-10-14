@@ -49,16 +49,13 @@ add_action( 'init', function() {
 		'label' => 'Blockquote',
 		'image' => 'dashicons-editor-quote',
 		'shortcodeAtts' => array(
-			array( 'label' => 'Background Color', 'id' => 'bg_color' ),
+			array( 'label' => 'Source', 'id' => 'source' ),
 			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
-			array( 'label' => 'Font Size', 'id' => 'font-size', 'value' => 'large' ),
 		),
 		// Expected - string - the template ID passed to wp.template
 		// Autoloads file from templates 'shortcode-$shortcode-$part.tpl.php'
-		'templates' => array(
-			'render'   => 'shortcode-blockquote-ui-render',
-			'editForm' => 'shortcode-blockquote-edit-form',
-		)
+		'templateEditForm' => 'shortcode-blockquote-edit-form',
+		'templateRender'   => 'shortcode-blockquote-ui-render',
 	);
 
 	$instance->register_shortcode_ui( 'blockquote', $args );

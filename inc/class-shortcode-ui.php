@@ -29,7 +29,8 @@ class Shortcode_UI {
 			'label'         => '',
 			'image'         => '',
 			'shortcodeAtts' => array(),
-			'templates'     => array(),
+			'templateEditForm' => null,
+			'templateRender'   => null,
 		);
 
 		// Parse args.
@@ -96,7 +97,7 @@ class Shortcode_UI {
 		// Load individual shortcode template files.
 		foreach ( $this->shortcodes as $shortcode => $args ) {
 			// Load shortcode edit form template.
-			if ( ! empty( $args['templates']['editForm'] ) ) {
+			if ( ! empty( $args['templateEditForm'] ) ) {
 				$this->get_view( 'shortcode-' . $shortcode . '-editForm' );
 			}
 		}
@@ -110,7 +111,7 @@ class Shortcode_UI {
 
 	public function get_view( $template, $template_args = array(), $echo = true ) {
 
- 		$template_dir  = $this->plugin_dir . '/inc/templates/';
+ 		$template_dir  = $this->plugin_dir . 'inc/templates/';
 		$template_file = $template_dir . $template . '.tpl.php';
 
 		if ( ! file_exists( $template_file ) ) {

@@ -1,4 +1,4 @@
-<script type="text/html" id="tmpl-edit-shortcode-content-default">
+<script type="text/html" id="tmpl-shortcode-blockquote-edit-form">
 
 	<form class="edit-shortcode-form">
 
@@ -14,8 +14,17 @@
 			</div>
 
 			<div>
-				<label for="shortcode-blockquote-align">Quote</label>
-				<textarea id="shortcode-blockquote-align" name="align" value="x">
+				<label for="shortcode-blockquote-source">Source</label>
+				<input type="text" id="shortcode-blockquote-source" name="source" value="{{ data.shortcodeAtts.source }}"/>
+			</div>
+
+			<div>
+				<label for="shortcode-blockquote-align">Alignment</label>
+				<select id="shortcode-blockquote-align" name="align">
+					<option value="left" {{ data.shortcodeAtts.align === 'left' ? 'selected="selected"' : void 0 }}>Left</option>
+					<option value="center" {{ data.shortcodeAtts.align === 'center' ? 'selected="selected"' : void 0 }}>Center</option>
+					<option value="right" {{ data.shortcodeAtts.align === 'right' ? 'selected="selected"' : void 0 }}>Right</option>
+				</select>
 			</div>
 
 		</div>

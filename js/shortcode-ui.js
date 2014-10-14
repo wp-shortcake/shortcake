@@ -133,7 +133,9 @@ jQuery(document).ready(function(){
 		singleInputTemplate:  wp.template('edit-shortcode-content-default-single-input'),
 
 		events: {
-			'keyup .edit-shortcode-form-fields input[type=text]': 'inputValueChanged'
+			'keyup .edit-shortcode-form-fields input[type="text"]': 'inputValueChanged',
+			'keyup .edit-shortcode-form-fields textarea': 'inputValueChanged',
+			'change .edit-shortcode-form-fields select': 'inputValueChanged',
 		},
 
 		// Handle custom params passed to view.
@@ -142,11 +144,9 @@ jQuery(document).ready(function(){
 		    this.options.action = options.action;
 		    this.options.customTemplate = false;
 
-			var templates = this.model.get('templates');
-			if ( 'editForm' in templates ) {
+			if ( this.model.get('templateEditForm') ) {
 				this.options.customTemplate = true;
-				console.log( templates.editForm );
-				this.template = wp.template( templates.editForm );
+				this.template = wp.template( this.model.get('templateEditForm') );
 			}
 
 		},
@@ -155,7 +155,6 @@ jQuery(document).ready(function(){
 			var $el = $( e.target );
 
 			if ( 'content' === $el.attr('name') ) {
-
 				this.model.set( 'content', $el.val() );
 
 			} else {
@@ -168,14 +167,24 @@ jQuery(document).ready(function(){
 
 			}
 
-		}, 500 ),
+		}, 200 ),
 
 		render: function(){
 
 			if ( ! this.options.customTemplate ) {
 				return this.renderDefaultTemplate();
 			} else {
-				return this.$el.html( this.template( this.model.toJSON() ) );
+
+				var model = this.model.toJSON();
+				var atts = {};
+
+				// Flatten attributes.
+				model.shortcodeAtts.each( function( item ) {
+					atts[ item.get('id') ] = item.get('value');
+				} );
+
+				model.shortcodeAtts = atts;
+				return this.$el.html( this.template( model ) );
 			}
 
 		},
