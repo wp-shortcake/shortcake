@@ -17,6 +17,11 @@ jQuery(document).ready(function(){
 			frame = new t.view.insertModal.frame( this );
 			frame.open();
 		},
+		openEditModal: function() {
+			this.attributes.test = 'test'
+			frame = new t.view.insertModal.frame( this );
+			frame.open();
+		},
 	});
 
 	t.model.ShortcodeAtts = Backbone.Model.extend({
@@ -104,8 +109,8 @@ jQuery(document).ready(function(){
 				data.image = '<div class="dashicons ' + data.image + '"></div>';
 			}
 
-            return this.$el.html( this.template( data ) );
-        }
+			return this.$el.html( this.template( data ) );
+		}
 	});
 
 	/**
@@ -130,18 +135,17 @@ jQuery(document).ready(function(){
 		render: function(){
 
 			var t = this;
-            var view = this.$el.html( this.template( this.model.toJSON() ) );
+			var view = this.$el.html( this.template( this.model.toJSON() ) );
 
-            this.model.get( 'shortcodeAtts' ).each( function( attribute ) {
-            	console.log( attribute.toJSON() );
-            	view.find( '.edit-shortcode-form-fields' ).append(
-            		'<div>' + t.singleInputTemplate( attribute.toJSON() ) + '</div>'
-            	);
-            } );
+			this.model.get( 'shortcodeAtts' ).each( function( attribute ) {
+				view.find( '.edit-shortcode-form-fields' ).append(
+					'<div>' + t.singleInputTemplate( attribute.toJSON() ) + '</div>'
+				);
+			} );
 
-            return view;
+			return view;
 
-        }
+		}
 
 	});
 
@@ -167,13 +171,16 @@ jQuery(document).ready(function(){
 				action: 'add',
 				currentShortcode: {},
 
+				initialize: function( a ) {
 
-				initialize: function() {
+					console.log( this );
+					// console.log( this );
 
 					// Set Shortcodes
-		            this.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
+					this.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
 
 					this.options = this.model.attributes;
+
 					wp.media.view.Frame.prototype.initialize.apply( this, arguments );
 
 					// Ensure core UI is enabled.
@@ -215,66 +222,66 @@ jQuery(document).ready(function(){
 							break;
 					}
 
-		            this.renderFooter();
+					this.renderFooter();
 
 					return r;
 				},
 
-		        renderAddShortcodeList: function() {
+				renderAddShortcodeList: function() {
 
-		 			var list = $('<ul class="add-shortcode-list">');
+					var list = $('<ul class="add-shortcode-list">');
 
-		 			this.shortcodes.each( function( shortcode ) {
-		 				var view = new t.view.insertModalListItem( { model: shortcode } );
-		 				list.append( view.render( shortcode.toJSON() ) );
-		 			} );
+					this.shortcodes.each( function( shortcode ) {
+						var view = new t.view.insertModalListItem( { model: shortcode } );
+						list.append( view.render( shortcode.toJSON() ) );
+					} );
 
-		            this.$contentEl.append( list );
+					this.$contentEl.append( list );
 
-		        },
+				},
 
-		        renderEditShortcodeForm: function() {
-		        	var view = new t.view.editModalListItem( { model: this.currentShortcode } );
-		        	this.$contentEl.append( view.render() );
-		        },
+				renderEditShortcodeForm: function() {
+					var view = new t.view.editModalListItem( { model: this.currentShortcode } );
+					this.$contentEl.append( view.render() );
+				},
 
-		        // @todo make this nicer.
-		        renderFooter: function() {
+				// @todo make this nicer.
+				renderFooter: function() {
 
-		        	var toolbar = $( '<div class="media-toolbar" />' );
-		        	var el = $( '<div class="media-toolbar-primary" />' );
-		        	var buttonSubmit = $('<button href="#" class="button media-button button-primary button-large media-button-insert" disabled="disabled">Insert into post</button>');
+					var toolbar = $( '<div class="media-toolbar" />' );
+					var el = $( '<div class="media-toolbar-primary" />' );
+					var buttonSubmit = $('<button href="#" class="button media-button button-primary button-large media-button-insert" disabled="disabled">Insert into post</button>');
 
-		        	buttonSubmit.appendTo( el );
-		        	el.appendTo( toolbar );
-		        	toolbar.appendTo( this.$toolbarEl );
+					buttonSubmit.appendTo( el );
+					el.appendTo( toolbar );
+					toolbar.appendTo( this.$toolbarEl );
 
 					switch( this.action ) {
-		            	case 'add' :
-		            		buttonSubmit.attr( 'disabled', 'disabled' );
-		            		break;
-		                case 'edit' :
-		                case 'update' :
-		                	buttonSubmit.removeAttr( 'disabled' );
-		            		break;
-		            }
+						case 'add' :
+							buttonSubmit.attr( 'disabled', 'disabled' );
+							break;
+						case 'edit' :
+						case 'update' :
+							buttonSubmit.removeAttr( 'disabled' );
+							break;
+					}
 
-		        },
+				},
 
-		        selectEditShortcode: function(e) {
+				selectEditShortcode: function(e) {
 
-		        	this.action = 'edit';
-		        	var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
-		        	var shortcode = target.attr( 'data-shortcode' );
-		        	this.currentShortcode = this.shortcodes.findWhere( { shortcode: shortcode } ).clone();
+					this.action = 'edit';
+					var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
+					var shortcode = target.attr( 'data-shortcode' );
+					this.currentShortcode = this.shortcodes.findWhere( { shortcode: shortcode } ).clone();
 					this.render();
 
-		        },
+				},
 
-		        insertShortcode: function() {
-		        	send_to_editor( '<p>' + this.currentShortcode.formatShortcode() + '<p>' );
-		        	this.close();
-		        }
+				insertShortcode: function() {
+					send_to_editor( '<p class="shortcode-ui">' + this.currentShortcode.formatShortcode() + '<p>' );
+					this.close();
+				}
 
 			});
 
@@ -302,11 +309,11 @@ jQuery(document).ready(function(){
 
 	};
 
-	var modal = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
+	t.modal = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
 
 	jQuery('.shortcode-editor-open-insert-modal').click( function(e) {
 		e && e.preventDefault();
-		modal.openInsertModal();
+		t.modal.openInsertModal();
 	});
 
 });
