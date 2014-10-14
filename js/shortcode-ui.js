@@ -237,8 +237,8 @@ jQuery(document).ready(function(){
 						case 'add' :
 							this.renderAddShortcodeList();
 							break;
-						case 'edit' :
 						case 'update' :
+						case 'edit' :
 							this.renderEditShortcodeForm();
 							break;
 					}
@@ -266,7 +266,13 @@ jQuery(document).ready(function(){
 						model:  this.options.currentShortcode,
 						action: this.options.action
 					} );
+
 					this.$contentEl.append( view.render() );
+
+					if ( this.options.action === 'update' ) {
+						this.$contentEl.find( '.edit-shortcode-form-cancel' ).remove();
+					}
+
 				},
 
 				// @todo make this nicer.
