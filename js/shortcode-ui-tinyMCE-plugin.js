@@ -25,7 +25,8 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 		var model, attrs;
 
-		var matches = shortcodeString.match( /\[([^\s\]\/]+) ?([^\]]+)?\]/ );
+		var megaRegex = /\[(\S+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
+		var matches = shortcodeString.match( megaRegex );
 
 		if ( ! matches ) {
 			return;
@@ -59,11 +60,8 @@ tinymce.PluginManager.add('shortcodeui', function( ed ) {
 
 		model.set( 'attrs', attrs ); // note slice - remove ". @todo - make more robust.
 
-		var bitsRegExp = new RegExp( "\\[" + matches[1] + "([^\\]]+)?\\]([^\\[]*)?(\\[/" + matches[1] + "\\])?" );
-		var bits       = bitsRegExp.exec( shortcodeString );
-
-		if ( bits && bits[2] ) {
-			model.set( 'content', bits[2] );
+		if ( matches[3] ) {
+			model.set( 'content', matches[3] );
 		}
 
 		return model;
