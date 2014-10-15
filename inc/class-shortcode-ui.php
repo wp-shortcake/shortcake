@@ -19,18 +19,17 @@ class Shortcode_UI {
 		add_action( 'admin_footer-post.php', array( $this, 'print_templates' ) );
 		add_action( 'admin_footer-post-new.php', array( $this, 'print_templates' ) );
 
-		add_filter( 'mce_external_plugins', array( $this, 'add_tinymce_plugin' ) );
-
 	}
 
 	function register_shortcode_ui( $shortcode, $args = array() ) {
 
 		$defaults = array(
 			'label' => '',
-			'image' => '',
 			'attrs' => array(),
-			'templateEditForm' => null,
-			'templateRender'   => null,
+			'listItemImage'    => '', // src or 'dashicons-' - used in insert list.
+			'templateEditForm' => null, // Template used to render edit form
+			'templateRender'   => null, // Template used to render on front end
+			'templateRenderJS' => null, // Template used to render in tinyMCE
 		);
 
 		// Parse args.
@@ -94,21 +93,24 @@ class Shortcode_UI {
 
 		$this->get_view( 'media-frame' );
 		$this->get_view( 'list-item' );
-		$this->get_view( 'edit-form-default' );
+		$this->get_view( 'default-editForm' );
+		$this->get_view( 'default-render-js' );
 
 		// Load individual shortcode template files.
 		foreach ( $this->shortcodes as $shortcode => $args ) {
+
 			// Load shortcode edit form template.
 			if ( ! empty( $args['templateEditForm'] ) ) {
 				$this->get_view( 'shortcode-' . $shortcode . '-editForm' );
 			}
+
+			// Load shortcode edit form template.
+			if ( ! empty( $args['templateRenderJS'] ) ) {
+				$this->get_view( 'shortcode-' . $shortcode . '-render-js' );
+			}
+
 		}
 
-	}
-
-	public function add_tinymce_plugin( $plugin_array ) {
-		$plugin_array['shortcodeui'] = $this->plugin_url . '/js/shortcode-ui-tinyMCE-plugin.js';
-		return $plugin_array;
 	}
 
 	public function get_view( $template, $template_args = array(), $echo = true ) {

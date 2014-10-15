@@ -92,8 +92,8 @@ jQuery(document).ready(function(){
 
 			this.$el.attr( 'data-shortcode', data.shortcode );
 
-			if ( ( 'image' in data ) && 0 === data.image.indexOf( 'dashicons-' ) ) {
-				data.image = '<div class="dashicons ' + data.image + '"></div>';
+			if ( ( 'listItemImage' in data ) && 0 === data.listItemImage.indexOf( 'dashicons-' ) ) {
+				data.listItemImage = '<div class="dashicons ' + data.listItemImage + '"></div>';
 			}
 
 			return this.$el.html( this.template( data ) );
@@ -316,36 +316,9 @@ jQuery(document).ready(function(){
 				},
 
 				insertShortcode: function() {
-
-					if ( this.options.action === 'update' ) {
-
-						var editor,
-						    hasTinymce = typeof tinymce !== 'undefined',
-						    hasQuicktags = typeof QTags !== 'undefined';
-
-						if ( ! wpActiveEditor ) {
-							if ( hasTinymce && tinymce.activeEditor ) {
-								editor = tinymce.activeEditor;
-								wpActiveEditor = editor.id;
-							} else if ( ! hasQuicktags ) {
-								return false;
-							}
-						} else if ( hasTinymce ) {
-							editor = tinymce.get( wpActiveEditor );
-						}
-
-						if ( editor && ! editor.isHidden() ) {
-							var shortcode = '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '</p>';
-							editor.execCommand( 'Shortcode_UI_Update', shortcode, this.options.markerEl );
-						}
-
-						this.close();
-
-					} else {
-						send_to_editor( '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '</p>' );
-						this.close();
-					}
-
+					var shortcode = this.options.currentShortcode.formatShortcode();
+					send_to_editor( shortcode );
+					this.close();
 				}
 
 			});
@@ -382,8 +355,106 @@ jQuery(document).ready(function(){
 		t.modal.openInsertModal();
 	});
 
+	var options = {
+
+		View: {
+
+			template: media.template( 'shortcode-default-render' ),
+
+			initialize: function( options ) {
+
+				var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode: options.shortcode.tag } );
+
+				if ( ! shortcode ) {
+					return;
+				}
+
+				var template = shortcode.get( 'templateRenderJS' );
+				if ( template ) {
+					this.template = media.template( template );
+				}
+
+				shortcode = shortcode.clone();
+				shortcode.set( 'content', options.shortcode.content );
+
+				var attrs = shortcode.get( 'attrs' );
+				for ( var id in options.shortcode.attrs.named ) {
+					if ( id in attrs ) {
+						attrs[ id ] = options.shortcode.attrs.named[ id ];
+					}
+				}
+				shortcode.set( 'attrs', attrs );
+
+				this.shortcode = shortcode;
+
+			},
+
+			getHtml: function() {
+				var options = this.shortcode.get( 'attrs' );
+				options.content   = this.shortcode.get( 'content' );
+				options.shortcode = this.shortcode.get( 'shortcode' );
+				return this.template( options );
+			}
+		},
+
+		edit: function( node ) {
+
+			var shortcodeString, model, attrs;
+
+			shortcodeString = decodeURIComponent( $(node).attr( 'data-wpview-text' ) );
+
+			var megaRegex = /\[(\S+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
+			var matches = shortcodeString.match( megaRegex );
+
+			if ( ! matches ) {
+				return;
+			}
+
+			model = Shortcode_UI.shortcodes.findWhere( { shortcode: matches[1] } ).clone();
+
+			if ( ! model ) {
+				return;
+			}
+
+			attrs = model.get( 'attrs' );
+
+			if ( typeof( matches[2] ) != undefined ) {
+
+				attributeMatches = matches[2].match(/(\S+?=".*?")/g );
+
+				// convert attribute strings to object.
+				for ( var i = 0; i < attributeMatches.length; i++ ) {
+
+					var bitsRegEx = /(\S+?)="(.*?)"/g;
+					var bits = bitsRegEx.exec( attributeMatches[i] );
+
+					if ( bits[1] in attrs ) {
+						attrs[ bits[1] ] = bits[2];
+					}
+
+				}
+
+			}
+
+			model.set( 'attrs', attrs ); // note slice - remove ". @todo - make more robust.
+
+			if ( matches[3] ) {
+				model.set( 'content', matches[3] );
+			}
+
+			Shortcode_UI.modal.openEditModal( model, $(node) );
+
+		}
+
+	}
+
+	t.shortcodes.each( function( shortcode ) {
+		var newOptions = jQuery.extend( true, {}, options );
+		wp.mce.views.register( shortcode.get('shortcode' ), newOptions );
+	} );
+
+
+
 });
-
-
 
 } )( jQuery );
