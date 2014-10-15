@@ -62,6 +62,8 @@ add_action( 'init', function() {
 		'template-render-js' => 'shortcode-blockquote-render-js',
 	) );
 
+	wp_enqueue_style( 'shortcode-ui-blockquote', plugins_url( 'css/shortcode-blockquote.css', __FILE__ ), array( 'twentyfifteen-style' ) );
+
 } );
 
 

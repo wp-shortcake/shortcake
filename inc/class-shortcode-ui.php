@@ -135,18 +135,24 @@ class Shortcode_UI {
 
 	}
 
-	function render_shortcode( $atts, $content = null, $shortcode ) {
+	function render_shortcode( $atts, $content = null, $tag ) {
 
-		if ( ! array_key_exists( $shortcode, $this->shortcodes ) ) {
+		if ( ! array_key_exists( $tag, $this->shortcodes ) ) {
 			return;
 		}
 
-		$args            = $this->shortcodes[ $shortcode ];
-		$atts['content'] = $content;
-		$atts            = apply_filters( "shortcode_ui_render_atts_$shortcode", $atts );
+		$shortcode_settings = $this->shortcodes[ $tag ];
 
-		if ( $args['template-render'] ) {
-			return $this->get_view( $args['template-render'], $atts, false );
+		$args = array(
+			'shortcode' => $tag,
+			'content'   => $content,
+			'attrs'     => $atts
+		);
+
+		$args = apply_filters( "shortcode_ui_render_atts_$shortcode", $args );
+
+		if ( $shortcode_settings['template-render'] ) {
+			return $this->get_view( $shortcode_settings['template-render'], $args, false );
 		}
 
 	}

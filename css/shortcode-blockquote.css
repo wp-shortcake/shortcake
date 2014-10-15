@@ -1,8 +1,16 @@
 .mce-content-body .wpview-wrap {
+	border: none;
+}
+
+.mce-content-body .wpview-wrap {
 	margin-bottom: 0;
 }
 
-.mce-content-body .wpview-wrap:before,
+.mce-content-body .wpview-wrap[data-mce-selected] {
+	background: transparent;
+}
+
+/*.mce-content-body .wpview-wrap:before,
 .mce-content-body .wpview-wrap:after {
     content: " ";
     display: table;
@@ -11,14 +19,28 @@
 .mce-content-body .wpview-wrap:after {
     clear: both;
 }
-
-.shortcode-ui-blockquote.alignleft,
-.shortcode-ui-blockquote.alignright {
+*/
+blockquote.shortcode-ui-blockquote.alignleft,
+blockquote.shortcode-ui-blockquote.alignright {
 	width: 50%;
+	float: left;
+	margin-left: 0;
+	margin-right: 20px;
 }
 
-.shortcode-ui-blockquote.aligncenter {
+blockquote.shortcode-ui-blockquote.alignright {
+	float: right;
+	margin-left: 20px;
+	margin-right: 0;
+}
+
+blockquote.shortcode-ui-blockquote.aligncenter {
 	border: none;
 	text-align: center;
 	margin: 0 0 40px 0;
+}
+
+blockquote.shortcode-ui-blockquote small {
+	font-size: 0.65em;
+	opacity: 0.5;
 }
