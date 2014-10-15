@@ -1,25 +1,20 @@
-.mce-content-body .wpview-wrap {
-	border: none;
-}
 
 .mce-content-body .wpview-wrap {
 	margin-bottom: 0;
 }
 
+/*
+.mce-content-body .wpview-wrap {
+	border: none;
+	width: auto;
+	clear: none;
+}
+
 .mce-content-body .wpview-wrap[data-mce-selected] {
 	background: transparent;
 }
-
-/*.mce-content-body .wpview-wrap:before,
-.mce-content-body .wpview-wrap:after {
-    content: " ";
-    display: table;
-}
-
-.mce-content-body .wpview-wrap:after {
-    clear: both;
-}
 */
+
 blockquote.shortcode-ui-blockquote.alignleft,
 blockquote.shortcode-ui-blockquote.alignright {
 	width: 50%;
