@@ -94,6 +94,7 @@ class Shortcode_UI {
 		$this->get_view( 'media-frame' );
 		$this->get_view( 'list-item' );
 		$this->get_view( 'edit-form-default' );
+		$this->get_view( 'default-render-js' );
 
 		// Load individual shortcode template files.
 		foreach ( $this->shortcodes as $shortcode => $args ) {

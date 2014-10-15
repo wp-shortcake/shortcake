@@ -355,40 +355,34 @@ jQuery(document).ready(function(){
 		t.modal.openInsertModal();
 	});
 
-
-	wp.mce.views.register( 'blockquote', {
+	var options = {
 
 		View: {
 
-			template: media.template( 'shortcode-blockquote-render' ),
-
-			// The fallback post ID to use as a parent for galleries that don't
-			// specify the `ids` or `include` parameters.
-			//
-			// Uses the hidden input on the edit posts page by default.
-			postID: $('#post_ID').val(),
+			template: media.template( 'shortcode-default-render' ),
 
 			initialize: function( options ) {
 
 				var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode: options.shortcode.tag } );
 
-				if ( shortcode ) {
-					shortcode = shortcode.clone();
-				} else {
+				if ( ! shortcode ) {
 					return;
 				}
 
+				var template = shortcode.get( 'templateRenderJS' );
+				if ( template ) {
+					this.template = media.template( template );
+				}
+
+				shortcode = shortcode.clone();
 				shortcode.set( 'content', options.shortcode.content );
 
 				var attrs = shortcode.get( 'attrs' );
-
 				for ( var id in options.shortcode.attrs.named ) {
-
 					if ( id in attrs ) {
 						attrs[ id ] = options.shortcode.attrs.named[ id ];
 					}
 				}
-
 				shortcode.set( 'attrs', attrs );
 
 				this.shortcode = shortcode;
@@ -396,12 +390,9 @@ jQuery(document).ready(function(){
 			},
 
 			getHtml: function() {
-
 				var options = this.shortcode.get( 'attrs' );
-				options.content = this.shortcode.get( 'content' ),
-
-				console.log( options );
-
+				options.content   = this.shortcode.get( 'content' );
+				options.shortcode = this.shortcode.get( 'shortcode' );
 				return this.template( options );
 			}
 		},
@@ -455,7 +446,13 @@ jQuery(document).ready(function(){
 
 		}
 
+	}
+
+	t.shortcodes.each( function( shortcode ) {
+		var newOptions = jQuery.extend( true, {}, options );
+		wp.mce.views.register( shortcode.get('shortcode' ), newOptions );
 	} );
+
 
 
 });
