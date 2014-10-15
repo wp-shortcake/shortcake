@@ -1,6 +1,6 @@
 <script type="text/html" id="tmpl-shortcode-blockquote-render-js">
-	<blockquote>
+	<blockquote class="align{{ data.attrs.source }}">
 		{{ data.content }}
-		<br/><small>{{ data.source }}</small>
+		<br/><small>{{ data.attrs.source }}</small>
 	</blockquote>
 </script>

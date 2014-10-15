@@ -56,9 +56,9 @@ add_action( 'init', function() {
 
 		// Expected - string - the template ID passed to wp.template
 		// Autoloads file from templates 'shortcode-$shortcode-$part.tpl.php'
-		'templateEditForm'   => 'shortcode-blockquote-edit-form',
-		'templateRender'     => 'shortcode-blockquote-render',
-		'templateRenderJS'   => 'shortcode-blockquote-render-js',
+		'template-edit-form' => 'shortcode-blockquote-edit-form',
+		'template-render'    => 'shortcode-blockquote-render',
+		'template-render-js' => 'shortcode-blockquote-render-js',
 	) );
 
 } );

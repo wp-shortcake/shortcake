@@ -1,4 +1,4 @@
-<script type="text/html" id="tmpl-edit-shortcode-content-default">
+<script type="text/html" id="tmpl-shortcode-default-edit-form">
 
 	<form class="edit-shortcode-form">
 
