@@ -57,8 +57,9 @@ add_action( 'init', function() {
 
 		// Expected - string - the template ID passed to wp.template
 		// Autoloads file from templates 'shortcode-$shortcode-$part.tpl.php'
-		'templateEditForm' => 'shortcode-blockquote-edit-form',
-		'templateRender'   => 'shortcode-blockquote-ui-render',
+		'templateEditForm'   => 'shortcode-blockquote-edit-form',
+		'templateRender'     => 'shortcode-blockquote-render',
+		'templateRenderJS'   => 'shortcode-blockquote-render-js',
 	);
 
 	$instance->register_shortcode_ui( 'blockquote', $args );

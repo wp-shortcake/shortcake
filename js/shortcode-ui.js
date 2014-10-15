@@ -317,6 +317,9 @@ jQuery(document).ready(function(){
 
 				insertShortcode: function() {
 
+					var shortcode = this.options.currentShortcode.formatShortcode();
+					// shortcode = decodeURIComponent( wp.mce.views.toViews( shortcode ) );
+
 					if ( this.options.action === 'update' ) {
 
 						var editor,
@@ -335,14 +338,13 @@ jQuery(document).ready(function(){
 						}
 
 						if ( editor && ! editor.isHidden() ) {
-							var shortcode = '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '</p>';
 							editor.execCommand( 'Shortcode_UI_Update', shortcode, this.options.markerEl );
 						}
 
 						this.close();
 
 					} else {
-						send_to_editor( '<p class="shortcode-ui">' + this.options.currentShortcode.formatShortcode() + '</p>' );
+						send_to_editor( shortcode );
 						this.close();
 					}
 
@@ -382,8 +384,109 @@ jQuery(document).ready(function(){
 		t.modal.openInsertModal();
 	});
 
+
+	wp.mce.views.register( 'blockquote', {
+
+		View: {
+
+			template: media.template( 'shortcode-blockquote-render' ),
+
+			// The fallback post ID to use as a parent for galleries that don't
+			// specify the `ids` or `include` parameters.
+			//
+			// Uses the hidden input on the edit posts page by default.
+			postID: $('#post_ID').val(),
+
+			initialize: function( options ) {
+
+				var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode: options.shortcode.tag } );
+
+				if ( shortcode ) {
+					shortcode = shortcode.clone();
+				} else {
+					return;
+				}
+
+				shortcode.set( 'content', options.shortcode.content );
+
+				var attrs = shortcode.get( 'attrs' );
+
+				for ( var id in options.shortcode.attrs.named ) {
+
+					if ( id in attrs ) {
+						attrs[ id ] = options.shortcode.attrs.named[ id ];
+					}
+				}
+
+				shortcode.set( 'attrs', attrs );
+
+				this.shortcode = shortcode;
+
+			},
+
+			getHtml: function() {
+
+				var options = this.shortcode.get( 'attrs' );
+				options.content = this.shortcode.get( 'content' ),
+
+				console.log( options );
+
+				return this.template( options );
+			}
+		},
+
+		edit: function( node ) {
+
+			var shortcodeString, model, attrs;
+
+			shortcodeString = decodeURIComponent( $(node).attr( 'data-wpview-text' ) );
+
+			var megaRegex = /\[(\S+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
+			var matches = shortcodeString.match( megaRegex );
+
+			if ( ! matches ) {
+				return;
+			}
+
+			model = Shortcode_UI.shortcodes.findWhere( { shortcode: matches[1] } ).clone();
+
+			if ( ! model ) {
+				return;
+			}
+
+			attrs = model.get( 'attrs' );
+
+			if ( typeof( matches[2] ) != undefined ) {
+
+				attributeMatches = matches[2].match(/(\S+?=".*?")/g );
+
+				// convert attribute strings to object.
+				for ( var i = 0; i < attributeMatches.length; i++ ) {
+
+					var bitsRegEx = /(\S+?)="(.*?)"/g;
+					var bits = bitsRegEx.exec( attributeMatches[i] );
+
+					if ( bits[1] in attrs ) {
+						attrs[ bits[1] ] = bits[2];
+					}
+
+				}
+
+			}
+
+			model.set( 'attrs', attrs ); // note slice - remove ". @todo - make more robust.
+
+			if ( matches[3] ) {
+				model.set( 'content', matches[3] );
+			}
+
+			Shortcode_UI.modal.openEditModal( model, $(node) );
+
+		}
+
+	} );
+
+
 });
-
-
 
 } )( jQuery );

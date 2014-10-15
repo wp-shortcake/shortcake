@@ -31,6 +31,7 @@ class Shortcode_UI {
 			'attrs' => array(),
 			'templateEditForm' => null,
 			'templateRender'   => null,
+			'templateRenderJS' => null,
 		);
 
 		// Parse args.
@@ -98,10 +99,17 @@ class Shortcode_UI {
 
 		// Load individual shortcode template files.
 		foreach ( $this->shortcodes as $shortcode => $args ) {
+
 			// Load shortcode edit form template.
 			if ( ! empty( $args['templateEditForm'] ) ) {
 				$this->get_view( 'shortcode-' . $shortcode . '-editForm' );
 			}
+
+			// Load shortcode edit form template.
+			if ( ! empty( $args['templateRenderJS'] ) ) {
+				$this->get_view( 'shortcode-' . $shortcode . '-render-js' );
+			}
+
 		}
 
 	}
