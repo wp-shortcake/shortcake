@@ -1,0 +1,24 @@
+.mce-content-body .wpview-wrap {
+	margin-bottom: 0;
+}
+
+.mce-content-body .wpview-wrap:before,
+.mce-content-body .wpview-wrap:after {
+    content: " ";
+    display: table;
+}
+
+.mce-content-body .wpview-wrap:after {
+    clear: both;
+}
+
+.shortcode-ui-blockquote.alignleft,
+.shortcode-ui-blockquote.alignright {
+	width: 50%;
+}
+
+.shortcode-ui-blockquote.aligncenter {
+	border: none;
+	text-align: center;
+	margin: 0 0 40px 0;
+}

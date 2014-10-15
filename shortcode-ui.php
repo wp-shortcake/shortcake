@@ -50,8 +50,9 @@ add_action( 'init', function() {
 
 		// Attributes. Format 'id' => 'default value'
 		'attrs' => array(
-			'align'  => 'left',
-			'source' => '',
+			'align'     => 'left',
+			'source'    => '',
+			'sourceurl' => '',
 		),
 
 		// Expected - string - the template ID passed to wp.template
@@ -62,3 +63,39 @@ add_action( 'init', function() {
 	) );
 
 } );
+
+
+function shortcode_ui_modify_tinyMCE4( $mceInit, $editor_id ) {
+
+	// Toolbar buttons are stored as a comma separated list - lets make them an array.
+	$toolbar1 = explode( ',', $mceInit['toolbar1'] );
+	$toolbar2 = explode( ',', $mceInit['toolbar2'] );
+
+	// buttons to completely remove.
+	$remove = array( 'blockquote' );
+
+	// Remove these buttons if they are found in toolbar1 or toolbar2
+	foreach ( $remove as $name ) {
+
+		if ( $key = array_search( $name, $toolbar1 ) ) {
+			unset( $toolbar1[$key] );
+		}
+
+		if ( $key = array_search( $name, $toolbar2 ) ) {
+			unset( $toolbar2[$key] );
+		}
+
+	}
+
+	// Convert back to original format.
+	$mceInit['toolbar1'] = implode( ',', $toolbar1 );
+	$mceInit['toolbar2'] = implode( ',', $toolbar2 );
+
+	$mceInit['content_css'] .= ',' . plugins_url( 'css/shortcode-blockquote.css', __FILE__ );
+
+	return $mceInit;
+
+}
+
+// Modify Tiny_MCE init
+add_filter( 'tiny_mce_before_init', 'shortcode_ui_modify_tinyMCE4', 10, 2 );

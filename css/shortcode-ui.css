@@ -58,7 +58,9 @@
   transition: 0.05s border-color ease-in-out;
   max-width: 100%; }
 .shortcode-ui-insert-modal textarea {
-  width: 400px; }
+  width: 100%;
+  max-width: 100%;
+  min-height: 100px; }
 
 .edit-shortcode-form {
   padding: 5px 20px; }

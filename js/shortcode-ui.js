@@ -386,7 +386,8 @@ jQuery(document).ready(function(){
 						attrs[ id ] = options.shortcode.attrs.named[ id ];
 					}
 				}
-				shortcode.set( 'attrs', attrs );
+
+				// shortcode.set( 'attrs', attrs );
 
 				this.shortcode = shortcode;
 
@@ -397,6 +398,7 @@ jQuery(document).ready(function(){
 			 * @return string html
 			 */
 			getHtml: function() {
+				console.log( this.shortcode.toJSON() );
 				return this.template( this.shortcode.toJSON() );
 			}
 
