@@ -106,7 +106,7 @@ jQuery(document).ready(function(){
 	 */
 	t.view.editModalListItem = Backbone.View.extend({
 
-		template: wp.template('edit-shortcode-content-default'),
+		template: wp.template('shortcode-default-edit-form'),
 
 		events: {
 			'keyup .edit-shortcode-form-fields input[type="text"]': 'inputValueChanged',
@@ -161,11 +161,13 @@ jQuery(document).ready(function(){
 
 			// If the model has provided its own template - use that.
 			// @todo - this would be better set as a default on the model?
-			if ( templateEditForm = this.model.get('templateEditForm') ) {
+			if ( templateEditForm = this.model.get('template-edit-form') ) {
 				templateEditForm = wp.template( templateEditForm );
 			} else {
 				templateEditForm = this.template;
 			}
+
+			console.log( this.model.toJSON() );
 
 			return this.$el.html( templateEditForm( this.model.toJSON() ) );
 
@@ -369,7 +371,7 @@ jQuery(document).ready(function(){
 					return;
 				}
 
-				var template = shortcode.get( 'templateRenderJS' );
+				var template = shortcode.get( 'template-render-js' );
 				if ( template ) {
 					this.template = media.template( template );
 				}
@@ -390,10 +392,10 @@ jQuery(document).ready(function(){
 			},
 
 			getHtml: function() {
-				var options = this.shortcode.get( 'attrs' );
-				options.content   = this.shortcode.get( 'content' );
-				options.shortcode = this.shortcode.get( 'shortcode' );
-				return this.template( options );
+				// var options = this.shortcode.get( 'attrs' ).clone();
+				// options.content   = this.shortcode.get( 'content' );
+				// options.shortcode = this.shortcode.get( 'shortcode' );
+				return this.template( this.shortcode.toJSON() );
 			}
 		},
 

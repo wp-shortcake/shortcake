@@ -26,10 +26,10 @@ class Shortcode_UI {
 		$defaults = array(
 			'label' => '',
 			'attrs' => array(),
-			'listItemImage'    => '', // src or 'dashicons-' - used in insert list.
-			'templateEditForm' => null, // Template used to render edit form
-			'templateRender'   => null, // Template used to render on front end
-			'templateRenderJS' => null, // Template used to render in tinyMCE
+			'listItemImage'      => '',   // src or 'dashicons-' - used in insert list.
+			'template-edit-form' => null, // Template used to render edit form
+			'template-render'    => null, // Template used to render on front end
+			'template-render-js' => null, // Template used to render in tinyMCE
 		);
 
 		// Parse args.
@@ -93,19 +93,19 @@ class Shortcode_UI {
 
 		$this->get_view( 'media-frame' );
 		$this->get_view( 'list-item' );
-		$this->get_view( 'default-editForm' );
-		$this->get_view( 'default-render-js' );
+		$this->get_view( 'shortcode-default-edit-form' );
+		$this->get_view( 'shortcode-default-render-js' );
 
 		// Load individual shortcode template files.
 		foreach ( $this->shortcodes as $shortcode => $args ) {
 
 			// Load shortcode edit form template.
-			if ( ! empty( $args['templateEditForm'] ) ) {
-				$this->get_view( 'shortcode-' . $shortcode . '-editForm' );
+			if ( ! empty( $args['template-edit-form'] ) ) {
+				$this->get_view( 'shortcode-' . $shortcode . '-edit-form' );
 			}
 
 			// Load shortcode edit form template.
-			if ( ! empty( $args['templateRenderJS'] ) ) {
+			if ( ! empty( $args['template-render-js'] ) ) {
 				$this->get_view( 'shortcode-' . $shortcode . '-render-js' );
 			}
 
@@ -145,10 +145,42 @@ class Shortcode_UI {
 		$atts['content'] = $content;
 		$atts            = apply_filters( "shortcode_ui_render_atts_$shortcode", $atts );
 
-		if ( $args['templateRender'] ) {
-			return $this->get_view( $args['templateRender'], $atts, false );
+		if ( $args['template-render'] ) {
+			return $this->get_view( $args['template-render'], $atts, false );
 		}
 
 	}
 
 }
+
+function shortcode_ui_modify_tinyMCE4( $mceInit, $editor_id ) {
+
+	// Toolbar buttons are stored as a comma separated list - lets make them an array.
+	$toolbar1 = explode( ',', $mceInit['toolbar1'] );
+	$toolbar2 = explode( ',', $mceInit['toolbar2'] );
+
+	// buttons to completely remove.
+	$remove = array( 'blockquote' );
+
+	// Remove these buttons if they are found in toolbar1 or toolbar2
+	foreach ( $remove as $name ) {
+
+		if ( $key = array_search( $name, $toolbar1 ) ) {
+			unset( $toolbar1[$key] );
+		}
+
+		if ( $key = array_search( $name, $toolbar2 ) ) {
+			unset( $toolbar2[$key] );
+		}
+
+	}
+
+	// Convert back to original format.
+	$mceInit['toolbar1'] = implode( ',', $toolbar1 );
+	$mceInit['toolbar2'] = implode( ',', $toolbar2 );
+
+	return $mceInit;
+}
+
+// Modify Tiny_MCE init
+add_filter( 'tiny_mce_before_init', 'shortcode_ui_modify_tinyMCE4', 10, 2 );
