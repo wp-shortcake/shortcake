@@ -16,14 +16,12 @@ jQuery(document).ready(function(){
 		openInsertModal: function() {
 			this.set( 'action', 'select' );
 			this.set( 'currentShortcode', null );
-			this.set( 'markerEl', null );
 			frame = new t.view.insertModal.frame( this );
 			frame.open();
 		},
-		openEditModal: function( shortcodeModel, markerEl ) {
+		openEditModal: function( shortcodeModel ) {
 			this.set( 'action', 'update' );
 			this.set( 'currentShortcode', shortcodeModel );
-			this.set( 'markerEl', markerEl );
 			frame = new t.view.insertModal.frame( this );
 			frame.open();
 		},
@@ -357,7 +355,10 @@ jQuery(document).ready(function(){
 		t.modal.openInsertModal();
 	});
 
-	var options = {
+	/**
+	 * Generic shortcode mce view constructor.
+	 */
+	var constructor = {
 
 		View: {
 
@@ -391,14 +392,23 @@ jQuery(document).ready(function(){
 
 			},
 
+			/**
+			 * Render the shortcode
+			 * @return string html
+			 */
 			getHtml: function() {
-				// var options = this.shortcode.get( 'attrs' ).clone();
-				// options.content   = this.shortcode.get( 'content' );
-				// options.shortcode = this.shortcode.get( 'shortcode' );
 				return this.template( this.shortcode.toJSON() );
 			}
+
 		},
 
+		/**
+		 * Edit shortcode.
+		 *
+		 * Parses the shortcode and creates shortcode mode.
+		 * @todo - I think there must be a cleaner way to get
+		 * the shortcode & args here that doesn't use regex.
+		 */
 		edit: function( node ) {
 
 			var shortcodeString, model, attrs;
@@ -444,15 +454,20 @@ jQuery(document).ready(function(){
 				model.set( 'content', matches[3] );
 			}
 
-			Shortcode_UI.modal.openEditModal( model, $(node) );
+			Shortcode_UI.modal.openEditModal( model );
 
 		}
 
 	}
 
 	t.shortcodes.each( function( shortcode ) {
-		var newOptions = jQuery.extend( true, {}, options );
-		wp.mce.views.register( shortcode.get('shortcode' ), newOptions );
+
+		// Register the mce view for each shortcode.
+		// Note - clone the constructor.
+		wp.mce.views.register(
+			shortcode.get('shortcode'),
+			jQuery.extend( true, {}, constructor )
+		);
 	} );
 
 
