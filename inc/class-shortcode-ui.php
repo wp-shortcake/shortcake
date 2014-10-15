@@ -19,8 +19,6 @@ class Shortcode_UI {
 		add_action( 'admin_footer-post.php', array( $this, 'print_templates' ) );
 		add_action( 'admin_footer-post-new.php', array( $this, 'print_templates' ) );
 
-		add_filter( 'mce_external_plugins', array( $this, 'add_tinymce_plugin' ) );
-
 	}
 
 	function register_shortcode_ui( $shortcode, $args = array() ) {
@@ -112,11 +110,6 @@ class Shortcode_UI {
 
 		}
 
-	}
-
-	public function add_tinymce_plugin( $plugin_array ) {
-		$plugin_array['shortcodeui'] = $this->plugin_url . '/js/shortcode-ui-tinyMCE-plugin.js';
-		return $plugin_array;
 	}
 
 	public function get_view( $template, $template_args = array(), $echo = true ) {

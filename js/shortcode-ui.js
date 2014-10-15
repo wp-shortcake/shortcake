@@ -316,38 +316,9 @@ jQuery(document).ready(function(){
 				},
 
 				insertShortcode: function() {
-
 					var shortcode = this.options.currentShortcode.formatShortcode();
-					// shortcode = decodeURIComponent( wp.mce.views.toViews( shortcode ) );
-
-					if ( this.options.action === 'update' ) {
-
-						var editor,
-						    hasTinymce = typeof tinymce !== 'undefined',
-						    hasQuicktags = typeof QTags !== 'undefined';
-
-						if ( ! wpActiveEditor ) {
-							if ( hasTinymce && tinymce.activeEditor ) {
-								editor = tinymce.activeEditor;
-								wpActiveEditor = editor.id;
-							} else if ( ! hasQuicktags ) {
-								return false;
-							}
-						} else if ( hasTinymce ) {
-							editor = tinymce.get( wpActiveEditor );
-						}
-
-						if ( editor && ! editor.isHidden() ) {
-							editor.execCommand( 'Shortcode_UI_Update', shortcode, this.options.markerEl );
-						}
-
-						this.close();
-
-					} else {
-						send_to_editor( shortcode );
-						this.close();
-					}
-
+					send_to_editor( shortcode );
+					this.close();
 				}
 
 			});
