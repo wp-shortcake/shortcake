@@ -92,8 +92,8 @@ jQuery(document).ready(function(){
 
 			this.$el.attr( 'data-shortcode', data.shortcode );
 
-			if ( ( 'image' in data ) && 0 === data.image.indexOf( 'dashicons-' ) ) {
-				data.image = '<div class="dashicons ' + data.image + '"></div>';
+			if ( ( 'listItemImage' in data ) && 0 === data.listItemImage.indexOf( 'dashicons-' ) ) {
+				data.listItemImage = '<div class="dashicons ' + data.listItemImage + '"></div>';
 			}
 
 			return this.$el.html( this.template( data ) );

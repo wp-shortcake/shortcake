@@ -25,11 +25,11 @@ class Shortcode_UI {
 
 		$defaults = array(
 			'label' => '',
-			'image' => '',
 			'attrs' => array(),
-			'templateEditForm' => null,
-			'templateRender'   => null,
-			'templateRenderJS' => null,
+			'listItemImage'    => '', // src or 'dashicons-' - used in insert list.
+			'templateEditForm' => null, // Template used to render edit form
+			'templateRender'   => null, // Template used to render on front end
+			'templateRenderJS' => null, // Template used to render in tinyMCE
 		);
 
 		// Parse args.
@@ -93,7 +93,7 @@ class Shortcode_UI {
 
 		$this->get_view( 'media-frame' );
 		$this->get_view( 'list-item' );
-		$this->get_view( 'edit-form-default' );
+		$this->get_view( 'default-editForm' );
 		$this->get_view( 'default-render-js' );
 
 		// Load individual shortcode template files.

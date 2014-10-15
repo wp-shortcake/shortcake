@@ -34,20 +34,19 @@ add_action( 'init', function() {
 
 	$instance = new Shortcode_UI();
 
-	$args = array(
+	$instance->register_shortcode_ui( 'test_shortcode', array(
 		'label' => 'Test Shortcode',
-		'image' => 'dashicons-carrot',
 		'attrs' => array(
 			'id'    => null,
 			'align' => 'left',
-		)
-	);
+		),
+		'listItemImage' => 'dashicons-carrot',
+	) );
 
-	$instance->register_shortcode_ui( 'test_shortcode', $args );
-
-	$args = array(
+	$instance->register_shortcode_ui( 'blockquote', array(
 		'label' => 'Blockquote',
-		'image' => 'dashicons-editor-quote',
+
+		'listItemImage' => 'dashicons-editor-quote',
 
 		// Attributes. Format 'id' => 'default value'
 		'attrs' => array(
@@ -60,9 +59,6 @@ add_action( 'init', function() {
 		'templateEditForm'   => 'shortcode-blockquote-edit-form',
 		'templateRender'     => 'shortcode-blockquote-render',
 		'templateRenderJS'   => 'shortcode-blockquote-render-js',
-	);
-
-	$instance->register_shortcode_ui( 'blockquote', $args );
-
+	) );
 
 } );
