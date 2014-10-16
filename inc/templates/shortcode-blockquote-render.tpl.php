@@ -4,14 +4,14 @@
 
 	<br/>
 
-	<? if ( ! empty( $attrs['sourceurl'] ) ) { ?>
+	<?php if ( ! empty( $attrs['sourceurl'] ) ) { ?>
 		<a href="<?php echo esc_attr( $attrs['sourceurl'] ); ?>">
-	<? } ?>
+	<?php } ?>
 
 	<small><?php echo esc_html( $attrs['source'] ); ?></small>
 
-	<? if ( ! empty( $attrs['sourceurl'] ) ) { ?>
+	<?php if ( ! empty( $attrs['sourceurl'] ) ) { ?>
 		</a>
-	<? } ?>
+	<?php } ?>
 
 </blockquote>
