@@ -14,4 +14,10 @@ if ( ! empty( $content ) ) {
 	$r .= "[/$shortcode]";
 }
 
-echo "<b>$r</b>";
+?>
+
+<div style="background: #eee; padding: 5px;">
+	<code>
+		<?php echo esc_html( $r ); ?>
+	</code>
+</div>
