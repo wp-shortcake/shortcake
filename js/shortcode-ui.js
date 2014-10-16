@@ -160,7 +160,7 @@ jQuery(document).ready(function(){
 			// If the model has provided its own template - use that.
 			// @todo - this would be better set as a default on the model?
 			if ( templateEditForm = this.model.get('template-edit-form') ) {
-				templateEditForm = wp.template( templateEditForm );
+				templateEditForm = wp.template( 'shortcode-' + this.model.get( 'shortcode' ) + '-edit-form' );
 			} else {
 				templateEditForm = this.template;
 			}

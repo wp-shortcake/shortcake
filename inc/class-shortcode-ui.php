@@ -7,6 +7,15 @@ class Shortcode_UI {
 
 	private $shortcodes = array();
 
+	private static $instance = null;
+
+	public static function get_instance() {
+        if ( null == self::$instance ) {
+            self::$instance = new self;
+        }
+        return self::$instance;
+    }
+
 	function __construct() {
 
 		$this->plugin_version = '0.1';
@@ -29,7 +38,7 @@ class Shortcode_UI {
 			'label' => '',
 			'attrs' => array(),
 			'listItemImage'      => '',   // src or 'dashicons-' - used in insert list.
-			'template-edit-form' => null, // Template used to render edit form
+			'template-edit-form' => 'shortcode-' . $shortcode . '-edit-form', // Template used to render edit form
 			'template-render'    => null, // Template used to render on front end
 		);
 
@@ -101,7 +110,7 @@ class Shortcode_UI {
 
 			// Load shortcode edit form template.
 			if ( ! empty( $args['template-edit-form'] ) ) {
-				$this->get_view( 'shortcode-' . $shortcode . '-edit-form' );
+				$this->get_view( $args['template-edit-form'] );
 			}
 
 		}
@@ -110,17 +119,21 @@ class Shortcode_UI {
 
 	public function get_view( $template, $template_args = array(), $echo = true ) {
 
- 		$template_dir  = $this->plugin_dir . 'inc/templates/';
-		$template_file = $template_dir . $template . '.tpl.php';
+		if ( ! file_exists( $template ) ) {
 
-		if ( ! file_exists( $template_file ) ) {
-			return '';
+			$template_dir  = $this->plugin_dir . 'inc/templates/';
+			$template = $template_dir . $template . '.tpl.php';
+
+			if ( ! file_exists( $template ) ) {
+				return '';
+			}
+
 		}
 
 		extract( $template_args, EXTR_SKIP );
 
 		ob_start();
-		include $template_file;
+		include $template;
 
 		if ( ! $echo ) {
 			return ob_get_clean();
@@ -159,4 +172,5 @@ class Shortcode_UI {
 		echo do_shortcode( $shortcode );
 		exit;
 	}
+
 }
