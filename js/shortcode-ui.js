@@ -311,8 +311,16 @@ jQuery(document).ready(function(){
 					this.options.action = 'insert';
 					var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 					var shortcode = this.shortcodes.findWhere( { shortcode: target.attr( 'data-shortcode' ) } );
-					this.options.currentShortcode = shortcode.clone();
+
+					if ( ! shortcode ) {
+						return;
+					}
+
+					// Deep clone the model.
+					this.options.currentShortcode = $.extend(true, {}, shortcode );
+
 					this.render();
+
 				},
 
 				insertShortcode: function() {
@@ -377,7 +385,7 @@ jQuery(document).ready(function(){
 					this.template = media.template( template );
 				}
 
-				shortcode = shortcode.clone();
+				shortcode = $.extend(true, {}, shortcode ); // Deep clone.
 				shortcode.set( 'content', options.shortcode.content );
 
 				var attrs = shortcode.get( 'attrs' );
@@ -424,11 +432,13 @@ jQuery(document).ready(function(){
 				return;
 			}
 
-			model = Shortcode_UI.shortcodes.findWhere( { shortcode: matches[1] } ).clone();
+			model = Shortcode_UI.shortcodes.findWhere( { shortcode: matches[1] } );
 
 			if ( ! model ) {
 				return;
 			}
+
+			model = $.extend(true, {}, model );
 
 			attrs = model.get( 'attrs' );
 
@@ -450,7 +460,7 @@ jQuery(document).ready(function(){
 
 			}
 
-			model.set( 'attrs', attrs ); // note slice - remove ". @todo - make more robust.
+			model.set( 'attrs', attrs );
 
 			if ( matches[3] ) {
 				model.set( 'content', matches[3] );
