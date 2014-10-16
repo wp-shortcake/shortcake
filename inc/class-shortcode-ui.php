@@ -72,8 +72,8 @@ class Shortcode_UI {
 		printf(
 			'<button class="%s" title="%s">%s</button>',
 			'button shortcode-editor-open-insert-modal add_media',
-			esc_attr__( 'Add Content Block', 'shortcode-ui' ),
-			$img . __( 'Add Content Block', 'shortcode-ui' )
+			esc_attr__( 'Add Content Item', 'shortcode-ui' ),
+			$img . __( 'Add Content Item', 'shortcode-ui' )
 		);
 
 	}
@@ -88,10 +88,7 @@ class Shortcode_UI {
     		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
     			'shortcodes' => array_values( $this->shortcodes ),
     			'modalOptions' => array(
-    				'media_frame_title' => 'Insert Content Block',
-					'insert_into_button_label' => 'Button',
-					'media_toolbar_secondary_button_label' => 'Secondary Button',
-					'default_title' => 'Default Title',
+    				'media_frame_title' => 'Insert Content Item',
 				)
     		) );
 

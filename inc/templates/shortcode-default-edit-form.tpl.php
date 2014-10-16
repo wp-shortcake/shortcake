@@ -4,7 +4,7 @@
 
 		<h2 class="edit-shortcode-form-title">Edit {{ data.label }}</h2>
 
-		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; Cancel Shortcode</a></p>
+		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; Return to list view.</a></p>
 
 		<div class="edit-shortcode-form-fields">
 			<# _.each( data.attrs, function( value, id ) { #>
