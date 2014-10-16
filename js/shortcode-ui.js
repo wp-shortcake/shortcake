@@ -6,9 +6,9 @@ jQuery(document).ready(function(){
 
 	var t = Shortcode_UI = this;
 
-	t.model = {};
+	t.model      = {};
 	t.collection = {};
-	t.view = {};
+	t.view       = {};
 
 	// Controller Model
 	t.model.Shortcode_UI = Backbone.Model.extend({
@@ -39,7 +39,6 @@ jQuery(document).ready(function(){
 
 		/**
 		 * Get the shortcode as... well a shortcode!
-		 * Also - pro JS templates ;)
 		 *
 		 * @return string eg [shortcode attr1=value]
 		 */
@@ -52,12 +51,11 @@ jQuery(document).ready(function(){
 				_attrs.push( id + '="' + shortcodeAttributes[id] + '"' );
 			}
 
-			content = this.get( 'content' );
+			template = "[shortcode attributes]"
 
+			content = this.get( 'content' );
 			if ( content && content.length > 1 ) {
-				template = "[shortcode attributes]content[/shortcode]"
-			} else {
-				template = "[shortcode attributes]"
+				template += "content[/shortcode]"
 			}
 
 			template = template.replace( /shortcode/g, this.get('shortcode') );
@@ -405,6 +403,7 @@ jQuery(document).ready(function(){
 
 					data = {
 						action: 'do_shortcode',
+						post_id: $('#post_ID').val(),
 						shortcode: this.shortcode.formatShortcode()
 					};
 

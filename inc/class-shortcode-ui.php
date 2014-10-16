@@ -72,8 +72,8 @@ class Shortcode_UI {
 		printf(
 			'<button class="%s" title="%s">%s</button>',
 			'button shortcode-editor-open-insert-modal add_media',
-			esc_attr__( 'Add Shortcode', 'shortcode-ui' ),
-			$img . __( 'Add Shortcode', 'shortcode-ui' )
+			esc_attr__( 'Add Content Block', 'shortcode-ui' ),
+			$img . __( 'Add Content Block', 'shortcode-ui' )
 		);
 
 	}
@@ -88,7 +88,7 @@ class Shortcode_UI {
     		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
     			'shortcodes' => array_values( $this->shortcodes ),
     			'modalOptions' => array(
-    				'media_frame_title' => 'Insert Shortcode',
+    				'media_frame_title' => 'Insert Content Block',
 					'insert_into_button_label' => 'Button',
 					'media_toolbar_secondary_button_label' => 'Secondary Button',
 					'default_title' => 'Default Title',
@@ -168,7 +168,14 @@ class Shortcode_UI {
 	}
 
 	function do_shortcode( ) {
+
 		$shortcode = ! empty( $_POST['shortcode'] ) ? sanitize_text_field( wp_unslash( $_POST['shortcode'] ) ) : null;
+		$post_id   = ! empty( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : null;
+
+		global $post;
+		$post = get_post( $post_id );
+		setup_postdata( $post );
+
 		echo do_shortcode( $shortcode );
 		exit;
 	}
