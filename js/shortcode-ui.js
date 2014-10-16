@@ -165,8 +165,6 @@ jQuery(document).ready(function(){
 				templateEditForm = this.template;
 			}
 
-			console.log( this.model.toJSON() );
-
 			return this.$el.html( templateEditForm( this.model.toJSON() ) );
 
 		},
@@ -370,7 +368,7 @@ jQuery(document).ready(function(){
 
 		View: {
 
-			template: media.template( 'shortcode-default-render' ),
+			shortcodeHTML: false,
 
 			initialize: function( options ) {
 
@@ -378,11 +376,6 @@ jQuery(document).ready(function(){
 
 				if ( ! shortcode ) {
 					return;
-				}
-
-				var template = shortcode.get( 'template-render-js' );
-				if ( template ) {
-					this.template = media.template( template );
 				}
 
 				shortcode = $.extend(true, {}, shortcode ); // Deep clone.
@@ -395,19 +388,37 @@ jQuery(document).ready(function(){
 					}
 				}
 
-				// shortcode.set( 'attrs', attrs );
-
 				this.shortcode = shortcode;
 
 			},
 
 			/**
 			 * Render the shortcode
+			 *
+			 * To ensure consistent rendering - this makes an ajax request to the admin and displays.
 			 * @return string html
 			 */
 			getHtml: function() {
-				console.log( this.shortcode.toJSON() );
-				return this.template( this.shortcode.toJSON() );
+
+				var t = this, data;
+
+				if ( false === t.shortcodeHTML ) {
+
+					data = {
+						action: 'do_shortcode',
+						shortcode: this.shortcode.formatShortcode()
+					};
+
+					$.post( ajaxurl, data, function( response ) {
+						// Note - set even if empty to prevent this firing multiple times.
+						t.shortcodeHTML = response;
+						t.render( true );
+					});
+
+				}
+
+				return t.shortcodeHTML;
+
 			}
 
 		},

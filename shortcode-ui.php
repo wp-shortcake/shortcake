@@ -59,7 +59,7 @@ add_action( 'init', function() {
 		// Autoloads file from templates 'shortcode-$shortcode-$part.tpl.php'
 		'template-edit-form' => 'shortcode-blockquote-edit-form',
 		'template-render'    => 'shortcode-blockquote-render',
-		'template-render-js' => 'shortcode-blockquote-render-js',
+
 	) );
 
 	wp_enqueue_style( 'shortcode-ui-blockquote', plugins_url( 'css/shortcode-blockquote.css', __FILE__ ), array( 'twentyfifteen-style' ) );

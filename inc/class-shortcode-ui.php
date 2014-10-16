@@ -19,6 +19,8 @@ class Shortcode_UI {
 		add_action( 'admin_footer-post.php', array( $this, 'print_templates' ) );
 		add_action( 'admin_footer-post-new.php', array( $this, 'print_templates' ) );
 
+		add_action( 'wp_ajax_do_shortcode', array( $this, 'do_shortcode' ) );
+
 	}
 
 	function register_shortcode_ui( $shortcode, $args = array() ) {
@@ -29,7 +31,6 @@ class Shortcode_UI {
 			'listItemImage'      => '',   // src or 'dashicons-' - used in insert list.
 			'template-edit-form' => null, // Template used to render edit form
 			'template-render'    => null, // Template used to render on front end
-			'template-render-js' => null, // Template used to render in tinyMCE
 		);
 
 		// Parse args.
@@ -94,7 +95,6 @@ class Shortcode_UI {
 		$this->get_view( 'media-frame' );
 		$this->get_view( 'list-item' );
 		$this->get_view( 'shortcode-default-edit-form' );
-		$this->get_view( 'shortcode-default-render-js' );
 
 		// Load individual shortcode template files.
 		foreach ( $this->shortcodes as $shortcode => $args ) {
@@ -102,11 +102,6 @@ class Shortcode_UI {
 			// Load shortcode edit form template.
 			if ( ! empty( $args['template-edit-form'] ) ) {
 				$this->get_view( 'shortcode-' . $shortcode . '-edit-form' );
-			}
-
-			// Load shortcode edit form template.
-			if ( ! empty( $args['template-render-js'] ) ) {
-				$this->get_view( 'shortcode-' . $shortcode . '-render-js' );
 			}
 
 		}
@@ -153,8 +148,15 @@ class Shortcode_UI {
 
 		if ( $shortcode_settings['template-render'] ) {
 			return $this->get_view( $shortcode_settings['template-render'], $args, false );
+		} else {
+			return $this->get_view( 'shortcode-default-render', $args, false );
 		}
 
 	}
 
+	function do_shortcode( ) {
+		$shortcode = ! empty( $_POST['shortcode'] ) ? sanitize_text_field( wp_unslash( $_POST['shortcode'] ) ) : null;
+		echo do_shortcode( $shortcode );
+		exit;
+	}
 }
