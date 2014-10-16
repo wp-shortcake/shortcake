@@ -7,7 +7,8 @@ This is a wrapper for add_shortcode that also creates a UI for adding the shortc
 
 ## Usage.
 
-````add_action( 'init', function() {
+```php
+add_action( 'init', function() {
 
 	$shortcode_ui = Shortcode_UI::get_instance();
 
@@ -45,7 +46,8 @@ This is a wrapper for add_shortcode that also creates a UI for adding the shortc
 
 	) );
 
-} );````
+} );
+````
 
 ## Known issues
 
