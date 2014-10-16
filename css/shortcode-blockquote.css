@@ -1,20 +1,8 @@
-/*
-.mce-content-body .wpview-wrap {
-	margin-bottom: 0;
+.mce-content-body .wpview-wrap:after {
+  content: "";
+  display: table;
+  clear: both;
 }
-*/
-/*
-.mce-content-body .wpview-wrap {
-	border: none;
-	width: auto;
-	clear: none;
-}
-
-.mce-content-body .wpview-wrap[data-mce-selected] {
-	background: transparent;
-}
-*/
-
 
 blockquote.shortcode-ui-blockquote.alignleft,
 blockquote.shortcode-ui-blockquote.alignright {
