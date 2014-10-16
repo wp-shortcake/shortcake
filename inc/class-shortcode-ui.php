@@ -38,7 +38,7 @@ class Shortcode_UI {
 			'label' => '',
 			'attrs' => array(),
 			'listItemImage'      => '',   // src or 'dashicons-' - used in insert list.
-			'template-edit-form' => 'shortcode-' . $shortcode . '-edit-form', // Template used to render edit form
+			'template-edit-form' => null, // Template used to render edit form
 			'template-render'    => null, // Template used to render on front end
 		);
 
