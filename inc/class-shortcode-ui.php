@@ -32,7 +32,7 @@ class Shortcode_UI {
 
 	}
 
-	function register_shortcode_ui( $shortcode, $args = array() ) {
+	function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
 		$defaults = array(
 			'label'              => '',
@@ -51,8 +51,16 @@ class Shortcode_UI {
 			}
 		}
 
-		$args['shortcode'] = $shortcode;
-		$this->shortcodes[ $shortcode ] = $args;
+		$args['shortcode_tag'] = $shortcode_tag;
+		$this->shortcodes[ $shortcode_tag ] = $args;
+
+	}
+
+	function get_shortcode( $shortcode_tag ) {
+
+		if ( isset( $this->shortcodes ) ) {
+			return $this->shortcodes[ $shortcode_tag ];
+		}
 
 	}
 

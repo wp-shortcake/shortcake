@@ -58,7 +58,7 @@ jQuery(document).ready(function(){
 				template += "content[/shortcode]"
 			}
 
-			template = template.replace( /shortcode/g, this.get('shortcode') );
+			template = template.replace( /shortcode/g, this.get('shortcode_tag') );
 			template = template.replace( /attributes/g, _attrs.join( ' ' ) );
 			template = template.replace( /content/g, content );
 
@@ -157,7 +157,7 @@ jQuery(document).ready(function(){
 
 			// If the model has provided its own template - use that.
 			if ( templateEditForm = this.model.get('template-edit-form') ) {
-				templateEditForm = wp.template( 'shortcode-' + this.model.get( 'shortcode' ) + '-edit-form' );
+				templateEditForm = wp.template( 'shortcode-' + this.model.get( 'shortcode_tag' ) + '-edit-form' );
 			} else {
 				templateEditForm = this.template;
 			}
@@ -486,7 +486,7 @@ jQuery(document).ready(function(){
 		// Register the mce view for each shortcode.
 		// Note - clone the constructor.
 		wp.mce.views.register(
-			shortcode.get('shortcode'),
+			shortcode.get('shortcode_tag'),
 			jQuery.extend( true, {}, constructor )
 		);
 	} );
