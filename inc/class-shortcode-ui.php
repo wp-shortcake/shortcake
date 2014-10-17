@@ -82,7 +82,7 @@ class Shortcode_UI {
 
     	if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
 
-    		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone' ), $this->plugin_version );
+    		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
     		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 
     		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
@@ -101,6 +101,7 @@ class Shortcode_UI {
 		$this->get_view( 'media-frame' );
 		$this->get_view( 'list-item' );
 		$this->get_view( 'shortcode-default-edit-form' );
+		$this->get_view( 'default-shortcode-render' );
 
 		// Load individual shortcode template files.
 		foreach ( $this->shortcodes as $shortcode => $args ) {
@@ -154,7 +155,7 @@ class Shortcode_UI {
 			'attrs'     => $atts
 		);
 
-		$args = apply_filters( "shortcode_ui_render_atts_$shortcode", $args );
+		$args = apply_filters( "shortcode_ui_render_atts_$tag", $args );
 
 		if ( $shortcode_settings['template-render'] ) {
 			return $this->get_view( $shortcode_settings['template-render'], $args, false );
