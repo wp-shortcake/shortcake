@@ -35,8 +35,8 @@ class Shortcode_UI {
 	function register_shortcode_ui( $shortcode, $args = array() ) {
 
 		$defaults = array(
-			'label' => '',
-			'attrs' => array(),
+			'label'              => '',
+			'attrs'              => array(),
 			'listItemImage'      => '',   // src or 'dashicons-' - used in insert list.
 			'template-edit-form' => null, // Template used to render edit form
 		);
