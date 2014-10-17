@@ -39,7 +39,6 @@ class Shortcode_UI {
 			'attrs' => array(),
 			'listItemImage'      => '',   // src or 'dashicons-' - used in insert list.
 			'template-edit-form' => null, // Template used to render edit form
-			'template-render'    => null, // Template used to render on front end
 		);
 
 		// Parse args.
@@ -53,9 +52,6 @@ class Shortcode_UI {
 		}
 
 		$args['shortcode'] = $shortcode;
-
-		add_shortcode( $shortcode, array( $this, 'render_shortcode' ) );
-
 		$this->shortcodes[ $shortcode ] = $args;
 
 	}
@@ -115,6 +111,15 @@ class Shortcode_UI {
 
 	}
 
+	/**
+	 * Helper function for displaying a PHP template file.
+	 * Template args array is extracted and passed to the template file.
+	 *
+	 * @param  string  $template      full template file path. Or name of template file in inc/templates.
+	 * @param  array   $template_args array of args
+	 * @param  boolean $echo          [description]
+	 * @return [type]                 [description]
+	 */
 	public function get_view( $template, $template_args = array(), $echo = true ) {
 
 		if ( ! file_exists( $template ) ) {
@@ -138,30 +143,6 @@ class Shortcode_UI {
 		}
 
 		echo ob_get_clean();
-
-	}
-
-	function render_shortcode( $atts, $content = null, $tag ) {
-
-		if ( ! array_key_exists( $tag, $this->shortcodes ) ) {
-			return;
-		}
-
-		$shortcode_settings = $this->shortcodes[ $tag ];
-
-		$args = array(
-			'shortcode' => $tag,
-			'content'   => $content,
-			'attrs'     => $atts
-		);
-
-		$args = apply_filters( "shortcode_ui_render_atts_$tag", $args );
-
-		if ( $shortcode_settings['template-render'] ) {
-			return $this->get_view( $shortcode_settings['template-render'], $args, false );
-		} else {
-			return $this->get_view( 'shortcode-default-render', $args, false );
-		}
 
 	}
 
