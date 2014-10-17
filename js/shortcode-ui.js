@@ -86,7 +86,7 @@ jQuery(document).ready(function(){
 
 			var data = this.model.toJSON();
 
-			this.$el.attr( 'data-shortcode', data.shortcode );
+			this.$el.attr( 'data-shortcode', data.shortcode_tag );
 
 			if ( ( 'listItemImage' in data ) && 0 === data.listItemImage.indexOf( 'dashicons-' ) ) {
 				data.listItemImage = '<div class="dashicons ' + data.listItemImage + '"></div>';
