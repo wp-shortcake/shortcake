@@ -305,7 +305,7 @@ jQuery(document).ready(function(){
 				selectEditShortcode: function(e) {
 					this.options.action = 'insert';
 					var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
-					var shortcode = this.shortcodes.findWhere( { shortcode: target.attr( 'data-shortcode' ) } );
+					var shortcode = this.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
 
 					if ( ! shortcode ) {
 						return;
@@ -369,7 +369,7 @@ jQuery(document).ready(function(){
 
 			initialize: function( options ) {
 
-				var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode: options.shortcode.tag } );
+				var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
 
 				if ( ! shortcode ) {
 					return;
@@ -441,7 +441,7 @@ jQuery(document).ready(function(){
 				return;
 			}
 
-			model = Shortcode_UI.shortcodes.findWhere( { shortcode: matches[1] } );
+			model = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: matches[1] } );
 
 			if ( ! model ) {
 				return;

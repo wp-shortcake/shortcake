@@ -58,7 +58,7 @@ class Shortcode_UI {
 
 	function get_shortcode( $shortcode_tag ) {
 
-		if ( isset( $this->shortcodes ) ) {
+		if ( isset( $this->shortcodes[ $shortcode_tag ] ) ) {
 			return $this->shortcodes[ $shortcode_tag ];
 		}
 
