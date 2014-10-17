@@ -26,3 +26,22 @@
  */
 
 require_once( 'inc/class-shortcode-ui.php' );
+
+add_action( 'init', function() {
+	$instance = Shortcode_UI::get_instance();
+}, 5 );
+
+/**
+ * Register UI for Shortcode
+ *
+ * @param  string $shortcode_tag
+ * @param  array  $args
+ * @return null
+ */
+function sui_register_ui_for_shortcode( $shortcode_tag, $args = array() ) {
+	Shortcode_UI::get_instance()->register_shortcode_ui( $shortcode_tag, $args );
+}
+
+function sui_get_registered_ui_for_shortcode( $shortcode_tag ) {
+	return Shortcode_UI::get_instance()->get_shortcode( $shortcode_tag );
+}
