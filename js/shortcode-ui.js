@@ -27,15 +27,44 @@ jQuery(document).ready(function(){
 		},
 	});
 
-	// Single Shortcode Model.
+	t.model.ShortcodeAttribute = Backbone.Model.extend({
+		defaults: {
+			attr:  '',
+			label: '',
+			type:  '',
+			value: '',
+		},
+	});
+
+	t.model.ShortcodeAttributes = Backbone.Collection.extend({
+		model: t.model.ShortcodeAttribute
+	});
+
 	t.model.Shortcode = Backbone.Model.extend({
 
 		defaults: {
 			label: '',
 			shortcode: '',
-			attrs: {},
-			content: '',
+			attrs: t.model.ShortcodeAttributes,
 		},
+
+
+		set: function( attributes, options ) {
+
+		    if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof t.model.ShortcodeAttributes ) ) {
+		        attributes.attrs = new t.model.ShortcodeAttributes( attributes.attrs );
+		    }
+
+		    return Backbone.Model.prototype.set.call(this, attributes, options);
+		},
+
+		toJSON: function( options ) {
+			options = Backbone.Model.prototype.toJSON.call(this, options);
+			if ( options.attrs !== undefined && ( options.attrs instanceof t.model.ShortcodeAttributes ) ) {
+				options.attrs = options.attrs.toJSON();
+			}
+			return options;
+    	},
 
 		/**
 		 * Get the shortcode as... well a shortcode!
@@ -44,22 +73,31 @@ jQuery(document).ready(function(){
 		 */
 		formatShortcode: function() {
 
-			var template, shortcodeAttributes, _attrs = [], content;
+			var template, shortcodeAttributes, attrs = [], content;
 
-			shortcodeAttributes = this.get( 'attrs' );
-			for ( var id in shortcodeAttributes ) {
-				_attrs.push( id + '="' + shortcodeAttributes[id] + '"' );
-			}
+			console.log( this.toJSON() );
+
+			this.get( 'attrs' ).each( function( attr ) {
+
+				// console.log( 'x' );
+				// console.log( attr.toJSON() );
+
+				if ( attr.get( 'attr' ) === 'content' ) {
+					content = attr.get( 'value' );
+				} else {
+					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+				}
+
+			} );
 
 			template = "[shortcode attributes]"
 
-			content = this.get( 'content' );
 			if ( content && content.length > 1 ) {
 				template += "content[/shortcode]"
 			}
 
 			template = template.replace( /shortcode/g, this.get('shortcode_tag') );
-			template = template.replace( /attributes/g, _attrs.join( ' ' ) );
+			template = template.replace( /attributes/g, attrs.join( ' ' ) );
 			template = template.replace( /content/g, content );
 
 			return template;
@@ -126,22 +164,12 @@ jQuery(document).ready(function(){
 
 			var $el = $( e.target );
 
-			if ( 'content' === $el.attr('name') ) {
+			var attribute = this.model.get( 'attrs' ).findWhere( {
+				'attr': $el.attr('name')
+			} );
 
-				this.model.set( 'content', $el.val() );
-
-			} else {
-
-				var shortcodeAttributes = this.model.get( 'attrs' );
-
-				// Note - check this is a valid attribute first.
-				var id = $el.attr('name');
-				if ( id in shortcodeAttributes ) {
-					shortcodeAttributes[ id ] = $el.val();
-				}
-
-				this.model.set( 'attrs', shortcodeAttributes );
-
+			if ( attribute ) {
+				attribute.set( 'value', $el.val() );
 			}
 
 		}, 100 ),
@@ -153,16 +181,27 @@ jQuery(document).ready(function(){
 		 */
 		render: function(){
 
-			var template;
+			var template, fieldTemplate, fieldContainer, data, view, fieldView;
 
 			// If the model has provided its own template - use that.
-			if ( templateEditForm = this.model.get('template-edit-form') ) {
-				templateEditForm = wp.template( 'shortcode-' + this.model.get( 'shortcode_tag' ) + '-edit-form' );
-			} else {
-				templateEditForm = this.template;
-			}
+			// if ( templateEditForm = this.model.get('template-edit-form') ) {
+			// 	var data = this.model.toJSON();
+			// 	data.attrs = data.attrs.toJSON();
+			// 	templateEditForm = wp.template( 'shortcode-' + this.model.get( 'shortcode_tag' ) + '-edit-form' );
+			// } else {
+			// 	templateEditForm = this.template;
+			// }
 
-			return this.$el.html( templateEditForm( this.model.toJSON() ) );
+			view = this.$el.html( this.template( this.model.toJSON() ) );
+
+			fieldContainer = view.find( '.edit-shortcode-form-fields' );
+
+			this.model.get( 'attrs' ).each( function( attr ) {
+				fieldTemplate = wp.template( 'shortcode-ui-field-' + attr.get( 'type' ) );
+				fieldContainer.append( fieldTemplate( attr.toJSON() ) );
+			} );
+
+			return view;
 
 		},
 
@@ -376,14 +415,21 @@ jQuery(document).ready(function(){
 				}
 
 				shortcode = $.extend(true, {}, shortcode ); // Deep clone.
-				shortcode.set( 'content', options.shortcode.content );
 
-				var attrs = shortcode.get( 'attrs' );
-				for ( var id in options.shortcode.attrs.named ) {
-					if ( id in attrs ) {
-						attrs[ id ] = options.shortcode.attrs.named[ id ];
+				shortcode.get( 'attrs' ).each( function( attr ) {
+
+					if ( attr.get( 'attr') in options.shortcode.attrs.named ) {
+						attr.set(
+							'value',
+							options.shortcode.attrs.named[ attr.get( 'attr') ]
+						);
 					}
-				}
+
+					if ( attr.get( 'attr' ) === 'content' && ( 'content' in  options.shortcode ) ) {
+						attr.set( 'value', options.shortcode.content );
+					}
+
+				});
 
 				this.shortcode = shortcode;
 
@@ -400,6 +446,8 @@ jQuery(document).ready(function(){
 				var t = this, data;
 
 				if ( false === t.shortcodeHTML ) {
+
+					// console.log( this.shortcode.formatShortcode() );
 
 					data = {
 						action: 'do_shortcode',
@@ -430,7 +478,7 @@ jQuery(document).ready(function(){
 		 */
 		edit: function( node ) {
 
-			var shortcodeString, model, attrs;
+			var shortcodeString, model, attr;
 
 			shortcodeString = decodeURIComponent( $(node).attr( 'data-wpview-text' ) );
 
@@ -449,8 +497,6 @@ jQuery(document).ready(function(){
 
 			model = $.extend(true, {}, model );
 
-			attrs = model.get( 'attrs' );
-
 			if ( typeof( matches[2] ) != undefined ) {
 
 				attributeMatches = matches[2].match(/(\S+?=".*?")/g );
@@ -461,18 +507,20 @@ jQuery(document).ready(function(){
 					var bitsRegEx = /(\S+?)="(.*?)"/g;
 					var bits = bitsRegEx.exec( attributeMatches[i] );
 
-					if ( bits[1] in attrs ) {
-						attrs[ bits[1] ] = bits[2];
+					attr = model.get( 'attrs' ).findWhere( { attr: bits[1] } );
+					if ( attr ) {
+						attr.set( 'value', bits[2] );
 					}
 
 				}
 
 			}
 
-			model.set( 'attrs', attrs );
-
 			if ( matches[3] ) {
-				model.set( 'content', matches[3] );
+				var content = model.get( 'attrs' ).findWhere( { attr: 'content' } );
+				if ( content ) {
+					content.set( 'value', matches[3] );
+				}
 			}
 
 			Shortcode_UI.modal.openEditModal( model );
