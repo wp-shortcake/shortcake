@@ -9,7 +9,7 @@ var Shortcode_UI;
 	t.view       = {};
 	t.utils      = {};
 
-	// Controller Model
+	// Modal Controller
 	t.model.Shortcode_UI = Backbone.Model.extend({
 		_this: this,
 		openInsertModal: function() {
@@ -166,6 +166,8 @@ var Shortcode_UI;
 			'keyup .edit-shortcode-form-fields input[type="text"]': 'inputValueChanged',
 			'keyup .edit-shortcode-form-fields textarea': 'inputValueChanged',
 			'change .edit-shortcode-form-fields select': 'inputValueChanged',
+			'change .edit-shortcode-form-fields input[type=checkbox]': 'inputValueChanged',
+			'change .edit-shortcode-form-fields input[type=radio]': 'inputValueChanged',
 		},
 
 		// Handle custom params passed to view.
@@ -202,15 +204,6 @@ var Shortcode_UI;
 		render: function(){
 
 			var template, fieldTemplate, fieldContainer, data, view, fieldView;
-
-			// If the model has provided its own template - use that.
-			// if ( templateEditForm = this.model.get('template-edit-form') ) {
-			// 	var data = this.model.toJSON();
-			// 	data.attrs = data.attrs.toJSON();
-			// 	templateEditForm = wp.template( 'shortcode-' + this.model.get( 'shortcode_tag' ) + '-edit-form' );
-			// } else {
-			// 	templateEditForm = this.template;
-			// }
 
 			view = this.$el.html( this.template( this.model.toJSON() ) );
 

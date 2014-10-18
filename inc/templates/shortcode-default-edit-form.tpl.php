@@ -14,21 +14,28 @@
 </script>
 
 <script type="text/html" id="tmpl-shortcode-ui-field-text">
-	<p>
+	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
 		<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}"/>
 	</p>
 </script>
 
+<script type="text/html" id="tmpl-shortcode-ui-field-url">
+	<p class="field-block">
+		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="code"/>
+	</p>
+</script>
+
 <script type="text/html" id="tmpl-shortcode-ui-field-textarea">
-	<p>
+	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
 		<textarea name="{{ data.attr }}" id="{{ data.attr }}">{{ data.value }}</textarea>
 	</p>
 </script>
 
 <script type="text/html" id="tmpl-shortcode-ui-field-select">
-	<p>
+	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
 		<select name="{{ data.attr }}" id="{{ data.attr }}">
 			<# _.each( data.options, function( label, value ) { #>
