@@ -25,8 +25,7 @@ class Shortcode_UI {
 		add_action( 'media_buttons', array( $this, 'action_media_buttons' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		add_action( 'admin_footer-post.php', array( $this, 'print_templates' ) );
-		add_action( 'admin_footer-post-new.php', array( $this, 'print_templates' ) );
+		add_action( 'print_media_templates', array( $this, 'print_templates' ) );
 
 		add_action( 'wp_ajax_do_shortcode', array( $this, 'do_shortcode' ) );
 
