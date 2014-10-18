@@ -2,13 +2,12 @@ var Shortcode_UI;
 
 ( function( $ ) {
 
-jQuery(document).ready(function(){
-
 	var t = Shortcode_UI = this;
 
 	t.model      = {};
 	t.collection = {};
 	t.view       = {};
+	t.utils      = {};
 
 	// Controller Model
 	t.model.Shortcode_UI = Backbone.Model.extend({
@@ -37,7 +36,16 @@ jQuery(document).ready(function(){
 	});
 
 	t.model.ShortcodeAttributes = Backbone.Collection.extend({
-		model: t.model.ShortcodeAttribute
+		model: t.model.ShortcodeAttribute,
+		clone: function(deep) {
+			if ( deep ) {
+				return new this.constructor( _.map( this.models, function(m) {
+					return m.clone();
+				} ) );
+			} else {
+				return Backbone.Collection.prototype.clone();
+			}
+		}
 	});
 
 	t.model.Shortcode = Backbone.Model.extend({
@@ -48,7 +56,10 @@ jQuery(document).ready(function(){
 			attrs: t.model.ShortcodeAttributes,
 		},
 
-
+		/**
+		 * Custom set method.
+		 * Handles setting the attribute collection.
+		 */
 		set: function( attributes, options ) {
 
 		    if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof t.model.ShortcodeAttributes ) ) {
@@ -58,6 +69,10 @@ jQuery(document).ready(function(){
 		    return Backbone.Model.prototype.set.call(this, attributes, options);
 		},
 
+		/**
+		 * Custon toJSON.
+		 * Handles converting the attribute collection to JSON.
+		 */
 		toJSON: function( options ) {
 			options = Backbone.Model.prototype.toJSON.call(this, options);
 			if ( options.attrs !== undefined && ( options.attrs instanceof t.model.ShortcodeAttributes ) ) {
@@ -66,8 +81,18 @@ jQuery(document).ready(function(){
 			return options;
     	},
 
+    	/**
+    	 * Make sure we don't clone a reference to attributes.
+    	 */
+    	clone: function() {
+    		var clone = Backbone.Model.prototype.clone.call( this );
+    		// Deep clone attributes.
+    		clone.set( 'attrs', clone.get( 'attrs' ).clone( true ) );
+			return clone;
+    	},
+
 		/**
-		 * Get the shortcode as... well a shortcode!
+		 * Get the shortcode as... a shortcode!
 		 *
 		 * @return string eg [shortcode attr1=value]
 		 */
@@ -75,12 +100,7 @@ jQuery(document).ready(function(){
 
 			var template, shortcodeAttributes, attrs = [], content;
 
-			console.log( this.toJSON() );
-
 			this.get( 'attrs' ).each( function( attr ) {
-
-				// console.log( 'x' );
-				// console.log( attr.toJSON() );
 
 				if ( attr.get( 'attr' ) === 'content' ) {
 					content = attr.get( 'value' );
@@ -350,8 +370,7 @@ jQuery(document).ready(function(){
 						return;
 					}
 
-					// Deep clone the model.
-					this.options.currentShortcode = $.extend(true, {}, shortcode );
+					this.options.currentShortcode = shortcode.clone();
 
 					this.render();
 
@@ -389,18 +408,10 @@ jQuery(document).ready(function(){
 
 	};
 
-	t.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
-	t.modal      = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
-
-	jQuery('.shortcode-editor-open-insert-modal').click( function(e) {
-		e && e.preventDefault();
-		t.modal.openInsertModal();
-	});
-
 	/**
 	 * Generic shortcode mce view constructor.
 	 */
-	var constructor = {
+	t.utils.shorcodeViewConstructor = {
 
 		View: {
 
@@ -408,13 +419,13 @@ jQuery(document).ready(function(){
 
 			initialize: function( options ) {
 
-				var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+				var placeholderShortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
 
-				if ( ! shortcode ) {
+				if ( ! placeholderShortcode ) {
 					return;
 				}
 
-				shortcode = $.extend(true, {}, shortcode ); // Deep clone.
+				shortcode = placeholderShortcode.clone();
 
 				shortcode.get( 'attrs' ).each( function( attr ) {
 
@@ -446,8 +457,6 @@ jQuery(document).ready(function(){
 				var t = this, data;
 
 				if ( false === t.shortcodeHTML ) {
-
-					// console.log( this.shortcode.formatShortcode() );
 
 					data = {
 						action: 'do_shortcode',
@@ -489,13 +498,13 @@ jQuery(document).ready(function(){
 				return;
 			}
 
-			model = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: matches[1] } );
+			defaultShortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: matches[1] } );
 
-			if ( ! model ) {
+			if ( ! defaultShortcode ) {
 				return;
 			}
 
-			model = $.extend(true, {}, model );
+			currentShortcode = defaultShortcode.clone();
 
 			if ( typeof( matches[2] ) != undefined ) {
 
@@ -507,7 +516,7 @@ jQuery(document).ready(function(){
 					var bitsRegEx = /(\S+?)="(.*?)"/g;
 					var bits = bitsRegEx.exec( attributeMatches[i] );
 
-					attr = model.get( 'attrs' ).findWhere( { attr: bits[1] } );
+					attr = currentShortcode.get( 'attrs' ).findWhere( { attr: bits[1] } );
 					if ( attr ) {
 						attr.set( 'value', bits[2] );
 					}
@@ -517,30 +526,39 @@ jQuery(document).ready(function(){
 			}
 
 			if ( matches[3] ) {
-				var content = model.get( 'attrs' ).findWhere( { attr: 'content' } );
+				var content = currentShortcode.get( 'attrs' ).findWhere( { attr: 'content' } );
 				if ( content ) {
 					content.set( 'value', matches[3] );
 				}
 			}
 
-			Shortcode_UI.modal.openEditModal( model );
+			Shortcode_UI.modal.openEditModal( currentShortcode );
 
 		}
 
 	}
 
-	t.shortcodes.each( function( shortcode ) {
+	$(document).ready(function(){
 
-		// Register the mce view for each shortcode.
-		// Note - clone the constructor.
-		wp.mce.views.register(
-			shortcode.get('shortcode_tag'),
-			jQuery.extend( true, {}, constructor )
-		);
-	} );
+		t.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
+		t.modal      = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
 
+		$('.shortcode-editor-open-insert-modal').click( function(e) {
+			e && e.preventDefault();
+			t.modal.openInsertModal();
+		});
 
+		t.shortcodes.each( function( shortcode ) {
 
-});
+			// Register the mce view for each shortcode.
+			// Note - clone the constructor.
+			wp.mce.views.register(
+				shortcode.get('shortcode_tag'),
+				$.extend( true, {}, t.utils.shorcodeViewConstructor )
+			);
+
+		} );
+
+	});
 
 } )( jQuery );
