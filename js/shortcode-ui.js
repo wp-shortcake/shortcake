@@ -158,7 +158,7 @@ var Shortcode_UI;
 	 * Single edit shortcode content view.
 	 * Used for add/edit shortcode modal.
 	 */
-	t.view.editModalListItem = Backbone.View.extend({
+	t.view.shortcodeEditFormForm = Backbone.View.extend({
 
 		template: wp.template('shortcode-default-edit-form'),
 
@@ -175,7 +175,7 @@ var Shortcode_UI;
 
 			this.model.get( 'attrs' ).each( function( attr ) {
 				$fieldsEl.append(
-					new t.view.formField( { model: attr } ).render()
+					new t.view.attributeEditField( { model: attr } ).render()
 				);
 			} );
 
@@ -185,7 +185,7 @@ var Shortcode_UI;
 
 	});
 
-	t.view.formField = Backbone.View.extend( {
+	t.view.attributeEditField = Backbone.View.extend( {
 
 		tagName: "div",
 
@@ -304,7 +304,7 @@ var Shortcode_UI;
 				},
 
 				renderEditShortcodeForm: function() {
-					var view = new t.view.editModalListItem( {
+					var view = new t.view.shortcodeEditForm( {
 						model:  this.options.currentShortcode,
 						action: this.options.action
 					} );
