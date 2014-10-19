@@ -162,18 +162,44 @@ var Shortcode_UI;
 
 		template: wp.template('shortcode-default-edit-form'),
 
-		events: {
-			'keyup .edit-shortcode-form-fields input[type="text"]': 'inputValueChanged',
-			'keyup .edit-shortcode-form-fields textarea': 'inputValueChanged',
-			'change .edit-shortcode-form-fields select': 'inputValueChanged',
-			'change .edit-shortcode-form-fields input[type=checkbox]': 'inputValueChanged',
-			'change .edit-shortcode-form-fields input[type=radio]': 'inputValueChanged',
-		},
-
 		// Handle custom params passed to view.
 		initialize: function(options) {
 		    this.options = {};
 		    this.options.action = options.action;
+		},
+
+		render: function(){
+
+			var view      = this.$el.html( this.template( this.model.toJSON() ) );
+			var $fieldsEl = view.find( '.edit-shortcode-form-fields' );
+
+			this.model.get( 'attrs' ).each( function( attr ) {
+				$fieldsEl.append(
+					new t.view.formField( { model: attr } ).render()
+				);
+			} );
+
+			return view;
+
+		},
+
+	});
+
+	t.view.formField = Backbone.View.extend( {
+
+		tagName: "div",
+
+		events: {
+			'keyup  input[type="text"]':   'updateValue',
+			'keyup  textarea':             'updateValue',
+			'change select':               'updateValue',
+			'change input[type=checkbox]': 'updateValue',
+			'change input[type=radio]':    'updateValue',
+		},
+
+		render: function() {
+			this.template = wp.media.template( 'shortcode-ui-field-' + this.model.get( 'type' ) );
+			return this.$el.html( this.template( this.model.toJSON() ) );
 		},
 
 		/**
@@ -182,43 +208,12 @@ var Shortcode_UI;
 		 * If the input field that has changed is for content or a valid attribute,
 		 * then it should update the model.
 		 */
-		inputValueChanged: _.debounce( function( e ) {
-
+		updateValue: function( e ) {
 			var $el = $( e.target );
-
-			var attribute = this.model.get( 'attrs' ).findWhere( {
-				'attr': $el.attr('name')
-			} );
-
-			if ( attribute ) {
-				attribute.set( 'value', $el.val() );
-			}
-
-		}, 100 ),
-
-		/**
-		 * Render the Edit form.
-		 * Uses custom template passed by model if available
-		 * Otherwise - displays functional default.
-		 */
-		render: function(){
-
-			var template, fieldTemplate, fieldContainer, data, view, fieldView;
-
-			view = this.$el.html( this.template( this.model.toJSON() ) );
-
-			fieldContainer = view.find( '.edit-shortcode-form-fields' );
-
-			this.model.get( 'attrs' ).each( function( attr ) {
-				fieldTemplate = wp.template( 'shortcode-ui-field-' + attr.get( 'type' ) );
-				fieldContainer.append( fieldTemplate( attr.toJSON() ) );
-			} );
-
-			return view;
-
+			this.model.set( 'value', $el.val() );
 		},
 
-	});
+	} );
 
 	t.view.insertModal = {
 
