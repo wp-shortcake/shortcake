@@ -158,7 +158,7 @@ var Shortcode_UI;
 	 * Single edit shortcode content view.
 	 * Used for add/edit shortcode modal.
 	 */
-	t.view.shortcodeEditFormForm = Backbone.View.extend({
+	t.view.shortcodeEditForm = Backbone.View.extend({
 
 		template: wp.template('shortcode-default-edit-form'),
 
