@@ -364,16 +364,11 @@ var Shortcode_UI;
 			this.states.add([ controller]);
 
 			this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
-			this.on( 'router:create:' + id + '-router', this.createRouter, this );
-			this.on( 'router:render:' + id + '-router', _.bind( this.routerRender, this ) );
 			this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
 			this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
 			this.on( 'menu:render:default', this.renderMenuSeparator );
 
 		},
-
-		// Empty because currently there are no other tabs.
-		routerRender : function( view ) {},
 
 		contentRender : function( id, tab ) {
 			this.content.set(
@@ -547,9 +542,6 @@ var Shortcode_UI;
 			} );
 
 			wp_media_frame.open();
-
-
-			// Shortcode_UI.modal.openEditModal( currentShortcode );
 
 		}
 
