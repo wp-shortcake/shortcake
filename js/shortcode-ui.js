@@ -347,7 +347,7 @@ var Shortcode_UI;
 
 			var controller = new t.controller.MediaController( {
 				id      : id,
-				router  : id + '-router',
+				router  : false,
 				toolbar : id + '-toolbar',
 				menu    : 'default',
 				title   : 'Insert Content Item',
