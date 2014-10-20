@@ -352,7 +352,7 @@ var Shortcode_UI;
 				menu    : 'default',
 				title   : 'Insert Content Item',
 				tabs    : [ 'insert' ],
-				priority: 20, // places it above Insert From URL
+				priority:  66, // places it above Insert From URL
 				content : id + '-content-insert',
 			} );
 
@@ -368,6 +368,7 @@ var Shortcode_UI;
 			this.on( 'router:render:' + id + '-router', _.bind( this.routerRender, this ) );
 			this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
 			this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
+			this.on( 'menu:render:default', this.renderMenuSeparator );
 
 		},
 
@@ -398,6 +399,15 @@ var Shortcode_UI;
 					}
 				}
 			} );
+		},
+
+		renderMenuSeparator: function( view ) {
+			view.set({
+				'library-separator-2': new media.View({
+					className: 'separator',
+					priority: 65
+				})
+			});
 		},
 
 		insertAction: function() {
