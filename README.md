@@ -24,11 +24,8 @@ add_action( 'init', function() {
 		?>
 
 		<blockquote>
-
-			<?php echo esc_html( $content ); ?>
-			<br/>
+			<?php echo esc_html( $content ); ?><br/>
 			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
-
 		</blockquote>
 
 		<?php
