@@ -35,3 +35,14 @@ add_action( 'init', function() {
 function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) {
 	Shortcode_UI::get_instance()->register_shortcode_ui( $shortcode_tag, $args );
 }
+
+/**
+ * Get register UI args by shortcode tag
+ *
+ * @param  string $shortcode_tag
+ * @param  array  $args
+ * @return null
+ */
+function shortcode_ui_get_register_shortcode( $shortcode_tag, $args = array() ) {
+	return Shortcode_UI::get_instance()->get_shortcode( $shortcode_tag );
+}
