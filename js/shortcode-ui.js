@@ -232,34 +232,20 @@ var Shortcode_UI;
 
 	t.view.Shortcode_UI = Backbone.View.extend({
 
-		options: {
-			action: 'select'
-		},
-
 		events: {
 			"click .add-shortcode-list li":      "select",
 			"click .edit-shortcode-form-cancel": "cancelSelect"
 		},
 
 		initialize: function(options) {
-
-			console.log( options );
-
-			if ( 'action' in options ) {
-				this.options.action = options.action;
-			}
-
-			if ( 'controller' in options ) {
-				this.options.controller = options.controller;
-			}
-
+			this.controller = options.controller.state();
 		},
 
 		render: function() {
 
 			this.$el.html('');
 
-			switch( this.options.action ) {
+			switch( this.controller.props.get('action') ) {
 				case 'select' :
 					this.renderSelectShortcodeView();
 					break;
@@ -280,13 +266,12 @@ var Shortcode_UI;
 		renderEditShortcodeView: function() {
 
 			var view = new t.view.shortcodeEditForm( {
-				model:  this.options.controller.state().props.get( 'currentShortcode' ),
-				action: this.options.action
+				model:  this.controller.props.get( 'currentShortcode' ),
 			} );
 
 			this.$el.append( view.render().el );
 
-			if ( this.options.action === 'update' ) {
+			if ( this.controller.props.get('action') === 'update' ) {
 				this.$contentEl.find( '.edit-shortcode-form-cancel' ).remove();
 			}
 
@@ -295,14 +280,14 @@ var Shortcode_UI;
 		},
 
 		cancelSelect: function() {
-			this.options.action = 'select';
-			this.options.controller.state().props.set( 'currentShortcode', null );
+			this.controller.props.set( 'action', 'select' );
+			this.controller.props.set( 'currentShortcode', null );
 			this.render();
 		},
 
 		select: function(e) {
 
-			this.options.action = 'insert';
+			this.controller.props.set( 'action', 'insert' );
 			var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 			var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
 
@@ -310,8 +295,7 @@ var Shortcode_UI;
 				return;
 			}
 
-			this.options.controller.state().props.set( 'currentShortcode', shortcode.clone() );
-			// this.options.currentShortcode = shortcode.clone();
+			this.controller.props.set( 'currentShortcode', shortcode.clone() );
 
 			this.render();
 
@@ -322,15 +306,21 @@ var Shortcode_UI;
 	t.controller.MediaController = wp.media.controller.State.extend({
 
 	    initialize: function(){
-	        this.props = new Backbone.Model();
-	        // this.props.on( 'change:currentShortcode', this.refresh, this );
+
+	        this.props = new Backbone.Model({
+				currentShortcode: null,
+				action: 'select',
+	        });
+
+	        this.props.on( 'change:action', this.refresh, this );
+
 	    },
 
 	    // called each time the model changes
-	    // refresh: function() {
+	    refresh: function() {
 	        // update the toolbar
-	    	// this.frame.toolbar.get().refresh();
-		// },
+	    	this.frame.toolbar.get().refresh();
+		},
 
 		insert: function() {
 		    var shortcode = this.props.get('currentShortcode');
@@ -538,7 +528,6 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 
 	toolbarRender: function( toolbar ) {
 		// console.log( 'toolbarRender', toolbar );
-		// toolbar.set('insert', {} );
 	},
 
 	toolbarCreate : function( toolbar ) {
