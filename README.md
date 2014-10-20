@@ -8,15 +8,16 @@ This is a tool to be used alongside add_shortcode to add a user friendly interfa
 ## Usage.
 
 ```php
+
 add_action( 'init', function() {
 
 	/**
 	 * Register your shorcode as you would normally.
 	 * This is a simple example for a blockquote with a citation.
 	 */
-	add_shortcode( 'blockquote', function( $args, $content = '' ) {
+	add_shortcode( 'blockquote', function( $attr, $content = '' ) {
 
-		$args = wp_parse_args( $args, array(
+		$attr = wp_parse_args( $attr, array(
 			'source' => ''
 		) );
 
@@ -26,7 +27,7 @@ add_action( 'init', function() {
 
 			<?php echo esc_html( $content ); ?>
 			<br/>
-			<cite><em><?php echo esc_html( $attr['source'] ); ?>
+			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
 
 		</blockquote>
 
