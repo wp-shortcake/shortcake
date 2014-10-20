@@ -10,11 +10,11 @@ class Shortcode_UI {
 	private static $instance = null;
 
 	public static function get_instance() {
-        if ( null == self::$instance ) {
-            self::$instance = new self;
-        }
-        return self::$instance;
-    }
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+		return self::$instance;
+	}
 
 	function __construct() {
 
@@ -31,15 +31,14 @@ class Shortcode_UI {
 	function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
 		$defaults = array(
-			'label'              => '',
-			'attrs'              => array(),
-			'listItemImage'      => '',   // src or 'dashicons-' - used in insert list.
+			'label'         => '',
+			'attrs'         => array(),
+			'listItemImage' => '',   // src or 'dashicons-' - used in insert list.
 		);
 
-		// Parse args.
 		$args = wp_parse_args( $args, $defaults );
 
-		// strip invalid
+		// Strip invalid args.
 		foreach ( $args as $key => $value ) {
 			if ( ! array_key_exists( $key, $defaults ) ) {
 				unset( $args[ $key ] );
@@ -79,19 +78,19 @@ class Shortcode_UI {
 
 	function enqueue_scripts( $hook ) {
 
-    	if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
+		if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
 
-    		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
-    		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
+			wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
+			wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 
-    		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
-    			'shortcodes' => array_values( $this->shortcodes ),
-    			'modalOptions' => array(
-    				'media_frame_title' => 'Insert Content Item',
+			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
+				'shortcodes' => array_values( $this->shortcodes ),
+				'modalOptions' => array(
+					'media_frame_title' => 'Insert Content Item',
 				)
-    		) );
+			) );
 
-    	}
+		}
 
 	}
 

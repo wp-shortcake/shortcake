@@ -46,11 +46,11 @@ var Shortcode_UI;
 		 */
 		set: function( attributes, options ) {
 
-		    if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof t.model.ShortcodeAttributes ) ) {
-		        attributes.attrs = new t.model.ShortcodeAttributes( attributes.attrs );
-		    }
+			if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof t.model.ShortcodeAttributes ) ) {
+				attributes.attrs = new t.model.ShortcodeAttributes( attributes.attrs );
+			}
 
-		    return Backbone.Model.prototype.set.call(this, attributes, options);
+			return Backbone.Model.prototype.set.call(this, attributes, options);
 		},
 
 		/**
@@ -63,17 +63,17 @@ var Shortcode_UI;
 				options.attrs = options.attrs.toJSON();
 			}
 			return options;
-    	},
+		},
 
-    	/**
-    	 * Make sure we don't clone a reference to attributes.
-    	 */
-    	clone: function() {
-    		var clone = Backbone.Model.prototype.clone.call( this );
-    		// Deep clone attributes.
-    		clone.set( 'attrs', clone.get( 'attrs' ).clone( true ) );
+		/**
+		 * Make sure we don't clone a reference to attributes.
+		 */
+		clone: function() {
+			var clone = Backbone.Model.prototype.clone.call( this );
+			// Deep clone attributes.
+			clone.set( 'attrs', clone.get( 'attrs' ).clone( true ) );
 			return clone;
-    	},
+		},
 
 		/**
 		 * Get the shortcode as... a shortcode!
@@ -305,33 +305,33 @@ var Shortcode_UI;
 
 	t.controller.MediaController = wp.media.controller.State.extend({
 
-	    initialize: function(){
+		initialize: function(){
 
-	        this.props = new Backbone.Model({
+			this.props = new Backbone.Model({
 				currentShortcode: null,
 				action: 'select',
-	        });
+			});
 
-	        this.props.on( 'change:action', this.refresh, this );
+			this.props.on( 'change:action', this.refresh, this );
 
-	    },
+		},
 
-	    refresh: function() {
-	    	// Need to trigger disabled state on button.
+		refresh: function() {
+			// Need to trigger disabled state on button.
 		},
 
 		insert: function() {
-		    var shortcode = this.props.get('currentShortcode');
-		    if ( shortcode ) {
-		    	send_to_editor( shortcode.formatShortcode() );
-		    	this.reset();
+			var shortcode = this.props.get('currentShortcode');
+			if ( shortcode ) {
+				send_to_editor( shortcode.formatShortcode() );
+				this.reset();
 				this.frame.close();
-		    }
+			}
 		},
 
 		reset: function() {
 			this.props.set( 'action', 'select' );
-		    this.props.set( 'currentShortcode', null );
+			this.props.set( 'currentShortcode', null );
 		},
 
 	});
@@ -389,13 +389,13 @@ var Shortcode_UI;
 			toolbar.view = new  wp.media.view.Toolbar( {
 				controller : this,
 				items: {
-				    insert: {
-				        text: 'Insert Item', // added via 'media_view_strings' filter,
-				        style: 'primary',
-				        priority: 80,
-				        requires: false,
-				        click: this.insertAction,
-				    }
+					insert: {
+						text: 'Insert Item', // added via 'media_view_strings' filter,
+						style: 'primary',
+						priority: 80,
+						requires: false,
+						click: this.insertAction,
+					}
 				}
 			} );
 		},
@@ -531,10 +531,10 @@ var Shortcode_UI;
 			}
 
 			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media( {
-        		frame: "post",
-        		state: 'shortcode-ui',
-        		currentShortcode: currentShortcode,
-    		} );
+				frame: "post",
+				state: 'shortcode-ui',
+				currentShortcode: currentShortcode,
+			} );
 
 			wp_media_frame.open();
 
