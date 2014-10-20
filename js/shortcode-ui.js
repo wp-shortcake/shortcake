@@ -36,7 +36,7 @@ var Shortcode_UI;
 
 		defaults: {
 			label: '',
-			shortcode: '',
+			shortcode_tag: '',
 			attrs: t.model.ShortcodeAttributes,
 		},
 
