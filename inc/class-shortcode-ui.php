@@ -30,6 +30,7 @@ class Shortcode_UI {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'print_media_templates', array( $this, 'print_templates' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'do_shortcode' ) );
+		add_filter( 'tiny_mce_before_init',  array( $this, 'modify_tinyMCE4' ), 10 );
 
 	}
 
@@ -181,6 +182,11 @@ class Shortcode_UI {
 
 		echo ob_get_clean();
 
+	}
+
+	function modify_tinyMCE4( $init ) {
+		$init['content_css'] .= ',' . $this->plugin_url . '/css/shortcode-ui-editor-styles.css';
+		return $init;
 	}
 
 	function do_shortcode( ) {
