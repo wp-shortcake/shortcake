@@ -316,10 +316,8 @@ var Shortcode_UI;
 
 	    },
 
-	    // called each time the model changes
 	    refresh: function() {
-	        // update the toolbar
-	    	this.frame.toolbar.get().refresh();
+	    	// Need to trigger disabled state on button.
 		},
 
 		insert: function() {
@@ -329,6 +327,72 @@ var Shortcode_UI;
 				this.frame.close();
 		    }
 		}
+
+	});
+
+	var shortcodeFrame = wp.media.view.MediaFrame.Post;
+	wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
+
+		initialize: function() {
+
+			shortcodeFrame.prototype.initialize.apply( this, arguments );
+
+			var id = 'shortcode-ui';
+
+			this.states.add([
+				new t.controller.MediaController( {
+					id      : id,
+					router  : id + '-router',
+					toolbar : id + '-toolbar',
+					menu    : 'default',
+					title   : 'Insert Content Item',
+					tabs    : [ 'insert' ],
+					priority: 20, // places it above Insert From URL
+					content : id + '-content-insert',
+				} )
+			]);
+
+			this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
+			this.on( 'router:create:' + id + '-router', this.createRouter, this );
+			this.on( 'router:render:' + id + '-router', _.bind( this.routerRender, this ) );
+			this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
+			this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
+
+		},
+
+		// Empty because currently there are no other tabs.
+		routerRender : function( view ) {},
+
+		contentRender : function( id, tab ) {
+			this.content.set(
+				new t.view.Shortcode_UI( {
+					controller: this,
+					className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
+				} )
+			);
+		},
+
+		toolbarRender: function( toolbar ) {},
+
+		toolbarCreate : function( toolbar ) {
+			toolbar.view = new  wp.media.view.Toolbar( {
+				controller : this,
+				items: {
+				    insert: {
+				        text: 'Insert Item', // added via 'media_view_strings' filter,
+				        style: 'primary',
+				        priority: 80,
+				        requires: false,
+				        click: this.insertAction,
+				    }
+				}
+			} );
+		},
+
+		insertAction: function() {
+			console.log( 'insertAction' );
+			this.controller.state().insert();
+		},
 
 	});
 
@@ -478,78 +542,5 @@ var Shortcode_UI;
 		} );
 
 	});
-
-
-// VIEW - MEDIA FRAME (MENU BAR)
-var shortcodeFrame = wp.media.view.MediaFrame.Post;
-wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
-
-	initialize: function() {
-
-		shortcodeFrame.prototype.initialize.apply( this, arguments );
-
-		var id = 'shortcode-ui';
-
-		this.states.add([
-			new t.controller.MediaController( {
-				id      : id,
-				router  : id + '-router',
-				toolbar : id + '-toolbar',
-				menu    : 'default',
-				title   : 'Insert Content Item',
-				tabs    : [ 'insert' ],
-				priority: 20, // places it above Insert From URL
-				content : id + '-content-insert',
-			} )
-		]);
-
-		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
-		// this.on( 'content:render:' + id, _.bind( this.contentRender, this ) );
-		// this.on( 'content:render:' + id + '-content', _.bind( this.contentRender, this ) );
-		this.on( 'router:create:' + id + '-router', this.createRouter, this );
-		this.on( 'router:render:' + id + '-router', _.bind( this.routerRender, this ) );
-		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
-		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
-
-	},
-
-	routerRender : function( view ) {},
-
-	contentRender : function( id, tab ) {
-
-		this.content.set(
-			new t.view.Shortcode_UI( {
-				controller: this,
-				className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
-			} )
-		);
-
-	},
-
-	toolbarRender: function( toolbar ) {
-		// console.log( 'toolbarRender', toolbar );
-	},
-
-	toolbarCreate : function( toolbar ) {
-		toolbar.view = new  wp.media.view.Toolbar( {
-			controller : this,
-			items: {
-			    insert: {
-			        text: 'Insert Item', // added via 'media_view_strings' filter,
-			        style: 'primary',
-			        priority: 80,
-			        requires: false,
-			        click: this.insertAction,
-			    }
-			}
-		} );
-	},
-
-	insertAction: function() {
-		console.log( 'insertAction' );
-		this.controller.state().insert();
-	},
-
-});
 
 } )( jQuery );
