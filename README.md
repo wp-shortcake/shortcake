@@ -23,19 +23,19 @@ add_action( 'init', function() {
 			'listItemImage' => 'dashicons-editor-quote',
 
 			// Available shortcode attributes and default values. Required. Array.
-			// Format 'id' => 'default value'
+			// Attribute model expects 'attr', 'type' and 'label'
 			'attrs' => array(
-				'align'     => 'left',
-				'source'    => '',
-				'sourceurl' => '',
+				array(
+					'label' => 'Quote',
+					'attr'  => 'content',
+					'type'  => 'textarea',
+				),
+				array(
+					'label' => 'Cite',
+					'attr'  => 'source',
+					'type'  => 'text',
+				),
 			),
-
-			// Edit form Template
-			// String. Path of the file that contains the template.
-			// This should be a <script type="text/html"> containing an underscore template.
-			// The ID of this template should be 'shortcode-$shortcode-edit-form''
-			// Optional - by default displays inputs for all attributes.
-			'template-edit-form' => plugin_dir_path( __FILE__ ) . 'inc/templates/shortcode-blockquote-edit-form.tpl.php',
 
 	) );
 
