@@ -10,11 +10,11 @@ class Shortcode_UI {
 	private static $instance = null;
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
-			self::$instance = new self;
-		}
-		return self::$instance;
-	}
+        if ( null == self::$instance ) {
+            self::$instance = new self;
+        }
+        return self::$instance;
+    }
 
 	function __construct() {
 
@@ -22,9 +22,14 @@ class Shortcode_UI {
 		$this->plugin_dir     = plugin_dir_path( dirname(  __FILE__ ) );
 		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
 
+		add_action( 'admin_init', function() {
+			remove_action( 'media_buttons', 'media_buttons' );
+		} );
+
+		add_action( 'media_buttons',         array( $this, 'action_media_buttons' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'print_media_templates', array( $this, 'print_templates' ) );
-		add_action( 'wp_ajax_do_shortcode', array( $this, 'do_shortcode' ) );
+		add_action( 'wp_ajax_do_shortcode',  array( $this, 'do_shortcode' ) );
 
 	}
 
@@ -38,7 +43,7 @@ class Shortcode_UI {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		// Strip invalid args.
+		// strip invalid
 		foreach ( $args as $key => $value ) {
 			if ( ! array_key_exists( $key, $defaults ) ) {
 				unset( $args[ $key ] );
@@ -58,39 +63,69 @@ class Shortcode_UI {
 
 	}
 
-	public function action_media_buttons() {
+	/**
+	 * Replace the 'add media' button with a more generic button.
+	 * This is slightly modified version of the core `media_buttons` function.
+	 *
+	 * @param  string $editor_id
+	 * @return null
+	 */
+	public function action_media_buttons( $editor_id = 'content' ) {
+
+		static $instance = 0;
+		$instance++;
 
 		$post = get_post();
-
 		if ( ! $post && ! empty( $GLOBALS['post_ID'] ) )
 			$post = $GLOBALS['post_ID'];
 
+		wp_enqueue_media( array(
+			'post' => $post
+		) );
+
 		$img = '<span class="wp-media-buttons-icon"></span> ';
 
-		printf(
-			'<button class="%s" title="%s">%s</button>',
-			'button shortcode-editor-open-insert-modal add_media',
-			esc_attr__( 'Add Content Item', 'shortcode-ui' ),
-			$img . __( 'Add Content Item', 'shortcode-ui' )
+		$id_attribute = $instance === 1 ? ' id="insert-media-button"' : '';
+		printf( '<a href="#"%s class="button insert-media add_media" data-editor="%s" title="%s">%s</a>',
+			$id_attribute,
+			esc_attr( $editor_id ),
+			esc_attr__( 'Add Content', 'shortcode-ui' ),
+			$img . __( 'Add Content', 'shortcode-ui' )
 		);
 
+		/**
+		 * Filter the legacy (pre-3.5.0) media buttons.
+		 *
+		 * @since 2.5.0
+		 * @deprecated 3.5.0 Use 'media_buttons' action instead.
+		 *
+		 * @param string $string Media buttons context. Default empty.
+		 */
+		$legacy_filter = apply_filters( 'media_buttons_context', '' );
+
+		if ( $legacy_filter ) {
+			// #WP22559. Close <a> if a plugin started by closing <a> to open their own <a> tag.
+			if ( 0 === stripos( trim( $legacy_filter ), '</a>' ) )
+				$legacy_filter .= '</a>';
+			echo $legacy_filter;
+		}
 	}
 
 	function enqueue_scripts( $hook ) {
 
-		if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
+    	if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
 
-			wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
-			wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
+    		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
+    		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 
-			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
-				'shortcodes' => array_values( $this->shortcodes ),
-				'modalOptions' => array(
-					'media_frame_title' => 'Insert Content Item',
+    		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
+    			'shortcodes' => array_values( $this->shortcodes ),
+    			'modalOptions' => array(
+    				'media_frame_title' => 'Insert Content Item',
 				)
-			) );
+    		) );
 
-		}
+    	}
 
 	}
 
