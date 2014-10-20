@@ -312,6 +312,9 @@ var Shortcode_UI;
 
 		select: function(e) {
 
+			console.log( 'select' );
+			console.log( this );
+
 			this.options.action = 'insert';
 			var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 			var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
@@ -327,6 +330,7 @@ var Shortcode_UI;
 		},
 
 		insert: function() {
+			alert('YEah!');
 			var shortcode = this.options.currentShortcode.formatShortcode();
 			send_to_editor( shortcode );
 			this.close();
@@ -524,8 +528,9 @@ t.controller.MediaController = wp.media.controller.State.extend({
 	},
 
 	// called when the toolbar button is clicked
-	customAction: function(){
+	insert: function(){
 	    console.log(this.props.get('custom_data'));
+	    console.log(this);
 	}
 
 });
@@ -535,10 +540,10 @@ t.controller.MediaController = wp.media.controller.State.extend({
 t.view.MediaToolbar = wp.media.view.Toolbar.extend({
 	initialize: function() {
 		_.defaults( this.options, {
-		    event: 'custom_event',
+		    event: 'shortcode-ui',
 		    close: false,
 			items: {
-			    custom_event: {
+			    insert: {
 			        text: 'XXX', // added via 'media_view_strings' filter,
 			        style: 'primary',
 			        priority: 80,
@@ -559,13 +564,7 @@ t.view.MediaToolbar = wp.media.view.Toolbar.extend({
 		wp.media.view.Toolbar.prototype.refresh.apply( this, arguments );
 	},
 
-	// triggered when the button is clicked
-	customAction: function(){
 
-		// console.log( this.controller.state().toJSON() );
-		// console.log( typeof( this.controller.state() ) );
-	    this.controller.state().customAction();
-	}
 });
 
 
@@ -927,6 +926,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 		this.on( 'router:create:' + id + '-router', this.createRouter, this );
 		this.on( 'router:render:' + id + '-router', _.bind( this.routerRender, this ) );
 		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
+		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
 
 	},
 
@@ -936,20 +936,41 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 
 		this.content.set(
 			new t.view.Shortcode_UI( {
-				className  : 'clearfix ' + id + '-content ' + id + '-content-' + tab
+				controller: this,
+				className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
 			} )
 		);
 
 	},
 
+	toolbarRender: function( toolbar ) {
+		// console.log( 'toolbarRender', toolbar );
+		// toolbar.set('insert', {} );
+	},
+
 	toolbarCreate : function( toolbar ) {
-		toolbar.view = new t.view.MediaToolbar( {
+		console.log( 'toolbarCreate' );
+		// toolbar.view = new t.view.MediaToolbar( {
+		toolbar.view = new  wp.media.view.Toolbar( {
 			controller : this,
+			items: {
+			    insert: {
+			        text: 'Insert Item', // added via 'media_view_strings' filter,
+			        style: 'primary',
+			        priority: 80,
+			        requires: false,
+			        click: this.insertAction,
+			    }
+			}
 		} );
 	},
 
-	insertAction: function() {
-		alert(1);
+	insertAction: function( e, a ) {
+		// this.controller.state().insert();
+
+		console.log( this.controller.content.view );
+		console.log( this.controller.state() );
+
 	},
 
 });
