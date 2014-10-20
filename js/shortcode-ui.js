@@ -403,7 +403,7 @@ var Shortcode_UI;
 
 		renderMenuSeparator: function( view ) {
 			view.set({
-				'library-separator-2': new media.View({
+				'shortcode-ui-separator': new media.View({
 					className: 'separator',
 					priority: 65
 				})
