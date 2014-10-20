@@ -2,15 +2,14 @@ var Shortcode_UI;
 
 ( function( $ ) {
 
-jQuery(document).ready(function(){
-
 	var t = Shortcode_UI = this;
 
 	t.model      = {};
 	t.collection = {};
 	t.view       = {};
+	t.utils      = {};
 
-	// Controller Model
+	// Modal Controller
 	t.model.Shortcode_UI = Backbone.Model.extend({
 		_this: this,
 		openInsertModal: function() {
@@ -27,39 +26,98 @@ jQuery(document).ready(function(){
 		},
 	});
 
-	// Single Shortcode Model.
+	t.model.ShortcodeAttribute = Backbone.Model.extend({
+		defaults: {
+			attr:  '',
+			label: '',
+			type:  '',
+			value: '',
+		},
+	});
+
+	t.model.ShortcodeAttributes = Backbone.Collection.extend({
+		model: t.model.ShortcodeAttribute,
+		clone: function(deep) {
+			if ( deep ) {
+				return new this.constructor( _.map( this.models, function(m) {
+					return m.clone();
+				} ) );
+			} else {
+				return Backbone.Collection.prototype.clone();
+			}
+		}
+	});
+
 	t.model.Shortcode = Backbone.Model.extend({
 
 		defaults: {
 			label: '',
 			shortcode: '',
-			attrs: {},
-			content: '',
+			attrs: t.model.ShortcodeAttributes,
 		},
 
 		/**
-		 * Get the shortcode as... well a shortcode!
+		 * Custom set method.
+		 * Handles setting the attribute collection.
+		 */
+		set: function( attributes, options ) {
+
+		    if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof t.model.ShortcodeAttributes ) ) {
+		        attributes.attrs = new t.model.ShortcodeAttributes( attributes.attrs );
+		    }
+
+		    return Backbone.Model.prototype.set.call(this, attributes, options);
+		},
+
+		/**
+		 * Custon toJSON.
+		 * Handles converting the attribute collection to JSON.
+		 */
+		toJSON: function( options ) {
+			options = Backbone.Model.prototype.toJSON.call(this, options);
+			if ( options.attrs !== undefined && ( options.attrs instanceof t.model.ShortcodeAttributes ) ) {
+				options.attrs = options.attrs.toJSON();
+			}
+			return options;
+    	},
+
+    	/**
+    	 * Make sure we don't clone a reference to attributes.
+    	 */
+    	clone: function() {
+    		var clone = Backbone.Model.prototype.clone.call( this );
+    		// Deep clone attributes.
+    		clone.set( 'attrs', clone.get( 'attrs' ).clone( true ) );
+			return clone;
+    	},
+
+		/**
+		 * Get the shortcode as... a shortcode!
 		 *
 		 * @return string eg [shortcode attr1=value]
 		 */
 		formatShortcode: function() {
 
-			var template, shortcodeAttributes, _attrs = [], content;
+			var template, shortcodeAttributes, attrs = [], content;
 
-			shortcodeAttributes = this.get( 'attrs' );
-			for ( var id in shortcodeAttributes ) {
-				_attrs.push( id + '="' + shortcodeAttributes[id] + '"' );
-			}
+			this.get( 'attrs' ).each( function( attr ) {
+
+				if ( attr.get( 'attr' ) === 'content' ) {
+					content = attr.get( 'value' );
+				} else {
+					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+				}
+
+			} );
 
 			template = "[shortcode attributes]"
 
-			content = this.get( 'content' );
 			if ( content && content.length > 1 ) {
 				template += "content[/shortcode]"
 			}
 
 			template = template.replace( /shortcode/g, this.get('shortcode_tag') );
-			template = template.replace( /attributes/g, _attrs.join( ' ' ) );
+			template = template.replace( /attributes/g, attrs.join( ' ' ) );
 			template = template.replace( /content/g, content );
 
 			return template;
@@ -100,20 +158,48 @@ jQuery(document).ready(function(){
 	 * Single edit shortcode content view.
 	 * Used for add/edit shortcode modal.
 	 */
-	t.view.editModalListItem = Backbone.View.extend({
+	t.view.shortcodeEditForm = Backbone.View.extend({
 
 		template: wp.template('shortcode-default-edit-form'),
-
-		events: {
-			'keyup .edit-shortcode-form-fields input[type="text"]': 'inputValueChanged',
-			'keyup .edit-shortcode-form-fields textarea': 'inputValueChanged',
-			'change .edit-shortcode-form-fields select': 'inputValueChanged',
-		},
 
 		// Handle custom params passed to view.
 		initialize: function(options) {
 		    this.options = {};
 		    this.options.action = options.action;
+		},
+
+		render: function(){
+
+			var view      = this.$el.html( this.template( this.model.toJSON() ) );
+			var $fieldsEl = view.find( '.edit-shortcode-form-fields' );
+
+			this.model.get( 'attrs' ).each( function( attr ) {
+				$fieldsEl.append(
+					new t.view.attributeEditField( { model: attr } ).render()
+				);
+			} );
+
+			return view;
+
+		},
+
+	});
+
+	t.view.attributeEditField = Backbone.View.extend( {
+
+		tagName: "div",
+
+		events: {
+			'keyup  input[type="text"]':   'updateValue',
+			'keyup  textarea':             'updateValue',
+			'change select':               'updateValue',
+			'change input[type=checkbox]': 'updateValue',
+			'change input[type=radio]':    'updateValue',
+		},
+
+		render: function() {
+			this.template = wp.media.template( 'shortcode-ui-field-' + this.model.get( 'type' ) );
+			return this.$el.html( this.template( this.model.toJSON() ) );
 		},
 
 		/**
@@ -122,51 +208,12 @@ jQuery(document).ready(function(){
 		 * If the input field that has changed is for content or a valid attribute,
 		 * then it should update the model.
 		 */
-		inputValueChanged: _.debounce( function( e ) {
-
+		updateValue: function( e ) {
 			var $el = $( e.target );
-
-			if ( 'content' === $el.attr('name') ) {
-
-				this.model.set( 'content', $el.val() );
-
-			} else {
-
-				var shortcodeAttributes = this.model.get( 'attrs' );
-
-				// Note - check this is a valid attribute first.
-				var id = $el.attr('name');
-				if ( id in shortcodeAttributes ) {
-					shortcodeAttributes[ id ] = $el.val();
-				}
-
-				this.model.set( 'attrs', shortcodeAttributes );
-
-			}
-
-		}, 100 ),
-
-		/**
-		 * Render the Edit form.
-		 * Uses custom template passed by model if available
-		 * Otherwise - displays functional default.
-		 */
-		render: function(){
-
-			var template;
-
-			// If the model has provided its own template - use that.
-			if ( templateEditForm = this.model.get('template-edit-form') ) {
-				templateEditForm = wp.template( 'shortcode-' + this.model.get( 'shortcode_tag' ) + '-edit-form' );
-			} else {
-				templateEditForm = this.template;
-			}
-
-			return this.$el.html( templateEditForm( this.model.toJSON() ) );
-
+			this.model.set( 'value', $el.val() );
 		},
 
-	});
+	} );
 
 	t.view.insertModal = {
 
@@ -257,7 +304,7 @@ jQuery(document).ready(function(){
 				},
 
 				renderEditShortcodeForm: function() {
-					var view = new t.view.editModalListItem( {
+					var view = new t.view.shortcodeEditForm( {
 						model:  this.options.currentShortcode,
 						action: this.options.action
 					} );
@@ -311,8 +358,7 @@ jQuery(document).ready(function(){
 						return;
 					}
 
-					// Deep clone the model.
-					this.options.currentShortcode = $.extend(true, {}, shortcode );
+					this.options.currentShortcode = shortcode.clone();
 
 					this.render();
 
@@ -350,18 +396,10 @@ jQuery(document).ready(function(){
 
 	};
 
-	t.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
-	t.modal      = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
-
-	jQuery('.shortcode-editor-open-insert-modal').click( function(e) {
-		e && e.preventDefault();
-		t.modal.openInsertModal();
-	});
-
 	/**
 	 * Generic shortcode mce view constructor.
 	 */
-	var constructor = {
+	t.utils.shorcodeViewConstructor = {
 
 		View: {
 
@@ -369,21 +407,28 @@ jQuery(document).ready(function(){
 
 			initialize: function( options ) {
 
-				var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+				var placeholderShortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
 
-				if ( ! shortcode ) {
+				if ( ! placeholderShortcode ) {
 					return;
 				}
 
-				shortcode = $.extend(true, {}, shortcode ); // Deep clone.
-				shortcode.set( 'content', options.shortcode.content );
+				shortcode = placeholderShortcode.clone();
 
-				var attrs = shortcode.get( 'attrs' );
-				for ( var id in options.shortcode.attrs.named ) {
-					if ( id in attrs ) {
-						attrs[ id ] = options.shortcode.attrs.named[ id ];
+				shortcode.get( 'attrs' ).each( function( attr ) {
+
+					if ( attr.get( 'attr') in options.shortcode.attrs.named ) {
+						attr.set(
+							'value',
+							options.shortcode.attrs.named[ attr.get( 'attr') ]
+						);
 					}
-				}
+
+					if ( attr.get( 'attr' ) === 'content' && ( 'content' in  options.shortcode ) ) {
+						attr.set( 'value', options.shortcode.content );
+					}
+
+				});
 
 				this.shortcode = shortcode;
 
@@ -430,7 +475,7 @@ jQuery(document).ready(function(){
 		 */
 		edit: function( node ) {
 
-			var shortcodeString, model, attrs;
+			var shortcodeString, model, attr;
 
 			shortcodeString = decodeURIComponent( $(node).attr( 'data-wpview-text' ) );
 
@@ -441,15 +486,13 @@ jQuery(document).ready(function(){
 				return;
 			}
 
-			model = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: matches[1] } );
+			defaultShortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: matches[1] } );
 
-			if ( ! model ) {
+			if ( ! defaultShortcode ) {
 				return;
 			}
 
-			model = $.extend(true, {}, model );
-
-			attrs = model.get( 'attrs' );
+			currentShortcode = defaultShortcode.clone();
 
 			if ( typeof( matches[2] ) != undefined ) {
 
@@ -461,38 +504,49 @@ jQuery(document).ready(function(){
 					var bitsRegEx = /(\S+?)="(.*?)"/g;
 					var bits = bitsRegEx.exec( attributeMatches[i] );
 
-					if ( bits[1] in attrs ) {
-						attrs[ bits[1] ] = bits[2];
+					attr = currentShortcode.get( 'attrs' ).findWhere( { attr: bits[1] } );
+					if ( attr ) {
+						attr.set( 'value', bits[2] );
 					}
 
 				}
 
 			}
 
-			model.set( 'attrs', attrs );
-
 			if ( matches[3] ) {
-				model.set( 'content', matches[3] );
+				var content = currentShortcode.get( 'attrs' ).findWhere( { attr: 'content' } );
+				if ( content ) {
+					content.set( 'value', matches[3] );
+				}
 			}
 
-			Shortcode_UI.modal.openEditModal( model );
+			Shortcode_UI.modal.openEditModal( currentShortcode );
 
 		}
 
 	}
 
-	t.shortcodes.each( function( shortcode ) {
+	$(document).ready(function(){
 
-		// Register the mce view for each shortcode.
-		// Note - clone the constructor.
-		wp.mce.views.register(
-			shortcode.get('shortcode_tag'),
-			jQuery.extend( true, {}, constructor )
-		);
-	} );
+		t.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
+		t.modal      = new t.model.Shortcode_UI( shortcodeUIData.modalOptions );
 
+		$('.shortcode-editor-open-insert-modal').click( function(e) {
+			e && e.preventDefault();
+			t.modal.openInsertModal();
+		});
 
+		t.shortcodes.each( function( shortcode ) {
 
-});
+			// Register the mce view for each shortcode.
+			// Note - clone the constructor.
+			wp.mce.views.register(
+				shortcode.get('shortcode_tag'),
+				$.extend( true, {}, t.utils.shorcodeViewConstructor )
+			);
+
+		} );
+
+	});
 
 } )( jQuery );

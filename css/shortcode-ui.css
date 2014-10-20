@@ -66,8 +66,12 @@
   padding: 5px 20px; }
   .edit-shortcode-form .edit-shortcode-form-fields > div {
     margin-bottom: 10px; }
-  .edit-shortcode-form .edit-shortcode-form-fields label {
+  .edit-shortcode-form .field-block label {
     display: block;
     margin-bottom: 10px; }
+  .edit-shortcode-form .field-inline {
+    padding-top: 10px; }
+    .edit-shortcode-form .field-inline label {
+      display: inline-block; }
 
 /*# sourceMappingURL=shortcode-ui.css.map */

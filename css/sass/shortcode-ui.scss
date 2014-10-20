@@ -92,12 +92,21 @@
 	padding: 5px 20px;
 
 	.edit-shortcode-form-fields {
-
 		> div { margin-bottom: 10px; }
+	}
+
+	.field-block {
 		label {
 			display: block;
 			margin-bottom: 10px;
 		}
-
 	}
+
+	.field-inline {
+		label {
+			display: inline-block;
+		}
+		padding-top: 10px;
+	}
+
 }
