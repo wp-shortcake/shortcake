@@ -10,9 +10,35 @@ This is a tool to be used alongside add_shortcode to add a user friendly interfa
 ```php
 add_action( 'init', function() {
 
-	$shortcode_ui = Shortcode_UI::get_instance();
+	/**
+	 * Register your shorcode as you would normally.
+	 * This is a simple example for a blockquote with a citation.
+	 */
+	add_shortcode( 'blockquote', function( $args, $content = '' ) {
 
-	$shortcode_ui->register_shortcode_ui(
+		$args = wp_parse_args( $args, array(
+			'source' => ''
+		) );
+
+		?>
+
+		<blockquote>
+
+			<?php echo esc_html( $content ); ?>
+			<br/>
+			<cite><em><?php echo esc_html( $attr['source'] ); ?>
+
+		</blockquote>
+
+		<?php
+	} );
+
+	/**
+	 * Register a UI for the Shortcode.
+	 * Pass the shortcode tag (string)
+	 * and an array or args.
+	 */
+	shortcode_ui_register_for_shortcode(
 		'blockquote',
 		array(
 
@@ -24,6 +50,7 @@ add_action( 'init', function() {
 
 			// Available shortcode attributes and default values. Required. Array.
 			// Attribute model expects 'attr', 'type' and 'label'
+			// Supported field types: 'text', 'url', 'textarea', 'select'
 			'attrs' => array(
 				array(
 					'label' => 'Quote',
@@ -36,8 +63,8 @@ add_action( 'init', function() {
 					'type'  => 'text',
 				),
 			),
-
-	) );
+		)
+	);
 
 } );
 ````

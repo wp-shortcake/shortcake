@@ -38,10 +38,6 @@ add_action( 'init', function() {
  * @param  array  $args
  * @return null
  */
-function sui_register_ui_for_shortcode( $shortcode_tag, $args = array() ) {
+function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) {
 	Shortcode_UI::get_instance()->register_shortcode_ui( $shortcode_tag, $args );
-}
-
-function sui_get_registered_ui_for_shortcode( $shortcode_tag ) {
-	return Shortcode_UI::get_instance()->get_shortcode( $shortcode_tag );
 }
