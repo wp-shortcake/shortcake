@@ -22,11 +22,8 @@ class Shortcode_UI {
 		$this->plugin_dir     = plugin_dir_path( dirname(  __FILE__ ) );
 		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
 
-		add_action( 'media_buttons', array( $this, 'action_media_buttons' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
 		add_action( 'print_media_templates', array( $this, 'print_templates' ) );
-
 		add_action( 'wp_ajax_do_shortcode', array( $this, 'do_shortcode' ) );
 
 	}

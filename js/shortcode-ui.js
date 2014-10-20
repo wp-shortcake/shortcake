@@ -272,7 +272,7 @@ var Shortcode_UI;
 			this.$el.append( view.render().el );
 
 			if ( this.controller.props.get('action') === 'update' ) {
-				this.$contentEl.find( '.edit-shortcode-form-cancel' ).remove();
+				this.$el.find( '.edit-shortcode-form-cancel' ).remove();
 			}
 
 			return this;
@@ -324,9 +324,15 @@ var Shortcode_UI;
 		    var shortcode = this.props.get('currentShortcode');
 		    if ( shortcode ) {
 		    	send_to_editor( shortcode.formatShortcode() );
+		    	this.reset();
 				this.frame.close();
 		    }
-		}
+		},
+
+		reset: function() {
+			this.props.set( 'action', 'select' );
+		    this.props.set( 'currentShortcode', null );
+		},
 
 	});
 
@@ -339,18 +345,23 @@ var Shortcode_UI;
 
 			var id = 'shortcode-ui';
 
-			this.states.add([
-				new t.controller.MediaController( {
-					id      : id,
-					router  : id + '-router',
-					toolbar : id + '-toolbar',
-					menu    : 'default',
-					title   : 'Insert Content Item',
-					tabs    : [ 'insert' ],
-					priority: 20, // places it above Insert From URL
-					content : id + '-content-insert',
-				} )
-			]);
+			var controller = new t.controller.MediaController( {
+				id      : id,
+				router  : id + '-router',
+				toolbar : id + '-toolbar',
+				menu    : 'default',
+				title   : 'Insert Content Item',
+				tabs    : [ 'insert' ],
+				priority: 20, // places it above Insert From URL
+				content : id + '-content-insert',
+			} );
+
+			if ( 'currentShortcode' in arguments[0] ) {
+				controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
+				controller.props.set( 'action', 'update' );
+			}
+
+			this.states.add([ controller]);
 
 			this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
 			this.on( 'router:create:' + id + '-router', this.createRouter, this );
@@ -390,7 +401,6 @@ var Shortcode_UI;
 		},
 
 		insertAction: function() {
-			console.log( 'insertAction' );
 			this.controller.state().insert();
 		},
 
@@ -520,7 +530,16 @@ var Shortcode_UI;
 				}
 			}
 
-			Shortcode_UI.modal.openEditModal( currentShortcode );
+			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media( {
+        		frame: "post",
+        		state: 'shortcode-ui',
+        		currentShortcode: currentShortcode,
+    		} );
+
+			wp_media_frame.open();
+
+
+			// Shortcode_UI.modal.openEditModal( currentShortcode );
 
 		}
 
