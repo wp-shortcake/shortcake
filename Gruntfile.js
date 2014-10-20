@@ -13,6 +13,7 @@ module.exports = function( grunt ) {
 			dist: {
 				files: {
 					'css/shortcode-ui.css' : 'css/sass/shortcode-ui.scss',
+					'css/shortcode-ui-editor-styles.css' : 'css/sass/shortcode-ui-editor-styles.scss',
 				},
 				options: {
 					sourceMap: true

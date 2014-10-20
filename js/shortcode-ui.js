@@ -36,7 +36,7 @@ var Shortcode_UI;
 
 		defaults: {
 			label: '',
-			shortcode: '',
+			shortcode_tag: '',
 			attrs: t.model.ShortcodeAttributes,
 		},
 
@@ -94,15 +94,15 @@ var Shortcode_UI;
 
 			} );
 
-			template = "[shortcode attributes]"
+			template = "[{{ shortcode }} {{ attributes }}]"
 
 			if ( content && content.length > 1 ) {
-				template += "content[/shortcode]"
+				template += "{{ content }}[/{{ shortcode }}]"
 			}
 
-			template = template.replace( /shortcode/g, this.get('shortcode_tag') );
-			template = template.replace( /attributes/g, attrs.join( ' ' ) );
-			template = template.replace( /content/g, content );
+			template = template.replace( /{{ shortcode }}/g, this.get('shortcode_tag') );
+			template = template.replace( /{{ attributes }}/g, attrs.join( ' ' ) );
+			template = template.replace( /{{ content }}/g, content );
 
 			return template;
 
