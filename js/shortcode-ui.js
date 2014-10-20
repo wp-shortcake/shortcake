@@ -7,6 +7,7 @@ var Shortcode_UI;
 	t.model      = {};
 	t.collection = {};
 	t.view       = {};
+	t.controller = {};
 	t.utils      = {};
 
 	// Modal Controller
@@ -135,12 +136,12 @@ var Shortcode_UI;
 	 * Single shortcode list item view.
 	 * Used for add new shortcode modal.
 	 */
-	t.view.insertModalListItem = Backbone.View.extend({
+	t.view.insertShortcodeListItem = Backbone.View.extend({
 		tagName: 'li',
 		template:  wp.template('add-shortcode-list-item'),
 		className: 'shortcode-list-item',
 
-		render: function(){
+		render: function() {
 
 			var data = this.model.toJSON();
 
@@ -150,8 +151,47 @@ var Shortcode_UI;
 				data.listItemImage = '<div class="dashicons ' + data.listItemImage + '"></div>';
 			}
 
-			return this.$el.html( this.template( data ) );
+			this.$el.html( this.template( data ) );
+
+			return this;
+
 		}
+	});
+
+	t.view.insertShortcodeList = Backbone.View.extend({
+
+		tagName: 'div',
+
+		initialize: function(options) {
+			this.options = {};
+			this.options.shortcodes = options.shortcodes;
+		},
+
+		render: function(){
+
+			var t = this;
+
+			t.$el.html('');
+
+			var $listEl = $('<ul class="add-shortcode-list">');
+			t.options.shortcodes.each( function( shortcode ) {
+
+				var view = new Shortcode_UI.view.insertShortcodeListItem( {
+					model: shortcode
+				} );
+
+				$listEl.append(
+					view.render().el
+				);
+
+			} );
+
+			t.$el.append( $listEl );
+
+			return t;
+
+		}
+
 	});
 
 	/**
@@ -164,8 +204,8 @@ var Shortcode_UI;
 
 		// Handle custom params passed to view.
 		initialize: function(options) {
-		    this.options = {};
-		    this.options.action = options.action;
+			this.options = {};
+			this.options.action = options.action;
 		},
 
 		render: function(){
@@ -215,6 +255,85 @@ var Shortcode_UI;
 
 	} );
 
+	t.view.Shortcode_UI = Backbone.View.extend({
+
+		options: {
+			action: 'select'
+		},
+
+		events: {
+			"click .add-shortcode-list li":      "select",
+			"click .media-button-insert":        "insert",
+			"click .edit-shortcode-form-cancel": "cancelSelect"
+		},
+
+		render: function() {
+
+			this.$el.html('');
+
+			switch( this.options.action ) {
+				case 'select' :
+					this.renderSelectShortcodeView();
+					break;
+				case 'update' :
+				case 'insert' :
+					this.renderEditShortcodeView();
+					break;
+			}
+
+		},
+
+		renderSelectShortcodeView: function() {
+			this.$el.append(
+				new t.view.insertShortcodeList( { shortcodes: t.shortcodes } ).render().el
+			);
+		},
+
+		renderEditShortcodeView: function() {
+
+			var view = new t.view.shortcodeEditForm( {
+				model:  this.options.currentShortcode,
+				action: this.options.action
+			} );
+
+			this.$el.append( view.render() );
+
+			if ( this.options.action === 'update' ) {
+				this.$contentEl.find( '.edit-shortcode-form-cancel' ).remove();
+			}
+
+		},
+
+		cancelSelect: function() {
+			this.options.action = 'select';
+			this.options.currentShortcode = null;
+			this.render();
+		},
+
+		select: function(e) {
+
+			this.options.action = 'insert';
+			var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
+			var shortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
+
+			if ( ! shortcode ) {
+				return;
+			}
+
+			this.options.currentShortcode = shortcode.clone();
+
+			this.render();
+
+		},
+
+		insert: function() {
+			var shortcode = this.options.currentShortcode.formatShortcode();
+			send_to_editor( shortcode );
+			this.close();
+		}
+
+	});
+
 	t.view.insertModal = {
 
 		frame: function( delegate ) {
@@ -261,7 +380,7 @@ var Shortcode_UI;
 
 					this.activeRichTextEditors = Array();
 
-					this.modal.$el.addClass('shortcode-ui-insert-modal')
+					this.modal.$el.addClass('shortcode-ui-insert')
 
 				},
 
@@ -292,15 +411,244 @@ var Shortcode_UI;
 
 				renderAddShortcodeList: function() {
 
-					var list = $('<ul class="add-shortcode-list">');
+					this.$contentEl.append(
+						new t.view.insertShortcodeList( { shortcodes: t.shortcodes } ).render().el
+					);
+				},
 
-					this.shortcodes.each( function( shortcode ) {
-						var view = new t.view.insertModalListItem( { model: shortcode } );
-						list.append( view.render( shortcode.toJSON() ) );
+				renderEditShortcodeForm: function() {
+					var view = new t.view.shortcodeEditForm( {
+						model:  this.options.currentShortcode,
+						action: this.options.action
 					} );
 
-					this.$contentEl.append( list );
+					this.$contentEl.append( view.render() );
 
+					if ( this.options.action === 'update' ) {
+						this.$contentEl.find( '.edit-shortcode-form-cancel' ).remove();
+					}
+
+				},
+
+				// @todo make this nicer.
+				renderFooter: function() {
+
+					var toolbar = $( '<div class="media-toolbar" />' );
+					var el = $( '<div class="media-toolbar-primary" />' );
+					var buttonSubmit = $('<button href="#" class="button media-button button-primary button-large media-button-insert" disabled="disabled">Insert into post</button>');
+
+					buttonSubmit.appendTo( el );
+					el.appendTo( toolbar );
+					toolbar.appendTo( this.$toolbarEl );
+
+					switch( this.options.action ) {
+						case 'select' :
+							buttonSubmit.attr( 'disabled', 'disabled' );
+							break;
+						case 'insert' :
+							buttonSubmit.removeAttr( 'disabled' );
+							break;
+						case 'update' :
+							buttonSubmit.removeAttr( 'disabled' );
+							buttonSubmit.html( 'Update' );
+							break;
+					}
+
+				},
+
+				cancelInsert: function() {
+					this.options.action = 'select';
+					this.options.currentShortcode = null;
+					this.render();
+				},
+
+				selectEditShortcode: function(e) {
+					this.options.action = 'insert';
+					var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
+					var shortcode = this.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
+
+					if ( ! shortcode ) {
+						return;
+					}
+
+					this.options.currentShortcode = shortcode.clone();
+
+					this.render();
+
+				},
+
+				insertShortcode: function() {
+					var shortcode = this.options.currentShortcode.formatShortcode();
+					send_to_editor( shortcode );
+					this.close();
+				}
+
+			});
+
+			// Map some of the modal's methods to the frame.
+			_.each(['open','close','attach','detach','escape'], function( method ) {
+				_frame.prototype[ method ] = function( view ) {
+					if ( this.modal )
+						this.modal[ method ].apply( this.modal, arguments );
+					return this;
+				};
+			});
+
+			this._frame = new _frame();
+
+			return this._frame;
+		},
+
+		render: function() {
+
+		},
+
+		init: function() {
+
+		}
+
+	};
+
+
+t.controller.MediaController = wp.media.controller.State.extend({
+
+    initialize: function(){
+        this.props = new Backbone.Model({ custom_data: '' });
+        this.props.on( 'change:custom_data', this.refresh, this );
+    },
+
+    // called each time the model changes
+    refresh: function() {
+        // update the toolbar
+    	this.frame.toolbar.get().refresh();
+	},
+
+	// called when the toolbar button is clicked
+	customAction: function(){
+	    console.log(this.props.get('custom_data'));
+	}
+
+});
+
+
+// custom toolbar : contains the buttons at the bottom
+t.view.MediaToolbar = wp.media.view.Toolbar.extend({
+	initialize: function() {
+		_.defaults( this.options, {
+		    event: 'custom_event',
+		    close: false,
+			items: {
+			    custom_event: {
+			        text: 'XXX', // added via 'media_view_strings' filter,
+			        style: 'primary',
+			        priority: 80,
+			        requires: false,
+			        click: this.customAction
+			    }
+			}
+		});
+
+		wp.media.view.Toolbar.prototype.initialize.apply( this, arguments );
+	},
+
+    // called each time the model changes
+    // Use this to set/unset button disabled state.
+	refresh: function() {
+
+	    // call the parent refresh
+		wp.media.view.Toolbar.prototype.refresh.apply( this, arguments );
+	},
+
+	// triggered when the button is clicked
+	customAction: function(){
+
+		// console.log( this.controller.state().toJSON() );
+		// console.log( typeof( this.controller.state() ) );
+	    this.controller.state().customAction();
+	}
+});
+
+
+	t.view.insertModal = {
+
+		frame: function( delegate ) {
+
+			if ( this._frame )
+				return this._frame;
+
+			var _frame = wp.media.view.Frame.extend({
+
+				className: 'media-frame',
+				template:  wp.media.template('shortcode-ui-media-frame'),
+				model: delegate,
+				events: {
+					"click .add-shortcode-list li": "selectEditShortcode",
+					"click .media-button-insert": "insertShortcode",
+					"submit .edit-shortcode-form": "insertShortcode",
+					"click .edit-shortcode-form-cancel": 'cancelInsert'
+				},
+
+				initialize: function( a ) {
+
+					this.shortcodes = Shortcode_UI.shortcodes;
+
+					this.options = this.model.attributes;
+
+					if ( ! this.options.action ) {
+						this.options.action = 'select';
+					}
+
+					wp.media.view.Frame.prototype.initialize.apply( this, arguments );
+
+					// Ensure core UI is enabled.
+					this.$el.addClass('wp-core-ui');
+
+					this.originalActiveEditor = false;
+
+					// Initialize modal container view.
+					this.modal = new wp.media.view.Modal({
+						controller: this,
+						title:	  "Edit Image"
+					});
+
+					this.modal.content( this );
+
+					this.activeRichTextEditors = Array();
+
+					this.modal.$el.addClass('shortcode-ui-insert')
+
+				},
+
+				render: function() {
+
+					var r = wp.media.view.Frame.prototype.render.apply( this, arguments );
+
+					this.$toolbarEl  = this.$el.find( '.media-frame-toolbar' );
+					this.$contentEl = this.$el.find( '.media-frame-content' );
+
+					this.$contentEl.html('');
+					this.$toolbarEl.html('');
+
+					switch( this.options.action ) {
+						case 'select' :
+							this.renderAddShortcodeList();
+							break;
+						case 'update' :
+						case 'insert' :
+							this.renderEditShortcodeForm();
+							break;
+					}
+
+					this.renderFooter();
+
+					return r;
+				},
+
+				renderAddShortcodeList: function() {
+
+					this.$contentEl.append(
+						new t.view.insertShortcodeList( { shortcodes: t.shortcodes } ).render().el
+					);
 				},
 
 				renderEditShortcodeForm: function() {
@@ -548,5 +896,62 @@ var Shortcode_UI;
 		} );
 
 	});
+
+
+// VIEW - MEDIA FRAME (MENU BAR)
+var shortcodeFrame = wp.media.view.MediaFrame.Post;
+wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
+
+	initialize: function() {
+
+		shortcodeFrame.prototype.initialize.apply( this, arguments );
+
+		var id = 'shortcode-ui';
+
+		this.states.add([
+			new t.controller.MediaController( {
+				id      : id,
+				router  : id + '-router',
+				toolbar : id + '-toolbar',
+				menu    : 'default',
+				title   : 'Insert Content Item',
+				tabs    : [ 'insert' ],
+				priority: 20, // places it above Insert From URL
+				content : id + '-content-insert'
+			} )
+		]);
+
+		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
+		// this.on( 'content:render:' + id, _.bind( this.contentRender, this ) );
+		// this.on( 'content:render:' + id + '-content', _.bind( this.contentRender, this ) );
+		this.on( 'router:create:' + id + '-router', this.createRouter, this );
+		this.on( 'router:render:' + id + '-router', _.bind( this.routerRender, this ) );
+		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
+
+	},
+
+	routerRender : function( view ) {},
+
+	contentRender : function( id, tab ) {
+
+		this.content.set(
+			new t.view.Shortcode_UI( {
+				className  : 'clearfix ' + id + '-content ' + id + '-content-' + tab
+			} )
+		);
+
+	},
+
+	toolbarCreate : function( toolbar ) {
+		toolbar.view = new t.view.MediaToolbar( {
+			controller : this,
+		} );
+	},
+
+	insertAction: function() {
+		alert(1);
+	},
+
+});
 
 } )( jQuery );
