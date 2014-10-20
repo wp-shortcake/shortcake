@@ -397,12 +397,26 @@ var Shortcode_UI;
 		},
 
 		renderMenuSeparator: function( view ) {
+
 			view.set({
 				'shortcode-ui-separator': new wp.media.View({
 					className: 'separator',
 					priority: 65
 				})
 			});
+
+			// @todo - fix this.
+			// This is a hack.
+			// I just can't work out how to do it properly...
+			if (
+				view.controller.state().props
+				&& view.controller.state().props.get( 'currentShortcode' )
+			) {
+				window.setTimeout( function() {
+					view.controller.$el.addClass( 'hide-menu' );
+				} );
+			}
+
 		},
 
 		insertAction: function() {
