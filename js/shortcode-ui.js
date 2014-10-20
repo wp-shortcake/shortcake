@@ -352,7 +352,7 @@ var Shortcode_UI;
 				menu    : 'default',
 				title   : 'Insert Content Item',
 				tabs    : [ 'insert' ],
-				priority:  66, // places it above Insert From URL
+				priority:  66,
 				content : id + '-content-insert',
 			} );
 
