@@ -2,34 +2,57 @@
 
 add_action( 'init', function() {
 
-	$instance = new Shortcode_UI();
+	/**
+	 * Register your shorcode as you would normally.
+	 * This is a simple example for a blockquote with a citation.
+	 */
+	add_shortcode( 'blockquote', function( $attr, $content = '' ) {
 
-	$args = array(
-		'label' => 'Test Shortcode',
-		'image' => 'dashicons-carrot',
-		'shortcodeAtts' => array(
-			array( 'label' => 'ID', 'id' => 'id' ),
-			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
+		$attr = wp_parse_args( $attr, array(
+			'source' => ''
+		) );
+
+		?>
+
+		<blockquote>
+			<?php echo esc_html( $content ); ?><br/>
+			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
+		</blockquote>
+
+		<?php
+	} );
+
+	/**
+	 * Register a UI for the Shortcode.
+	 * Pass the shortcode tag (string)
+	 * and an array or args.
+	 */
+	shortcode_ui_register_for_shortcode(
+		'blockquote',
+		array(
+
+			// Display label. String. Required.
+			'label' => 'Blockquote',
+
+			// Icon/image for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
+			'listItemImage' => 'dashicons-editor-quote',
+
+			// Available shortcode attributes and default values. Required. Array.
+			// Attribute model expects 'attr', 'type' and 'label'
+			// Supported field types: 'text', 'url', 'textarea', 'select'
+			'attrs' => array(
+				array(
+					'label' => 'Quote',
+					'attr'  => 'content',
+					'type'  => 'textarea',
+				),
+				array(
+					'label' => 'Cite',
+					'attr'  => 'source',
+					'type'  => 'text',
+				),
+			),
 		)
 	);
-
-	$instance->register_shortcode_ui( 'test_shortcode', $args );
-
-	$args = array(
-		'label' => 'Blockquote',
-		'image' => 'dashicons-editor-quote',
-		'shortcodeAtts' => array(
-			array( 'label' => 'Background Color', 'id' => 'bg_color' ),
-			array( 'label' => 'Align', 'id' => 'align', 'value' => 'left' ),
-			array( 'label' => 'Font Size', 'id' => 'font-size', 'value' => 'large' ),
-		),
-		'templates' => array(
-			'render'   => $instance->plugin_dir . '/inc/shortcodes/blockquote/render.tpl.php',
-			'editForm' => $instance->plugin_dir . '/inc/shortcodes/blockquote/editForm.tpl.php',
-		)
-	);
-
-	$instance->register_shortcode_ui( 'blockquote', $args );
-
 
 } );

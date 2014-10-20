@@ -8,7 +8,6 @@ This is a tool to be used alongside add_shortcode to add a user friendly interfa
 ## Usage.
 
 ```php
-
 add_action( 'init', function() {
 
 	/**
