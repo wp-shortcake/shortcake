@@ -403,7 +403,7 @@ var Shortcode_UI;
 
 		renderMenuSeparator: function( view ) {
 			view.set({
-				'shortcode-ui-separator': new media.View({
+				'shortcode-ui-separator': new wp.media.View({
 					className: 'separator',
 					priority: 65
 				})
