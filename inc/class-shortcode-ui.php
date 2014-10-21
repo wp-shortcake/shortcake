@@ -10,11 +10,11 @@ class Shortcode_UI {
 	private static $instance = null;
 
 	public static function get_instance() {
-        if ( null == self::$instance ) {
-            self::$instance = new self;
-        }
-        return self::$instance;
-    }
+		if ( null == self::$instance ) {
+			self::$instance = new self;
+		}
+		return self::$instance;
+	}
 
 	function __construct() {
 
@@ -29,8 +29,8 @@ class Shortcode_UI {
 		add_action( 'media_buttons',         array( $this, 'action_media_buttons' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'print_media_templates', array( $this, 'print_templates' ) );
-		add_action( 'wp_ajax_do_shortcode',  array( $this, 'do_shortcode' ) );
-		add_filter( 'tiny_mce_before_init',  array( $this, 'modify_tinyMCE4' ), 10 );
+		add_filter( 'tiny_mce_before_init',  array( $this, 'modify_tiny_mce_4' ) );
+		add_action( 'wp_ajax_do_shortcode',  array( $this, 'ajax_do_shortcode' ) );
 
 	}
 
@@ -81,7 +81,7 @@ class Shortcode_UI {
 			$post = $GLOBALS['post_ID'];
 
 		wp_enqueue_media( array(
-			'post' => $post
+			'post' => $post,
 		) );
 
 		$img = '<span class="wp-media-buttons-icon"></span> ';
@@ -94,22 +94,6 @@ class Shortcode_UI {
 			$img . __( 'Add Content', 'shortcode-ui' )
 		);
 
-		/**
-		 * Filter the legacy (pre-3.5.0) media buttons.
-		 *
-		 * @since 2.5.0
-		 * @deprecated 3.5.0 Use 'media_buttons' action instead.
-		 *
-		 * @param string $string Media buttons context. Default empty.
-		 */
-		$legacy_filter = apply_filters( 'media_buttons_context', '' );
-
-		if ( $legacy_filter ) {
-			// #WP22559. Close <a> if a plugin started by closing <a> to open their own <a> tag.
-			if ( 0 === stripos( trim( $legacy_filter ), '</a>' ) )
-				$legacy_filter .= '</a>';
-			echo $legacy_filter;
-		}
 	}
 
 	function enqueue_scripts( $hook ) {
@@ -130,23 +114,15 @@ class Shortcode_UI {
 
 	}
 
+	/**
+	 * Output required underscore.js templates
+	 *
+	 * @return null
+	 */
 	public function print_templates() {
-
 		$this->get_view( 'media-frame' );
 		$this->get_view( 'list-item' );
-		$this->get_view( 'shortcode-default-edit-form' );
-		$this->get_view( 'default-shortcode-render' );
-
-		// Load individual shortcode template files.
-		foreach ( $this->shortcodes as $shortcode => $args ) {
-
-			// Load shortcode edit form template.
-			if ( ! empty( $args['template-edit-form'] ) ) {
-				$this->get_view( $args['template-edit-form'] );
-			}
-
-		}
-
+		$this->get_view( 'edit-form' );
 	}
 
 	/**
@@ -184,14 +160,26 @@ class Shortcode_UI {
 
 	}
 
-	function modify_tinyMCE4( $init ) {
+	/**
+	 * Load custom editor style CSS.
+	 *
+	 * @param  array tinyMCE config
+	 * @return array tinyMCE config
+	 */
+	function modify_tiny_mce_4( $init ) {
 		$init['content_css'] .= ',' . $this->plugin_url . '/css/shortcode-ui-editor-styles.css';
 		return $init;
 	}
 
-	function do_shortcode( ) {
+	/**
+	 * Output a shortcode.
+	 * ajax callback for displaying the shortcode in the TinyMCE editor.
+	 *
+	 * @return null
+	 */
+	function ajax_do_shortcode( ) {
 
-		$shortcode = ! empty( $_POST['shortcode'] ) ? sanitize_text_field( wp_unslash( $_POST['shortcode'] ) ) : null;
+		$shortcode = ! empty( $_POST['shortcode'] ) ? sanitize_text_field( $_POST['shortcode'] ) : null;
 		$post_id   = ! empty( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : null;
 
 		global $post;
@@ -200,6 +188,7 @@ class Shortcode_UI {
 
 		echo do_shortcode( $shortcode );
 		exit;
+
 	}
 
 }
