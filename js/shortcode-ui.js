@@ -21,14 +21,11 @@ var Shortcode_UI;
 
 	t.model.ShortcodeAttributes = Backbone.Collection.extend({
 		model: t.model.ShortcodeAttribute,
-		clone: function(deep) {
-			if ( deep ) {
-				return new this.constructor( _.map( this.models, function(m) {
-					return m.clone();
-				} ) );
-			} else {
-				return Backbone.Collection.prototype.clone();
-			}
+		//  Deep Clone.
+		clone: function() {
+			return new this.constructor( _.map( this.models, function(m) {
+				return m.clone();
+			} ) );
 		}
 	});
 
@@ -70,8 +67,7 @@ var Shortcode_UI;
 		 */
 		clone: function() {
 			var clone = Backbone.Model.prototype.clone.call( this );
-			// Deep clone attributes.
-			clone.set( 'attrs', clone.get( 'attrs' ).clone( true ) );
+			clone.set( 'attrs', clone.get( 'attrs' ).clone() );
 			return clone;
 		},
 
