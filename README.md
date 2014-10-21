@@ -17,11 +17,7 @@ add_action( 'init', function() {
 	 * [blockquote source=""]Quote[/blockquote]
 	 */
 	add_shortcode( 'blockquote', function( $attr, $content = '' ) {
-
-		$attr = wp_parse_args( $attr, array(
-			'source' => ''
-		) );
-
+		
 		?>
 
 		<blockquote>
