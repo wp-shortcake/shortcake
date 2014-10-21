@@ -13,13 +13,10 @@ add_action( 'init', function() {
 	/**
 	 * Register your shorcode as you would normally.
 	 * This is a simple example for a blockquote with a citation.
+	 * [blockquote source=""]Quote[/blockquote]
 	 */
 	add_shortcode( 'blockquote', function( $attr, $content = '' ) {
-
-		$attr = wp_parse_args( $attr, array(
-			'source' => ''
-		) );
-
+		
 		?>
 
 		<blockquote>
