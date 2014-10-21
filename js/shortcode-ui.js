@@ -175,7 +175,7 @@ var Shortcode_UI;
 	/**
 	 * Single edit shortcode content view.
 	 */
-	t.view.shortcodeEditForm = Backbone.View.extend({
+	t.view.editShortcodeForm = Backbone.View.extend({
 
 		template: wp.template('shortcode-default-edit-form'),
 
@@ -186,7 +186,7 @@ var Shortcode_UI;
 
 			this.model.get( 'attrs' ).each( function( attr ) {
 				$fieldsEl.append(
-					new t.view.attributeEditField( { model: attr } ).render()
+					new t.view.editAttributeField( { model: attr } ).render()
 				);
 			} );
 
@@ -196,7 +196,7 @@ var Shortcode_UI;
 
 	});
 
-	t.view.attributeEditField = Backbone.View.extend( {
+	t.view.editAttributeField = Backbone.View.extend( {
 
 		tagName: "div",
 
@@ -261,7 +261,7 @@ var Shortcode_UI;
 
 		renderEditShortcodeView: function() {
 
-			var view = new t.view.shortcodeEditForm( {
+			var view = new t.view.editShortcodeForm( {
 				model:  this.controller.props.get( 'currentShortcode' ),
 			} );
 
@@ -313,7 +313,7 @@ var Shortcode_UI;
 		},
 
 		refresh: function() {
-			// Need to trigger disabled state on button.
+			// @todo Need to trigger disabled state on button.
 		},
 
 		insert: function() {
@@ -362,7 +362,7 @@ var Shortcode_UI;
 			this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
 			this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
 			this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
-			this.on( 'menu:render:default', this.renderMenuSeparator );
+			this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
 		},
 
@@ -392,8 +392,9 @@ var Shortcode_UI;
 			} );
 		},
 
-		renderMenuSeparator: function( view ) {
+		renderShortcodeUIMenu: function( view ) {
 
+			// Add a menu separator link.
 			view.set({
 				'shortcode-ui-separator': new wp.media.View({
 					className: 'separator',
@@ -401,6 +402,7 @@ var Shortcode_UI;
 				})
 			});
 
+			// Hide menu if editing.
 			// @todo - fix this.
 			// This is a hack.
 			// I just can't work out how to do it properly...
@@ -423,6 +425,7 @@ var Shortcode_UI;
 
 	/**
 	 * Generic shortcode mce view constructor.
+	 * This is cloned and used by each shortcode when registering a view.
 	 */
 	t.utils.shorcodeViewConstructor = {
 
@@ -432,13 +435,13 @@ var Shortcode_UI;
 
 			initialize: function( options ) {
 
-				var placeholderShortcode = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+				var shortcodeModel = Shortcode_UI.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
 
-				if ( ! placeholderShortcode ) {
+				if ( ! shortcodeModel ) {
 					return;
 				}
 
-				shortcode = placeholderShortcode.clone();
+				shortcode = shortcodeModel.clone();
 
 				shortcode.get( 'attrs' ).each( function( attr ) {
 
@@ -449,7 +452,7 @@ var Shortcode_UI;
 						);
 					}
 
-					if ( attr.get( 'attr' ) === 'content' && ( 'content' in  options.shortcode ) ) {
+					if ( attr.get( 'attr' ) === 'content' && ( 'content' in options.shortcode ) ) {
 						attr.set( 'value', options.shortcode.content );
 					}
 
