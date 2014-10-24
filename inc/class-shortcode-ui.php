@@ -127,9 +127,9 @@ class Shortcode_UI {
 	 * @return null
 	 */
 	public function action_print_media_templates() {
-		$this->get_view( 'media-frame' );
-		$this->get_view( 'list-item' );
-		$this->get_view( 'edit-form' );
+		echo $this->get_view( 'media-frame' );
+		echo $this->get_view( 'list-item' );
+		echo $this->get_view( 'edit-form' );
 	}
 
 	/**
@@ -138,10 +138,9 @@ class Shortcode_UI {
 	 *
 	 * @param  string  $template      full template file path. Or name of template file in inc/templates.
 	 * @param  array   $template_args array of args
-	 * @param  boolean $echo          [description]
 	 * @return [type]                 [description]
 	 */
-	public function get_view( $template, $template_args = array(), $echo = true ) {
+	public function get_view( $template, $template_args = array() ) {
 
 		if ( ! file_exists( $template ) ) {
 
@@ -159,12 +158,7 @@ class Shortcode_UI {
 		ob_start();
 		include $template;
 
-		if ( ! $echo ) {
-			return ob_get_clean();
-		}
-
-		echo ob_get_clean();
-
+		return ob_get_clean();
 	}
 
 	/**
