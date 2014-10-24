@@ -32,16 +32,16 @@ class Shortcode_UI {
 		} );
 
 		add_action( 'media_buttons',         array( $this, 'action_media_buttons' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'print_media_templates', array( $this, 'print_templates' ) );
-		add_action( 'wp_ajax_do_shortcode',  array( $this, 'ajax_do_shortcode' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
+		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
+		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
 	}
 
 	private function setup_filters() {
 		add_filter( 'tiny_mce_before_init',  array( $this, 'modify_tiny_mce_4' ) );
 	}
 
-	function register_shortcode_ui( $shortcode_tag, $args = array() ) {
+	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
 		$defaults = array(
 			'label'         => '',
@@ -63,7 +63,7 @@ class Shortcode_UI {
 
 	}
 
-	function get_shortcode( $shortcode_tag ) {
+	public function get_shortcode( $shortcode_tag ) {
 
 		if ( isset( $this->shortcodes[ $shortcode_tag ] ) ) {
 			return $this->shortcodes[ $shortcode_tag ];
@@ -103,7 +103,7 @@ class Shortcode_UI {
 
 	}
 
-	function enqueue_scripts( $hook ) {
+	public function action_admin_enqueue_scripts( $hook ) {
 
     	if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
 
@@ -126,7 +126,7 @@ class Shortcode_UI {
 	 *
 	 * @return null
 	 */
-	public function print_templates() {
+	public function action_print_media_templates() {
 		$this->get_view( 'media-frame' );
 		$this->get_view( 'list-item' );
 		$this->get_view( 'edit-form' );
@@ -173,7 +173,7 @@ class Shortcode_UI {
 	 * @param  array tinyMCE config
 	 * @return array tinyMCE config
 	 */
-	function modify_tiny_mce_4( $init ) {
+	public function modify_tiny_mce_4( $init ) {
 		$init['content_css'] .= ',' . $this->plugin_url . '/css/shortcode-ui-editor-styles.css';
 		return $init;
 	}
@@ -184,7 +184,7 @@ class Shortcode_UI {
 	 *
 	 * @return null
 	 */
-	function ajax_do_shortcode( ) {
+	public function handle_ajax_do_shortcode( ) {
 
 		$shortcode = ! empty( $_POST['shortcode'] ) ? sanitize_text_field( $_POST['shortcode'] ) : null;
 		$post_id   = ! empty( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : null;
