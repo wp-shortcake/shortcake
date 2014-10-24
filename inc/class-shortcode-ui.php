@@ -98,26 +98,25 @@ class Shortcode_UI {
 			$id_attribute,
 			esc_attr( $editor_id ),
 			esc_attr__( 'Add Content', 'shortcode-ui' ),
-			$img . __( 'Add Content', 'shortcode-ui' )
+			$img . esc_html__( 'Add Content', 'shortcode-ui' )
 		);
 
 	}
 
 	public function action_admin_enqueue_scripts( $hook ) {
 
-    	if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
+		if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
 
-    		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
-    		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
-
-    		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
-    			'shortcodes' => array_values( $this->shortcodes ),
-    			'modalOptions' => array(
-    				'media_frame_title' => 'Insert Content Item',
+			wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
+			wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
+			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
+				'shortcodes' => array_values( $this->shortcodes ),
+    				'modalOptions' => array(
+    					'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
 				)
-    		) );
+			) );
 
-    	}
+		}
 
 	}
 
