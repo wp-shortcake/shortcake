@@ -477,7 +477,8 @@ var Shortcode_UI;
 					data = {
 						action: 'do_shortcode',
 						post_id: $('#post_ID').val(),
-						shortcode: this.shortcode.formatShortcode()
+						shortcode: this.shortcode.formatShortcode(),
+						nonce: shortcodeUIData.previewNonce
 					};
 
 					$.post( ajaxurl, data, function( response ) {

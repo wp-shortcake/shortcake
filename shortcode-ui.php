@@ -19,7 +19,7 @@
  * GNU General Public License for more details.
  */
 
-require_once( 'inc/class-shortcode-ui.php' );
+require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 
 add_action( 'init', function() {
 	$instance = Shortcode_UI::get_instance();
