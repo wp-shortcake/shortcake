@@ -12,6 +12,8 @@ class Shortcode_UI {
 	public static function get_instance() {
 		if ( null == self::$instance ) {
 			self::$instance = new self;
+			self::$instance->setup_actions();
+			self::$instance->setup_filters();
 		}
 		return self::$instance;
 	}
@@ -22,6 +24,9 @@ class Shortcode_UI {
 		$this->plugin_dir     = plugin_dir_path( dirname(  __FILE__ ) );
 		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
 
+	}
+
+	private function setup_actions() {
 		add_action( 'admin_init', function() {
 			remove_action( 'media_buttons', 'media_buttons' );
 		} );
@@ -29,9 +34,11 @@ class Shortcode_UI {
 		add_action( 'media_buttons',         array( $this, 'action_media_buttons' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'print_media_templates', array( $this, 'print_templates' ) );
-		add_filter( 'tiny_mce_before_init',  array( $this, 'modify_tiny_mce_4' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'ajax_do_shortcode' ) );
+	}
 
+	private function setup_filters() {
+		add_filter( 'tiny_mce_before_init',  array( $this, 'modify_tiny_mce_4' ) );
 	}
 
 	function register_shortcode_ui( $shortcode_tag, $args = array() ) {
