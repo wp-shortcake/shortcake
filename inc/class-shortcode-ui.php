@@ -111,7 +111,8 @@ class Shortcode_UI {
 			wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 				'shortcodes' => array_values( $this->shortcodes ),
-    				'modalOptions' => array(
+				'previewNonce' => wp_create_nonce( 'shortcode-ui-preview' ),
+				'modalOptions' => array(
     					'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
 				)
 			) );
@@ -181,6 +182,11 @@ class Shortcode_UI {
 
 		$shortcode = ! empty( $_POST['shortcode'] ) ? sanitize_text_field( $_POST['shortcode'] ) : null;
 		$post_id   = ! empty( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : null;
+
+		if ( ! current_user_can( 'edit_post', $post_id ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-preview' ) ) {
+			echo esc_html__( "Something's rotten in the state of Denmark", 'shortcode-ui' );
+			exit;
+		}
 
 		global $post;
 		$post = get_post( $post_id );
