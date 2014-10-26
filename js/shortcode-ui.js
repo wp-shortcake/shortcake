@@ -171,18 +171,16 @@ var Shortcode_UI;
 
 		template: wp.template('shortcode-default-edit-form'),
 
-		render: function(){
+		initialize: function() {
 
-			this.$el.html( this.template( this.model.toJSON() ) );
-			var $fieldsEl = this.$el.find( '.edit-shortcode-form-fields' );
+			var t = this;
 
 			this.model.get( 'attrs' ).each( function( attr ) {
-				$fieldsEl.append(
-					new t.views.editAttributeField( { model: attr } ).render()
+				t.views.add(
+					'.edit-shortcode-form-fields',
+					new Shortcode_UI.views.editAttributeField( { model: attr } )
 				);
 			} );
-
-			return this;
 
 		},
 
