@@ -4,13 +4,13 @@ var Shortcode_UI;
 
 	var t = Shortcode_UI = this;
 
-	t.model      = {};
-	t.collection = {};
-	t.view       = {};
-	t.controller = {};
-	t.utils      = {};
+	t.models      = {};
+	t.collections = {};
+	t.views       = {};
+	t.controllers = {};
+	t.utils       = {};
 
-	t.model.ShortcodeAttribute = Backbone.Model.extend({
+	t.models.ShortcodeAttribute = Backbone.Model.extend({
 		defaults: {
 			attr:  '',
 			label: '',
@@ -19,8 +19,8 @@ var Shortcode_UI;
 		},
 	});
 
-	t.model.ShortcodeAttributes = Backbone.Collection.extend({
-		model: t.model.ShortcodeAttribute,
+	t.models.ShortcodeAttributes = Backbone.Collection.extend({
+		model: t.models.ShortcodeAttribute,
 		//  Deep Clone.
 		clone: function() {
 			return new this.constructor( _.map( this.models, function(m) {
@@ -29,12 +29,12 @@ var Shortcode_UI;
 		}
 	});
 
-	t.model.Shortcode = Backbone.Model.extend({
+	t.models.Shortcode = Backbone.Model.extend({
 
 		defaults: {
 			label: '',
 			shortcode_tag: '',
-			attrs: t.model.ShortcodeAttributes,
+			attrs: t.models.ShortcodeAttributes,
 		},
 
 		/**
@@ -43,8 +43,8 @@ var Shortcode_UI;
 		 */
 		set: function( attributes, options ) {
 
-			if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof t.model.ShortcodeAttributes ) ) {
-				attributes.attrs = new t.model.ShortcodeAttributes( attributes.attrs );
+			if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof t.models.ShortcodeAttributes ) ) {
+				attributes.attrs = new t.models.ShortcodeAttributes( attributes.attrs );
 			}
 
 			return Backbone.Model.prototype.set.call(this, attributes, options);
@@ -56,7 +56,7 @@ var Shortcode_UI;
 		 */
 		toJSON: function( options ) {
 			options = Backbone.Model.prototype.toJSON.call(this, options);
-			if ( options.attrs !== undefined && ( options.attrs instanceof t.model.ShortcodeAttributes ) ) {
+			if ( options.attrs !== undefined && ( options.attrs instanceof t.models.ShortcodeAttributes ) ) {
 				options.attrs = options.attrs.toJSON();
 			}
 			return options;
@@ -107,14 +107,14 @@ var Shortcode_UI;
 	});
 
 	// Shortcode Collection
-	t.collection.Shortcodes = Backbone.Collection.extend({
-		model: t.model.Shortcode
+	t.collections.Shortcodes = Backbone.Collection.extend({
+		model: t.models.Shortcode
 	});
 
 	/**
 	 * Single shortcode list item view.
 	 */
-	t.view.insertShortcodeListItem = Backbone.View.extend({
+	t.views.insertShortcodeListItem = Backbone.View.extend({
 		tagName: 'li',
 		template:  wp.template('add-shortcode-list-item'),
 		className: 'shortcode-list-item',
@@ -136,7 +136,7 @@ var Shortcode_UI;
 		}
 	});
 
-	t.view.insertShortcodeList = Backbone.View.extend({
+	t.views.insertShortcodeList = Backbone.View.extend({
 
 		tagName: 'div',
 
@@ -154,7 +154,7 @@ var Shortcode_UI;
 			var $listEl = $('<ul class="add-shortcode-list">');
 			t.options.shortcodes.each( function( shortcode ) {
 
-				var view = new Shortcode_UI.view.insertShortcodeListItem( {
+				var view = new Shortcode_UI.views.insertShortcodeListItem( {
 					model: shortcode
 				} );
 
@@ -175,7 +175,7 @@ var Shortcode_UI;
 	/**
 	 * Single edit shortcode content view.
 	 */
-	t.view.editShortcodeForm = Backbone.View.extend({
+	t.views.editShortcodeForm = Backbone.View.extend({
 
 		template: wp.template('shortcode-default-edit-form'),
 
@@ -186,7 +186,7 @@ var Shortcode_UI;
 
 			this.model.get( 'attrs' ).each( function( attr ) {
 				$fieldsEl.append(
-					new t.view.editAttributeField( { model: attr } ).render()
+					new t.views.editAttributeField( { model: attr } ).render()
 				);
 			} );
 
@@ -196,7 +196,7 @@ var Shortcode_UI;
 
 	});
 
-	t.view.editAttributeField = Backbone.View.extend( {
+	t.views.editAttributeField = Backbone.View.extend( {
 
 		tagName: "div",
 
@@ -226,7 +226,7 @@ var Shortcode_UI;
 
 	} );
 
-	t.view.Shortcode_UI = Backbone.View.extend({
+	t.views.Shortcode_UI = Backbone.View.extend({
 
 		events: {
 			"click .add-shortcode-list li":      "select",
@@ -255,13 +255,13 @@ var Shortcode_UI;
 
 		renderSelectShortcodeView: function() {
 			this.$el.append(
-				new t.view.insertShortcodeList( { shortcodes: t.shortcodes } ).render().el
+				new t.views.insertShortcodeList( { shortcodes: t.shortcodes } ).render().el
 			);
 		},
 
 		renderEditShortcodeView: function() {
 
-			var view = new t.view.editShortcodeForm( {
+			var view = new t.views.editShortcodeForm( {
 				model:  this.controller.props.get( 'currentShortcode' ),
 			} );
 
@@ -299,7 +299,7 @@ var Shortcode_UI;
 
 	});
 
-	t.controller.MediaController = wp.media.controller.State.extend({
+	t.controllers.MediaController = wp.media.controller.State.extend({
 
 		initialize: function(){
 
@@ -341,7 +341,7 @@ var Shortcode_UI;
 
 			var id = 'shortcode-ui';
 
-			var controller = new t.controller.MediaController( {
+			var controller = new t.controllers.MediaController( {
 				id      : id,
 				router  : false,
 				toolbar : id + '-toolbar',
@@ -368,7 +368,7 @@ var Shortcode_UI;
 
 		contentRender : function( id, tab ) {
 			this.content.set(
-				new t.view.Shortcode_UI( {
+				new t.views.Shortcode_UI( {
 					controller: this,
 					className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
 				} )
@@ -563,7 +563,7 @@ var Shortcode_UI;
 
 	$(document).ready(function(){
 
-		t.shortcodes = new t.collection.Shortcodes( shortcodeUIData.shortcodes )
+		t.shortcodes = new t.collections.Shortcodes( shortcodeUIData.shortcodes )
 
 		t.shortcodes.each( function( shortcode ) {
 
