@@ -10,6 +10,9 @@ var Shortcode_UI;
 	t.controllers = {};
 	t.utils       = {};
 
+	/**
+	 * Shortcode Attribute Model.
+	 */
 	t.models.ShortcodeAttribute = Backbone.Model.extend({
 		defaults: {
 			attr:  '',
@@ -19,6 +22,9 @@ var Shortcode_UI;
 		},
 	});
 
+	/**
+	 * Shortcode Attributes collection.
+	 */
 	t.models.ShortcodeAttributes = Backbone.Collection.extend({
 		model: t.models.ShortcodeAttribute,
 		//  Deep Clone.
@@ -29,6 +35,9 @@ var Shortcode_UI;
 		}
 	});
 
+	/**
+	 * Shortcode Model
+	 */
 	t.models.Shortcode = Backbone.Model.extend({
 
 		defaults: {
@@ -51,7 +60,7 @@ var Shortcode_UI;
 		},
 
 		/**
-		 * Custon toJSON.
+		 * Custom toJSON.
 		 * Handles converting the attribute collection to JSON.
 		 */
 		toJSON: function( options ) {
@@ -63,6 +72,7 @@ var Shortcode_UI;
 		},
 
 		/**
+		 * Custom clone
 		 * Make sure we don't clone a reference to attributes.
 		 */
 		clone: function() {
