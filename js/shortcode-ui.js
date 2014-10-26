@@ -114,7 +114,8 @@ var Shortcode_UI;
 	/**
 	 * Single shortcode list item view.
 	 */
-	t.views.insertShortcodeListItem = Backbone.View.extend({
+	t.views.insertShortcodeListItem = wp.Backbone.View.extend({
+
 		tagName: 'li',
 		template:  wp.template('add-shortcode-list-item'),
 		className: 'shortcode-list-item',
@@ -122,7 +123,6 @@ var Shortcode_UI;
 		render: function() {
 
 			var data = this.model.toJSON();
-
 			this.$el.attr( 'data-shortcode', data.shortcode_tag );
 
 			if ( ( 'listItemImage' in data ) && 0 === data.listItemImage.indexOf( 'dashicons-' ) ) {
@@ -136,46 +136,32 @@ var Shortcode_UI;
 		}
 	});
 
-	t.views.insertShortcodeList = Backbone.View.extend({
+	t.views.insertShortcodeList = wp.Backbone.View.extend({
 
 		tagName: 'div',
+		template:  wp.template('add-shortcode-list'),
 
 		initialize: function(options) {
-			this.options = {};
-			this.options.shortcodes = options.shortcodes;
-		},
-
-		render: function(){
 
 			var t = this;
 
-			t.$el.html('');
+			t.options = {};
+			t.options.shortcodes = options.shortcodes;
 
-			var $listEl = $('<ul class="add-shortcode-list">');
 			t.options.shortcodes.each( function( shortcode ) {
-
-				var view = new Shortcode_UI.views.insertShortcodeListItem( {
+				t.views.add( 'ul', new Shortcode_UI.views.insertShortcodeListItem( {
 					model: shortcode
-				} );
+				} ) );
+			} )
 
-				$listEl.append(
-					view.render().el
-				);
-
-			} );
-
-			t.$el.append( $listEl );
-
-			return t;
-
-		}
+		},
 
 	});
 
 	/**
 	 * Single edit shortcode content view.
 	 */
-	t.views.editShortcodeForm = Backbone.View.extend({
+	t.views.editShortcodeForm = wp.Backbone.View.extend({
 
 		template: wp.template('shortcode-default-edit-form'),
 
