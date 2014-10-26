@@ -82,6 +82,12 @@ var Shortcode_UI;
 
 			this.get( 'attrs' ).each( function( attr ) {
 
+				// Skip empty attributes.
+				if ( attr.get( 'value' ).length < 1 ) {
+					return;
+				}
+
+				// Handle content attribute as a special case.
 				if ( attr.get( 'attr' ) === 'content' ) {
 					content = attr.get( 'value' );
 				} else {
@@ -92,7 +98,7 @@ var Shortcode_UI;
 
 			template = "[{{ shortcode }} {{ attributes }}]"
 
-			if ( content && content.length > 1 ) {
+			if ( content && content.length > 0 ) {
 				template += "{{ content }}[/{{ shortcode }}]"
 			}
 
