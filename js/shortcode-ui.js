@@ -1,3 +1,5 @@
+var Shortcode_UI;
+
 ( function( $ ) {
 
 	var sui = window.Shortcode_UI = {
@@ -8,6 +10,9 @@
 		utils:       {},
 	}
 
+	/**
+	 * Shortcode Attribute Model.
+	 */
 	sui.models.ShortcodeAttribute = Backbone.Model.extend({
 		defaults: {
 			attr:  '',
@@ -17,6 +22,9 @@
 		},
 	});
 
+	/**
+	 * Shortcode Attributes collection.
+	 */
 	sui.models.ShortcodeAttributes = Backbone.Collection.extend({
 		model: sui.models.ShortcodeAttribute,
 		//  Deep Clone.
@@ -27,6 +35,9 @@
 		}
 	});
 
+	/**
+	 * Shortcode Model
+	 */
 	sui.models.Shortcode = Backbone.Model.extend({
 
 		defaults: {
@@ -49,7 +60,7 @@
 		},
 
 		/**
-		 * Custon toJSON.
+		 * Custom toJSON.
 		 * Handles converting the attribute collection to JSON.
 		 */
 		toJSON: function( options ) {
@@ -61,6 +72,7 @@
 		},
 
 		/**
+		 * Custom clone		
 		 * Make sure we don't clone a reference to attributes.
 		 */
 		clone: function() {
