@@ -208,7 +208,6 @@ var Shortcode_UI;
 			'change input[type=radio]':    'updateValue',
 			'change input[type=email]':    'updateValue',
 			'change input[type=number]':    'updateValue',
-			'change input[type=hidden]':    'updateValue',
 			'change input[type=date]':    'updateValue',
 			'change input[type=url]':    'updateValue',
 		},
