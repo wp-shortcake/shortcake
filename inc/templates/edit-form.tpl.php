@@ -44,3 +44,12 @@
 		</select>
 	</p>
 </script>
+
+<script type="text/html" id="tmpl-shortcode-ui-field-radio">
+	<p class="field-block">
+		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<# _.each( data.options, function( label, value ) { #>
+			<input type="radio" name="{{ data.attr }}" value="{{ value }}" <# if ( value == data.value ){ print('selected'); } #>>{{ label }}<br />
+		<# }); #>
+	</p>
+</script>
