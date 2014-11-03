@@ -23,7 +23,7 @@
 <script type="text/html" id="tmpl-shortcode-ui-field-url">
 	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="code"/>
+		<input type="url" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="code"/>
 	</p>
 </script>
 
