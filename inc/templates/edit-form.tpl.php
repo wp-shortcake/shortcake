@@ -49,7 +49,42 @@
 	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
 		<# _.each( data.options, function( label, value ) { #>
-			<input type="radio" name="{{ data.attr }}" value="{{ value }}" <# if ( value == data.value ){ print('selected'); } #>>{{ label }}<br />
+			<input type="radio" name="{{ data.attr }}" value="{{ value }}" <# if ( value == data.value ){ print('checked'); } #>>{{ label }}<br />
 		<# }); #>
+	</p>
+</script>
+
+<script type="text/html" id="tmpl-shortcode-ui-field-checkbox">
+	<p class="field-block">
+		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<input type="checkbox" name="{{ data.attr }}" id="{{ data.attr }}" value="true" <# if ( 'true' == data.value ){ print('checked'); } #>>
+	</p>
+</script>
+
+<script type="text/html" id="tmpl-shortcode-ui-field-email">
+	<p class="field-block">
+		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<input type="email" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value}}" />
+	</p>
+</script>
+
+<script type="text/html" id="tmpl-shortcode-ui-field-number">
+	<p class="field-block">
+		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<input type="number" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value}}" />
+	</p>
+</script>
+
+<script type="text/html" id="tmpl-shortcode-ui-field-hidden">
+	<p class="field-block">
+		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<input type="hidden" name="{{ data.attr }}" id="{{ data.attr }}" value="true" />
+	</p>
+</script>
+
+<script type="text/html" id="tmpl-shortcode-ui-field-date">
+	<p class="field-block">
+		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<input type="date" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" />
 	</p>
 </script>
