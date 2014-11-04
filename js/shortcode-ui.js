@@ -206,6 +206,10 @@ var Shortcode_UI;
 			'change select':               'updateValue',
 			'change input[type=checkbox]': 'updateValue',
 			'change input[type=radio]':    'updateValue',
+			'change input[type=email]':    'updateValue',
+			'change input[type=number]':    'updateValue',
+			'change input[type=date]':    'updateValue',
+			'change input[type=url]':    'updateValue',
 		},
 
 		render: function() {
