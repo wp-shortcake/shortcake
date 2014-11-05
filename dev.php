@@ -6,7 +6,7 @@ add_action( 'init', function() {
 	 * Register your shorcode as you would normally.
 	 * This is a simple example for a blockquote with a citation.
 	 */
-	add_shortcode( 'blockquote', function( $attr, $content = '' ) {
+	add_shortcode( 'pullquote', function( $attr, $content = '' ) {
 
 		$attr = wp_parse_args( $attr, array(
 			'source' => ''
@@ -14,10 +14,10 @@ add_action( 'init', function() {
 
 		?>
 
-		<blockquote>
+		<section class="pullquote">
 			<?php echo esc_html( $content ); ?><br/>
 			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
-		</blockquote>
+		</section>
 
 		<?php
 	} );
@@ -28,11 +28,11 @@ add_action( 'init', function() {
 	 * and an array or args.
 	 */
 	shortcode_ui_register_for_shortcode(
-		'blockquote',
+		'pullquote',
 		array(
 
 			// Display label. String. Required.
-			'label' => 'Blockquote',
+			'label' => 'Pullquote',
 
 			// Icon/image for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 			'listItemImage' => 'dashicons-editor-quote',
