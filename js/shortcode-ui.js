@@ -515,23 +515,17 @@ var Shortcode_UI;
 			setHtml: function( body ) {
 				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 
-				console.log( body );
-
 				if ( body.indexOf( '<script' ) === -1 ) {
 					this.shortcodeHTML = body;
 					this.render( true );
 					return;
 				}
 
-				console.log( body );
-
 				this.getNodes( function ( editor, node, content ) {
 					var dom = editor.dom,
 					styles = '',
 					bodyClasses = editor.getBody().className || '',
 					iframe, iframeDoc, i, resize;
-
-					console.log( body );
 
 					content.innerHTML = '';
 					head = '';
