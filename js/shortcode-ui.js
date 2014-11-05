@@ -93,7 +93,7 @@ var Shortcode_UI;
 			this.get( 'attrs' ).each( function( attr ) {
 
 				// Skip empty attributes.
-				if ( attr.get( 'value' ).length < 1 ) {
+				if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
 					return;
 				}
 
@@ -529,7 +529,7 @@ var Shortcode_UI;
 
 			if ( typeof( matches[2] ) != undefined ) {
 
-				attributeMatches = matches[2].match(/(\S+?=".*?")/g );
+				attributeMatches = matches[2].match(/(\S+?=".*?")/g ) || [];
 
 				// convert attribute strings to object.
 				for ( var i = 0; i < attributeMatches.length; i++ ) {
