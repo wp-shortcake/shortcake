@@ -1,4 +1,6 @@
 .wpview-wrap {
   min-height: 48px; }
+  .wpview-wrap.wp-mce-view-show-toolbar .toolbar {
+    display: block; }
 
 /*# sourceMappingURL=shortcode-ui-editor-styles.css.map */
