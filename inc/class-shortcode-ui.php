@@ -140,7 +140,7 @@ class Shortcode_UI {
 	 * @param  array   $template_args array of args
 	 * @return [type]                 [description]
 	 */
-	public function get_view( $template, $template_args = array() ) {
+	public function get_view( $template ) {
 
 		if ( ! file_exists( $template ) ) {
 
@@ -152,8 +152,6 @@ class Shortcode_UI {
 			}
 
 		}
-
-		extract( $template_args, EXTR_SKIP );
 
 		ob_start();
 		include $template;
