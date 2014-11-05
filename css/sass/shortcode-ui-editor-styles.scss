@@ -1,3 +1,10 @@
 .wpview-wrap {
 	min-height: 48px;
+
+	&.wp-mce-view-show-toolbar {
+
+		.toolbar {
+			display: block;
+		}
+	}
 }

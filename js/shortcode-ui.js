@@ -530,6 +530,8 @@ var Shortcode_UI;
 					content.innerHTML = '';
 					head = '';
 
+					$(node).addClass('wp-mce-view-show-toolbar');
+					
 					if ( ! wp.mce.views.sandboxStyles ) {
 						tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
 							if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
