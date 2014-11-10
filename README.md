@@ -67,11 +67,14 @@ add_action( 'init', function() {
 ````
 
 ## Screenshots
-TK of fusion-pullquote without UI
+Without Shortcake, shortcodes have a minimal UI.
+![no-shortcake](https://cloud.githubusercontent.com/assets/1636964/4981504/a4f1ff98-6909-11e4-8406-aa8a7bba4f4e.png)
 
-TK of fusion-pullquote preview
+But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view.
+![shortcake](https://cloud.githubusercontent.com/assets/1636964/4981503/a056e7a0-6909-11e4-925a-0e4e4cb6e812.png)
 
-TK of fusion-pullquote UI
+And add a user-friendly UI to edit shortcode content and attributes.
+![screen shot 2014-11-10 at 1 48 29 pm](https://cloud.githubusercontent.com/assets/1636964/4981557/37ddc5e4-690a-11e4-8fb5-089ed4b31336.png)
 
 ## Known issues
 
