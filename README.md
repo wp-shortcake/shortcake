@@ -1,9 +1,11 @@
 Shortcake
 ============
 
-Shortcake makes using WordPress shortcodes a piece of cake. Use it alongside add_shortcode to create a user-friendly interface for adding shortcodes and viewing them inside the content editor.
+Shortcake makes WordPress shortcodes a piece of cake.
 
-## Usage.
+Used alongside `add_shortcode`, Shortcake supplies a user-friendly interface for adding a shortcode to a post, and viewing and editing it from within the content editor.
+
+## Usage
 
 ```php
 add_action( 'init', function() {
@@ -64,7 +66,14 @@ add_action( 'init', function() {
 } );
 ````
 
+## Screenshots
+TK of fusion-pullquote without UI
+
+TK of fusion-pullquote preview
+
+TK of fusion-pullquote UI
+
 ## Known issues
 
 * You cannot use camelcase or hyphens in attribute names.
-* If your shortcode output is not a block level element, it may display wierdly in the TinyMCE editor.
+* If your shortcode output is not a block level element, it may display oddly in the TinyMCE editor.
