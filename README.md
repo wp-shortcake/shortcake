@@ -1,28 +1,31 @@
-Shortcode-UI
+Shortcake
 ============
 
-Add different content blocks to the WordPress tinyMCE editor using shortcodes!
+Shortcake makes WordPress shortcodes a piece of cake.
 
-This is a tool to be used alongside add_shortcode to add a user friendly interface for adding shortcodes and viewing them inside the content editor.
+Used alongside `add_shortcode`, Shortcake supplies a user-friendly interface for adding a shortcode to a post, and viewing and editing it from within the content editor.
 
-## Usage.
+## Usage
 
 ```php
 add_action( 'init', function() {
 
 	/**
-	 * Register your shorcode as you would normally.
-	 * This is a simple example for a blockquote with a citation.
-	 * [blockquote source=""]Quote[/blockquote]
+	 * Register your shortcode as you would normally.
+	 * This is a simple example for a pullquote with a citation.
 	 */
-	add_shortcode( 'blockquote', function( $attr, $content = '' ) {
-		
+	add_shortcode( 'pullquote', function( $attr, $content = '' ) {
+
+		$attr = wp_parse_args( $attr, array(
+			'source' => ''
+		) );
+
 		?>
 
-		<blockquote>
+		<section class="pullquote">
 			<?php echo esc_html( $content ); ?><br/>
 			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
-		</blockquote>
+		</section>
 
 		<?php
 	} );
@@ -33,18 +36,18 @@ add_action( 'init', function() {
 	 * and an array or args.
 	 */
 	shortcode_ui_register_for_shortcode(
-		'blockquote',
+		'pullquote',
 		array(
 
 			// Display label. String. Required.
-			'label' => 'Blockquote',
+			'label' => 'Pullquote',
 
 			// Icon/image for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 			'listItemImage' => 'dashicons-editor-quote',
 
 			// Available shortcode attributes and default values. Required. Array.
 			// Attribute model expects 'attr', 'type' and 'label'
-			// Supported field types: 'text', 'url', 'textarea', 'select'
+			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
 			'attrs' => array(
 				array(
 					'label' => 'Quote',
@@ -63,7 +66,14 @@ add_action( 'init', function() {
 } );
 ````
 
+## Screenshots
+TK of fusion-pullquote without UI
+
+TK of fusion-pullquote preview
+
+TK of fusion-pullquote UI
+
 ## Known issues
 
 * You cannot use camelcase or hyphens in attribute names.
-* If your shortcode output is not a block level element, it may display wierdly in the TinyMCE editor.
+* If your shortcode output is not a block level element, it may display oddly in the TinyMCE editor.
