@@ -4,7 +4,7 @@ add_action( 'init', function() {
 
 	/**
 	 * Register your shorcode as you would normally.
-	 * This is a simple example for a blockquote with a citation.
+	 * This is a simple example for a pullquote with a citation.
 	 */
 	add_shortcode( 'pullquote', function( $attr, $content = '' ) {
 
@@ -39,7 +39,7 @@ add_action( 'init', function() {
 
 			// Available shortcode attributes and default values. Required. Array.
 			// Attribute model expects 'attr', 'type' and 'label'
-			// Supported field types: 'text', 'url', 'textarea', 'select'
+			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
 			'attrs' => array(
 				array(
 					'label' => 'Quote',
