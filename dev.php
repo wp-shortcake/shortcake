@@ -12,6 +12,8 @@ add_action( 'init', function() {
 			'source' => ''
 		) );
 
+		ob_start();
+
 		?>
 
 		<section class="pullquote">
@@ -20,6 +22,8 @@ add_action( 'init', function() {
 		</section>
 
 		<?php
+
+		return ob_get_clean();
 	} );
 
 	/**
