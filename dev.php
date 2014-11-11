@@ -9,12 +9,19 @@ add_action( 'init', function() {
 	add_shortcode( 'pullquote', function( $attr, $content = '' ) {
 
 		$attr = wp_parse_args( $attr, array(
-			'source' => ''
+			'source' => '',
+			'image'  => '',
 		) );
 
 		?>
 
-		<section class="pullquote">
+		<section class="pullquote" style="overflow: hidden;">
+			<?php if ( $attr['image'] ) : ?>
+			<div style="float: left; margin-right: 20px;">
+				<?php echo wp_get_attachment_image( $attr['image'], array( 112, 112 ) ); ?>
+			</div>
+			<?php endif; ?>
+
 			<?php echo esc_html( $content ); ?><br/>
 			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
 		</section>

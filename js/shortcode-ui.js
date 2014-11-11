@@ -231,51 +231,6 @@ var Shortcode_UI;
 
 	} );
 
-	sui.views.editAttributeFieldMedia = sui.views.editAttributeField.extend( {
-
-		events: {},
-
-		render: function() {
-
-			this.template = wp.media.template( 'shortcode-ui-field-' + this.model.get( 'type' ) );
-			var html = $( this.template( this.model.toJSON() ) );
-
-			// Define preview size for use by fieldmanager JS.
-			window.fm_preview_size = window.fm_preview_size || [];
-			window.fm_preview_size[ this.model.get('attr') ] = 'thumbnail';
-
-			// Create template if neccessary.
-			if ( this.model.get('value') ) {
-
-				var data = {
-					action: 'shortcode_ui_get_thumbnail_image',
-					id: this.model.get('value'),
-					size: 'thumbnail',
-					nonce: shortcodeUIData.nonces.thumbnailImage
-				};
-
-				$.post( ajaxurl, data, function(response) {
-
-					if ( ! response.success ) {
-						return;
-					}
-
-					var previewHTML = 'Uploaded file:</br>';
-					previewHTML += '<a href="#">' + response.data.html + '</a></br>';
-					previewHTML += '<a class="fm-media-remove fm-delete" href="#">remove</a>';
-					html.find('.media-wrapper').append( previewHTML );
-
-				});
-
-			}
-
-			return this.$el.html( html );
-
-		},
-
-	} );
-
-
 	sui.views.Shortcode_UI = wp.Backbone.View.extend({
 
 		events: {
@@ -304,6 +259,7 @@ var Shortcode_UI;
 		},
 
 		renderSelectShortcodeView: function() {
+			this.views.unset();
 			this.views.add(
 				'',
 				new sui.views.insertShortcodeList( { shortcodes: sui.shortcodes } )
@@ -316,6 +272,7 @@ var Shortcode_UI;
 				model:  this.controller.props.get( 'currentShortcode' ),
 			} );
 
+			this.views.unset();
 			this.views.add( '', view );
 
 			if ( this.controller.props.get('action') === 'update' ) {

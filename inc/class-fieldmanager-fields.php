@@ -21,6 +21,7 @@ class Shortcode_UI_Fieldmanager_Fields {
 
 	function setup_actions() {
 		$this->init();
+		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ), 100 );
 		add_action( 'wp_ajax_shortcode_ui_get_thumbnail_image', array( $this, 'ajax_get_thumbnail_image' ) );
 	}
 
@@ -67,6 +68,83 @@ class Shortcode_UI_Fieldmanager_Fields {
 			'html'   => wp_get_attachment_image( $id, $size ),
 		) );
 
+	}
+
+
+	public function action_print_media_templates() {
+		?>
+
+<script>
+
+( function( $ ) {
+
+	var sui = window.Shortcode_UI;
+
+	sui.views.editAttributeFieldMedia = sui.views.editAttributeField.extend( {
+
+		events: {
+			'click .fm-media-button': 'reorderModals',
+		},
+
+		render: function() {
+
+			this.template = wp.media.template( 'shortcode-ui-field-' + this.model.get( 'type' ) );
+			var html = $( this.template( this.model.toJSON() ) );
+
+			// Define preview size for use by fieldmanager JS.
+			window.fm_preview_size = window.fm_preview_size || [];
+			window.fm_preview_size[ this.model.get('attr') ] = 'thumbnail';
+
+			// Create template if neccessary.
+			if ( this.model.get('value') ) {
+
+				var data = {
+					action: 'shortcode_ui_get_thumbnail_image',
+					id: this.model.get('value'),
+					size: 'thumbnail',
+					nonce: shortcodeUIData.nonces.thumbnailImage
+				};
+
+				$.post( ajaxurl, data, function(response) {
+
+					if ( ! response.success ) {
+						return;
+					}
+
+					var previewHTML = 'Uploaded file:</br>';
+					previewHTML += '<a href="#">' + response.data.html + '</a></br>';
+					previewHTML += '<a class="fm-media-remove fm-delete" href="#">remove</a>';
+					html.find('.media-wrapper').append( previewHTML );
+
+				});
+
+			}
+
+			return this.$el.html( html );
+
+		},
+
+		/**
+		 * Now we have 2 media frames.
+		 * Ensure that the new frame is on top.
+		 */
+		reorderModals: function( e ) {
+			var t = this;
+			// Make sure the frame has been created already.
+			window.setTimeout( function() {
+				var id = $( e.target ).attr( 'id' );
+				var frame = window.fm_media_frame[ id ];
+				frame.$el.closest( '.media-modal' ).parent().appendTo( 'body' );
+			}, 100 );
+		}
+
+	} );
+
+} )( jQuery );
+
+</script>
+
+		<?php
 	}
 
 }
