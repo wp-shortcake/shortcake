@@ -41,16 +41,26 @@ add_action( 'init', function() {
 			// Attribute model expects 'attr', 'type' and 'label'
 			// Supported field types: 'text', 'url', 'textarea', 'select'
 			'attrs' => array(
+
 				array(
 					'label' => 'Quote',
 					'attr'  => 'content',
-					'type'  => 'textarea',
+					'type'  => 'Fieldmanager_TextArea',
 				),
+
+				array(
+					'label' => 'Image',
+					'attr'  => 'image',
+					'type'  => 'Fieldmanager_Media',
+					'fieldView' => 'editAttributeFieldMedia',
+				),
+
 				array(
 					'label' => 'Cite',
 					'attr'  => 'source',
-					'type'  => 'text',
+					'type'  => 'Fieldmanager_Textfield',
 				),
+
 			),
 		)
 	);

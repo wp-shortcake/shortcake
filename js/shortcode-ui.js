@@ -72,7 +72,7 @@ var Shortcode_UI;
 		},
 
 		/**
-		 * Custom clone		
+		 * Custom clone
 		 * Make sure we don't clone a reference to attributes.
 		 */
 		clone: function() {
@@ -186,30 +186,31 @@ var Shortcode_UI;
 			var t = this;
 
 			this.model.get( 'attrs' ).each( function( attr ) {
-				t.views.add(
-					'.edit-shortcode-form-fields',
-					new sui.views.editAttributeField( { model: attr } )
-				);
+
+				if ( attr.get( 'fieldView' ) ) {
+					var viewObjName = attr.get( 'fieldView' );
+					var view = new sui.views[viewObjName]( { model: attr } );
+				} else {
+					var view = new sui.views.editAttributeField( { model: attr } );
+				}
+
+				t.views.add( '.edit-shortcode-form-fields', view );
+
 			} );
 
 		},
 
 	});
 
-	sui.views.editAttributeField = Backbone.View.extend( {
+	sui.views.editAttributeField = wp.Backbone.View.extend( {
 
 		tagName: "div",
 
 		events: {
-			'keyup  input[type="text"]':   'updateValue',
-			'keyup  textarea':             'updateValue',
-			'change select':               'updateValue',
-			'change input[type=checkbox]': 'updateValue',
-			'change input[type=radio]':    'updateValue',
-			'change input[type=email]':    'updateValue',
-			'change input[type=number]':    'updateValue',
-			'change input[type=date]':    'updateValue',
-			'change input[type=url]':    'updateValue',
+			'keyup  input[type="text"]': 'updateValue',
+			'keyup  textarea':           'updateValue',
+			'change select':             'updateValue',
+			'change':                    'updateValue',
 		},
 
 		render: function() {
@@ -223,14 +224,59 @@ var Shortcode_UI;
 		 * If the input field that has changed is for content or a valid attribute,
 		 * then it should update the model.
 		 */
-		updateValue: function( e ) {
-			var $el = $( e.target );
+		updateValue: function() {
+			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
 			this.model.set( 'value', $el.val() );
 		},
 
 	} );
 
-	sui.views.Shortcode_UI = Backbone.View.extend({
+	sui.views.editAttributeFieldMedia = sui.views.editAttributeField.extend( {
+
+		events: {},
+
+		render: function() {
+
+			this.template = wp.media.template( 'shortcode-ui-field-' + this.model.get( 'type' ) );
+			var html = $( this.template( this.model.toJSON() ) );
+
+			// Define preview size for use by fieldmanager JS.
+			window.fm_preview_size = window.fm_preview_size || [];
+			window.fm_preview_size[ this.model.get('attr') ] = 'thumbnail';
+
+			// Create template if neccessary.
+			if ( this.model.get('value') ) {
+
+				var data = {
+					action: 'shortcode_ui_get_thumbnail_image',
+					id: this.model.get('value'),
+					size: 'thumbnail',
+					nonce: shortcodeUIData.nonces.thumbnailImage
+				};
+
+				$.post( ajaxurl, data, function(response) {
+
+					if ( ! response.success ) {
+						return;
+					}
+
+					var previewHTML = 'Uploaded file:</br>';
+					previewHTML += '<a href="#">' + response.data.html + '</a></br>';
+					previewHTML += '<a class="fm-media-remove fm-delete" href="#">remove</a>';
+					html.find('.media-wrapper').append( previewHTML );
+
+				});
+
+			}
+
+			return this.$el.html( html );
+
+		},
+
+	} );
+
+
+	sui.views.Shortcode_UI = wp.Backbone.View.extend({
 
 		events: {
 			"click .add-shortcode-list li":      "select",
@@ -258,8 +304,9 @@ var Shortcode_UI;
 		},
 
 		renderSelectShortcodeView: function() {
-			this.$el.append(
-				new sui.views.insertShortcodeList( { shortcodes: sui.shortcodes } ).render().el
+			this.views.add(
+				'',
+				new sui.views.insertShortcodeList( { shortcodes: sui.shortcodes } )
 			);
 		},
 
@@ -269,7 +316,7 @@ var Shortcode_UI;
 				model:  this.controller.props.get( 'currentShortcode' ),
 			} );
 
-			this.$el.append( view.render().el );
+			this.views.add( '', view );
 
 			if ( this.controller.props.get('action') === 'update' ) {
 				this.$el.find( '.edit-shortcode-form-cancel' ).remove();
@@ -371,12 +418,14 @@ var Shortcode_UI;
 		},
 
 		contentRender : function( id, tab ) {
-			this.content.set(
-				new sui.views.Shortcode_UI( {
-					controller: this,
-					className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
-				} )
-			);
+
+			this.shortcodeUIView = new sui.views.Shortcode_UI( {
+				controller: this,
+				className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
+			} );
+
+			this.content.set( this.shortcodeUIView );
+
 		},
 
 		toolbarRender: function( toolbar ) {},
@@ -422,7 +471,18 @@ var Shortcode_UI;
 		},
 
 		insertAction: function() {
+
+			var form = this.controller.shortcodeUIView.views.first();
+
+			// Note that this *can* be a select shortcode list view.
+			if ( form instanceof sui.views.editShortcodeForm ) {
+				_.each( form.views.all(), function( field ) {
+					field.updateValue();
+				} );
+			}
+
 			this.controller.state().insert();
+
 		},
 
 	});
@@ -468,7 +528,7 @@ var Shortcode_UI;
 
 			/**
 			 * @see wp.mce.View.getEditors
-			 */ 
+			 */
 			getEditors: function( callback ) {
 				var editors = [];
 
@@ -531,7 +591,7 @@ var Shortcode_UI;
 					head = '';
 
 					$(node).addClass('wp-mce-view-show-toolbar');
-					
+
 					if ( ! wp.mce.views.sandboxStyles ) {
 						tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
 							if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
@@ -640,7 +700,7 @@ var Shortcode_UI;
 						action: 'do_shortcode',
 						post_id: $('#post_ID').val(),
 						shortcode: this.shortcode.formatShortcode(),
-						nonce: shortcodeUIData.previewNonce
+						nonce: shortcodeUIData.nonces.preview
 					};
 
 					$.post( ajaxurl, data, $.proxy( this.setHtml, this ) );

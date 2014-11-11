@@ -111,9 +111,12 @@ class Shortcode_UI {
 			wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 				'shortcodes' => array_values( $this->shortcodes ),
-				'previewNonce' => wp_create_nonce( 'shortcode-ui-preview' ),
 				'modalOptions' => array(
-    					'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
+    				'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
+				),
+				'nonces' => array(
+					'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
+					'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
 				)
 			) );
 
