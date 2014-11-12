@@ -51,9 +51,10 @@ add_action( 'init', function() {
 					'type'  => 'textarea',
 				),
 				array(
-					'label' => 'Cite',
-					'attr'  => 'source',
-					'type'  => 'text',
+					'label'       => 'Cite',
+					'attr'        => 'source',
+					'type'        => 'text',
+					'placeholder' => 'Firstname Lastname',
 				),
 			),
 		)
