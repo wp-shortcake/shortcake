@@ -431,7 +431,7 @@ var Shortcode_UI;
 	 * Generic shortcode mce view constructor.
 	 * This is cloned and used by each shortcode when registering a view.
 	 */
-	sui.utils.shorcodeViewConstructor = {
+	sui.utils.shortcodeViewConstructor = {
 
 		View: {
 
@@ -729,7 +729,7 @@ var Shortcode_UI;
 			// Note - clone the constructor.
 			wp.mce.views.register(
 				shortcode.get('shortcode_tag'),
-				$.extend( true, {}, sui.utils.shorcodeViewConstructor )
+				$.extend( true, {}, sui.utils.shortcodeViewConstructor )
 			);
 
 		} );
