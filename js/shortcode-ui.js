@@ -15,10 +15,11 @@ var Shortcode_UI;
 	 */
 	sui.models.ShortcodeAttribute = Backbone.Model.extend({
 		defaults: {
-			attr:  '',
-			label: '',
-			type:  '',
-			value: '',
+			attr:        '',
+			label:       '',
+			type:        '',
+			value:       '',
+			placeholder: '',
 		},
 	});
 
