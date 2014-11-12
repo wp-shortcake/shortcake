@@ -16,21 +16,21 @@
 <script type="text/html" id="tmpl-shortcode-ui-field-text">
 	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}"<# if ( data.placeholder ){ print( ' placeholder="' + data.placeholder + '"' ); } #>/>
+		<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}"/>
 	</p>
 </script>
 
 <script type="text/html" id="tmpl-shortcode-ui-field-url">
 	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="url" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="code"<# if ( data.placeholder ){ print( ' placeholder="' + data.placeholder + '"' ); } #>/>
+		<input type="url" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="code" placeholder="{{ data.placeholder }}"/>
 	</p>
 </script>
 
 <script type="text/html" id="tmpl-shortcode-ui-field-textarea">
 	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<textarea name="{{ data.attr }}" id="{{ data.attr }}"<# if ( data.placeholder ){ print( ' placeholder="' + data.placeholder + '"' ); } #>>{{ data.value }}</textarea>
+		<textarea name="{{ data.attr }}" id="{{ data.attr }}" placeholder="{{ data.placeholder }}">{{ data.value }}</textarea>
 	</p>
 </script>
 
@@ -64,14 +64,14 @@
 <script type="text/html" id="tmpl-shortcode-ui-field-email">
 	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="email" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value}}"<# if ( data.placeholder ){ print( ' placeholder="' + data.placeholder + '"' ); } #>/>
+		<input type="email" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value}}" placeholder="{{ data.placeholder }}"/>
 	</p>
 </script>
 
 <script type="text/html" id="tmpl-shortcode-ui-field-number">
 	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="number" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value}}"<# if ( data.placeholder ){ print( ' placeholder="' + data.placeholder + '"' ); } #>/>
+		<input type="number" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value}}" placeholder="{{ data.placeholder }}"/>
 	</p>
 </script>
 
@@ -85,6 +85,6 @@
 <script type="text/html" id="tmpl-shortcode-ui-field-date">
 	<p class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="date" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}"<# if ( data.placeholder ){ print( ' placeholder="' + data.placeholder + '"' ); } #>/>
+		<input type="date" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}"/>
 	</p>
 </script>
