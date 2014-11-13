@@ -68,6 +68,9 @@ add_action( 'init', function() {
 	);
 
 } );
+
+[Install the demo plugin using this snippet](https://gist.github.com/Mte90/cb8a0e37565d219062ec)
+
 ````
 
 ## Screenshots
