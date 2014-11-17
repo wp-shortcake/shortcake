@@ -63,6 +63,10 @@ class Shortcode_UI {
 
 	}
 
+	public function get_shortcodes() {
+		return $this->shortcodes;
+	}
+
 	public function get_shortcode( $shortcode_tag ) {
 
 		if ( isset( $this->shortcodes[ $shortcode_tag ] ) ) {
@@ -112,7 +116,7 @@ class Shortcode_UI {
 			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 				'shortcodes' => array_values( $this->shortcodes ),
 				'modalOptions' => array(
-    				'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
+				'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
 				),
 				'nonces' => array(
 					'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),

@@ -35,11 +35,11 @@ add_action( 'init', function() {
 	 * and an array or args.
 	 */
 	shortcode_ui_register_for_shortcode(
-		'pullquote',
+		'blockquote',
 		array(
 
 			// Display label. String. Required.
-			'label' => 'Pullquote',
+			'label' => 'Dev Blockquote',
 
 			// Icon/image for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 			'listItemImage' => 'dashicons-editor-quote',
@@ -59,13 +59,22 @@ add_action( 'init', function() {
 					'label' => 'Image',
 					'attr'  => 'image',
 					'type'  => 'Fieldmanager_Media',
-					'fieldView' => 'editAttributeFieldMedia',
 				),
 
 				array(
 					'label' => 'Cite',
 					'attr'  => 'source',
 					'type'  => 'Fieldmanager_Textfield',
+				),
+
+				array(
+					'label' => 'Post',
+					'attr'  => 'post',
+					'type'  => 'post',
+					'query' => array(
+						'post_type' => array( 'fusion_stream' ),
+						'posts_per_page' => 100,
+					)
 				),
 
 			),

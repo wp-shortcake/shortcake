@@ -187,12 +187,13 @@ var Shortcode_UI;
 
 			this.model.get( 'attrs' ).each( function( attr ) {
 
-				if ( attr.get( 'fieldView' ) ) {
-					var viewObjName = attr.get( 'fieldView' );
-					var view = new sui.views[viewObjName]( { model: attr } );
-				} else {
-					var view = new sui.views.editAttributeField( { model: attr } );
-				}
+				// Get the field settings from localization data.
+				var type        = attr.get('type');
+				var viewObjName = shortcodeUIFieldData.fields[ type ].view;
+				var tmplName    = shortcodeUIFieldData.fields[ type ].template;
+
+				var view = new sui.views[viewObjName]( { model: attr } );
+				view.template = wp.media.template( tmplName );
 
 				t.views.add( '.edit-shortcode-form-fields', view );
 
@@ -202,6 +203,12 @@ var Shortcode_UI;
 
 	});
 
+	/**
+	 * Default Attribute field object.
+	 *
+	 * The template used by this view has the id tmpl-shortcode-ui-field-$type
+	 * where type is passed when defining the attribute.
+	 */
 	sui.views.editAttributeField = wp.Backbone.View.extend( {
 
 		tagName: "div",
@@ -214,7 +221,6 @@ var Shortcode_UI;
 		},
 
 		render: function() {
-			this.template = wp.media.template( 'shortcode-ui-field-' + this.model.get( 'type' ) );
 			return this.$el.html( this.template( this.model.toJSON() ) );
 		},
 
@@ -753,4 +759,11 @@ var Shortcode_UI;
 
 	});
 
+
+	sui.views.editAttributeFieldPost = sui.views.editAttributeField.extend( {
+
+	} );
+
 } )( jQuery );
+
+
