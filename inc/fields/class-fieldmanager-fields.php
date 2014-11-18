@@ -6,9 +6,16 @@ class Shortcode_UI_Fieldmanager_Fields {
 	static $instance;
 
 	private $fields = array(
-		'Fieldmanager_Textfield',
-		'Fieldmanager_TextArea',
-		'Fieldmanager_Media'
+		'Fieldmanager_Textfield' => array(
+			'template' => 'shortcode-ui-field-Fieldmanager_Textfield',
+		),
+		'Fieldmanager_TextArea' => array(
+			'template' => 'shortcode-ui-field-Fieldmanager_TextArea',
+		),
+		'Fieldmanager_Media' => array(
+			'template' => 'shortcode-ui-field-Fieldmanager_Media',
+			'view'     => 'editAttributeFieldMedia',
+		),
 	);
 
 	public static function get_instance() {
@@ -20,14 +27,22 @@ class Shortcode_UI_Fieldmanager_Fields {
 	}
 
 	function setup_actions() {
+
 		$this->init();
+
+		add_filter( 'shortcode_ui_fields', function( $fields ) {
+			return array_merge( $fields, $this->fields );
+		}  );
+
+		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ), 100 );
 		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ), 100 );
 		add_action( 'wp_ajax_shortcode_ui_get_thumbnail_image', array( $this, 'ajax_get_thumbnail_image' ) );
+
 	}
 
 	function init() {
 
-		foreach ( $this->fields as $field_class ) {
+		foreach ( $this->fields as $field_class => $field_attr ) {
 
 			$field = new $field_class( '{{ data.label }}', array( 'name' => '{{ data.attr }}' ) );
 

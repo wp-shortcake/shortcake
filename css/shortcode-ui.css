@@ -74,5 +74,10 @@
     padding-top: 10px; }
     .edit-shortcode-form .field-inline label {
       display: inline-block; }
+  .edit-shortcode-form .select2-container {
+    min-width: 300px; }
+
+.wp-admin .select2-drop {
+  z-index: 160001; }
 
 /*# sourceMappingURL=shortcode-ui.css.map */

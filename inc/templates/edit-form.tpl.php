@@ -88,3 +88,13 @@
 		<input type="date" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" />
 	</p>
 </script>
+
+
+<script type="text/html" id="tmpl-shortcode-ui-field-post">
+	<p class="field-block">
+
+		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="shortcode-ui-post-select" />
+
+	</p>
+</script>
