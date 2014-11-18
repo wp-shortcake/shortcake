@@ -113,7 +113,7 @@ var Shortcode_UI;
 			}
 
 			template = template.replace( /{{ shortcode }}/g, this.get('shortcode_tag') );
-            template = template.replace( /{{ attributes }}/g, attrs.join( ' ' ) );
+			template = template.replace( /{{ attributes }}/g, attrs.join( ' ' ) );
 			template = template.replace( /{{ content }}/g, content );
 
 			return template;
