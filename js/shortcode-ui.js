@@ -666,7 +666,7 @@ var Shortcode_UI;
 
 			shortcodeString = decodeURIComponent( $(node).attr( 'data-wpview-text' ) );
 
-			var megaRegex = /\[(\S+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
+			var megaRegex = /\[([^\s\]]+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
 			var matches = shortcodeString.match( megaRegex );
 
 			if ( ! matches ) {
@@ -681,7 +681,7 @@ var Shortcode_UI;
 
 			currentShortcode = defaultShortcode.clone();
 
-			if ( typeof( matches[2] ) != undefined ) {
+			if ( matches[2] ) {
 
 				attributeMatches = matches[2].match(/(\S+?=".*?")/g ) || [];
 
