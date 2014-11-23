@@ -6,6 +6,8 @@
 
 		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; Return to list view.</a></p>
 
+		<div class="edit-shortcode-preview"></div>
+
 		<div class="edit-shortcode-form-fields">
 		</div>
 

@@ -185,7 +185,14 @@ var Shortcode_UI;
 		initialize: function() {
 
 			var t = this;
-
+			
+			// Add live preview.
+			t.views.add(
+				'.edit-shortcode-preview',
+				new sui.views.shortcodePreview()	
+			);
+			
+			// Add shortcode form fields
 			this.model.get( 'attrs' ).each( function( attr ) {
 				t.views.add(
 					'.edit-shortcode-form-fields',
@@ -230,6 +237,12 @@ var Shortcode_UI;
 		},
 
 	} );
+	
+	sui.views.shortcodePreview = Backbone.View.extend({
+		render: function() {
+			this.$el.html( 'PREVIEW' );
+		}
+	});
 
 	sui.views.Shortcode_UI = Backbone.View.extend({
 
