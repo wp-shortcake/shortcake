@@ -114,7 +114,7 @@ class Shortcode_UI_Fields {
 
 		foreach ( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode => $shortcode_args ) {
 			foreach ( $shortcode_args['attrs'] as $attr ) {
-				if ( 'post' === $attr['type'] ) {
+				if ( 'post_select2' === $attr['type'] ) {
 
 					$nonce_action = sprintf( 'shortcode_ui_%s, %s', $shortcode, $attr['attr'] );
 
