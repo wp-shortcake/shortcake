@@ -28,10 +28,6 @@ add_action( 'init', function() {
 	$shortcode_ui = Shortcode_UI::get_instance();
 	$fields       = Shortcode_UI_Fields::get_instance();
 
-	if ( class_exists( 'Fieldmanager_Field' ) ) {
-		$shortcode_ui_fieldmanager = Shortcode_UI_Fieldmanager_Fields::get_instance();
-	}
-
 }, 5 );
 
 /**
