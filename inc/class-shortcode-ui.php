@@ -181,6 +181,7 @@ class Shortcode_UI {
 	 */
 	public function handle_ajax_do_shortcode( ) {
 
+		// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
 		$shortcode = ! empty( $_POST['shortcode'] ) ? stripslashes( $_POST['shortcode'] ) : null;
 		$post_id   = ! empty( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : null;
 
