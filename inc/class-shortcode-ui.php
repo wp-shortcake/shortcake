@@ -181,7 +181,8 @@ class Shortcode_UI {
 	 */
 	public function handle_ajax_do_shortcode( ) {
 
-		$shortcode = ! empty( $_POST['shortcode'] ) ? wp_filter_post_kses( stripslashes( $_POST['shortcode'] ) ) : null;
+		// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
+		$shortcode = ! empty( $_POST['shortcode'] ) ? stripslashes( $_POST['shortcode'] ) : null;
 		$post_id   = ! empty( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : null;
 
 		if ( ! current_user_can( 'edit_post', $post_id ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-preview' ) ) {
