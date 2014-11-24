@@ -183,14 +183,11 @@ var Shortcode_UI;
 		template: wp.template('shortcode-default-edit-form'),
 
 		initialize: function() {
-
-			var t = this;
+			var t = this,
+				preview;
 			
 			// Add live preview.
-			t.views.add(
-				'.edit-shortcode-preview',
-				new sui.views.shortcodePreview()	
-			);
+			t.views.add( '.edit-shortcode-preview', ( preview = new sui.views.shortcodePreview({ model: this.model }) ) );
 			
 			// Add shortcode form fields
 			this.model.get( 'attrs' ).each( function( attr ) {
@@ -198,6 +195,11 @@ var Shortcode_UI;
 					'.edit-shortcode-form-fields',
 					new sui.views.editAttributeField( { model: attr } )
 				);
+				
+				// TODO: Move listener binding to sui.views.shortcodePreview and trigger render.
+				preview.listenTo( attr, 'change', function() {
+					console.log( "Change:", this, arguments );
+				});
 			} );
 
 		},
@@ -239,8 +241,56 @@ var Shortcode_UI;
 	} );
 	
 	sui.views.shortcodePreview = Backbone.View.extend({
+		template: _.template( "PREVIEW" ),
+		
+		initialize: function( options ) {
+			this.fetchTemplate();
+		},
+		
 		render: function() {
-			this.$el.html( 'PREVIEW' );
+			this.$el.html( this.template( this.mapAttributes() ) );
+		},
+		
+		fetchTemplate: function() {
+			var self = this;
+			var data;
+			var shortcode = this.model.clone();
+			
+			// Use wp.template style delimiters. Would prefer not to duplicate this option data, 
+			// but can't use wp.template directly on an actual template string.
+			var options = {
+				evaluate:    /<#([\s\S]+?)#>/g,
+				interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+				escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
+				variable:    'data'
+			};
+			
+			// Inject template field tokens into attribute values.
+			shortcode.get( 'attrs' ).each( function( attr ) {
+				attr.set( 'value', "{{ data." + attr.get( 'attr' ) + " }}" );
+			});
+			
+			// Fetch shortcode markup using template tokens.
+			data = {
+				action: 'do_shortcode',
+				post_id: $('#post_ID').val(),
+				shortcode: shortcode.formatShortcode(),
+				nonce: shortcodeUIData.previewNonce
+			};
+
+			$.post( ajaxurl, data, function( result ) {
+				console.log( "Result:", shortcode.formatShortcode(), result );	// This logging also captures the missing attributes reported in #60.
+				self.template = _.template( result, null, options );
+				self.render();
+			});
+		},
+		
+		mapAttributes: function() {
+			// TODO: Replace stubbed data with hash of attr:value from shortcode attributes collection.
+			return {
+				content: "The Dude abides.",
+				source: "The Dude"
+			};
 		}
 	});
 
