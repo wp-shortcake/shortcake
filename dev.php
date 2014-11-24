@@ -17,9 +17,12 @@ add_action( 'init', function() {
 
 		?>
 
-		<section class="pullquote">
-			<?php echo esc_html( $content ); ?><br/>
-			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
+		<section class="pullquote" style="padding: 20px; background: rgba(0,0,0,0.1);">
+			<p style="margin:0; padding: 0;">
+				<b>Content:</b> <?php echo esc_html( $content ); ?></br>
+				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
+				<b>Post:</b> <?php echo esc_html( get_the_title( $attr['post'] ) ); ?></br>
+			</p>
 		</section>
 
 		<?php
