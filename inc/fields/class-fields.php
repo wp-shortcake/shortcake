@@ -47,9 +47,9 @@ class Shortcode_UI_Fields {
 		'date' => array(
 			'template' => 'shortcode-ui-field-date',
 		),
-		'post' => array(
-			'template' => 'shortcode-ui-field-post',
-			'view'     => 'editAttributeFieldPost',
+		'post_select2' => array(
+			'template' => 'shortcode-ui-field-post-select2',
+			'view'     => 'editAttributeFieldPostSelect2',
 		),
 	);
 

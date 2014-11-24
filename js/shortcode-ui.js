@@ -767,7 +767,7 @@ var Shortcode_UI;
 	});
 
 
-	sui.views.editAttributeFieldPost = sui.views.editAttributeField.extend( {
+	sui.views.editAttributeFieldPostSelect2 = sui.views.editAttributeField.extend( {
 
 		render: function() {
 
