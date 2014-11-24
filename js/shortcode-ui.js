@@ -244,7 +244,7 @@ var Shortcode_UI;
 	 * 	@params options.model {sui.models.Shortcode} Requires a valid shortcode.
 	 */
 	sui.views.ShortcodePreview = Backbone.View.extend({
-		template: _.template( "PREVIEW" ),
+		template: _.template( "" ),
 		
 		initialize: function( options ) {
 			this.fetchTemplate();
@@ -303,7 +303,7 @@ var Shortcode_UI;
 		/**
 		 * Converts the attributes (`attrs`) collection on current shortcode model to a hash of key:value pairs
 		 * suitable for injection into a template.
-		 * 
+		 *
 		 * @returns {Object}
 		 */
 		mapAttributes: function() {
