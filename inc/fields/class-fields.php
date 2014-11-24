@@ -63,8 +63,8 @@ class Shortcode_UI_Fields {
 
 	function __construct() {
 		$this->plugin_version = '0.1';
-		$this->plugin_dir     = plugin_dir_path( dirname(  __FILE__ ) );
-		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
+		$this->plugin_dir     = plugin_dir_path( dirname( dirname(  __FILE__ ) ) );
+		$this->plugin_url     = plugin_dir_url( dirname( dirname( __FILE__ ) ) );
 	}
 
 	private function setup_actions() {
@@ -162,7 +162,7 @@ class Shortcode_UI_Fields {
 		}
 
 		if ( ! empty( $_GET['s'] ) ) {
-			$query_args['s'] = sanitize_text_field( $_GET['page'] );
+			$query_args['s'] = sanitize_text_field( $_GET['s'] );
 		}
 
 		$query = new WP_Query( $query_args );
