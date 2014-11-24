@@ -187,7 +187,7 @@ var Shortcode_UI;
 				preview;
 			
 			// Add live preview.
-			t.views.add( '.edit-shortcode-preview', ( preview = new sui.views.shortcodePreview({ model: this.model }) ) );
+			t.views.add( '.edit-shortcode-preview', ( preview = new sui.views.ShortcodePreview({ model: this.model }) ) );
 			
 			// Add shortcode form fields
 			this.model.get( 'attrs' ).each( function( attr ) {
@@ -195,11 +195,6 @@ var Shortcode_UI;
 					'.edit-shortcode-form-fields',
 					new sui.views.editAttributeField( { model: attr } )
 				);
-				
-				// TODO: Move listener binding to sui.views.shortcodePreview and trigger render.
-				preview.listenTo( attr, 'change', function() {
-					console.log( "Change:", this, arguments );
-				});
 			} );
 
 		},
@@ -239,8 +234,16 @@ var Shortcode_UI;
 		},
 
 	} );
-	
-	sui.views.shortcodePreview = Backbone.View.extend({
+
+	/**
+	 * Live preview of rendered shortcode.
+	 *
+	 * @class sui.views.ShortcodePreview
+	 * @constructor
+	 * @params options
+	 * 	@params options.model {sui.models.Shortcode} Requires a valid shortcode.
+	 */
+	sui.views.ShortcodePreview = Backbone.View.extend({
 		template: _.template( "PREVIEW" ),
 		
 		initialize: function( options ) {
@@ -250,7 +253,14 @@ var Shortcode_UI;
 		render: function() {
 			this.$el.html( this.template( this.mapAttributes() ) );
 		},
-		
+
+		/**
+		 * Fetches and generates a client-side template for the rendered shortcode by passing templatized
+		 * attribute and content values to the server-side `do_shortcode` endpoint then generating a compiled
+		 * template from the returned markup.
+		 *
+		 * @method fetchTemplate
+		 */
 		fetchTemplate: function() {
 			var self = this;
 			var data;
@@ -282,15 +292,29 @@ var Shortcode_UI;
 				console.log( "Result:", shortcode.formatShortcode(), result );	// This logging also captures the missing attributes reported in #60.
 				self.template = _.template( result, null, options );
 				self.render();
+				
+				// Must listen to original model, not local clone.
+				self.listenTo( self.model.get( 'attrs' ), 'change', function() {
+					self.render();
+				});
 			});
 		},
-		
+
+		/**
+		 * Converts the attributes (`attrs`) collection on current shortcode model to a hash of key:value pairs
+		 * suitable for injection into a template.
+		 * 
+		 * @returns {Object}
+		 */
 		mapAttributes: function() {
-			// TODO: Replace stubbed data with hash of attr:value from shortcode attributes collection.
-			return {
-				content: "The Dude abides.",
-				source: "The Dude"
-			};
+			var obj = {};
+			var attrs = this.model.get( 'attrs' );
+			
+			attrs.each( function( attr ) {
+				obj[attr.get( 'attr' )] = attr.get( 'value' );
+			});
+			
+			return obj;
 		}
 	});
 
