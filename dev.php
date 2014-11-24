@@ -3,30 +3,29 @@
 add_action( 'init', function() {
 
 	/**
-	 * Register your shorcode as you would normally.
+	 * Register your shortcode as you would normally.
 	 * This is a simple example for a pullquote with a citation.
 	 */
-	add_shortcode( 'pullquote', function( $attr, $content = '' ) {
+	add_shortcode( 'shortcake_dev', function( $attr, $content = '' ) {
 
 		$attr = wp_parse_args( $attr, array(
 			'source' => '',
-			'image'  => '',
+			'post'   => '',
 		) );
+
+		ob_start();
 
 		?>
 
-		<section class="pullquote" style="overflow: hidden;">
-			<?php if ( $attr['image'] ) : ?>
-			<div style="float: left; margin-right: 20px;">
-				<?php echo wp_get_attachment_image( $attr['image'], array( 112, 112 ) ); ?>
-			</div>
-			<?php endif; ?>
-
+		<section class="pullquote">
 			<?php echo esc_html( $content ); ?><br/>
 			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
 		</section>
 
 		<?php
+
+		return ob_get_clean();
+
 	} );
 
 	/**
@@ -35,11 +34,11 @@ add_action( 'init', function() {
 	 * and an array or args.
 	 */
 	shortcode_ui_register_for_shortcode(
-		'blockquote',
+		'shortcake_dev',
 		array(
 
 			// Display label. String. Required.
-			'label' => 'Dev Blockquote',
+			'label' => 'Shortcake Dev',
 
 			// Icon/image for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 			'listItemImage' => 'dashicons-editor-quote',
@@ -52,21 +51,14 @@ add_action( 'init', function() {
 				array(
 					'label' => 'Quote',
 					'attr'  => 'content',
-					'type'  => 'Fieldmanager_TextArea',
+					'type'  => 'textarea',
 				),
-
-				array(
-					'label' => 'Image',
-					'attr'  => 'image',
-					'type'  => 'Fieldmanager_Media',
-				),
-
 				array(
 					'label' => 'Cite',
 					'attr'  => 'source',
-					'type'  => 'Fieldmanager_Textfield',
+					'type'  => 'text',
+					'placeholder' => 'Test placeholder',
 				),
-
 				array(
 					'label' => 'Post',
 					'attr'  => 'post',
@@ -76,7 +68,6 @@ add_action( 'init', function() {
 						'posts_per_page' => 100,
 					)
 				),
-
 			),
 		)
 	);
