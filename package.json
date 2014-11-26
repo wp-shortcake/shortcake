@@ -1,12 +1,14 @@
 {
-  "name": "shortcode-ui",
-  "version": "0.1.0",
-  "main": "Gruntfile.js",
-  "author": "Human Made Limited",
-  "license": "GPL V2",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-sass": "0.12.1"
-  }
+	"name": "shortcode-ui",
+	"version": "0.1.0",
+	"main": "Gruntfile.js",
+	"author": "Human Made Limited",
+	"license": "GPL V2",
+	"devDependencies": {
+		"grunt": "^0.4.5",
+		"grunt-contrib-requirejs": "^0.4.4",
+		"grunt-contrib-watch": "^0.6.1",
+		"grunt-sass": "0.12.1",
+		"requirejs": "^2.1.15"
+	}
 }
