@@ -55,6 +55,14 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		jshint: {
+			options: {
+				expr: true
+			},
+
+			all: ['js/src/**/*.js']
+		},
+
 		watch:  {
 			sass: {
 				files: ['css/*/**/*.scss'],
@@ -71,6 +79,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-contrib-requirejs' );
+	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
 	grunt.registerTask( 'default', ['sass'] );
 	grunt.registerTask( 'build', ['sass', 'requirejs:dist'] );
