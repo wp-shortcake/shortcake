@@ -6,7 +6,7 @@
 
 		$( document ).ready( function() {
 
-			var shortcodes = sui.shortcodes = new Shortcodes( shortcodeUIData.shortcodes )
+			var shortcodes = sui.shortcodes = new Shortcodes( shortcodeUIData.shortcodes );
 
 			shortcodes.each( function( shortcode ) {
 

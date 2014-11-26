@@ -120,6 +120,8 @@ define( ['jquery'], function ( $ ) {
 					// Seems Firefox needs a bit of time to insert/set the view nodes, or the iframe will fail
 					// especially when switching Text => Visual.
 					setTimeout( function() {
+						// jshint scripturl: true
+
 						iframe = dom.add( content, 'iframe', {
 							src: tinymce.Env.ie ? 'javascript:""' : '',
 							frameBorder: '0',

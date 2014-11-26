@@ -75,10 +75,10 @@ define( ['shortcodes/attribute.collection'], function ( AttributeCollection ) {
 
 			} );
 
-			template = "[{{ shortcode }} {{ attributes }}]"
+			template = "[{{ shortcode }} {{ attributes }}]";
 
 			if ( content && content.length > 0 ) {
-				template += "{{ content }}[/{{ shortcode }}]"
+				template += "{{ content }}[/{{ shortcode }}]";
 			}
 
 			template = template.replace( /{{ shortcode }}/g, this.get('shortcode_tag') );
