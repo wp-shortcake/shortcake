@@ -15,16 +15,11 @@ require.config({
 	// Karma serves files under /base, which is the basePath from your config file
 	baseUrl: '/base/js/src',
 
-	// example of using shim, to load non AMD libraries (such as underscore and jquery)
 	paths: {
-		'jquery':			'/base/lib/jquery/jquery-1.7.2',
-		'underscore':		'/base/lib/underscore-min',
-		'backbone':			'/base/lib/backbone-min'
+		'jquery':			'/base/node_modules/jquery/dist/jquery',
+		'underscore':		'/base/node_modules/backbone/node_modules/underscore/underscore',
+		'backbone':			'/base/node_modules/backbone/backbone'
 	},
-
-	packages: [
-		{ name: 'when', location: 'lib/when', main: 'when' }
-	],
 
 	shim: {
 		"backbone": {
@@ -34,6 +29,16 @@ require.config({
 		"underscore": {
 			exports: '_'
 		}
+	},
+
+	deps: ['jquery', 'underscore', 'backbone'],
+
+	// Export jQuery, Underscore, and Backbone to global context to match expected runtime environment (WordPress).
+	callback: function( jQuery, _, Backbone ) {
+		// Export globals
+		window.jQuery = window.$ = jQuery;
+		window._ = _;
+		window.backbone = Backbone;
 	}
 });
 
@@ -49,8 +54,7 @@ require.config({
 
 	paths: {
 		'chai': 	'chai/chai',
-		'squire':	'squirejs/src/Squire',
-		'jquery':	'/base/lib/jquery/jquery-1.7.2'
+		'squire':	'squirejs/src/Squire'
 	},
 
 	packages: [

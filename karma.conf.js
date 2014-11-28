@@ -14,6 +14,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+		{ pattern: 'node_modules/jquery/**/*.js', included: false },
+		{ pattern: 'node_modules/backbone/**/*.js', included: false },
+		{ pattern: 'node_modules/squirejs/**/*.js', included: false },
+		{ pattern: 'node_modules/chai/**/*.js', included: false },
+
 		{ pattern: 'js/src/**/*.js', included: false },
 		{ pattern: 'spec/**/*-spec.js', included: false },
 
