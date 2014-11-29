@@ -337,6 +337,7 @@ var Shortcode_UI;
 
 	});
 
+	// RESTRUCTURING: media/mediaframe.view.js
 	var shortcodeFrame = wp.media.view.MediaFrame.Post;
 	wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 
@@ -428,6 +429,7 @@ var Shortcode_UI;
 
 	});
 
+	// RESTRUCTURING: mce/mce.view.constructor.js
 	/**
 	 * Generic shortcode mce view constructor.
 	 * This is cloned and used by each shortcode when registering a view.

@@ -6,7 +6,6 @@ module.exports = function( grunt ) {
 
 	// Project configuration
 	grunt.initConfig( {
-
 		pkg:    grunt.file.readJSON( 'package.json' ),
 
 		sass: {
@@ -21,8 +20,50 @@ module.exports = function( grunt ) {
 			}
 		},
 
-		watch:  {
+		requirejs: {
+			dist: {
+				options: {
+					baseUrl:	'./js/src',
+					name:		'main',
+					include:	['almond'],
+					out:		'./js/shortcode-ui.js',
+					wrap:		true,
+					paths: {
+						'almond':	'../../lib/almond',
+						'jquery':	'wrappers/jquery.wrapper',
+						'backbone':	'empty:'
+					}
+				}
+			},
+			dev: {
+				options: {
+					baseUrl:	'./js/src',
+					name:		'main',
+					include:	['almond'],
+					out:		'./js/shortcode-ui.js',
+					wrap:		true,
+					optimize:	'uglify2',
+					paths: {
+						'almond':	'../../lib/almond',
+						'jquery':	'wrappers/jquery.wrapper',
+						'backbone':	'empty:'
+					},
 
+					generateSourceMaps: 		true,
+					preserveLicenseComments:	false
+				}
+			}
+		},
+
+		jshint: {
+			options: {
+				expr: true
+			},
+
+			all: ['js/src/**/*.js']
+		},
+
+		watch:  {
 			sass: {
 				files: ['css/*/**/*.scss'],
 				tasks: ['sass'],
@@ -32,15 +73,16 @@ module.exports = function( grunt ) {
 					sourceMap: true
 				}
 			}
+		}
+	});
 
-		},
+	grunt.loadNpmTasks( 'grunt-sass' );
+	grunt.loadNpmTasks( 'grunt-contrib-watch' );
+	grunt.loadNpmTasks( 'grunt-contrib-requirejs' );
+	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
-	} );
-
-	grunt.loadNpmTasks('grunt-sass');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-
-	grunt.registerTask( 'default', ['sass' ] );
+	grunt.registerTask( 'default', ['sass'] );
+	grunt.registerTask( 'build', ['sass', 'requirejs:dist'] );
 
 	grunt.util.linefeed = '\n';
 
