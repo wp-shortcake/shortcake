@@ -1,12 +1,16 @@
 <script type="text/html" id="tmpl-shortcode-default-edit-form">
 
+	<div class="preview-shortcode">
+		<div class="preview-shortcode-content"></div>
+		<h2 class="preview-shortcode-title">Preview</h2>
+	</div>
+		
+
 	<form class="edit-shortcode-form">
 
 		<h2 class="edit-shortcode-form-title">Edit {{ data.label }}</h2>
 
 		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; Return to list view.</a></p>
-
-		<div class="edit-shortcode-preview"></div>
 
 		<div class="edit-shortcode-form-fields">
 		</div>

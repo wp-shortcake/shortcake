@@ -187,7 +187,7 @@ var Shortcode_UI;
 				preview;
 			
 			// Add live preview.
-			t.views.add( '.edit-shortcode-preview', ( preview = new sui.views.ShortcodePreview({ model: this.model }) ) );
+			t.views.add( '.preview-shortcode-content', ( preview = new sui.views.ShortcodePreview({ model: this.model }) ) );
 			
 			// Add shortcode form fields
 			this.model.get( 'attrs' ).each( function( attr ) {
@@ -244,14 +244,14 @@ var Shortcode_UI;
 	 * 	@params options.model {sui.models.Shortcode} Requires a valid shortcode.
 	 */
 	sui.views.ShortcodePreview = Backbone.View.extend({
-		template: _.template( "" ),
-		
+		template: false,
+
 		initialize: function( options ) {
 			this.fetchTemplate();
 		},
-		
+
 		render: function() {
-			this.$el.html( this.template( this.mapAttributes() ) );
+			this.$el.html( this.template ? this.template( this.mapAttributes() ) : wp.mce.View.prototype.loadingPlaceholder() );
 		},
 
 		/**
