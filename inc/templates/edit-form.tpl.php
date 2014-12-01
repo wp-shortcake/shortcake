@@ -1,14 +1,14 @@
 <script type="text/html" id="tmpl-shortcode-default-edit-form">
 
 	<div class="preview-shortcode">
-		<h2 class="preview-shortcode-title">Preview</h2>
+		<h2 class="preview-shortcode-title"><?php esc_html_e( 'Preview', 'shortcode-ui' ); ?></h2>
 		<div class="preview-shortcode-content"></div>
 	</div>
 		
 
 	<form class="edit-shortcode-form">
-		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; Return to list view.</a></p>
-		<h2 class="edit-shortcode-form-title">Edit {{ data.label }}</h2>
+		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; <?php esc_html_e( 'Return to list view.', 'shortcode-ui' ); ?></a></p>
+		<h2 class="edit-shortcode-form-title"><?php esc_html_e( 'Edit', 'shortcode-ui' ); ?></h2>
 
 		<div class="edit-shortcode-form-fields"></div>
 	</form>
