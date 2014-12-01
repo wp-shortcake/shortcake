@@ -1,18 +1,18 @@
 <script type="text/html" id="tmpl-shortcode-default-edit-form">
-
-	<div class="preview-shortcode">
-		<h2 class="preview-shortcode-title"><?php esc_html_e( 'Preview', 'shortcode-ui' ); ?></h2>
-		<div class="preview-shortcode-content"></div>
-	</div>
-		
-
 	<form class="edit-shortcode-form">
 		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; <?php esc_html_e( 'Return to list view.', 'shortcode-ui' ); ?></a></p>
-		<h2 class="edit-shortcode-form-title"><?php esc_html_e( 'Edit', 'shortcode-ui' ); ?></h2>
 
 		<div class="edit-shortcode-form-fields"></div>
 	</form>
+</script>
 
+<script type="text/html" id="tmpl-tabbed-view-base">
+    <div class="edit-shortcode-tabs" data-role="tab-group">
+        <# _.each( data, function( tab, key ) { #>
+            <a class="edit-shortcode-tab" data-role="tab" data-target="{{ key }}">{{ tab.label }}</a>
+        <# }); #>
+    </div>
+    <div class="edit-shortcode-tabs-content" data-role="tab-content"></div>
 </script>
 
 <script type="text/html" id="tmpl-shortcode-ui-field-text">

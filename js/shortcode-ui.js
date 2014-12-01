@@ -230,18 +230,90 @@ var Shortcode_UI;
 	});
 
 	/**
+	 *
+	 */
+	sui.views.TabbedView = Backbone.View.extend({
+		template: wp.template( 'tabbed-view-base' ),
+		tabs: {},
+
+		events: {
+			'click [data-role="tab"]': function( event ) {
+				event.stopPropagation();
+				event.preventDefault();
+
+				var target = $( event.currentTarget ).attr( 'data-target' );
+
+				this.select( target );
+			}
+		},
+
+		initialize: function( options ) {
+			Backbone.View.prototype.initialize.apply( this, arguments );
+
+			this.tabs = _.extend( this.tabs, options.tabs );
+		},
+
+		/**
+		 * @chainable
+		 * @returns {TabbedView}
+		 */
+		render: function() {
+			var $content;
+
+			this.$el.html( this.template( this.tabs ) );
+
+			$content = this.$( '[data-role="tab-content"]' );
+			$content.empty();
+
+			_.each( this.tabs, function( tab ) {
+				var $el = tab.content.render().$el;
+				$el.hide();
+				$content.append( $el );
+			});
+
+			this.select( 0 );
+
+			return this;
+		},
+
+		select: function( selector ) {
+			var index = 0;
+			var target = null;
+			var tab;
+
+			selector = selector || 0;
+
+			_.each( this.tabs, function( tab, key ) {
+				tab.content.$el.hide();
+
+				if ( selector === key || selector === index ) {
+					target = key;
+				}
+
+				index = index + 1;
+			});
+
+			this.$( '[data-role="tab"]' ).removeClass( 'active' );
+
+			if ( target ) {
+				tab = this.tabs[target];
+
+				this.$( '[data-role="tab"][data-target="' + target + '"]' ).addClass( 'active' );
+
+				tab.content.$el.show();
+				( typeof tab.open == 'function' ) && tab.open.call( tab.content );
+			}
+		}
+	});
+
+	/**
 	 * Single edit shortcode content view.
 	 */
-	sui.views.editShortcodeForm = wp.Backbone.View.extend({
-
+	sui.views.EditShortcodeForm = wp.Backbone.View.extend({
 		template: wp.template('shortcode-default-edit-form'),
 
 		initialize: function() {
-			var t = this,
-				preview;
-			
-			// Add live preview.
-			t.views.add( '.preview-shortcode-content', ( preview = new sui.views.ShortcodePreview({ model: this.model }) ) );
+			var t = this;
 			
 			// Add shortcode form fields
 			this.model.get( 'attrs' ).each( function( attr ) {
@@ -251,8 +323,7 @@ var Shortcode_UI;
 				);
 			} );
 
-		},
-
+		}
 	});
 
 	sui.views.editAttributeField = Backbone.View.extend( {
@@ -307,8 +378,46 @@ var Shortcode_UI;
 			this.fetchTemplate();
 		},
 
+		/**
+		 * @chainable
+		 * @returns {ShortcodePreview}
+		 */
 		render: function() {
 			this.sandbox.update( this.template ? this.template( this.mapAttributes() ) : wp.mce.View.prototype.loadingPlaceholder() );
+
+			return this;
+		},
+
+		/**
+		 * Makes an AJAX call to the server to render the shortcode based on user supplied attributes. Server-side
+		 * rendering is necessary to allow for shortcodes that incorporate external content based on shortcode
+		 * attributes.
+		 *
+		 * @method renderShortcode
+		 * @returns {String} Rendered shortcode markup (HTML).
+		 */
+		renderShortcode: function() {
+			var self = this;
+			var data;
+			var shortcode = this.model;
+
+			// Fetch shortcode markup using template tokens.
+			data = {
+				action: 'do_shortcode',
+				post_id: $('#post_ID').val(),
+				shortcode: shortcode.formatShortcode(),
+				nonce: shortcodeUIData.previewNonce
+			};
+
+			$.post( ajaxurl, data, function( result ) {
+				self.template = _.template( result, null, options );
+				self.render();
+
+				// Must listen to original model, not local clone.
+				self.listenTo( self.model.get( 'attrs' ), 'change', function() {
+					self.render();
+				});
+			});
 		},
 
 		/**
@@ -396,7 +505,6 @@ var Shortcode_UI;
 	});
 
 	sui.views.Shortcode_UI = Backbone.View.extend({
-
 		events: {
 			"click .add-shortcode-list li":      "select",
 			"click .edit-shortcode-form-cancel": "cancelSelect"
@@ -429,10 +537,23 @@ var Shortcode_UI;
 		},
 
 		renderEditShortcodeView: function() {
+			var shortcode = this.controller.props.get( 'currentShortcode' );
+			var view = new sui.views.TabbedView({
+				tabs: {
+					edit: {
+						label: "Edit",
+						content: new sui.views.EditShortcodeForm({ model: shortcode })
+					},
 
-			var view = new sui.views.editShortcodeForm( {
-				model:  this.controller.props.get( 'currentShortcode' ),
-			} );
+					preview: {
+						label: "Preview",
+						content: new sui.views.ShortcodePreview({ model: shortcode }),
+						open: function() {
+							this.render();
+						}
+					}
+				}
+			});
 
 			this.$el.append( view.render().el );
 

@@ -49,6 +49,27 @@
       -webkit-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
       box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15); }
 
+.shortcode-ui-content .edit-shortcode-tabs {
+  margin: 10px 20px;
+  border-bottom: 1px solid #ddd; }
+.shortcode-ui-content .edit-shortcode-tab {
+  display: inline-block;
+  padding: 3px 10px;
+  border-width: 1px 1px 0;
+  border-style: solid;
+  border-color: #ddd;
+  border-radius: 5px 5px 0 0;
+  font-size: 18px;
+  color: #ddd;
+  background-color: #fff;
+  cursor: pointer; }
+  .shortcode-ui-content .edit-shortcode-tab.active {
+    position: relative;
+    top: 1px;
+    color: #222; }
+.shortcode-ui-content .edit-shortcode-tabs-content {
+  margin: 0 20px; }
+
 .edit-shortcode-form {
   padding: 5px 20px; }
   .edit-shortcode-form input, .edit-shortcode-form textarea {
