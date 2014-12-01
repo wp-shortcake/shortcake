@@ -8,3 +8,41 @@
 		}
 	}
 }
+
+.loading-placeholder {
+	.wpview-loading {
+		width: 60px;
+		height: 5px;
+		overflow: hidden;
+		background-color: transparent;
+		margin: 10px auto 0;
+
+		ins {
+			background-color: #333;
+			margin: 0 0 0 -60px;
+			width: 60px;
+			height: 5px;
+			display: block;
+			-webkit-animation: preview-loading 1.3s infinite 1s linear;
+			animation: preview-loading 1.3s infinite 1s linear;
+		}
+	}
+}
+
+@-webkit-keyframes preview-loading {
+	0% {
+		margin-left: -60px;
+	}
+	100% {
+		margin-left: 60px;
+	}
+}
+
+@keyframes preview-loading {
+	0% {
+		margin-left: -60px;
+	}
+	100% {
+		margin-left: 60px;
+	}
+}
