@@ -7,14 +7,10 @@
 		
 
 	<form class="edit-shortcode-form">
-
+		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; Return to list view.</a></p>
 		<h2 class="edit-shortcode-form-title">Edit {{ data.label }}</h2>
 
-		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; Return to list view.</a></p>
-
-		<div class="edit-shortcode-form-fields">
-		</div>
-
+		<div class="edit-shortcode-form-fields"></div>
 	</form>
 
 </script>
