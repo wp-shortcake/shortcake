@@ -1,8 +1,8 @@
 <script type="text/html" id="tmpl-shortcode-default-edit-form">
 
 	<div class="preview-shortcode">
-		<div class="preview-shortcode-content"></div>
 		<h2 class="preview-shortcode-title">Preview</h2>
+		<div class="preview-shortcode-content"></div>
 	</div>
 		
 

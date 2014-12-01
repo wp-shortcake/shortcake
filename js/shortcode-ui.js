@@ -11,6 +11,56 @@ var Shortcode_UI;
 	}
 
 	/**
+	 * DOM manipulation utilities.
+	 */
+	sui.dom = {
+		/**
+		 * Creates an <iframe> appended to the `$parent` node. Manages <iframe> content updates and state.
+		 *
+		 * @param $parent jQuery object to which <iframe> should be appended.
+		 * @param [body]
+		 * @param [head]
+		 * @returns {}
+		 */
+		iframe: function( $parent, body, head ) {
+			var pending = {
+				head:	head || "",
+				body:	body || ""
+			};
+
+			var node	= document.createElement( 'iframe' );
+			var ready	= false;
+			var obj;
+
+			node.src = tinymce.Env.ie ? 'javascript:""' : '';
+			node.frameBorder = '0';
+			node.allowTransparency = 'true';
+			node.scrolling = 'no';
+			$( node ).css({ width: '100%', display: 'block' });
+
+			node.onload = function() {
+				ready = true;
+				$( node ).contents().find( 'head' ).html( pending.head );
+				update( pending.body );
+			};
+
+			$parent.append( node );
+
+			function update( content ) {
+				pending.body = content || "";
+
+				if ( ready ) {
+					$( node ).contents().find( 'body' ).html( pending.body );
+				}
+			}
+
+			return {
+				update: update
+			};
+		}
+	};
+
+	/**
 	 * Shortcode Attribute Model.
 	 */
 	sui.models.ShortcodeAttribute = Backbone.Model.extend({
@@ -247,11 +297,14 @@ var Shortcode_UI;
 		template: false,
 
 		initialize: function( options ) {
+			var stylesheets = this.getEditorStyles().join( "\n" );
+
+			this.sandbox = sui.dom.iframe( this.$el, "", stylesheets );
 			this.fetchTemplate();
 		},
 
 		render: function() {
-			this.$el.html( this.template ? this.template( this.mapAttributes() ) : wp.mce.View.prototype.loadingPlaceholder() );
+			this.sandbox.update( this.template ? this.template( this.mapAttributes() ) : wp.mce.View.prototype.loadingPlaceholder() );
 		},
 
 		/**
@@ -315,6 +368,26 @@ var Shortcode_UI;
 			});
 			
 			return obj;
+		},
+
+		/**
+		 *
+		 */
+		getEditorStyles: function() {
+			var styles = {};
+
+			_.each( tinymce.editors, function( editor ) {
+				_.each( editor.dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
+					var href;
+					( href = link.href ) && ( styles[href] = true );
+				});
+			});
+
+			styles = _.map( _.keys( styles ), function( href ) {
+				return '<link rel="stylesheet" type="text/css" href="' + href + '">';
+			});
+
+			return styles;
 		}
 	});
 
