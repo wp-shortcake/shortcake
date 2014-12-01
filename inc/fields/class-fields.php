@@ -154,7 +154,7 @@ class Shortcode_UI_Fields {
 		}
 
 		// Get the query specified when registering this field.
-		$query_args = $this->post_fields[ $shortcode ][ $field ];
+		$query_args = $this->post_fields[ $shortcode ][ $field ]['query'];
 		$query_args['fields'] = 'ids';
 
 		if ( isset( $_GET['page'] ) ) {
