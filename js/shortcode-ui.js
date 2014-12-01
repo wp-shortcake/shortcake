@@ -39,8 +39,12 @@ var Shortcode_UI;
 			$( node ).css({ width: '100%', display: 'block' });
 
 			node.onload = function() {
+				var $contents = $( node ).contents();
+
 				ready = true;
-				$( node ).contents().find( 'head' ).html( pending.head );
+
+				$contents.find( 'body' ).addClass( 'shortcake shortcake-preview' );
+				$contents.find( 'head' ).html( pending.head );
 				update( pending.body );
 			};
 
