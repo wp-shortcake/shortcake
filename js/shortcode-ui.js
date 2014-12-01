@@ -369,13 +369,10 @@ var Shortcode_UI;
 	 * 	@params options.model {sui.models.Shortcode} Requires a valid shortcode.
 	 */
 	sui.views.ShortcodePreview = Backbone.View.extend({
-		template: false,
-
 		initialize: function( options ) {
 			var stylesheets = this.getEditorStyles().join( "\n" );
 
 			this.sandbox = sui.dom.iframe( this.$el, "", stylesheets );
-			this.fetchTemplate();
 		},
 
 		/**
@@ -383,7 +380,13 @@ var Shortcode_UI;
 		 * @returns {ShortcodePreview}
 		 */
 		render: function() {
-			this.sandbox.update( this.template ? this.template( this.mapAttributes() ) : wp.mce.View.prototype.loadingPlaceholder() );
+			var sandbox = this.sandbox;
+
+			sandbox.update( wp.mce.View.prototype.loadingPlaceholder() );
+
+			this.fetchShortcode( function( result ) {
+				sandbox.update( result );
+			});
 
 			return this;
 		},
@@ -393,10 +396,10 @@ var Shortcode_UI;
 		 * rendering is necessary to allow for shortcodes that incorporate external content based on shortcode
 		 * attributes.
 		 *
-		 * @method renderShortcode
+		 * @method fetchShortcode
 		 * @returns {String} Rendered shortcode markup (HTML).
 		 */
-		renderShortcode: function() {
+		fetchShortcode: function( callback ) {
 			var self = this;
 			var data;
 			var shortcode = this.model;
@@ -409,78 +412,7 @@ var Shortcode_UI;
 				nonce: shortcodeUIData.previewNonce
 			};
 
-			$.post( ajaxurl, data, function( result ) {
-				self.template = _.template( result, null, options );
-				self.render();
-
-				// Must listen to original model, not local clone.
-				self.listenTo( self.model.get( 'attrs' ), 'change', function() {
-					self.render();
-				});
-			});
-		},
-
-		/**
-		 * Fetches and generates a client-side template for the rendered shortcode by passing templatized
-		 * attribute and content values to the server-side `do_shortcode` endpoint then generating a compiled
-		 * template from the returned markup.
-		 *
-		 * @method fetchTemplate
-		 */
-		fetchTemplate: function() {
-			var self = this;
-			var data;
-			var shortcode = this.model.clone();
-			
-			// Use wp.template style delimiters. Would prefer not to duplicate this option data, 
-			// but can't use wp.template directly on an actual template string.
-			var options = {
-				evaluate:    /<#([\s\S]+?)#>/g,
-				interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
-				escape:      /\{\{([^\}]+?)\}\}(?!\})/g,
-				variable:    'data'
-			};
-			
-			// Inject template field tokens into attribute values.
-			shortcode.get( 'attrs' ).each( function( attr ) {
-				attr.set( 'value', "{{ data." + attr.get( 'attr' ) + " }}" );
-			});
-			
-			// Fetch shortcode markup using template tokens.
-			data = {
-				action: 'do_shortcode',
-				post_id: $('#post_ID').val(),
-				shortcode: shortcode.formatShortcode(),
-				nonce: shortcodeUIData.previewNonce
-			};
-
-			$.post( ajaxurl, data, function( result ) {
-				console.log( "Result:", shortcode.formatShortcode(), result );	// This logging also captures the missing attributes reported in #60.
-				self.template = _.template( result, null, options );
-				self.render();
-				
-				// Must listen to original model, not local clone.
-				self.listenTo( self.model.get( 'attrs' ), 'change', function() {
-					self.render();
-				});
-			});
-		},
-
-		/**
-		 * Converts the attributes (`attrs`) collection on current shortcode model to a hash of key:value pairs
-		 * suitable for injection into a template.
-		 *
-		 * @returns {Object}
-		 */
-		mapAttributes: function() {
-			var obj = {};
-			var attrs = this.model.get( 'attrs' );
-			
-			attrs.each( function( attr ) {
-				obj[attr.get( 'attr' )] = attr.get( 'value' );
-			});
-			
-			return obj;
+			$.post( ajaxurl, data, callback );
 		},
 
 		/**
