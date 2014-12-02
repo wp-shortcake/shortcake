@@ -397,7 +397,7 @@ var Shortcode_UI;
 	 */
 	sui.views.ShortcodePreview = Backbone.View.extend({
 		initialize: function( options ) {
-			var stylesheets = this.getEditorStyles().join( "\n" );
+			var stylesheets = this.getEditorStyles();
 
 			this.sandbox = sui.dom.iframe( this.$el, "", stylesheets );
 		},
@@ -444,7 +444,7 @@ var Shortcode_UI;
 		},
 
 		/**
-		 * Returns an array of urls representing the stylesheets applied to the TinyMCE editor.
+		 * Returns an array of jQuery objects representing <link> tags for stylesheets applied to the TinyMCE editor.
 		 *
 		 * @method getEditorStyles
 		 * @returns {Array}
@@ -455,12 +455,12 @@ var Shortcode_UI;
 			_.each( tinymce.editors, function( editor ) {
 				_.each( editor.dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
 					var href;
-					( href = link.href ) && ( styles[href] = true );
+					( href = link.href ) && ( styles[href] = true );	// Poor man's de-duping.
 				});
 			});
 
 			styles = _.map( _.keys( styles ), function( href ) {
-				return '<link rel="stylesheet" type="text/css" href="' + href + '">';
+				return $( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href );
 			});
 
 			return styles;
