@@ -504,12 +504,12 @@ var Shortcode_UI;
 			var view = new sui.views.TabbedView({
 				tabs: {
 					edit: {
-						label: "Edit",
+						label: shortcodeUIData.modalOptions.edit_tab_label,
 						content: new sui.views.EditShortcodeForm({ model: shortcode })
 					},
 
 					preview: {
-						label: "Preview",
+						label: shortcodeUIData.modalOptions.preview_tab_label,
 						content: new sui.views.ShortcodePreview({ model: shortcode }),
 						open: function() {
 							this.render();

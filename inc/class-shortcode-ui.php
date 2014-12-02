@@ -114,6 +114,8 @@ class Shortcode_UI {
 				'previewNonce' => wp_create_nonce( 'shortcode-ui-preview' ),
 				'modalOptions' => array(
     					'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
+    					'edit_tab_label'	=> esc_html__( 'Edit', 'shortcode-ui' ),
+    					'preview_tab_label'	=> esc_html__( 'Preview', 'shortcode-ui' )
 				)
 			) );
 
