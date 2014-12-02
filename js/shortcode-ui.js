@@ -17,10 +17,12 @@ var Shortcode_UI;
 		/**
 		 * Creates an <iframe> appended to the `$parent` node. Manages <iframe> content updates and state.
 		 *
+		 * @class sui.dom.iframe
+		 * @function sui.dom.iframe Factory function.
 		 * @param $parent jQuery object to which <iframe> should be appended.
-		 * @param [body]
-		 * @param [head]
-		 * @returns {}
+		 * @param [body] HTML content for insertion into the &lt;iframe> body.
+		 * @param [head] Markup for insertion into the &lt;iframe> head.
+		 * @returns {iframe}
 		 */
 		iframe: function( $parent, body, head ) {
 			var pending = {
@@ -50,6 +52,12 @@ var Shortcode_UI;
 
 			$parent.append( node );
 
+			/**
+			 * Updates &lt;iframe> content, after checking ready state. If not ready, stores content and updates on ready.
+			 *
+			 * @method update
+			 * @param content HTML content for insertion into the &lt;iframe> body.
+			 */
 			function update( content ) {
 				pending.body = content || "";
 
@@ -230,7 +238,18 @@ var Shortcode_UI;
 	});
 
 	/**
+	 * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with views for associated content are
+	 * passed to initialize the tabbed view.
 	 *
+	 * @class TabbedView
+	 * @constructor
+	 * @extends Backbone.View
+	 * @params [options]
+	 * 	@params [options.tabs] {Object} A hash of key:value pairs, where each value is itself an object with the
+	 * 	following properties:
+	 *
+	 * 		label: The label to display on the tab.
+	 * 		content: The `Backbone.View` associated with the tab content.
 	 */
 	sui.views.TabbedView = Backbone.View.extend({
 		template: wp.template( 'tabbed-view-base' ),
@@ -254,6 +273,7 @@ var Shortcode_UI;
 		},
 
 		/**
+		 * @method render
 		 * @chainable
 		 * @returns {TabbedView}
 		 */
@@ -276,6 +296,12 @@ var Shortcode_UI;
 			return this;
 		},
 
+		/**
+		 * Programmatically select (activate) a specific tab. Used internally to process tab click events.
+		 *
+		 * @method select
+		 * @param selector {number|string} The index (zero based) or key of the target tab.
+		 */
 		select: function( selector ) {
 			var index = 0;
 			var target = null;
@@ -361,7 +387,8 @@ var Shortcode_UI;
 	} );
 
 	/**
-	 * Live preview of rendered shortcode.
+	 * Preview of rendered shortcode. Asynchronously fetches rendered shortcode content from WordPress and displays
+	 * in an &lt;iframe> to isolate editor styles.
 	 *
 	 * @class sui.views.ShortcodePreview
 	 * @constructor
@@ -376,6 +403,7 @@ var Shortcode_UI;
 		},
 
 		/**
+		 * @method render
 		 * @chainable
 		 * @returns {ShortcodePreview}
 		 */
@@ -416,7 +444,10 @@ var Shortcode_UI;
 		},
 
 		/**
+		 * Returns an array of urls representing the stylesheets applied to the TinyMCE editor.
 		 *
+		 * @method getEditorStyles
+		 * @returns {Array}
 		 */
 		getEditorStyles: function() {
 			var styles = {};
