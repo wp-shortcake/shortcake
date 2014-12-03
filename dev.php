@@ -22,6 +22,8 @@ add_action( 'init', function() {
 				<b>Content:</b> <?php echo esc_html( $content ); ?></br>
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
 				<b>Post:</b> <?php echo esc_html( get_the_title( $attr['post'] ) ); ?></br>
+				<b>Fieldmanager Textarea:</b> <?php echo esc_html( $attr['fieldmanager_textarea'] ); ?></br>
+				<b>Fieldmanager Media:</b> <?php echo esc_html( get_the_title( $attr['fieldmanager_media'] ) ); ?></br>
 			</p>
 		</section>
 
@@ -70,6 +72,19 @@ add_action( 'init', function() {
 						'posts_per_page' => 100,
 					)
 				),
+
+				array(
+					'label' => 'Fieldmanager Textarea',
+					'attr'  => 'fieldmanager_textarea',
+					'type'  => 'Fieldmanager_TextArea',
+				),
+
+				array(
+					'label' => 'Fieldmanager Media',
+					'attr'  => 'fieldmanager_media',
+					'type'  => 'Fieldmanager_Media',
+				),
+
 			),
 		)
 	);
