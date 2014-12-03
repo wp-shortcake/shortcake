@@ -15,60 +15,94 @@ var Shortcode_UI;
 	 */
 	sui.dom = {
 		/**
-		 * Creates an <iframe> appended to the `$parent` node. Manages <iframe> content updates and state.
 		 *
-		 * @class sui.dom.iframe
-		 * @function sui.dom.iframe Factory function.
-		 * @param $parent jQuery object to which <iframe> should be appended.
-		 * @param [body] HTML content for insertion into the &lt;iframe> body.
-		 * @param [head] Markup for insertion into the &lt;iframe> head.
-		 * @returns {iframe}
+		 *
+		 * @class sui.dom.IFrame
 		 */
-		iframe: function( $parent, body, head ) {
-			var pending = {
-				head:	head || "",
-				body:	body || ""
-			};
-
-			var node	= document.createElement( 'iframe' );
-			var ready	= false;
-			var obj;
-
-			node.src = tinymce.Env.ie ? 'javascript:""' : '';
-			node.frameBorder = '0';
-			node.allowTransparency = 'true';
-			node.scrolling = 'no';
-			$( node ).css({ width: '100%', display: 'block' });
-
-			node.onload = function() {
-				var $contents = $( node ).contents();
-
-				ready = true;
-
-				$contents.find( 'body' ).addClass( 'shortcake shortcake-preview' );
-				$contents.find( 'head' ).html( pending.head );
-				update( pending.body );
-			};
-
-			$parent.append( node );
+		IFrame: {
+			template: wp.template( 'iframe-doc' ),
 
 			/**
-			 * Updates &lt;iframe> content, after checking ready state. If not ready, stores content and updates on ready.
+			 * Creates an <iframe> appended to the `$parent` node. Manages <iframe> content updates and state.
 			 *
-			 * @method update
-			 * @param content HTML content for insertion into the &lt;iframe> body.
+			 * @method create
+			 * @static
+			 * @param $parent jQuery object to which <iframe> should be appended.
+			 * @param [options.body] HTML content for insertion into the &lt;iframe> body.
+			 * @param [options.head] Markup for insertion into the &lt;iframe> head.
 			 */
-			function update( content ) {
-				pending.body = content || "";
+			create: function( $parent, options ) {
+				var iframe	= document.createElement( 'iframe' );
 
-				if ( ready ) {
-					$( node ).contents().find( 'body' ).html( pending.body );
+				iframe.src = tinymce.Env.ie ? 'javascript:""' : '';
+				iframe.frameBorder = '0';
+				iframe.allowTransparency = 'true';
+				iframe.scrolling = 'no';
+				$( iframe ).css({ width: '100%', display: 'block' });
+
+				iframe.onload = function() {
+					if ( options.write !== false ) {
+						sui.dom.IFrame.write( iframe, options );
+					}
+				};
+
+				$parent.append( iframe );
+
+				return iframe;
+			},
+
+			/**
+			 * Write a new document to the target iframe.
+			 *
+			 * @param iframe
+			 * @param params
+			 * 	@param params.head {String}
+			 * 	@param params.body {String}
+			 * 	@param params.body_classes {String}
+			 */
+			write: function( iframe, params ) {
+				var doc;
+
+				_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': '' });
+
+				if ( !( doc = iframe.contentWindow && iframe.contentWindow.document ) ) {
+					throw new Error( "Cannot write to iframe that is not ready." );
 				}
-			}
 
-			return {
-				update: update
-			};
+				doc.open();
+				doc.write( sui.dom.IFrame.template( params ) );
+				doc.close();
+			},
+
+			/**
+			 * If the `MutationObserver` class is available, observe the target iframe and execute the callback upon
+			 * mutation. If the `MutationObserver` class is not available, execute the callback after a timeout (light
+			 * poling).
+			 *
+			 * @param iframe
+			 * @param callback
+			 * @returns {MutationObserver|false}
+			 */
+			observe: function( iframe, callback ) {
+				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+				var observer = false;
+				var doc;
+
+				if ( MutationObserver && ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) ) {
+					observer = new MutationObserver( callback );
+					observer.observe( doc.body, {
+						attributes:	true,
+						childList:	true,
+						subtree:	true
+					});
+				} else {
+					for ( i = 1; i < 6; i++ ) {
+						setTimeout( callback, i * 700 );
+					}
+				}
+
+				return observer;
+			}
 		}
 	};
 
@@ -397,9 +431,9 @@ var Shortcode_UI;
 	 */
 	sui.views.ShortcodePreview = Backbone.View.extend({
 		initialize: function( options ) {
-			var stylesheets = this.getEditorStyles();
+			this.stylesheets = this.getEditorStyles().join( "\n" );
 
-			this.sandbox = sui.dom.iframe( this.$el, "", stylesheets );
+			this.iframe = false;
 		},
 
 		/**
@@ -408,15 +442,42 @@ var Shortcode_UI;
 		 * @returns {ShortcodePreview}
 		 */
 		render: function() {
-			var sandbox = this.sandbox;
+			var self = this;
+			var stylesheets = this.stylesheets;
 
-			sandbox.update( wp.mce.View.prototype.loadingPlaceholder() );
+			self.renderIFrame({ body: wp.mce.View.prototype.loadingPlaceholder(), head: stylesheets });
 
 			this.fetchShortcode( function( result ) {
-				sandbox.update( result );
+				self.renderIFrame({ body: result, head: stylesheets });
 			});
 
 			return this;
+		},
+
+		/**
+		 * Render a child iframe, removing any previously rendered iframe. Additionally, observe the rendered iframe
+		 * for mutations and resize as necessary to match content.
+		 *
+		 * @param params
+		 */
+		renderIFrame: function( params ) {
+			var iframe = false;
+
+			_.defaults( params, { 'body_classes': "shortcake shortcake-preview" });
+
+			if ( iframe = this.iframe ) {
+				$( iframe ).remove();
+			}
+
+			iframe = this.iframe = sui.dom.IFrame.create( this.$el, params );
+
+			sui.dom.IFrame.observe( iframe, _.debounce( function() {
+				var doc;
+
+				if ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) {
+					$( iframe ).height( $( doc.body ).height() );
+				}
+			}, 100 ) );
 		},
 
 		/**
@@ -444,7 +505,7 @@ var Shortcode_UI;
 		},
 
 		/**
-		 * Returns an array of jQuery objects representing <link> tags for stylesheets applied to the TinyMCE editor.
+		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
 		 *
 		 * @method getEditorStyles
 		 * @returns {Array}
@@ -460,7 +521,7 @@ var Shortcode_UI;
 			});
 
 			styles = _.map( _.keys( styles ), function( href ) {
-				return $( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href );
+				return $( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
 			});
 
 			return styles;
