@@ -68,11 +68,15 @@ class Shortcode_UI_Fields {
 	}
 
 	private function setup_actions() {
+
 		add_action( 'init', array( $this, 'action_init' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
+
+		// Post Select 2 field actions.
 		add_action( 'wp_ajax_shortcode_ui_post_field', array( $this, 'action_wp_ajax_shortcode_ui_post_field' ) );
 		add_action( 'wp_ajax_shortcode_ui_post_field_init_values', array( $this, 'action_wp_ajax_shortcode_ui_post_field_init_values' ) );
 		add_action( 'admin_init', array( $this, 'admin_init_post_field' ), 100 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
+
 	}
 
 	/**
