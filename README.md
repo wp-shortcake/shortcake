@@ -5,6 +5,13 @@ Shortcake makes WordPress shortcodes a piece of cake.
 
 Used alongside `add_shortcode`, Shortcake supplies a user-friendly interface for adding a shortcode to a post, and viewing and editing it from within the content editor.
 
+See:
+
+* [Usage](#usage)
+* [Examples](#examples)
+* [Screenshots](#screenshots)
+* [Known Issues](#known-issues)
+
 ## Usage
 
 ```php
@@ -59,9 +66,10 @@ add_action( 'init', function() {
 					'type'  => 'textarea',
 				),
 				array(
-					'label' => 'Cite',
-					'attr'  => 'source',
-					'type'  => 'text',
+					'label'       => 'Cite',
+					'attr'        => 'source',
+					'type'        => 'text',
+					'placeholder' => 'Firstname Lastname',
 				),
 			),
 		)
@@ -72,6 +80,10 @@ add_action( 'init', function() {
 ````
 
 [Install the demo plugin using this snippet](https://gist.github.com/Mte90/cb8a0e37565d219062ec)
+
+## Examples
+
+* Per Søderlind [@soderlind](https://twitter.com/soderlind) uses Shortcake to insert charts and tables. [See the screencast](http://screencast.com/t/ZJ1u3CvKF5uq)
 
 ## Screenshots
 Without Shortcake, shortcodes have a minimal UI.
