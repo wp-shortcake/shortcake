@@ -98,7 +98,7 @@ class Shortcode_UI_Fields {
 
 	public function action_admin_enqueue_scripts() {
 
-		wp_enqueue_script( 'shortcode_ui_select2', $this->plugin_url . '/js/lib/select2/select2.js' );
+		wp_enqueue_script( 'shortcode_ui_select2', $this->plugin_url . '/js/lib/select2/select2.min.js' );
 		wp_enqueue_style(  'shortcode_ui_select2', $this->plugin_url . '/js/lib/select2/select2.css' );
 
 		wp_localize_script( 'shortcode-ui', 'shortcodeUIFieldData', $this->fields );
