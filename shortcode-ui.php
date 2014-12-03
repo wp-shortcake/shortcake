@@ -21,11 +21,13 @@
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-post-select.php';
 
 add_action( 'init', function() {
 
 	$shortcode_ui = Shortcode_UI::get_instance();
 	$fields       = Shortcode_UI_Fields::get_instance();
+	$fields       = Shortcode_UI_Field_Post_Select::get_instance();
 
 }, 5 );
 
