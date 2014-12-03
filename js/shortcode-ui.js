@@ -11,6 +11,102 @@ var Shortcode_UI;
 	}
 
 	/**
+	 * DOM manipulation utilities.
+	 */
+	sui.dom = {
+		/**
+		 *
+		 *
+		 * @class sui.dom.IFrame
+		 */
+		IFrame: {
+			template: wp.template( 'iframe-doc' ),
+
+			/**
+			 * Creates an <iframe> appended to the `$parent` node. Manages <iframe> content updates and state.
+			 *
+			 * @method create
+			 * @static
+			 * @param $parent jQuery object to which <iframe> should be appended.
+			 * @param [options.body] HTML content for insertion into the &lt;iframe> body.
+			 * @param [options.head] Markup for insertion into the &lt;iframe> head.
+			 */
+			create: function( $parent, options ) {
+				var iframe	= document.createElement( 'iframe' );
+
+				iframe.src = tinymce.Env.ie ? 'javascript:""' : '';
+				iframe.frameBorder = '0';
+				iframe.allowTransparency = 'true';
+				iframe.scrolling = 'no';
+				$( iframe ).css({ width: '100%', display: 'block' });
+
+				iframe.onload = function() {
+					if ( options.write !== false ) {
+						sui.dom.IFrame.write( iframe, options );
+					}
+				};
+
+				$parent.append( iframe );
+
+				return iframe;
+			},
+
+			/**
+			 * Write a new document to the target iframe.
+			 *
+			 * @param iframe
+			 * @param params
+			 * 	@param params.head {String}
+			 * 	@param params.body {String}
+			 * 	@param params.body_classes {String}
+			 */
+			write: function( iframe, params ) {
+				var doc;
+
+				_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': '' });
+
+				if ( !( doc = iframe.contentWindow && iframe.contentWindow.document ) ) {
+					throw new Error( "Cannot write to iframe that is not ready." );
+				}
+
+				doc.open();
+				doc.write( sui.dom.IFrame.template( params ) );
+				doc.close();
+			},
+
+			/**
+			 * If the `MutationObserver` class is available, observe the target iframe and execute the callback upon
+			 * mutation. If the `MutationObserver` class is not available, execute the callback after a timeout (light
+			 * poling).
+			 *
+			 * @param iframe
+			 * @param callback
+			 * @returns {MutationObserver|false}
+			 */
+			observe: function( iframe, callback ) {
+				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+				var observer = false;
+				var doc;
+
+				if ( MutationObserver && ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) ) {
+					observer = new MutationObserver( callback );
+					observer.observe( doc.body, {
+						attributes:	true,
+						childList:	true,
+						subtree:	true
+					});
+				} else {
+					for ( i = 1; i < 6; i++ ) {
+						setTimeout( callback, i * 700 );
+					}
+				}
+
+				return observer;
+			}
+		}
+	};
+
+	/**
 	 * Shortcode Attribute Model.
 	 */
 	sui.models.ShortcodeAttribute = Backbone.Model.extend({
@@ -176,10 +272,106 @@ var Shortcode_UI;
 	});
 
 	/**
+	 * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with views for associated content are
+	 * passed to initialize the tabbed view.
+	 *
+	 * @class TabbedView
+	 * @constructor
+	 * @extends Backbone.View
+	 * @params [options]
+	 * 	@params [options.tabs] {Object} A hash of key:value pairs, where each value is itself an object with the
+	 * 	following properties:
+	 *
+	 * 		label: The label to display on the tab.
+	 * 		content: The `Backbone.View` associated with the tab content.
+	 */
+	sui.views.TabbedView = Backbone.View.extend({
+		template: wp.template( 'tabbed-view-base' ),
+		tabs: {},
+
+		events: {
+			'click [data-role="tab"]': function( event ) {
+				event.stopPropagation();
+				event.preventDefault();
+
+				var target = $( event.currentTarget ).attr( 'data-target' );
+
+				this.select( target );
+			}
+		},
+
+		initialize: function( options ) {
+			Backbone.View.prototype.initialize.apply( this, arguments );
+
+			_.defaults( this.options = ( options || {}), { styles: { group: '', tab: '' } });
+
+			this.tabs = _.extend( this.tabs, options.tabs );
+		},
+
+		/**
+		 * @method render
+		 * @chainable
+		 * @returns {TabbedView}
+		 */
+		render: function() {
+			var $content;
+
+			this.$el.html( this.template({ tabs: this.tabs, styles: this.options.styles }) );
+
+			$content = this.$( '[data-role="tab-content"]' );
+			$content.empty();
+
+			_.each( this.tabs, function( tab ) {
+				var $el = tab.content.render().$el;
+				$el.hide();
+				$content.append( $el );
+			});
+
+			this.select( 0 );
+
+			return this;
+		},
+
+		/**
+		 * Programmatically select (activate) a specific tab. Used internally to process tab click events.
+		 *
+		 * @method select
+		 * @param selector {number|string} The index (zero based) or key of the target tab.
+		 */
+		select: function( selector ) {
+			var index = 0;
+			var target = null;
+			var tab;
+
+			selector = selector || 0;
+
+			_.each( this.tabs, function( tab, key ) {
+				tab.content.$el.hide();
+
+				if ( selector === key || selector === index ) {
+					target = key;
+				}
+
+				index = index + 1;
+			});
+
+			this.$( '[data-role="tab"]' ).removeClass( 'active' );
+
+			if ( target ) {
+				tab = this.tabs[target];
+
+				this.$( '[data-role="tab"][data-target="' + target + '"]' ).addClass( 'active' );
+
+				tab.content.$el.show();
+				( typeof tab.open == 'function' ) && tab.open.call( tab.content );
+			}
+		}
+	});
+
+	/**
 	 * Single edit shortcode content view.
 	 */
-	sui.views.editShortcodeForm = wp.Backbone.View.extend({
-
+	sui.views.EditShortcodeForm = wp.Backbone.View.extend({
 		template: wp.template('shortcode-default-edit-form'),
 
 		initialize: function() {
@@ -210,21 +402,20 @@ var Shortcode_UI;
 
 	});
 
-	/**
-	 * Default Attribute field object.
-	 *
-	 * The template used by this view has the id tmpl-shortcode-ui-field-$type
-	 * where type is passed when defining the attribute.
-	 */
-	sui.views.editAttributeField = wp.Backbone.View.extend( {
+	sui.views.editAttributeField = Backbone.View.extend( {
 
 		tagName: "div",
 
 		events: {
-			'keyup  input[type="text"]': 'updateValue',
-			'keyup  textarea':           'updateValue',
-			'change select':             'updateValue',
-			'change':                    'updateValue',
+			'keyup  input[type="text"]':   'updateValue',
+			'keyup  textarea':             'updateValue',
+			'change select':               'updateValue',
+			'change input[type=checkbox]': 'updateValue',
+			'change input[type=radio]':    'updateValue',
+			'change input[type=email]':    'updateValue',
+			'change input[type=number]':   'updateValue',
+			'change input[type=date]':     'updateValue',
+			'change input[type=url]':      'updateValue',
 		},
 
 		render: function() {
@@ -238,15 +429,122 @@ var Shortcode_UI;
 		 * If the input field that has changed is for content or a valid attribute,
 		 * then it should update the model.
 		 */
-		updateValue: function() {
+		updateValue: function( e ) {
 			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
 			this.model.set( 'value', $el.val() );
 		},
 
 	} );
 
-	sui.views.Shortcode_UI = wp.Backbone.View.extend({
+	/**
+	 * Preview of rendered shortcode. Asynchronously fetches rendered shortcode content from WordPress and displays
+	 * in an &lt;iframe> to isolate editor styles.
+	 *
+	 * @class sui.views.ShortcodePreview
+	 * @constructor
+	 * @params options
+	 * 	@params options.model {sui.models.Shortcode} Requires a valid shortcode.
+	 */
+	sui.views.ShortcodePreview = Backbone.View.extend({
+		initialize: function( options ) {
+			this.stylesheets = this.getEditorStyles().join( "\n" );
 
+			this.iframe = false;
+		},
+
+		/**
+		 * @method render
+		 * @chainable
+		 * @returns {ShortcodePreview}
+		 */
+		render: function() {
+			var self = this;
+			var stylesheets = this.stylesheets;
+
+			self.renderIFrame({ body: wp.mce.View.prototype.loadingPlaceholder(), head: stylesheets });
+
+			this.fetchShortcode( function( result ) {
+				self.renderIFrame({ body: result, head: stylesheets });
+			});
+
+			return this;
+		},
+
+		/**
+		 * Render a child iframe, removing any previously rendered iframe. Additionally, observe the rendered iframe
+		 * for mutations and resize as necessary to match content.
+		 *
+		 * @param params
+		 */
+		renderIFrame: function( params ) {
+			var iframe = false;
+
+			_.defaults( params, { 'body_classes': "shortcake shortcake-preview" });
+
+			if ( iframe = this.iframe ) {
+				$( iframe ).remove();
+			}
+
+			iframe = this.iframe = sui.dom.IFrame.create( this.$el, params );
+
+			sui.dom.IFrame.observe( iframe, _.debounce( function() {
+				var doc;
+
+				if ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) {
+					$( iframe ).height( $( doc.body ).height() );
+				}
+			}, 100 ) );
+		},
+
+		/**
+		 * Makes an AJAX call to the server to render the shortcode based on user supplied attributes. Server-side
+		 * rendering is necessary to allow for shortcodes that incorporate external content based on shortcode
+		 * attributes.
+		 *
+		 * @method fetchShortcode
+		 * @returns {String} Rendered shortcode markup (HTML).
+		 */
+		fetchShortcode: function( callback ) {
+			var self = this;
+			var data;
+			var shortcode = this.model;
+
+			// Fetch shortcode markup using template tokens.
+			data = {
+				action: 'do_shortcode',
+				post_id: $('#post_ID').val(),
+				shortcode: shortcode.formatShortcode(),
+				nonce: shortcodeUIData.previewNonce
+			};
+
+			$.post( ajaxurl, data, callback );
+		},
+
+		/**
+		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
+		 *
+		 * @method getEditorStyles
+		 * @returns {Array}
+		 */
+		getEditorStyles: function() {
+			var styles = {};
+
+			_.each( tinymce.editors, function( editor ) {
+				_.each( editor.dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
+					var href;
+					( href = link.href ) && ( styles[href] = true );	// Poor man's de-duping.
+				});
+			});
+
+			styles = _.map( _.keys( styles ), function( href ) {
+				return $( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
+			});
+
+			return styles;
+		}
+	});
+
+	sui.views.Shortcode_UI = Backbone.View.extend({
 		events: {
 			"click .add-shortcode-list li":      "select",
 			"click .edit-shortcode-form-cancel": "cancelSelect"
@@ -281,13 +579,30 @@ var Shortcode_UI;
 		},
 
 		renderEditShortcodeView: function() {
+			var shortcode = this.controller.props.get( 'currentShortcode' );
+			var view = new sui.views.TabbedView({
+				tabs: {
+					edit: {
+						label: shortcodeUIData.modalOptions.edit_tab_label,
+						content: new sui.views.EditShortcodeForm({ model: shortcode })
+					},
 
-			var view = new sui.views.editShortcodeForm( {
-				model:  this.controller.props.get( 'currentShortcode' ),
-			} );
+					preview: {
+						label: shortcodeUIData.modalOptions.preview_tab_label,
+						content: new sui.views.ShortcodePreview({ model: shortcode }),
+						open: function() {
+							this.render();
+						}
+					}
+				},
 
-			this.views.unset();
-			this.views.add( '', view );
+				styles: {
+					group:	'media-router edit-shortcode-tabs',
+					tab:	'media-menu-item edit-shortcode-tab'
+				}
+			});
+
+			this.$el.append( view.render().el );
 
 			if ( this.controller.props.get('action') === 'update' ) {
 				this.$el.find( '.edit-shortcode-form-cancel' ).remove();
@@ -389,14 +704,12 @@ var Shortcode_UI;
 		},
 
 		contentRender : function( id, tab ) {
-
-			this.shortcodeUIView = new sui.views.Shortcode_UI( {
-				controller: this,
-				className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
-			} );
-
-			this.content.set( this.shortcodeUIView );
-
+			this.content.set(
+				new sui.views.Shortcode_UI( {
+					controller: this,
+					className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
+				} )
+			);
 		},
 
 		toolbarRender: function( toolbar ) {},
@@ -442,18 +755,7 @@ var Shortcode_UI;
 		},
 
 		insertAction: function() {
-
-			var form = this.controller.shortcodeUIView.views.first();
-
-			// Note that this *can* be a select shortcode list view.
-			if ( form instanceof sui.views.editShortcodeForm ) {
-				_.each( form.views.all(), function( field ) {
-					field.updateValue();
-				} );
-			}
-
 			this.controller.state().insert();
-
 		},
 
 	});
@@ -671,7 +973,7 @@ var Shortcode_UI;
 						action: 'do_shortcode',
 						post_id: $('#post_ID').val(),
 						shortcode: this.shortcode.formatShortcode(),
-						nonce: shortcodeUIData.nonces.preview
+						nonce: shortcodeUIData.previewNonce
 					};
 
 					$.post( ajaxurl, data, $.proxy( this.setHtml, this ) );
@@ -768,5 +1070,3 @@ var Shortcode_UI;
 	});
 
 } )( jQuery );
-
-

@@ -1,16 +1,32 @@
 <script type="text/html" id="tmpl-shortcode-default-edit-form">
-
 	<form class="edit-shortcode-form">
+		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; <?php esc_html_e( 'Return to list view.', 'shortcode-ui' ); ?></a></p>
 
-		<h2 class="edit-shortcode-form-title">Edit {{ data.label }}</h2>
-
-		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; Return to list view.</a></p>
-
-		<div class="edit-shortcode-form-fields">
-		</div>
-
+		<div class="edit-shortcode-form-fields"></div>
 	</form>
+</script>
 
+<script type="text/html" id="tmpl-tabbed-view-base">
+    <div class="{{{ data.styles.group }}}" data-role="tab-group">
+        <# _.each( data.tabs, function( tab, key ) { #>
+            <a href="#" class="{{{ data.styles.tab }}}" data-role="tab" data-target="{{ key }}">{{ tab.label }}</a>
+        <# }); #>
+    </div>
+    <div class="edit-shortcode-tabs-content" data-role="tab-content"></div>
+</script>
+
+<script type="text/html" id="tmpl-iframe-doc">
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+            {{{ data.head }}}
+        </head>
+        <body class="{{{ data.body_classes }}}">
+            {{{ data.body }}}
+        </body>
+    </html>
 </script>
 
 <script type="text/html" id="tmpl-shortcode-ui-field-text">
