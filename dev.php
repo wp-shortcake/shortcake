@@ -67,7 +67,6 @@ add_action( 'init', function() {
 					'attr'  => 'post',
 					'type'  => 'post_select2',
 					'query' => array(
-						'post_type' => array( 'fusion_stream' ),
 						'posts_per_page' => 100,
 					)
 				),
