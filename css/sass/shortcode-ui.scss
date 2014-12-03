@@ -73,38 +73,13 @@
 
 .shortcode-ui-content {
 	.edit-shortcode-tabs {
-		margin: 10px 20px;
-		border-bottom: 1px solid #ddd;
-	}
-
-	.edit-shortcode-tab {
-		display: inline-block;
-
-		padding: 3px 10px;
-
-		border-width: 1px 1px 0;
-		border-style: solid;
-		border-color: #ddd;
-		border-radius: 5px 5px 0 0;
-
-		font-size: 18px;
-
-		color: #ddd;
-
-		background-color: #fff;
-
-		cursor: pointer;
-
-		&.active {
-			position: relative;
-			top: 1px;
-
-			color: #222;
-		}
+		height: 34px;
+		padding: 10px 10px 0;
 	}
 
 	.edit-shortcode-tabs-content {
-		margin: 0 20px;
+		padding: 10px;
+		border-top: 1px solid #ddd;
 	}
 }
 

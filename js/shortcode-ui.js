@@ -303,6 +303,8 @@ var Shortcode_UI;
 		initialize: function( options ) {
 			Backbone.View.prototype.initialize.apply( this, arguments );
 
+			_.defaults( this.options = ( options || {}), { styles: { group: '', tab: '' } });
+
 			this.tabs = _.extend( this.tabs, options.tabs );
 		},
 
@@ -314,7 +316,7 @@ var Shortcode_UI;
 		render: function() {
 			var $content;
 
-			this.$el.html( this.template( this.tabs ) );
+			this.$el.html( this.template({ tabs: this.tabs, styles: this.options.styles }) );
 
 			$content = this.$( '[data-role="tab-content"]' );
 			$content.empty();
@@ -576,6 +578,11 @@ var Shortcode_UI;
 							this.render();
 						}
 					}
+				},
+
+				styles: {
+					group:	'media-router edit-shortcode-tabs',
+					tab:	'media-menu-item edit-shortcode-tab'
 				}
 			});
 

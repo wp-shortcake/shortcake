@@ -7,9 +7,9 @@
 </script>
 
 <script type="text/html" id="tmpl-tabbed-view-base">
-    <div class="edit-shortcode-tabs" data-role="tab-group">
-        <# _.each( data, function( tab, key ) { #>
-            <a class="edit-shortcode-tab" data-role="tab" data-target="{{ key }}">{{ tab.label }}</a>
+    <div class="{{{ data.styles.group }}}" data-role="tab-group">
+        <# _.each( data.tabs, function( tab, key ) { #>
+            <a href="#" class="{{{ data.styles.tab }}}" data-role="tab" data-target="{{ key }}">{{ tab.label }}</a>
         <# }); #>
     </div>
     <div class="edit-shortcode-tabs-content" data-role="tab-content"></div>
