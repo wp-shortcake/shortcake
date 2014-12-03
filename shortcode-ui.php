@@ -27,7 +27,7 @@ add_action( 'init', function() {
 
 	$shortcode_ui = Shortcode_UI::get_instance();
 	$fields       = Shortcode_UI_Fields::get_instance();
-	$fields       = Shortcode_UI_Field_Post_Select::get_instance();
+	$post_select  = Shortcode_UI_Field_Post_Select::get_instance();
 
 }, 5 );
 
