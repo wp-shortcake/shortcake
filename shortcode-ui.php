@@ -20,7 +20,7 @@
  */
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-fields.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
 
 add_action( 'init', function() {
 
