@@ -21,7 +21,6 @@ add_action( 'init', function() {
 			<p style="margin:0; padding: 0;">
 				<b>Content:</b> <?php echo esc_html( $content ); ?></br>
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
-				<b>Post:</b> <?php echo esc_html( get_the_title( $attr['post'] ) ); ?></br>
 			</p>
 		</section>
 
@@ -61,14 +60,6 @@ add_action( 'init', function() {
 					'attr'  => 'source',
 					'type'  => 'text',
 					'placeholder' => 'Test placeholder',
-				),
-				array(
-					'label' => 'Post',
-					'attr'  => 'post',
-					'type'  => 'post_select2',
-					'query' => array(
-						'posts_per_page' => 100,
-					)
 				),
 			),
 		)
