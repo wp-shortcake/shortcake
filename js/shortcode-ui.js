@@ -443,7 +443,7 @@ var Shortcode_UI;
 	 * @class sui.views.ShortcodePreview
 	 * @constructor
 	 * @params options
-	 * 	@params options.model {sui.models.Shortcode} Requires a valid shortcode.
+	 * @params options.model {sui.models.Shortcode} Requires a valid shortcode.
 	 */
 	sui.views.ShortcodePreview = Backbone.View.extend({
 		initialize: function( options ) {
