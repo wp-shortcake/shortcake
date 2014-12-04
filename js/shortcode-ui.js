@@ -514,7 +514,7 @@ var Shortcode_UI;
 				action: 'do_shortcode',
 				post_id: $('#post_ID').val(),
 				shortcode: shortcode.formatShortcode(),
-				nonce: shortcodeUIData.previewNonce
+				nonce: shortcodeUIData.nonces.preview
 			};
 
 			$.post( ajaxurl, data, callback );
@@ -973,7 +973,7 @@ var Shortcode_UI;
 						action: 'do_shortcode',
 						post_id: $('#post_ID').val(),
 						shortcode: this.shortcode.formatShortcode(),
-						nonce: shortcodeUIData.previewNonce
+						nonce: shortcodeUIData.nonces.preview
 					};
 
 					$.post( ajaxurl, data, $.proxy( this.setHtml, this ) );
