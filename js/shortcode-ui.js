@@ -169,7 +169,7 @@ var Shortcode_UI;
 		},
 
 		/**
-		 * Custom clone		
+		 * Custom clone
 		 * Make sure we don't clone a reference to attributes.
 		 */
 		clone: function() {
@@ -375,17 +375,31 @@ var Shortcode_UI;
 		template: wp.template('shortcode-default-edit-form'),
 
 		initialize: function() {
+
 			var t = this;
-			
-			// Add shortcode form fields
+
 			this.model.get( 'attrs' ).each( function( attr ) {
-				t.views.add(
-					'.edit-shortcode-form-fields',
-					new sui.views.editAttributeField( { model: attr } )
-				);
+
+				// Get the field settings from localization data.
+				var type = attr.get('type');
+
+				if ( ! shortcodeUIFieldData[ type ] ) {
+					return;
+				}
+
+				var viewObjName = shortcodeUIFieldData[ type ].view;
+				var tmplName    = shortcodeUIFieldData[ type ].template;
+
+				var view        = new sui.views[viewObjName]( { model: attr } );
+				view.template   = wp.media.template( tmplName );
+				view.shortcode = t.model;
+
+				t.views.add( '.edit-shortcode-form-fields', view );
+
 			} );
 
-		}
+		},
+
 	});
 
 	sui.views.editAttributeField = Backbone.View.extend( {
@@ -399,14 +413,14 @@ var Shortcode_UI;
 			'change input[type=checkbox]': 'updateValue',
 			'change input[type=radio]':    'updateValue',
 			'change input[type=email]':    'updateValue',
-			'change input[type=number]':    'updateValue',
-			'change input[type=date]':    'updateValue',
-			'change input[type=url]':    'updateValue',
+			'change input[type=number]':   'updateValue',
+			'change input[type=date]':     'updateValue',
+			'change input[type=url]':      'updateValue',
 		},
 
 		render: function() {
-			this.template = wp.media.template( 'shortcode-ui-field-' + this.model.get( 'type' ) );
-			return this.$el.html( this.template( this.model.toJSON() ) );
+			this.$el.html( this.template( this.model.toJSON() ) );
+			return this
 		},
 
 		/**
@@ -416,7 +430,7 @@ var Shortcode_UI;
 		 * then it should update the model.
 		 */
 		updateValue: function( e ) {
-			var $el = $( e.target );
+			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
 			this.model.set( 'value', $el.val() );
 		},
 
@@ -429,7 +443,7 @@ var Shortcode_UI;
 	 * @class sui.views.ShortcodePreview
 	 * @constructor
 	 * @params options
-	 * 	@params options.model {sui.models.Shortcode} Requires a valid shortcode.
+	 * @params options.model {sui.models.Shortcode} Requires a valid shortcode.
 	 */
 	sui.views.ShortcodePreview = Backbone.View.extend({
 		initialize: function( options ) {
@@ -500,7 +514,7 @@ var Shortcode_UI;
 				action: 'do_shortcode',
 				post_id: $('#post_ID').val(),
 				shortcode: shortcode.formatShortcode(),
-				nonce: shortcodeUIData.previewNonce
+				nonce: shortcodeUIData.nonces.preview
 			};
 
 			$.post( ajaxurl, data, callback );
@@ -557,8 +571,10 @@ var Shortcode_UI;
 		},
 
 		renderSelectShortcodeView: function() {
-			this.$el.append(
-				new sui.views.insertShortcodeList( { shortcodes: sui.shortcodes } ).render().el
+			this.views.unset();
+			this.views.add(
+				'',
+				new sui.views.insertShortcodeList( { shortcodes: sui.shortcodes } )
 			);
 		},
 
@@ -785,7 +801,7 @@ var Shortcode_UI;
 
 			/**
 			 * @see wp.mce.View.getEditors
-			 */ 
+			 */
 			getEditors: function( callback ) {
 				var editors = [];
 
@@ -848,7 +864,7 @@ var Shortcode_UI;
 					head = '';
 
 					$(node).addClass('wp-mce-view-show-toolbar');
-					
+
 					if ( ! wp.mce.views.sandboxStyles ) {
 						tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
 							if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
@@ -957,7 +973,7 @@ var Shortcode_UI;
 						action: 'do_shortcode',
 						post_id: $('#post_ID').val(),
 						shortcode: this.shortcode.formatShortcode(),
-						nonce: shortcodeUIData.previewNonce
+						nonce: shortcodeUIData.nonces.preview
 					};
 
 					$.post( ajaxurl, data, $.proxy( this.setHtml, this ) );

@@ -21,7 +21,7 @@ class Shortcode_UI {
 	function __construct() {
 
 		$this->plugin_version = '0.1';
-		$this->plugin_dir     = plugin_dir_path( dirname(  __FILE__ ) );
+		$this->plugin_dir     = plugin_dir_path( dirname( __FILE__ ) );
 		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
 
 	}
@@ -61,6 +61,10 @@ class Shortcode_UI {
 		$args['shortcode_tag'] = $shortcode_tag;
 		$this->shortcodes[ $shortcode_tag ] = $args;
 
+	}
+
+	public function get_shortcodes() {
+		return $this->shortcodes;
 	}
 
 	public function get_shortcode( $shortcode_tag ) {
@@ -111,11 +115,14 @@ class Shortcode_UI {
 			wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 				'shortcodes' => array_values( $this->shortcodes ),
-				'previewNonce' => wp_create_nonce( 'shortcode-ui-preview' ),
 				'modalOptions' => array(
     					'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
     					'edit_tab_label'	=> esc_html__( 'Edit', 'shortcode-ui' ),
     					'preview_tab_label'	=> esc_html__( 'Preview', 'shortcode-ui' )
+				),
+				'nonces' => array(
+					'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
+					'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
 				)
 			) );
 
