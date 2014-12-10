@@ -1,6 +1,5 @@
 <?php
 
-
 class Shortcode_UI_Fields_Fieldmanager {
 
 	static $instance;
@@ -28,7 +27,7 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 	function setup_actions() {
 
-		$this->init();
+		$this->initilize_templates();
 
 		add_filter( 'shortcode_ui_fields', function( $fields ) {
 			return array_merge( $fields, $this->fields );
@@ -40,7 +39,7 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 	}
 
-	function init() {
+	private function initilize_templates() {
 
 		foreach ( $this->fields as $field_class => $field_attr ) {
 
@@ -62,7 +61,7 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 	}
 
-	function ajax_get_thumbnail_image() {
+	public function ajax_get_thumbnail_image() {
 
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-get-thumbnail-image' ) ) {
 			wp_send_json_error();
