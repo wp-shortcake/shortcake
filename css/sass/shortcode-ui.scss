@@ -71,6 +71,18 @@
 
 }
 
+.shortcode-ui-content {
+	.edit-shortcode-tabs {
+		height: 34px;
+		padding: 10px 10px 0;
+	}
+
+	.edit-shortcode-tabs-content {
+		padding: 10px;
+		border-top: 1px solid #ddd;
+	}
+}
+
 .edit-shortcode-form {
 
 	padding: 5px 20px;
@@ -113,13 +125,5 @@
 		padding-top: 10px;
 	}
 
-	.select2-container {
-		min-width: 300px;
-	}
-
-}
-
-.wp-admin .select2-drop {
-	z-index: 160001;
 }
 
