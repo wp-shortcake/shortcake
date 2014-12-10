@@ -34,7 +34,6 @@ class Shortcode_UI_Fields_Fieldmanager {
 		}  );
 
 		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ), 100 );
-		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ), 100 );
 		add_action( 'wp_ajax_shortcode_ui_get_thumbnail_image', array( $this, 'ajax_get_thumbnail_image' ) );
 
 	}
