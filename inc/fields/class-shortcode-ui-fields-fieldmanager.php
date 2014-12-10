@@ -25,9 +25,9 @@ class Shortcode_UI_Fields_Fieldmanager {
 		return self::$instance;
 	}
 
-	function setup_actions() {
+	private function setup_actions() {
 
-		$this->initilize_templates();
+		$this->initialize_templates();
 
 		add_filter( 'shortcode_ui_fields', function( $fields ) {
 			return array_merge( $fields, $this->fields );
@@ -38,7 +38,7 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 	}
 
-	private function initilize_templates() {
+	private function initialize_templates() {
 
 		foreach ( $this->fields as $field_class => $field_attr ) {
 

@@ -28,7 +28,7 @@ add_action( 'init', function() {
 	$fields       = Shortcode_UI_Fields::get_instance();
 
 	// Add fieldmanager fields if plugin is available.
-	if ( defined( 'FM_VERSION' ) ) {
+	if ( class_exists( 'Fieldmanager_Field' ) ) {
 		$fieldmanager = Shortcode_UI_Fields_Fieldmanager::get_instance();
 	}
 
