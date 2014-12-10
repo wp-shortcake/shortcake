@@ -21,6 +21,7 @@
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
+require_once dirname( __FILE__ ) . '/dev.php';
 
 add_action( 'init', function() {
 
@@ -29,6 +30,7 @@ add_action( 'init', function() {
 
 	// Add fieldmanager fields if plugin is available.
 	if ( class_exists( 'Fieldmanager_Field' ) ) {
+		require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields-fieldmanager.php';
 		$fieldmanager = Shortcode_UI_Fields_Fieldmanager::get_instance();
 	}
 

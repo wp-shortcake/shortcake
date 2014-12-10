@@ -85,6 +85,16 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 
 	public function action_print_media_templates() {
+
+		$localization = array(
+			'strings' => array(
+				'removeFile'   => 'Remove',
+				'uploadedFile' => 'Uploaded file',
+			),
+		);
+
+		hm( $localization );
+
 		?>
 
 <script>
@@ -92,6 +102,8 @@ class Shortcode_UI_Fields_Fieldmanager {
 ( function( $ ) {
 
 	var sui = window.Shortcode_UI;
+
+	var localization = <?php echo json_encode( $localization ); ?>;
 
 	sui.views.editAttributeFieldMedia = sui.views.editAttributeField.extend( {
 
@@ -124,9 +136,9 @@ class Shortcode_UI_Fields_Fieldmanager {
 						return;
 					}
 
-					var previewHTML = 'Uploaded file:</br>';
+					var previewHTML = localization.strings.uploadedFile + ':</br>';
 					previewHTML += '<a href="#">' + response.data.html + '</a></br>';
-					previewHTML += '<a class="fm-media-remove fm-delete" href="#">remove</a>';
+					previewHTML += '<a class="fm-media-remove fm-delete" href="#">' + localization.strings.removeFile + '</a>';
 					html.find('.media-wrapper').append( previewHTML );
 
 				});
