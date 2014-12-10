@@ -93,8 +93,6 @@ class Shortcode_UI_Fields_Fieldmanager {
 			),
 		);
 
-		hm( $localization );
-
 		?>
 
 <script>
