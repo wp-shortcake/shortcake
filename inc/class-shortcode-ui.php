@@ -199,12 +199,12 @@ class Shortcode_UI {
 			exit;
 		}
 
-		do_action( 'shortcode_ui_before_do_shortcode' );
 		global $post;
 		$post = get_post( $post_id );
 		setup_postdata( $post );
+		do_action( 'shortcode_ui_before_do_shortcode', $shortcode );
 		echo do_shortcode( $shortcode );
-		do_action( 'shortcode_ui_after_do_shortcode' );
+		do_action( 'shortcode_ui_after_do_shortcode', $shortcode );
 		exit;
 
 	}
