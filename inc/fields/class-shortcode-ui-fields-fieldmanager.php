@@ -144,7 +144,8 @@ class Shortcode_UI_Fields_Fieldmanager {
 			}
 
 			/**
-			 * Update the value when media iframe is closed.
+			 * Update the value when media iframe is closed,
+			 * setTimeout() is used to wait for the iframe to be created
 			 */
 			var self   = this;
 			var button = html.find( '.fm-media-button' );
