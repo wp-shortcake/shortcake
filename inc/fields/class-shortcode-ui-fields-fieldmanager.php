@@ -143,6 +143,20 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 			}
 
+			/**
+			 * Update the value when media iframe is closed.
+			 */
+			var self   = this;
+			var button = html.find( '.fm-media-button' );
+			button.on( 'click', function() {
+				window.setTimeout( function() {
+					fm_media_frame[ button.attr('id') ].on( 'select', function() {
+						var $el = self.$el.find( '.fm-media-id' );
+						self.model.set( 'value', $el.val() );
+					} );
+				}, 100 );
+			} );
+
 			return this.$el.html( html );
 
 		},
