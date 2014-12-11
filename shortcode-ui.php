@@ -21,7 +21,6 @@
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
-require_once dirname( __FILE__ ) . '/dev.php';
 
 add_action( 'init', function() {
 
