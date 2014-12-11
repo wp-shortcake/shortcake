@@ -27,6 +27,12 @@ add_action( 'init', function() {
 	$shortcode_ui = Shortcode_UI::get_instance();
 	$fields       = Shortcode_UI_Fields::get_instance();
 
+	// Add fieldmanager fields if plugin is available.
+	if ( class_exists( 'Fieldmanager_Field' ) ) {
+		require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields-fieldmanager.php';
+		$fieldmanager = Shortcode_UI_Fields_Fieldmanager::get_instance();
+	}
+
 }, 5 );
 
 /**
