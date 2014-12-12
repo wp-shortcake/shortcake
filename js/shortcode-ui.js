@@ -678,18 +678,24 @@ var Shortcode_UI;
 
 			var id = 'shortcode-ui';
 
-			var controller = new sui.controllers.MediaController( {
+			var opts = {
 				id      : id,
 				router  : false,
 				toolbar : id + '-toolbar',
 				menu    : 'default',
-				title   : 'Insert Content Item',
+				title   : shortcodeUIData.modalOptions.media_frame_menu_insert_label,
 				tabs    : [ 'insert' ],
 				priority:  66,
 				content : id + '-content-insert',
-			} );
+			};
 
-			if ( 'currentShortcode' in arguments[0] ) {
+			if ( 'currentShortcode' in this.options ) {
+				opts.title = shortcodeUIData.modalOptions.media_frame_menu_update_label;
+			}
+
+			var controller = new sui.controllers.MediaController( opts );
+
+			if ( 'currentShortcode' in this.options ) {
 				controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
 				controller.props.set( 'action', 'update' );
 			}
@@ -715,11 +721,16 @@ var Shortcode_UI;
 		toolbarRender: function( toolbar ) {},
 
 		toolbarCreate : function( toolbar ) {
+			var text = shortcodeUIData.modalOptions.media_frame_toolbar_insert_label;
+			if ( 'currentShortcode' in this.options ) {
+				text = shortcodeUIData.modalOptions.media_frame_toolbar_update_label;
+			}
+
 			toolbar.view = new  wp.media.view.Toolbar( {
 				controller : this,
 				items: {
 					insert: {
-						text: 'Insert Item', // added via 'media_view_strings' filter,
+						text: text,
 						style: 'primary',
 						priority: 80,
 						requires: false,

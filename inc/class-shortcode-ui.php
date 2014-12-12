@@ -27,11 +27,6 @@ class Shortcode_UI {
 	}
 
 	private function setup_actions() {
-		add_action( 'admin_init', function() {
-			remove_action( 'media_buttons', 'media_buttons' );
-		} );
-
-		add_action( 'media_buttons',         array( $this, 'action_media_buttons' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
@@ -75,38 +70,6 @@ class Shortcode_UI {
 
 	}
 
-	/**
-	 * Replace the 'add media' button with a more generic button.
-	 * This is slightly modified version of the core `media_buttons` function.
-	 *
-	 * @param  string $editor_id
-	 * @return null
-	 */
-	public function action_media_buttons( $editor_id = 'content' ) {
-
-		static $instance = 0;
-		$instance++;
-
-		$post = get_post();
-		if ( ! $post && ! empty( $GLOBALS['post_ID'] ) )
-			$post = $GLOBALS['post_ID'];
-
-		wp_enqueue_media( array(
-			'post' => $post,
-		) );
-
-		$img = '<span class="wp-media-buttons-icon"></span> ';
-
-		$id_attribute = $instance === 1 ? ' id="insert-media-button"' : '';
-		printf( '<a href="#"%s class="button insert-media add_media" data-editor="%s" title="%s">%s</a>',
-			$id_attribute,
-			esc_attr( $editor_id ),
-			esc_attr__( 'Add Content', 'shortcode-ui' ),
-			$img . esc_html__( 'Add Content', 'shortcode-ui' )
-		);
-
-	}
-
 	public function action_admin_enqueue_scripts( $hook ) {
 
 		if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
@@ -116,9 +79,13 @@ class Shortcode_UI {
 			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 				'shortcodes' => array_values( $this->shortcodes ),
 				'modalOptions' => array(
-    					'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
-    					'edit_tab_label'	=> esc_html__( 'Edit', 'shortcode-ui' ),
-    					'preview_tab_label'	=> esc_html__( 'Preview', 'shortcode-ui' )
+						'media_frame_title'              => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
+						'media_frame_menu_insert_label'  => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
+						'media_frame_menu_update_label'  => esc_html__( 'Post Element Details', 'shortcode-ui' ),
+						'media_frame_toolbar_insert_label' => esc_html__( 'Insert Element', 'shortcode-ui' ),
+						'media_frame_toolbar_update_label' => esc_html__( 'Update', 'shortcode-ui' ),
+						'edit_tab_label'	             => esc_html__( 'Edit', 'shortcode-ui' ),
+						'preview_tab_label'	             => esc_html__( 'Preview', 'shortcode-ui' )
 				),
 				'nonces' => array(
 					'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
