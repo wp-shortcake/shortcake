@@ -79,9 +79,9 @@ class Shortcode_UI {
 			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 				'shortcodes' => array_values( $this->shortcodes ),
 				'modalOptions' => array(
-    					'media_frame_title' => esc_html__( 'Insert Content Item', 'shortcode-ui' ),
-    					'edit_tab_label'	=> esc_html__( 'Edit', 'shortcode-ui' ),
-    					'preview_tab_label'	=> esc_html__( 'Preview', 'shortcode-ui' )
+						'media_frame_title' => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
+						'edit_tab_label'	=> esc_html__( 'Edit', 'shortcode-ui' ),
+						'preview_tab_label'	=> esc_html__( 'Preview', 'shortcode-ui' )
 				),
 				'nonces' => array(
 					'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
