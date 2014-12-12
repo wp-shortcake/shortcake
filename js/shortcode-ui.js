@@ -721,11 +721,16 @@ var Shortcode_UI;
 		toolbarRender: function( toolbar ) {},
 
 		toolbarCreate : function( toolbar ) {
+			var text = shortcodeUIData.modalOptions.media_frame_toolbar_insert_label;
+			if ( 'currentShortcode' in this.options ) {
+				text = shortcodeUIData.modalOptions.media_frame_toolbar_update_label;
+			}
+
 			toolbar.view = new  wp.media.view.Toolbar( {
 				controller : this,
 				items: {
 					insert: {
-						text: 'Insert Item', // added via 'media_view_strings' filter,
+						text: text,
 						style: 'primary',
 						priority: 80,
 						requires: false,

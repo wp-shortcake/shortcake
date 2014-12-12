@@ -82,6 +82,8 @@ class Shortcode_UI {
 						'media_frame_title'              => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
 						'media_frame_menu_insert_label'  => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
 						'media_frame_menu_update_label'  => esc_html__( 'Post Element Details', 'shortcode-ui' ),
+						'media_frame_toolbar_insert_label' => esc_html__( 'Insert Element', 'shortcode-ui' ),
+						'media_frame_toolbar_update_label' => esc_html__( 'Update', 'shortcode-ui' ),
 						'edit_tab_label'	             => esc_html__( 'Edit', 'shortcode-ui' ),
 						'preview_tab_label'	             => esc_html__( 'Preview', 'shortcode-ui' )
 				),
