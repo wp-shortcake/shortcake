@@ -689,13 +689,13 @@ var Shortcode_UI;
 				content : id + '-content-insert',
 			};
 
-			if ( 'currentShortcode' in arguments[0] ) {
+			if ( 'currentShortcode' in this.options ) {
 				opts.title = shortcodeUIData.modalOptions.media_frame_menu_update_label;
 			}
 
 			var controller = new sui.controllers.MediaController( opts );
 
-			if ( 'currentShortcode' in arguments[0] ) {
+			if ( 'currentShortcode' in this.options ) {
 				controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
 				controller.props.set( 'action', 'update' );
 			}
