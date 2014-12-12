@@ -678,16 +678,22 @@ var Shortcode_UI;
 
 			var id = 'shortcode-ui';
 
-			var controller = new sui.controllers.MediaController( {
+			var opts = {
 				id      : id,
 				router  : false,
 				toolbar : id + '-toolbar',
 				menu    : 'default',
-				title   : 'Insert Content Item',
+				title   : shortcodeUIData.modalOptions.media_frame_menu_insert_label,
 				tabs    : [ 'insert' ],
 				priority:  66,
 				content : id + '-content-insert',
-			} );
+			};
+
+			if ( 'currentShortcode' in arguments[0] ) {
+				opts.title = shortcodeUIData.modalOptions.media_frame_menu_update_label;
+			}
+
+			var controller = new sui.controllers.MediaController( opts );
 
 			if ( 'currentShortcode' in arguments[0] ) {
 				controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
