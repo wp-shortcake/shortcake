@@ -107,6 +107,7 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 		events: {
 			'click .fm-media-button': 'reorderModals',
+			'click .fm-media-remove': 'render',
 		},
 
 		render: function() {
