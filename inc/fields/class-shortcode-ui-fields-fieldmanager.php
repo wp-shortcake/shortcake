@@ -135,9 +135,17 @@ class Shortcode_UI_Fields_Fieldmanager {
 						return;
 					}
 
-					var previewHTML = localization.strings.uploadedFile + ':</br>';
-					previewHTML += '<a href="#">' + response.data.html + '</a></br>';
-					previewHTML += '<a class="fm-media-remove fm-delete" href="#">' + localization.strings.removeFile + '</a>';
+					var previewHTML = $('<div />');
+					var uploadedLabel = $('<span />');
+					uploadedLabel.css('display', 'block').text( localization.strings.uploadedFile + ':' );
+					var responseHTML = $('<a />');
+					responseHTML.attr('href', '#').css('display', 'block').append( response.data.html );
+					var removeLink = $('<a />');
+					removeLink.attr('href', '#').addClass('fm-media-remove fm-delete').text( localization.strings.removeFile );
+
+					previewHTML.append( uploadedLabel );
+					previewHTML.append( responseHTML );
+					previewHTML.append( removeLink );
 					html.find('.media-wrapper').append( previewHTML );
 
 				});
