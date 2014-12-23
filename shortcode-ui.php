@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Shortcode UI
- * Version: 1.0-alpha
+ * Version: v0.1.0
  * Description: User Interface for adding shortcodes.
- * Author: Human Made Limited
- * Author URI: http://hmn.md
+ * Author: Fusion Engineering and community
+ * Author URI: http://next.fusion.net/tag/shortcode-ui/
  * Text Domain: shortcode-ui
  * License: GPL v2 or later
  *
