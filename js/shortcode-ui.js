@@ -656,7 +656,7 @@ var Shortcode_UI;
 		insert: function() {
 			var shortcode = this.props.get('currentShortcode');
 			if ( shortcode ) {
-				send_to_editor( shortcode.formatShortcode() );
+				this.trigger( 'insert', shortcode );
 				this.reset();
 				this.frame.close();
 			}
@@ -999,66 +999,35 @@ var Shortcode_UI;
 
 		/**
 		 * Edit shortcode.
-		 *
-		 * Parses the shortcode and creates shortcode mode.
-		 * @todo - I think there must be a cleaner way to get
-		 * the shortcode & args here that doesn't use regex.
 		 */
 		edit: function( node ) {
+			var self = this,
+				$node = $( node ),
+				instance = wp.mce.views.getInstance( $node.attr( 'data-wpview-text' ) ),
+				frame;
 
-			var shortcodeString, model, attr;
-
-			shortcodeString = decodeURIComponent( $(node).attr( 'data-wpview-text' ) );
-
-			var megaRegex = /\[([^\s\]]+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
-			var matches = shortcodeString.match( megaRegex );
-
-			if ( ! matches ) {
+			if ( ! instance ) {
 				return;
 			}
 
-			defaultShortcode = sui.shortcodes.findWhere( { shortcode_tag: matches[1] } );
-
-			if ( ! defaultShortcode ) {
-				return;
-			}
-
-			currentShortcode = defaultShortcode.clone();
-
-			if ( matches[2] ) {
-
-				attributeMatches = matches[2].match(/(\S+?=".*?")/g ) || [];
-
-				// convert attribute strings to object.
-				for ( var i = 0; i < attributeMatches.length; i++ ) {
-
-					var bitsRegEx = /(\S+?)="(.*?)"/g;
-					var bits = bitsRegEx.exec( attributeMatches[i] );
-
-					attr = currentShortcode.get( 'attrs' ).findWhere( { attr: bits[1] } );
-					if ( attr ) {
-						attr.set( 'value', bits[2] );
-					}
-
-				}
-
-			}
-
-			if ( matches[3] ) {
-				var content = currentShortcode.get( 'attrs' ).findWhere( { attr: 'content' } );
-				if ( content ) {
-					content.set( 'value', matches[3] );
-				}
-			}
-
-			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media( {
-				frame: "post",
+			frame = wp.media( {
+				frame: 'post',
 				state: 'shortcode-ui',
-				currentShortcode: currentShortcode,
+				currentShortcode: instance.shortcode.clone(),
 			} );
 
-			wp_media_frame.open();
+			frame.state( 'shortcode-ui' ) .on( 'insert', function( shortcode ) {
+				shortcode = shortcode.formatShortcode();
 
+				$node.attr( 'data-wpview-text', window.encodeURIComponent( shortcode ) );
+				wp.mce.views.refreshView( self, shortcode, true );
+			} );
+
+			frame.on( 'close', function() {
+				frame.detach();
+			} );
+
+			frame.open();
 		}
 
 	}
