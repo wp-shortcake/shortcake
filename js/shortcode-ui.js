@@ -291,12 +291,7 @@ var Shortcode_UI;
 
 		events: {
 			'click [data-role="tab"]': function( event ) {
-				event.stopPropagation();
-				event.preventDefault();
-
-				var target = $( event.currentTarget ).attr( 'data-target' );
-
-				this.select( target );
+				this.tabSwitcher( event );
 			}
 		},
 
@@ -330,6 +325,18 @@ var Shortcode_UI;
 			this.select( 0 );
 
 			return this;
+		},
+		
+		/**
+		 * Switches tab when previewing or editing
+		 */
+		tabSwitcher: function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			var target = $( event.currentTarget ).attr( 'data-target' );
+
+			this.select( target );
 		},
 
 		/**
