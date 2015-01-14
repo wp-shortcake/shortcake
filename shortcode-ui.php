@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Shortcode UI
- * Version: v0.1.0
+ * Version: v0.2.0-dev
  * Description: User Interface for adding shortcodes.
  * Author: Fusion Engineering and community
  * Author URI: http://next.fusion.net/tag/shortcode-ui/
