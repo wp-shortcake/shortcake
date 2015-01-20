@@ -13,7 +13,6 @@ class Shortcode_UI {
 		if ( null == self::$instance ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
-			self::$instance->setup_filters();
 		}
 		return self::$instance;
 	}
@@ -27,13 +26,10 @@ class Shortcode_UI {
 	}
 
 	private function setup_actions() {
+		add_action( 'after_setup_theme',     array( $this, 'action_after_setup_theme' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
-	}
-
-	private function setup_filters() {
-		add_filter( 'tiny_mce_before_init',  array( $this, 'modify_tiny_mce_4' ) );
 	}
 
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
@@ -68,6 +64,10 @@ class Shortcode_UI {
 			return $this->shortcodes[ $shortcode_tag ];
 		}
 
+	}
+
+	public function action_after_setup_theme() {
+		add_editor_style($this->plugin_url . '/css/shortcode-ui-editor-styles.css');
 	}
 
 	public function action_admin_enqueue_scripts( $hook ) {
