@@ -136,20 +136,6 @@ class Shortcode_UI {
 	}
 
 	/**
-	 * Load custom editor style CSS.
-	 *
-	 * @param  array tinyMCE config
-	 * @return array tinyMCE config
-	 */
-	public function modify_tiny_mce_4( $init ) {
-		if ( ! isset( $init['content_css'] ) ) {
-			$init['content_css'] = '';
-		}
-		$init['content_css'] .= ',' . $this->plugin_url . '/css/shortcode-ui-editor-styles.css';
-		return $init;
-	}
-
-	/**
 	 * Output a shortcode.
 	 * ajax callback for displaying the shortcode in the TinyMCE editor.
 	 *
