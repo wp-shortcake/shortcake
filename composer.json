@@ -1,6 +1,6 @@
 {
     "name": "fusioneng/Shortcake",
-    "description": "User Interface for adding shortcodes.",
+    "description": "Shortcake makes using WordPress shortcodes a piece of cake.",
     "type": "wordpress-plugin",
     "homepage": "https://github.com/fusioneng/Shortcake",
     "authors": [
