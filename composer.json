@@ -1,0 +1,13 @@
+{
+    "name": "fusioneng/Shortcake",
+    "description": "User Interface for adding shortcodes.",
+    "type": "wordpress-plugin",
+    "homepage": "https://github.com/fusioneng/Shortcake",
+    "authors": [
+        {
+            "name": "Fusion",
+            "email": "tech@fusion.net",
+            "homepage": "http://fusion.net"
+        }
+    ]
+}
