@@ -86,14 +86,21 @@ add_action( 'init', function() {
 * Per Søderlind [@soderlind](https://twitter.com/soderlind) uses Shortcake to insert charts and tables. [See the screencast](http://screencast.com/t/ZJ1u3CvKF5uq)
 
 ## Screenshots
-Without Shortcake, shortcodes have a minimal UI.
-![no-shortcake](https://cloud.githubusercontent.com/assets/1636964/4981504/a4f1ff98-6909-11e4-8406-aa8a7bba4f4e.png)
 
-But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view.
-![shortcake](https://cloud.githubusercontent.com/assets/1636964/4981503/a056e7a0-6909-11e4-925a-0e4e4cb6e812.png)
+Take a look at this demo of Fusion's pullquote shortcode.
 
-And add a user-friendly UI to edit shortcode content and attributes.
-![screen shot 2014-11-10 at 1 48 29 pm](https://cloud.githubusercontent.com/assets/1636964/4981557/37ddc5e4-690a-11e4-8fb5-089ed4b31336.png)
+Without Shortcake, shortcodes have a minimal UI:
+![no-shortcake](https://cloud.githubusercontent.com/assets/36432/5930132/7351524e-a640-11e4-9246-543ee8138397.png)
+
+But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view:
+![shortcake](https://cloud.githubusercontent.com/assets/36432/5930148/99c404c6-a640-11e4-995d-76f6101277fe.png)
+
+And add a user-friendly UI to edit shortcode content and attributes:
+![editor](https://cloud.githubusercontent.com/assets/36432/5930154/ad46c38a-a640-11e4-904e-20b09c15b980.png)
+
+Add new shortcodes to your post through "Add Media":
+
+![add-new](https://cloud.githubusercontent.com/assets/36432/5930160/caca5ba6-a640-11e4-9cc7-3b8ae92c422f.png)
 
 ## Known issues
 
