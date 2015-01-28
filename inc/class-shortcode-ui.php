@@ -72,7 +72,9 @@ class Shortcode_UI {
 
 	public function action_admin_enqueue_scripts( $hook ) {
 
-		if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
+		global $current_screen;
+
+		if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) && $current_screen->post_type <> 'acf-field-group') {
 
 			wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
 			wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
