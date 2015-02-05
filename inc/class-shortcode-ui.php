@@ -29,6 +29,7 @@ class Shortcode_UI {
 		add_action( 'after_setup_theme',     array( $this, 'action_after_setup_theme' ) );
 		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
+		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
 	}
 
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
@@ -89,8 +90,6 @@ class Shortcode_UI {
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
 			)
 		) );
-
-		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
 
 		do_action( 'shortcode_ui_loaded_editor' );
 
