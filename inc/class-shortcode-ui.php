@@ -27,9 +27,9 @@ class Shortcode_UI {
 
 	private function setup_actions() {
 		add_action( 'after_setup_theme',     array( $this, 'action_after_setup_theme' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
-		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
+		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
+		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
 	}
 
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
@@ -70,30 +70,28 @@ class Shortcode_UI {
 		add_editor_style($this->plugin_url . '/css/shortcode-ui-editor-styles.css');
 	}
 
-	public function action_admin_enqueue_scripts( $hook ) {
+	public function action_wp_enqueue_editor() {
 
-		if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
+		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
+		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
+		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
+			'shortcodes' => array_values( $this->shortcodes ),
+			'modalOptions' => array(
+					'media_frame_title'              => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
+					'media_frame_menu_insert_label'  => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
+					'media_frame_menu_update_label'  => esc_html__( 'Post Element Details', 'shortcode-ui' ),
+					'media_frame_toolbar_insert_label' => esc_html__( 'Insert Element', 'shortcode-ui' ),
+					'media_frame_toolbar_update_label' => esc_html__( 'Update', 'shortcode-ui' ),
+					'edit_tab_label'                 => esc_html__( 'Edit', 'shortcode-ui' ),
+					'preview_tab_label'	             => esc_html__( 'Preview', 'shortcode-ui' )
+			),
+			'nonces' => array(
+				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
+				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
+			)
+		) );
 
-			wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
-			wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
-			wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
-				'shortcodes' => array_values( $this->shortcodes ),
-				'modalOptions' => array(
-						'media_frame_title'              => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
-						'media_frame_menu_insert_label'  => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
-						'media_frame_menu_update_label'  => esc_html__( 'Post Element Details', 'shortcode-ui' ),
-						'media_frame_toolbar_insert_label' => esc_html__( 'Insert Element', 'shortcode-ui' ),
-						'media_frame_toolbar_update_label' => esc_html__( 'Update', 'shortcode-ui' ),
-						'edit_tab_label'	             => esc_html__( 'Edit', 'shortcode-ui' ),
-						'preview_tab_label'	             => esc_html__( 'Preview', 'shortcode-ui' )
-				),
-				'nonces' => array(
-					'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
-					'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
-				)
-			) );
-
-		}
+		do_action( 'shortcode_ui_loaded_editor' );
 
 	}
 
