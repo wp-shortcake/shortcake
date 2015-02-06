@@ -1075,14 +1075,14 @@ var Shortcode_UI;
 		sui.shortcodes = new sui.collections.Shortcodes( shortcodeUIData.shortcodes )
 
 		sui.shortcodes.each( function( shortcode ) {
-
-			// Register the mce view for each shortcode.
-			// Note - clone the constructor.
-			wp.mce.views.register(
-				shortcode.get('shortcode_tag'),
-				$.extend( true, {}, sui.utils.shortcodeViewConstructor )
-			);
-
+			if( wp.mce.views ) {
+				// Register the mce view for each shortcode.
+				// Note - clone the constructor.
+				wp.mce.views.register(
+					shortcode.get('shortcode_tag'),
+					$.extend( true, {}, sui.utils.shortcodeViewConstructor )
+				);
+			}
 		} );
 
 	});
