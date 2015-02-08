@@ -1,6 +1,6 @@
 <?php
 
-class Shortcake_Field_Image {
+class Shortcake_Field_Attachment {
 
 	private static $instance = null;
 
@@ -9,9 +9,9 @@ class Shortcake_Field_Image {
 
 	// Field Settings.
 	private $fields = array(
-		'image' => array(
-			'template' => 'fusion-shortcake-field-image',
-			'view'     => 'editAttributeFieldImage',
+		'attachment' => array(
+			'template' => 'fusion-shortcake-field-attachment',
+			'view'     => 'editAttributeFieldAttachment',
 		),
 	);
 
@@ -28,7 +28,6 @@ class Shortcake_Field_Image {
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
 		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
-		add_action( 'wp_ajax_shortcode_ui_get_image', array( $this, 'action_wp_ajax_get_image' ) );
 
 	}
 
@@ -38,9 +37,9 @@ class Shortcake_Field_Image {
 
 	public function action_admin_enqueue_scripts() {
 
-		$script = plugins_url( '/js/field-image.js', dirname( dirname( __FILE__ ) ) );
+		$script = plugins_url( '/js/field-attachment.js', dirname( dirname( __FILE__ ) ) );
 
-		wp_enqueue_script( 'shortcake-field-image', $script, array( 'shortcode-ui' ) );
+		wp_enqueue_script( 'shortcake-field-attachment', $script, array( 'shortcode-ui' ) );
 
 	}
 
@@ -62,11 +61,11 @@ class Shortcake_Field_Image {
 
 		?>
 
-		<script type="text/html" id="tmpl-fusion-shortcake-field-image">
+		<script type="text/html" id="tmpl-fusion-shortcake-field-attachment">
 			<p class="field-block">
 				<label for="{{ data.attr }}">{{ data.label }}</label>
-				<div class="shortcake-image-field-preview">
-				<button id="{{ data.attr }}" class="button button-small add">Select Image</button>
+				<div class="shortcake-attachment-field-preview">
+				<button id="{{ data.attr }}" class="button button-small add">Select Attachment</button>
 				<button id="{{ data.attr }}" class="button button-small remove">&times;</button>
 				</div>
 			</p>
@@ -75,17 +74,4 @@ class Shortcake_Field_Image {
 		<?php
 	}
 
-	public function action_wp_ajax_get_image() {
-
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-get-thumbnail-image' ) ) {
-			wp_send_json_error();
-		}
-
-		if ( $attachment = wp_prepare_attachment_for_js( absint( $_POST['id'] ) ) ) {
-			wp_send_json_success( $attachment );
-		} else {
-			wp_send_json_error( 'Image not found' );
-		}
-
-	}
 }

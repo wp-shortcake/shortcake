@@ -21,14 +21,14 @@
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-image.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-field-attachment.php';
 require_once dirname( __FILE__ ) . '/dev.php';
 
 add_action( 'init', function() {
 
-	$shortcode_ui = Shortcode_UI::get_instance();
-	$fields       = Shortcode_UI_Fields::get_instance();
-	$image_field  = Shortcake_Field_Image::get_instance();
+	$shortcode_ui     = Shortcode_UI::get_instance();
+	$fields           = Shortcode_UI_Fields::get_instance();
+	$attachment_field = Shortcake_Field_Attachment::get_instance();
 
 	// Add fieldmanager fields if plugin is available.
 	if ( class_exists( 'Fieldmanager_Field' ) ) {

@@ -5,7 +5,7 @@
 	// Cache attachment IDs for quicker loading.
 	var iDCache = {};
 
-	sui.views.editAttributeFieldImage = sui.views.editAttributeField.extend( {
+	sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		render: function() {
 
@@ -38,7 +38,6 @@
 				model.set( 'value', id );
 
 				if ( iDCache[ id ] ) {
-					console.log( iDCache );
 					renderPreview( iDCache[ id ] );
 					return;
 				}
@@ -68,7 +67,7 @@
 					alt:    attachment.alt,
 				} ).appendTo( $container );
 
-				$container.toggleClass( 'has-img', true );
+				$container.toggleClass( 'has-attachment', true );
 
 			}
 
@@ -85,7 +84,7 @@
 				$container.find( 'img' ).remove();
 			}
 
-			// Add initial Image if available.
+			// Add initial Attachment if available.
 			updateAttachment( model.get( 'value' ) );
 
 			// Remove file when the button is clicked.
