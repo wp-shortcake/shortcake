@@ -62,21 +62,12 @@ class Shortcake_Field_Image {
 
 		?>
 
-		<style>
-			.shortcake-image-field-preview {
-				width: 100px;
-				height: 100px;
-				border: 2px dashed #DDD;
-				border-radius: 2px;
-			}
-		</style>
-
 		<script type="text/html" id="tmpl-fusion-shortcake-field-image">
 			<p class="field-block">
 				<label for="{{ data.attr }}">{{ data.label }}</label>
-				<input type="hidden" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}"/>
 				<div class="shortcake-image-field-preview">
-				<button class="button button-small">Select Image</button>
+				<button id="{{ data.attr }}" class="button button-small add">Select Image</button>
+				<button id="{{ data.attr }}" class="button button-small remove">&times;</button>
 				</div>
 			</p>
 		</script>
@@ -86,28 +77,15 @@ class Shortcake_Field_Image {
 
 	public function action_wp_ajax_get_image() {
 
-		hm_log('action_wp_ajax_get_image');
-
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-get-thumbnail-image' ) ) {
 			wp_send_json_error();
 		}
 
-		$id    = intval( $_POST['id'] );
-		$size  = sanitize_text_field( $_POST['size'] );
-		$image = wp_get_attachment_image_src( $id, $size );
-
-		if ( ! $image ) {
-			wp_send_json_error();
+		if ( $attachment = wp_prepare_attachment_for_js( absint( $_POST['id'] ) ) ) {
+			wp_send_json_success( $attachment );
+		} else {
+			wp_send_json_error( 'Image not found' );
 		}
-
-		wp_send_json_success( array(
-			'src'    => $image[0],
-			'width'  => $image[1],
-			'height' => $image[2],
-			'html'   => wp_get_attachment_image( $id, $size ),
-			'alt'    => '',
-			'title'  => '',
-		) );
 
 	}
 }

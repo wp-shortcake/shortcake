@@ -14,10 +14,9 @@
 
 			self.$el.html( self.template( self.model.toJSON() ) );
 
-			var container = self.$el.find( '.shortcake-image-field-preview' );
-			var button    = self.$el.find( '.shortcake-image-field-preview button' );
-			var input     = self.$el.find( 'input' );
-			var removeButton = $( '<button/>', { class: 'button', html: 'x' } );
+			var $container    = self.$el.find( '.shortcake-image-field-preview' );
+			var $addButton    = $container.find( 'button.add' );
+			var $removeButton = $container.find( 'button.remove' );
 
 			var CMB_Frame = wp.media( {
 				multiple: false,
@@ -50,19 +49,18 @@
 			}
 
 			self.removeImage = function() {
-				$(this).remove();
-				container.find( 'img' ).remove();
-				button.show();
+				$container.toggleClass( 'has-img', false );
+				$container.find( 'img' ).remove();
 			}
 
-			var value = self.model.get( 'value' );
-			if ( value ) {
-				self.addImage( value );
-			}
+			self.addImage( self.model.get( 'value' ) );
 
-			removeButton.click( self.removeImage );
+			$removeButton.click( function(e) {
+				e.preventDefault();
+				self.removeImage();
+			});
 
-			button.click( function(e) {
+			$addButton.click( function(e) {
 				e.preventDefault();
 				CMB_Frame.open();
 			} );
