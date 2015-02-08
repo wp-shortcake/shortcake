@@ -2,6 +2,9 @@
 
 	var sui = window.Shortcode_UI;
 
+	// Cache attachment IDs for quicker loading.
+	var iDCache = {};
+
 	sui.views.editAttributeFieldImage = sui.views.editAttributeField.extend( {
 
 		render: function() {
@@ -9,7 +12,7 @@
 			this.$el.html( this.template( this.model.toJSON() ) );
 
 			var model         = this.model;
-			var $container    = this.$el.find( '.shortcake-image-field-preview' );
+			var $container    = this.$el.find( '.shortcake-attachment-field-preview' );
 			var $addButton    = $container.find( 'button.add' );
 			var $removeButton = $container.find( 'button.remove' );
 
@@ -20,63 +23,90 @@
 			} );
 
 			/**
-			 * Add the image.
+			 * Update the field attachment.
+			 * Re-renders UI.
 			 * If ID is empty - does nothing.
+			 *
 			 * @param {int} id Attachment ID
 			 */
-			var addImage = function( id ) {
+			var updateAttachment = function( id ) {
 
 				if ( ! id ) {
+					return;
+				}
+
+				model.set( 'value', id );
+
+				if ( iDCache[ id ] ) {
+					console.log( iDCache );
+					renderPreview( iDCache[ id ] );
 					return;
 				}
 
 				wp.ajax.post( 'get-attachment', {
 					'id': id
 				} ).done( function( attachment ) {
-
-					$( '<img/>', {
-						src:    attachment.sizes.thumbnail.url,
-						width:  attachment.sizes.thumbnail.width,
-						height: attachment.sizes.thumbnail.height,
-						title:  attachment.title,
-						alt:    attachment.alt,
-					} ).appendTo( $container );
-
-					$container.toggleClass( 'has-img', true );
-
+					// Cache for later.
+					iDCache[ id ] = attachment;
+					renderPreview( attachment );
 				} );
 
 			}
 
 			/**
-			 * Remove the image.
+			 * Renders attachment preview in field.
+			 * @param {object} attachment model
+			 * @return null
 			 */
-			var removeImage = function() {
-				$container.toggleClass( 'has-img', false );
+			var renderPreview = function( attachment ) {
+
+				$( '<img/>', {
+					src:    attachment.sizes.thumbnail.url,
+					width:  attachment.sizes.thumbnail.width,
+					height: attachment.sizes.thumbnail.height,
+					title:  attachment.title,
+					alt:    attachment.alt,
+				} ).appendTo( $container );
+
+				$container.toggleClass( 'has-img', true );
+
+			}
+
+			/**
+			 * Remove the attachment.
+			 * Render preview & Update the model.
+			 */
+			var removeAttachment = function() {
+
+				model.set( 'value', null );
+
+				$container.toggleClass( 'has-attachment', false );
+				$container.toggleClass( 'has-attachment', false );
 				$container.find( 'img' ).remove();
 			}
 
-			// Maybe add Image
-			addImage( model.get( 'value' ) );
+			// Add initial Image if available.
+			updateAttachment( model.get( 'value' ) );
 
-			// Remove Image
+			// Remove file when the button is clicked.
 			$removeButton.click( function(e) {
 				e.preventDefault();
-				removeImage();
+				removeAttachment();
 			});
 
-			// Open media frame
+			// Open media frame when add button is clicked
 			$addButton.click( function(e) {
 				e.preventDefault();
 				frame.open();
 			} );
 
+			// Update the attachment when an item is selected.
 			frame.on( 'select', function() {
 
-				var selection = frame.state().get('selection');
+				var selection  = frame.state().get('selection');
+				    attachment = selection.first();
 
-				model.set( 'value', selection.first().id );
-				addImage( model.id );
+				updateAttachment( attachment.id );
 
 				frame.close();
 
