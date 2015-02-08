@@ -326,7 +326,7 @@ var Shortcode_UI;
 
 			return this;
 		},
-		
+
 		/**
 		 * Switches tab when previewing or editing
 		 */
@@ -590,12 +590,12 @@ var Shortcode_UI;
 			var view = new sui.views.TabbedView({
 				tabs: {
 					edit: {
-						label: shortcodeUIData.modalOptions.edit_tab_label,
+						label: shortcodeUIData.strings.edit_tab_label,
 						content: new sui.views.EditShortcodeForm({ model: shortcode })
 					},
 
 					preview: {
-						label: shortcodeUIData.modalOptions.preview_tab_label,
+						label: shortcodeUIData.strings.preview_tab_label,
 						content: new sui.views.ShortcodePreview({ model: shortcode }),
 						open: function() {
 							this.render();
@@ -690,14 +690,14 @@ var Shortcode_UI;
 				router  : false,
 				toolbar : id + '-toolbar',
 				menu    : 'default',
-				title   : shortcodeUIData.modalOptions.media_frame_menu_insert_label,
+				title   : shortcodeUIData.strings.media_frame_menu_insert_label,
 				tabs    : [ 'insert' ],
 				priority:  66,
 				content : id + '-content-insert',
 			};
 
 			if ( 'currentShortcode' in this.options ) {
-				opts.title = shortcodeUIData.modalOptions.media_frame_menu_update_label;
+				opts.title = shortcodeUIData.strings.media_frame_menu_update_label;
 			}
 
 			var controller = new sui.controllers.MediaController( opts );
@@ -728,9 +728,9 @@ var Shortcode_UI;
 		toolbarRender: function( toolbar ) {},
 
 		toolbarCreate : function( toolbar ) {
-			var text = shortcodeUIData.modalOptions.media_frame_toolbar_insert_label;
+			var text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
 			if ( 'currentShortcode' in this.options ) {
-				text = shortcodeUIData.modalOptions.media_frame_toolbar_update_label;
+				text = shortcodeUIData.strings.media_frame_toolbar_update_label;
 			}
 
 			toolbar.view = new  wp.media.view.Toolbar( {
