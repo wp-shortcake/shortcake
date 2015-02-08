@@ -815,165 +815,27 @@ var Shortcode_UI;
 
 				this.shortcode = shortcode;
 
+				this.fetch();
 			},
 
-			/**
-			 * @see wp.mce.View.getEditors
-			 */
-			getEditors: function( callback ) {
-				var editors = [];
+			// TODO: Handle errors, use wp.ajax.
+			fetch: function() {
 
-				_.each( tinymce.editors, function( editor ) {
-					if ( editor.plugins.wpview ) {
-						if ( callback ) {
-							callback( editor );
-						}
+				var self = this;
 
-						editors.push( editor );
-					}
-				}, this );
-
-				return editors;
-			},
-
-			/**
-			 * @see wp.mce.View.getNodes
-			 */
-			getNodes: function( callback ) {
-				var nodes = [],
-					self = this;
-
-				this.getEditors( function( editor ) {
-					$( editor.getBody() )
-					.find( '[data-wpview-text="' + self.encodedText + '"]' )
-					.each( function ( i, node ) {
-						if ( callback ) {
-							callback( editor, node, $( node ).find( '.wpview-content' ).get( 0 ) );
-						}
-
-						nodes.push( node );
-					} );
+				wp.ajax.post( 'do_shortcode', {
+					post_id: $( '#post_ID' ).val(),
+					shortcode: this.shortcode.formatShortcode(),
+					nonce: shortcodeUIData.nonces.preview,
+				}).done( function( response ) {
+					self.parsed = response;
+					self.render( true );
+				}).fail( function() {
+					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+					self.render( true );
 				} );
 
-				return nodes;
-			},
-
-			/**
-			 * Set the HTML. Modeled after wp.mce.View.setIframes
-			 *
-			 * If it includes a script tag, needs to be wrapped in an iframe
-			 */
-			setHtml: function( body ) {
-				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-
-				if ( body.indexOf( '<script' ) === -1 ) {
-					this.shortcodeHTML = body;
-					this.render( true );
-					return;
-				}
-
-				this.getNodes( function ( editor, node, content ) {
-					var dom = editor.dom,
-					styles = '',
-					bodyClasses = editor.getBody().className || '',
-					iframe, iframeDoc, i, resize;
-
-					content.innerHTML = '';
-					head = '';
-
-					$(node).addClass('wp-mce-view-show-toolbar');
-
-					if ( ! wp.mce.views.sandboxStyles ) {
-						tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
-							if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
-								link.href.indexOf( 'skins/wordpress/wp-content.css' ) === -1 ) {
-
-								styles += dom.getOuterHTML( link ) + '\n';
-							}
-						});
-
-						wp.mce.views.sandboxStyles = styles;
-					} else {
-						styles = wp.mce.views.sandboxStyles;
-					}
-
-					// Seems Firefox needs a bit of time to insert/set the view nodes, or the iframe will fail
-					// especially when switching Text => Visual.
-					setTimeout( function() {
-						iframe = dom.add( content, 'iframe', {
-							src: tinymce.Env.ie ? 'javascript:""' : '',
-							frameBorder: '0',
-							allowTransparency: 'true',
-							scrolling: 'no',
-							'class': 'wpview-sandbox',
-							style: {
-								width: '100%',
-								display: 'block'
-							}
-						} );
-
-						iframeDoc = iframe.contentWindow.document;
-
-						iframeDoc.open();
-						iframeDoc.write(
-							'<!DOCTYPE html>' +
-							'<html>' +
-								'<head>' +
-									'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' +
-									head +
-									styles +
-									'<style>' +
-										'html {' +
-											'background: transparent;' +
-											'padding: 0;' +
-											'margin: 0;' +
-										'}' +
-										'body#wpview-iframe-sandbox {' +
-											'background: transparent;' +
-											'padding: 1px 0 !important;' +
-											'margin: -1px 0 0 !important;' +
-										'}' +
-										'body#wpview-iframe-sandbox:before,' +
-										'body#wpview-iframe-sandbox:after {' +
-											'display: none;' +
-											'content: "";' +
-										'}' +
-									'</style>' +
-								'</head>' +
-								'<body id="wpview-iframe-sandbox" class="' + bodyClasses + '">' +
-									body +
-								'</body>' +
-							'</html>'
-						);
-						iframeDoc.close();
-
-						resize = function() {
-							// Make sure the iframe still exists.
-							iframe.contentWindow && $( iframe ).height( $( iframeDoc.body ).height() );
-						};
-
-						if ( MutationObserver ) {
-							new MutationObserver( _.debounce( function() {
-								resize();
-							}, 100 ) )
-							.observe( iframeDoc.body, {
-								attributes: true,
-								childList: true,
-								subtree: true
-							} );
-						} else {
-							for ( i = 1; i < 6; i++ ) {
-								setTimeout( resize, i * 700 );
-							}
-						}
-
-						editor.on( 'wp-body-class-change', function() {
-							iframeDoc.body.className = editor.getBody().className;
-						});
-					}, 50 );
-				});
-
-			},
+ 			},
 
 			/**
 			 * Render the shortcode
@@ -982,24 +844,7 @@ var Shortcode_UI;
 			 * @return string html
 			 */
 			getHtml: function() {
-
-				var data;
-
-				if ( false === this.shortcodeHTML ) {
-
-					data = {
-						action: 'do_shortcode',
-						post_id: $('#post_ID').val(),
-						shortcode: this.shortcode.formatShortcode(),
-						nonce: shortcodeUIData.nonces.preview
-					};
-
-					$.post( ajaxurl, data, $.proxy( this.setHtml, this ) );
-
-				}
-
-				return this.shortcodeHTML;
-
+				return this.parsed;
 			}
 
 		},
