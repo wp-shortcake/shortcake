@@ -2,6 +2,9 @@
   min-height: 48px; }
   .wpview-wrap.wp-mce-view-show-toolbar .toolbar {
     display: block; }
+  .wpview-wrap .shortcake-error {
+    color: red;
+    font-weight: bold; }
 
 .shortcake-preview .loading-placeholder .wpview-loading {
   width: 60px;
