@@ -27,15 +27,24 @@
 
 			self.addImage = function( id ) {
 
-				wp.ajax.post( 'shortcode_ui_get_image', {
-					id: id,
-					size: 'thumbnail',
-					nonce: shortcodeUIData.nonces.thumbnailImage
-				} ).done( function( response ) {
-					container.append( response.html );
-					input.val( id );
-					button.hide();
-					removeButton.appendTo( container );
+				if ( ! id ) {
+					return;
+				}
+
+				wp.ajax.post( 'get-attachment', {
+					'id': id
+				} ).done( function( attachment ) {
+
+					$( '<img/>', {
+						src:    attachment.sizes.thumbnail.url,
+						width:  attachment.sizes.thumbnail.width,
+						height: attachment.sizes.thumbnail.height,
+						title:  attachment.title,
+						alt:    attachment.alt,
+					} ).appendTo( $container );
+
+					$container.toggleClass( 'has-img', true );
+
 				} );
 
 			}
