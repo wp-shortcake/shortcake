@@ -415,6 +415,7 @@ var Shortcode_UI;
 
 		events: {
 			'keyup  input[type="text"]':   'updateValue',
+			'keyup  input[type="hidden"]': 'updateValue',
 			'keyup  textarea':             'updateValue',
 			'change select':               'updateValue',
 			'change input[type=checkbox]': 'updateValue',
@@ -437,6 +438,7 @@ var Shortcode_UI;
 		 * then it should update the model.
 		 */
 		updateValue: function( e ) {
+			console.log( this.model.get( 'attr' ) );
 			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
 			this.model.set( 'value', $el.val() );
 		},

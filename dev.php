@@ -23,6 +23,11 @@ add_action( 'init', function() {
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
 				<b>Fieldmanager Textarea:</b> <?php echo esc_html( $attr['fieldmanager_textarea'] ); ?></br>
 				<b>Fieldmanager Media:</b> <?php echo esc_html( get_the_title( $attr['fieldmanager_media'] ) ); ?></br>
+
+				<?php if ( ! empty( $attr['image'] ) ) : ?>
+				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['image'], array( 50, 50 ) ); ?></br>
+				<?php endif; ?>
+
 			</p>
 		</section>
 
@@ -64,11 +69,15 @@ add_action( 'init', function() {
 					'placeholder' => 'Test placeholder',
 				),
 				array(
+					'label' => 'Image',
+					'attr'  => 'image',
+					'type'  => 'image',
+				),
+				array(
 					'label' => 'Fieldmanager Textarea',
 					'attr'  => 'fieldmanager_textarea',
 					'type'  => 'Fieldmanager_TextArea',
 				),
-
 				array(
 					'label' => 'Fieldmanager Media',
 					'attr'  => 'fieldmanager_media',
