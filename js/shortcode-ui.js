@@ -818,7 +818,6 @@ var Shortcode_UI;
 				this.fetch();
 			},
 
-			// TODO: Handle errors, use wp.ajax.
 			fetch: function() {
 
 				var self = this;
