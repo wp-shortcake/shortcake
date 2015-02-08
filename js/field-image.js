@@ -4,27 +4,27 @@
 
 	sui.views.editAttributeFieldImage = sui.views.editAttributeField.extend( {
 
-		events: {
-			'change .shortcode-ui-image': 'updateValue',
-		},
-
 		render: function() {
 
-			var self = this;
+			this.$el.html( this.template( this.model.toJSON() ) );
 
-			self.$el.html( self.template( self.model.toJSON() ) );
-
-			var $container    = self.$el.find( '.shortcake-image-field-preview' );
+			var model         = this.model;
+			var $container    = this.$el.find( '.shortcake-image-field-preview' );
 			var $addButton    = $container.find( 'button.add' );
 			var $removeButton = $container.find( 'button.remove' );
 
-			var CMB_Frame = wp.media( {
+			var frame = wp.media( {
 				multiple: false,
 				title: 'Select File',
 				// library: frameLibraryType,
 			} );
 
-			self.addImage = function( id ) {
+			/**
+			 * Add the image.
+			 * If ID is empty - does nothing.
+			 * @param {int} id Attachment ID
+			 */
+			var addImage = function( id ) {
 
 				if ( ! id ) {
 					return;
@@ -48,33 +48,37 @@
 
 			}
 
-			self.removeImage = function() {
+			/**
+			 * Remove the image.
+			 */
+			var removeImage = function() {
 				$container.toggleClass( 'has-img', false );
 				$container.find( 'img' ).remove();
 			}
 
-			self.addImage( self.model.get( 'value' ) );
+			// Maybe add Image
+			addImage( model.get( 'value' ) );
 
+			// Remove Image
 			$removeButton.click( function(e) {
 				e.preventDefault();
-				self.removeImage();
+				removeImage();
 			});
 
+			// Open media frame
 			$addButton.click( function(e) {
 				e.preventDefault();
-				CMB_Frame.open();
+				frame.open();
 			} );
 
-			CMB_Frame.on( 'select', function() {
+			frame.on( 'select', function() {
 
-				var selection = CMB_Frame.state().get('selection'),
-					model     = selection.first();
+				var selection = frame.state().get('selection');
 
-				self.model.set( 'value', model.id );
+				model.set( 'value', selection.first().id );
+				addImage( model.id );
 
-				self.addImage( model.id );
-
-				CMB_Frame.close();
+				frame.close();
 
 			});
 
