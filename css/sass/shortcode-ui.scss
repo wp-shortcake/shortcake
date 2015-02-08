@@ -127,3 +127,46 @@
 
 }
 
+
+.shortcake-image-field-preview {
+
+	width: 150px;
+	height: 150px;
+	line-height: 150px;
+	text-align: center;
+	border: 2px dashed #DDD;
+	border-radius: 2px;
+	position: relative;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+
+	img {
+		margin: -2px;
+		box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+	}
+
+	.button.add {
+		vertical-align: middle;
+	}
+
+	.button.remove {
+		display: none;
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		border: 1px solid #aaa;
+		box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.15 );
+	}
+
+	&.has-img  {
+		.button.add {
+			display: none;
+		}
+		.button.remove {
+			display: block;
+		}
+	}
+
+}
