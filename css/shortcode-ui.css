@@ -90,7 +90,8 @@
   height: 150px !important;
   margin: 0 10px 10px 0;
   line-height: 150px;
-  text-align: center; }
+  text-align: center;
+  padding: 0; }
   .edit-shortcode-form .shortcake-attachment-preview:before {
     display: none !important; }
   .edit-shortcode-form .shortcake-attachment-preview:not(.has-attachment) {
