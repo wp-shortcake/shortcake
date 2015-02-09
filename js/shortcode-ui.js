@@ -438,8 +438,7 @@ var Shortcode_UI;
 		 * then it should update the model.
 		 */
 		updateValue: function( e ) {
-			console.log( this.model.get( 'attr' ) );
-			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
+ 			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
 			this.model.set( 'value', $el.val() );
 		},
 
