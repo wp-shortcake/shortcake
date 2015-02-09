@@ -12,7 +12,7 @@
 			this.$el.html( this.template( this.model.toJSON() ) );
 
 			var model         = this.model;
-			var $container    = this.$el.find( '.shortcake-attachment-field-preview' );
+			var $container    = this.$el.find( '.shortcake-attachment-preview' );
 			var $addButton    = $container.find( 'button.add' );
 			var $removeButton = $container.find( 'button.remove' );
 
@@ -59,14 +59,33 @@
 			 */
 			var renderPreview = function( attachment ) {
 
-				$( '<img/>', {
-					src:    attachment.sizes.thumbnail.url,
-					width:  attachment.sizes.thumbnail.width,
-					height: attachment.sizes.thumbnail.height,
-					title:  attachment.title,
-					alt:    attachment.alt,
-				} ).appendTo( $container );
+				var $thumbnail = $('<div class="thumbnail"></div>');
 
+				if ( 'image' !== attachment.type ) {
+
+					$( '<img/>', {
+						src: attachment.icon,
+						alt: attachment.title,
+					} ).appendTo( $thumbnail );
+
+					$( '<div/>', {
+						class: 'filename',
+						html:  '<div>' + attachment.title + '</div>',
+					} ).appendTo( $thumbnail );
+
+				} else {
+
+					$( '<img/>', {
+						src:    attachment.sizes.thumbnail.url,
+						width:  attachment.sizes.thumbnail.width,
+						height: attachment.sizes.thumbnail.height,
+						alt:    attachment.alt,
+					} ) .appendTo( $thumbnail )
+
+				}
+
+				$thumbnail.find( 'img' ).wrap( '<div class="centered"></div>' );
+				$container.append( $thumbnail );
 				$container.toggleClass( 'has-attachment', true );
 
 			}
@@ -81,7 +100,7 @@
 
 				$container.toggleClass( 'has-attachment', false );
 				$container.toggleClass( 'has-attachment', false );
-				$container.find( 'img' ).remove();
+				$container.find( '.thumbnail' ).remove();
 			}
 
 			// Add initial Attachment if available.

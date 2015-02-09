@@ -101,10 +101,10 @@ class Shortcake_Field_Post_Select {
 		</style>
 
 		<script type="text/html" id="tmpl-fusion-shortcake-field-post-select">
-			<p class="field-block">
+			<div class="field-block">
 				<label for="{{ data.attr }}">{{ data.label }}</label>
 				<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="shortcake-post-select" />
-			</p>
+			</div>
 		</script>
 
 		<?php
