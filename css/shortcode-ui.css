@@ -74,9 +74,11 @@
     min-height: 100px; }
   .edit-shortcode-form .edit-shortcode-form-fields > div {
     margin-bottom: 10px; }
-  .edit-shortcode-form .field-block label {
-    display: block;
-    margin-bottom: 10px; }
+  .edit-shortcode-form .field-block {
+    padding: 1em 0; }
+    .edit-shortcode-form .field-block label {
+      display: block;
+      margin-bottom: 10px; }
   .edit-shortcode-form .field-inline {
     padding-top: 10px; }
     .edit-shortcode-form .field-inline label {
