@@ -658,6 +658,7 @@ var Shortcode_UI;
 
 		refresh: function() {
 			// @todo Need to trigger disabled state on button.
+			this.frame.toolbar.get().refresh();
 		},
 
 		insert: function() {
@@ -733,7 +734,7 @@ var Shortcode_UI;
 				text = shortcodeUIData.strings.media_frame_toolbar_update_label;
 			}
 
-			toolbar.view = new  wp.media.view.Toolbar( {
+			toolbar.view = new  sui.views.Toolbar( {
 				controller : this,
 				items: {
 					insert: {
@@ -776,6 +777,29 @@ var Shortcode_UI;
 			this.controller.state().insert();
 		},
 
+	});
+	
+	/**
+	 * sui Toolbar view that extends wp.media.view.Toolbar
+	 * to define cusotm refresh method
+	 */
+	sui.views.Toolbar = wp.media.view.Toolbar.extend({
+		initialize: function() {
+			_.defaults( this.options, {
+				requires: false
+			});
+			// Call 'initialize' directly on the parent class.
+			wp.media.view.Toolbar.prototype.initialize.apply( this, arguments );
+		},
+
+		refresh: function() {
+			var action = this.controller.state().props.get('action');
+			this.get('insert').model.set( 'disabled', action == 'select' );
+			/**
+			 * call 'refresh' directly on the parent class
+			 */
+			wp.media.view.Toolbar.prototype.refresh.apply( this, arguments );
+		}
 	});
 
 	/**
