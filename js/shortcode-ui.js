@@ -11,102 +11,6 @@ var Shortcode_UI;
 	}
 
 	/**
-	 * DOM manipulation utilities.
-	 */
-	sui.dom = {
-		/**
-		 *
-		 *
-		 * @class sui.dom.IFrame
-		 */
-		IFrame: {
-			template: wp.template( 'iframe-doc' ),
-
-			/**
-			 * Creates an <iframe> appended to the `$parent` node. Manages <iframe> content updates and state.
-			 *
-			 * @method create
-			 * @static
-			 * @param $parent jQuery object to which <iframe> should be appended.
-			 * @param [options.body] HTML content for insertion into the &lt;iframe> body.
-			 * @param [options.head] Markup for insertion into the &lt;iframe> head.
-			 */
-			create: function( $parent, options ) {
-				var iframe	= document.createElement( 'iframe' );
-
-				iframe.src = tinymce.Env.ie ? 'javascript:""' : '';
-				iframe.frameBorder = '0';
-				iframe.allowTransparency = 'true';
-				iframe.scrolling = 'no';
-				$( iframe ).css({ width: '100%', display: 'block' });
-
-				iframe.onload = function() {
-					if ( options.write !== false ) {
-						sui.dom.IFrame.write( iframe, options );
-					}
-				};
-
-				$parent.append( iframe );
-
-				return iframe;
-			},
-
-			/**
-			 * Write a new document to the target iframe.
-			 *
-			 * @param iframe
-			 * @param params
-			 * 	@param params.head {String}
-			 * 	@param params.body {String}
-			 * 	@param params.body_classes {String}
-			 */
-			write: function( iframe, params ) {
-				var doc;
-
-				_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': '' });
-
-				if ( !( doc = iframe.contentWindow && iframe.contentWindow.document ) ) {
-					throw new Error( "Cannot write to iframe that is not ready." );
-				}
-
-				doc.open();
-				doc.write( sui.dom.IFrame.template( params ) );
-				doc.close();
-			},
-
-			/**
-			 * If the `MutationObserver` class is available, observe the target iframe and execute the callback upon
-			 * mutation. If the `MutationObserver` class is not available, execute the callback after a timeout (light
-			 * poling).
-			 *
-			 * @param iframe
-			 * @param callback
-			 * @returns {MutationObserver|false}
-			 */
-			observe: function( iframe, callback ) {
-				var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-				var observer = false;
-				var doc;
-
-				if ( MutationObserver && ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) ) {
-					observer = new MutationObserver( callback );
-					observer.observe( doc.body, {
-						attributes:	true,
-						childList:	true,
-						subtree:	true
-					});
-				} else {
-					for ( i = 1; i < 6; i++ ) {
-						setTimeout( callback, i * 700 );
-					}
-				}
-
-				return observer;
-			}
-		}
-	};
-
-	/**
 	 * Shortcode Attribute Model.
 	 */
 	sui.models.ShortcodeAttribute = Backbone.Model.extend({
@@ -286,6 +190,7 @@ var Shortcode_UI;
 	 * 		content: The `Backbone.View` associated with the tab content.
 	 */
 	sui.views.TabbedView = Backbone.View.extend({
+
 		template: wp.template( 'tabbed-view-base' ),
 		tabs: {},
 
@@ -458,10 +363,9 @@ var Shortcode_UI;
 	 * @params options.model {sui.models.Shortcode} Requires a valid shortcode.
 	 */
 	sui.views.ShortcodePreview = Backbone.View.extend({
+
 		initialize: function( options ) {
 			this.stylesheets = this.getEditorStyles().join( "\n" );
-
-			this.iframe = false;
 		},
 
 		/**
@@ -489,23 +393,55 @@ var Shortcode_UI;
 		 * @param params
 		 */
 		renderIFrame: function( params ) {
-			var iframe = false;
 
-			_.defaults( params, { 'body_classes': "shortcake shortcake-preview" });
+			var $iframe, resize;
+			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 
-			if ( iframe = this.iframe ) {
-				$( iframe ).remove();
-			}
+			_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
 
-			iframe = this.iframe = sui.dom.IFrame.create( this.$el, params );
+			$iframe = $( '<iframe/>', {
+				src: tinymce.Env.ie ? 'javascript:""' : '',
+				frameBorder: '0',
+				allowTransparency: 'true',
+				scrolling: 'no',
+				style: "width: 100%; display: block",
+			} );
 
-			sui.dom.IFrame.observe( iframe, _.debounce( function() {
-				var doc;
+			resize = function() {
+				// Make sure the iframe still exists.
+				$iframe && $iframe.height( $iframe.contents().find('body').height() );
+			};
 
-				if ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) {
-					$( iframe ).height( $( doc.body ).height() );
+			$iframe.load( function() {
+
+				var head = $(this).contents().find('head'),
+				    body = $(this).contents().find('body');
+
+				head.html( params.head );
+				body.html( params.body );
+				body.addClass( params.body_classes );
+
+				resize();
+
+				if ( MutationObserver ) {
+					new MutationObserver( _.debounce( function() {
+						resize();
+					}, 100 ) )
+					.observe( $(this).contents().find('body')[0], {
+						attributes: true,
+						childList: true,
+						subtree: true
+					} );
+				} else {
+					for ( i = 1; i < 6; i++ ) {
+						setTimeout( resize, i * 700 );
+					}
 				}
-			}, 100 ) );
+
+			} );
+
+			this.$el.html( $iframe );
+
 		},
 
 		/**
@@ -517,19 +453,17 @@ var Shortcode_UI;
 		 * @returns {String} Rendered shortcode markup (HTML).
 		 */
 		fetchShortcode: function( callback ) {
-			var self = this;
-			var data;
-			var shortcode = this.model;
 
-			// Fetch shortcode markup using template tokens.
-			data = {
-				action: 'do_shortcode',
-				post_id: $('#post_ID').val(),
-				shortcode: shortcode.formatShortcode(),
-				nonce: shortcodeUIData.nonces.preview
-			};
+			wp.ajax.post( 'do_shortcode', {
+				post_id: $( '#post_ID' ).val(),
+				shortcode: this.model.formatShortcode(),
+				nonce: shortcodeUIData.nonces.preview,
+			}).done( function( response ) {
+				callback( response );
+			}).fail( function() {
+				callback( '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>' );
+			} );
 
-			$.post( ajaxurl, data, callback );
 		},
 
 		/**
@@ -553,10 +487,12 @@ var Shortcode_UI;
 			});
 
 			return styles;
-		}
+		},
+
 	});
 
 	sui.views.Shortcode_UI = Backbone.View.extend({
+
 		events: {
 			"click .add-shortcode-list li":      "select",
 			"click .edit-shortcode-form-cancel": "cancelSelect"
@@ -591,23 +527,27 @@ var Shortcode_UI;
 		},
 
 		renderEditShortcodeView: function() {
+
 			var shortcode = this.controller.props.get( 'currentShortcode' );
+
 			var view = new sui.views.TabbedView({
 				tabs: {
 					edit: {
 						label: shortcodeUIData.strings.edit_tab_label,
-						content: new sui.views.EditShortcodeForm({ model: shortcode })
+						content: new sui.views.EditShortcodeForm({
+							model: shortcode
+						})
 					},
-
 					preview: {
 						label: shortcodeUIData.strings.preview_tab_label,
-						content: new sui.views.ShortcodePreview({ model: shortcode }),
+						content: new sui.views.ShortcodePreview({
+							model: shortcode,
+						}),
 						open: function() {
 							this.render();
 						}
 					}
 				},
-
 				styles: {
 					group:	'media-router edit-shortcode-tabs',
 					tab:	'media-menu-item edit-shortcode-tab'
@@ -784,7 +724,7 @@ var Shortcode_UI;
 		},
 
 	});
-	
+
 	/**
 	 * sui Toolbar view that extends wp.media.view.Toolbar
 	 * to define cusotm refresh method
