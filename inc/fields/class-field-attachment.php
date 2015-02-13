@@ -41,6 +41,13 @@ class Shortcake_Field_Attachment {
 
 		wp_enqueue_script( 'shortcake-field-attachment', $script, array( 'shortcode-ui' ) );
 
+		wp_localize_script( 'shortcake-field-attachment', 'ShorcakeImageFieldData', array(
+			'defaultArgs' => array(
+				'libraryType' => null, // array of mime types. eg image, image/jpg, application, application/pdf.
+				'addButton'   => __( 'Select Attachment', 'shortcake' ),
+				'frameTitle'  => __( 'Select Attachment', 'shortcake' ),
+			),
+		) );
 	}
 
 	/**
@@ -65,7 +72,7 @@ class Shortcake_Field_Attachment {
 			<div class="field-block">
 				<label for="{{ data.attr }}">{{ data.label }}</label>
 				<div class="shortcake-attachment-preview attachment-preview attachment">
-					<button id="{{ data.attr }}" class="button button-small add">Select Attachment</button>
+					<button id="{{ data.attr }}" class="button button-small add">{{ data.addButton }}</button>
 					<button class="button button-small remove">&times;</button>
 				</div>
 			</div>
