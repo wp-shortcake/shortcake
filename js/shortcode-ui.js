@@ -415,6 +415,7 @@ var Shortcode_UI;
 
 		events: {
 			'keyup  input[type="text"]':   'updateValue',
+			'keyup  input[type="hidden"]': 'updateValue',
 			'keyup  textarea':             'updateValue',
 			'change select':               'updateValue',
 			'change input[type=checkbox]': 'updateValue',
