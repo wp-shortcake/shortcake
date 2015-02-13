@@ -56,3 +56,10 @@ function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) 
 function shortcode_ui_get_register_shortcode( $shortcode_tag, $args = array() ) {
 	return Shortcode_UI::get_instance()->get_shortcode( $shortcode_tag );
 }
+
+/**
+ * Queue the shortcode UI scripts & templates manually
+ */
+function enqueue_shortcode_ui() {
+	Shortcode_UI::get_instance()->enqueue();
+}

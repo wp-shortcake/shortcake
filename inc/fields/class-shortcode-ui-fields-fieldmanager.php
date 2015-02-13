@@ -29,15 +29,12 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 		add_filter( 'shortcode_ui_fields', function( $fields ) {
 			return array_merge( $fields, $this->fields );
-		}  );
+		} );
 
-		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
+		add_action( 'print_shortcode_ui_templates', array( $this, 'action_print_shortcode_ui_templates' ), 100 );
 		add_action( 'wp_ajax_shortcode_ui_get_thumbnail_image', array( $this, 'ajax_get_thumbnail_image' ) );
 
-	}
-
-	public function action_shortcode_ui_loaded_editor() {
-		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ), 100 );
+		// Make sure Fieldmanager classes are ready early so it can enqueue scripts
 		$this->initialize_templates();
 	}
 
@@ -47,7 +44,7 @@ class Shortcode_UI_Fields_Fieldmanager {
 
 			$field = new $field_class( '{{ data.label }}', array( 'name' => '{{ data.attr }}' ) );
 
-			add_action( 'print_media_templates', function() use ( $field_class, $field ) {
+			add_action( 'print_shortcode_ui_templates', function() use ( $field_class, $field ) {
 
 				printf(
 					'<script type="text/html" id="tmpl-shortcode-ui-field-%s">',
@@ -87,7 +84,7 @@ class Shortcode_UI_Fields_Fieldmanager {
 	}
 
 
-	public function action_print_media_templates() {
+	public function action_print_shortcode_ui_templates() {
 
 		$localization = array(
 			'strings' => array(

@@ -29,7 +29,6 @@ class Shortcode_UI {
 		$this->add_editor_style();
 		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
-		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
 	}
 
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
@@ -70,7 +69,14 @@ class Shortcode_UI {
 		add_editor_style($this->plugin_url . '/css/shortcode-ui-editor-styles.css');
 	}
 
-	public function action_wp_enqueue_editor() {
+	public function enqueue() {
+
+		if ( did_action( 'enqueue_shortcode_ui' ) ) {
+			return;
+		}
+
+		// make sure media library is queued
+		wp_enqueue_media();
 
 		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
 		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
@@ -92,8 +98,20 @@ class Shortcode_UI {
 			)
 		) );
 
-		do_action( 'shortcode_ui_loaded_editor' );
+		// queue templates
+		add_action( 'admin_print_footer_scripts', array( $this, 'print_templates' ) );
 
+		do_action( 'enqueue_shortcode_ui' );
+	}
+
+	/**
+	 * Default hook to queue shortcake from
+	 */
+	public function action_wp_enqueue_editor() {
+		// queue scripts & templates
+		$this->enqueue();
+
+		do_action( 'shortcode_ui_loaded_editor' );
 	}
 
 	/**
@@ -101,10 +119,12 @@ class Shortcode_UI {
 	 *
 	 * @return null
 	 */
-	public function action_print_media_templates() {
+	public function print_templates() {
 		echo $this->get_view( 'media-frame' );
 		echo $this->get_view( 'list-item' );
 		echo $this->get_view( 'edit-form' );
+
+		do_action( 'print_shortcode_ui_templates' );
 	}
 
 	/**
@@ -112,8 +132,7 @@ class Shortcode_UI {
 	 * Template args array is extracted and passed to the template file.
 	 *
 	 * @param  string  $template      full template file path. Or name of template file in inc/templates.
-	 * @param  array   $template_args array of args
-	 * @return [type]                 [description]
+	 * @return string                 the template contents
 	 */
 	public function get_view( $template ) {
 
