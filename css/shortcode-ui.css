@@ -124,6 +124,14 @@
       left: 5px;
       font-size: 22px;
       text-indent: 0; }
+  .edit-shortcode-form .shortcake-attachment-preview .loading-indicator, .edit-shortcode-form .shortcake-attachment-preview.loading .button.add {
+    display: none; }
+  .edit-shortcode-form .shortcake-attachment-preview.loading .loading-indicator {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px; }
   .edit-shortcode-form .shortcake-attachment-preview .filename {
     line-height: 1.4em; }
   .edit-shortcode-form .shortcake-attachment-preview.has-attachment .button.add {

@@ -74,6 +74,7 @@ class Shortcake_Field_Attachment {
 				<div class="shortcake-attachment-preview attachment-preview attachment">
 					<button id="{{ data.attr }}" class="button button-small add">{{ data.addButton }}</button>
 					<button class="button button-small remove">&times;</button>
+					<span class="loading-indicator spinner"></span>
 				</div>
 			</div>
 		</script>

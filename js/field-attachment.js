@@ -11,7 +11,8 @@
 
 			this.$el.html( this.template( this.model.toJSON() ) );
 
-			var model         = this.model;
+			var model = this.model;
+
 			var $container    = this.$el.find( '.shortcake-attachment-preview' );
 			var $addButton    = $container.find( 'button.add' );
 			var $removeButton = $container.find( 'button.remove' );
@@ -42,12 +43,15 @@
 					return;
 				}
 
+				$container.addClass( 'loading' );
+
 				wp.ajax.post( 'get-attachment', {
 					'id': id
 				} ).done( function( attachment ) {
 					// Cache for later.
 					iDCache[ id ] = attachment;
 					renderPreview( attachment );
+					$container.removeClass( 'loading' );
 				} );
 
 			}

@@ -183,6 +183,19 @@
 		}
 	}
 
+	.loading-indicator,
+	&.loading .button.add {
+		display: none;
+	}
+
+	&.loading .loading-indicator {
+		display: block;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin: -10px 0 0 -10px;
+	}
+
 	.filename {
 		line-height: 1.4em
 	}
