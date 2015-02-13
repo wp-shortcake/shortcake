@@ -27,7 +27,7 @@ class Shortcode_UI {
 
 	private function setup_actions() {
 		$this->add_editor_style();
-		add_action( 'wp_enqueue_media',      array( $this, 'action_wp_enqueue_media' ) );
+		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
 		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
 	}
@@ -70,7 +70,7 @@ class Shortcode_UI {
 		add_editor_style($this->plugin_url . '/css/shortcode-ui-editor-styles.css');
 	}
 
-	public function action_wp_enqueue_media() {
+	public function action_wp_enqueue_editor() {
 
 		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
 		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
