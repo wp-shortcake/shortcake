@@ -439,7 +439,7 @@ var Shortcode_UI;
 		 */
 		updateValue: function( e ) {
 			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
-			if ( $el.attr( 'type' ).length && $el.attr( 'type' ).toLowerCase() == 'checkbox' ) {
+			if ( 'checkbox' === this.model.attributes.type ) {
 				this.model.set( 'value', $el.is( ':checked' ) );
 			} else {
 				this.model.set( 'value', $el.val() );
