@@ -62,6 +62,6 @@ function shortcode_ui_get_register_shortcode( $shortcode_tag, $args = array() ) 
 /**
  * Queue the shortcode UI scripts & templates manually
  */
-function enqueue_shortcode_ui() {
+function shortcode_ui_enqueue_assets() {
 	Shortcode_UI::get_instance()->enqueue();
 }
