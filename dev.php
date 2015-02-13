@@ -12,7 +12,8 @@ add_action( 'init', function() {
 			'source' => '',
 			'post'   => '',
 			'fieldmanager_textarea' => '',
-			'fieldmanager_media'    => ''
+			'fieldmanager_media'    => '',
+			'image'  => 0
 		) );
 
 		ob_start();
