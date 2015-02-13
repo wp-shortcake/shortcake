@@ -27,7 +27,7 @@ class Shortcake_Field_Attachment {
 
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
-		add_action( 'print_media_templates', array( $this, 'action_print_media_templates' ) );
+		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 
 	}
 
@@ -51,9 +51,9 @@ class Shortcake_Field_Attachment {
 	}
 
 	/**
-	 * Output styles and templates used by post select field.
+	 * Output templates used by post select field.
 	 */
-	public function action_print_media_templates() {
+	public function action_shortcode_ui_loaded_editor() {
 
 		?>
 
