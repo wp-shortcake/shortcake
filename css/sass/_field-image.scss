@@ -1,0 +1,77 @@
+.edit-shortcode-form .shortcake-attachment-preview {
+
+	width: 150px;
+	height: 150px;
+	margin: 0 10px 10px 0;
+	line-height: 150px;
+	text-align: center;
+	padding: 0;
+
+	&:before {
+		display: none;
+	}
+
+	&:not( .has-attachment ) {
+		border: 2px dashed #DDD;
+		border-radius: 2px;
+		background: transparent;
+		box-shadow: none;
+	}
+
+	.button.add {
+		vertical-align: middle;
+		z-index: 1;
+	}
+
+	.button.remove {
+
+		z-index: 1;
+		display: none;
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		border: 1px solid #aaa;
+		box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.15 );
+		text-indent: 100%;
+		whitespace: nowrap;
+		width: 24px;
+		height: 24px;
+		padding: 0;
+
+		&:after {
+			content: "\00d7";
+			position: absolute;
+			top: -1px;
+			left: 5px;
+			font-size: 22px;
+			text-indent: 0;
+		}
+	}
+
+	.loading-indicator,
+	&.loading .button.add {
+		display: none;
+	}
+
+	&.loading .loading-indicator {
+		display: block;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin: -10px 0 0 -10px;
+	}
+
+	.filename {
+		line-height: 1.4em
+	}
+
+	&.has-attachment  {
+		.button.add {
+			display: none;
+		}
+		.button.remove {
+			display: block;
+		}
+	}
+
+}

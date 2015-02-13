@@ -415,6 +415,7 @@ var Shortcode_UI;
 
 		events: {
 			'keyup  input[type="text"]':   'updateValue',
+			'keyup  input[type="hidden"]': 'updateValue',
 			'keyup  textarea':             'updateValue',
 			'change select':               'updateValue',
 			'change input[type=checkbox]': 'updateValue',
@@ -437,9 +438,8 @@ var Shortcode_UI;
 		 * then it should update the model.
 		 */
 		updateValue: function( e ) {
-			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']'),
-				type = $el.attr( 'type' );
-			if ( type && type.toLowerCase() == 'checkbox' ) {
+			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			if ( 'checkbox' === this.model.attributes.type ) {
 				this.model.set( 'value', $el.is( ':checked' ) );
 			} else {
 				this.model.set( 'value', $el.val() );
@@ -662,7 +662,6 @@ var Shortcode_UI;
 		},
 
 		refresh: function() {
-			// @todo Need to trigger disabled state on button.
 			if ( this.frame && this.frame.toolbar ) {
 				this.frame.toolbar.get().refresh();
 			}

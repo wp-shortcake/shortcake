@@ -58,6 +58,9 @@
 
 .edit-shortcode-form {
   padding: 5px 20px; }
+  .edit-shortcode-form label {
+    display: block;
+    clear: both; }
   .edit-shortcode-form input, .edit-shortcode-form textarea {
     border: 1px solid #ddd;
     -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
@@ -83,5 +86,57 @@
     padding-top: 10px; }
     .edit-shortcode-form .field-inline label {
       display: inline-block; }
+
+.edit-shortcode-form .shortcake-attachment-preview {
+  width: 150px;
+  height: 150px;
+  margin: 0 10px 10px 0;
+  line-height: 150px;
+  text-align: center;
+  padding: 0; }
+  .edit-shortcode-form .shortcake-attachment-preview:before {
+    display: none; }
+  .edit-shortcode-form .shortcake-attachment-preview:not(.has-attachment) {
+    border: 2px dashed #DDD;
+    border-radius: 2px;
+    background: transparent;
+    box-shadow: none; }
+  .edit-shortcode-form .shortcake-attachment-preview .button.add {
+    vertical-align: middle;
+    z-index: 1; }
+  .edit-shortcode-form .shortcake-attachment-preview .button.remove {
+    z-index: 1;
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border: 1px solid #aaa;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    text-indent: 100%;
+    whitespace: nowrap;
+    width: 24px;
+    height: 24px;
+    padding: 0; }
+    .edit-shortcode-form .shortcake-attachment-preview .button.remove:after {
+      content: "\00d7";
+      position: absolute;
+      top: -1px;
+      left: 5px;
+      font-size: 22px;
+      text-indent: 0; }
+  .edit-shortcode-form .shortcake-attachment-preview .loading-indicator, .edit-shortcode-form .shortcake-attachment-preview.loading .button.add {
+    display: none; }
+  .edit-shortcode-form .shortcake-attachment-preview.loading .loading-indicator {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px; }
+  .edit-shortcode-form .shortcake-attachment-preview .filename {
+    line-height: 1.4em; }
+  .edit-shortcode-form .shortcake-attachment-preview.has-attachment .button.add {
+    display: none; }
+  .edit-shortcode-form .shortcake-attachment-preview.has-attachment .button.remove {
+    display: block; }
 
 /*# sourceMappingURL=shortcode-ui.css.map */

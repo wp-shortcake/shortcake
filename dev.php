@@ -25,6 +25,7 @@ add_action( 'init', function() {
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
 				<b>Fieldmanager Textarea:</b> <?php echo esc_html( $attr['fieldmanager_textarea'] ); ?></br>
 				<b>Fieldmanager Media:</b> <?php echo esc_html( get_the_title( $attr['fieldmanager_media'] ) ); ?></br>
+				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
 			</p>
 		</section>
 
@@ -46,7 +47,7 @@ add_action( 'init', function() {
 			// Display label. String. Required.
 			'label' => 'Shortcake Dev',
 
-			// Icon/image for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
+			// Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 			'listItemImage' => 'dashicons-editor-quote',
 
 			// Available shortcode attributes and default values. Required. Array.
@@ -54,6 +55,14 @@ add_action( 'init', function() {
 			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
 			'attrs' => array(
 
+				array(
+					'label' => 'Attachment',
+					'attr'  => 'attachment',
+					'type'  => 'attachment',
+					'libraryType' => array( 'image' ),
+					'addButton'   => 'Select Image',
+					'frameTitle'  => 'Select Image',
+				),
 				array(
 					'label' => 'Quote',
 					'attr'  => 'content',
@@ -70,7 +79,6 @@ add_action( 'init', function() {
 					'attr'  => 'fieldmanager_textarea',
 					'type'  => 'Fieldmanager_TextArea',
 				),
-
 				array(
 					'label' => 'Fieldmanager Media',
 					'attr'  => 'fieldmanager_media',
