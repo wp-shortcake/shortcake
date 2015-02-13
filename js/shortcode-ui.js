@@ -658,7 +658,9 @@ var Shortcode_UI;
 
 		refresh: function() {
 			// @todo Need to trigger disabled state on button.
-			this.frame.toolbar.get().refresh();
+			if ( this.frame ) {
+				this.frame.toolbar.get().refresh();
+			}
 		},
 
 		insert: function() {
