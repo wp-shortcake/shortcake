@@ -438,7 +438,11 @@ var Shortcode_UI;
 		 */
 		updateValue: function( e ) {
 			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
-			this.model.set( 'value', $el.val() );
+			if ( $el.attr( 'type' ).toLowerCase() == 'checkbox' ) {
+				this.model.set( 'value', $el.is( ':checked' ) );
+			} else {
+				this.model.set( 'value', $el.val() );
+			}
 		},
 
 	} );
@@ -658,7 +662,9 @@ var Shortcode_UI;
 
 		refresh: function() {
 			// @todo Need to trigger disabled state on button.
-			this.frame.toolbar.get().refresh();
+			if( this.frame && this.frame.toolbar ) {
+				this.frame.toolbar.get().refresh();
+			}
 		},
 
 		insert: function() {
