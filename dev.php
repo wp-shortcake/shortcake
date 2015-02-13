@@ -50,7 +50,7 @@ add_action( 'init', function() {
 			'label' => 'Shortcake Dev',
 
 			// Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
-			'listItemAttachment' => 'dashicons-editor-quote',
+			'listItemImage' => 'dashicons-editor-quote',
 
 			// Available shortcode attributes and default values. Required. Array.
 			// Attribute model expects 'attr', 'type' and 'label'
