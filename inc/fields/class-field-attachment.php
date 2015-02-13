@@ -51,17 +51,6 @@ class Shortcake_Field_Attachment {
 	}
 
 	/**
-	 * Initialize Post Fields.
-	 *
-	 * Find all registered shortcode attributes that use the post field and
-	 * store an array with all their args for future reference.
-	 *
-	 * @return null
-	 */
-	public function action_init_post_field() {
-	}
-
-	/**
 	 * Output styles and templates used by post select field.
 	 */
 	public function action_print_media_templates() {
