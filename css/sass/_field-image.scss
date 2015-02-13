@@ -1,14 +1,14 @@
 .edit-shortcode-form .shortcake-attachment-preview {
 
-	width: 150px !important;
-	height: 150px !important;
+	width: 150px;
+	height: 150px;
 	margin: 0 10px 10px 0;
 	line-height: 150px;
 	text-align: center;
 	padding: 0;
 
 	&:before {
-		display: none !important;
+		display: none;
 	}
 
 	&:not( .has-attachment ) {
