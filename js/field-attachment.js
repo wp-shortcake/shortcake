@@ -13,14 +13,24 @@
 
 			var model = this.model;
 
+			// Set model default values.
+			for ( var arg in ShorcakeImageFieldData.defaultArgs ) {
+				var currentArg = model.get( arg );
+				if ( ! currentArg ) {
+					model.set( arg, ShorcakeImageFieldData.defaultArgs[ arg ] );
+				}
+			}
+
 			var $container    = this.$el.find( '.shortcake-attachment-preview' );
 			var $addButton    = $container.find( 'button.add' );
 			var $removeButton = $container.find( 'button.remove' );
 
 			var frame = wp.media( {
 				multiple: false,
-				title: 'Select File',
-				// library: frameLibraryType,
+				title: model.get( 'frameTitle' ),
+				library: {
+					type: model.get( 'libraryType' ),
+				},
 			} );
 
 			/**

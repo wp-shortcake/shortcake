@@ -23,11 +23,7 @@ add_action( 'init', function() {
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
 				<b>Fieldmanager Textarea:</b> <?php echo esc_html( $attr['fieldmanager_textarea'] ); ?></br>
 				<b>Fieldmanager Media:</b> <?php echo esc_html( get_the_title( $attr['fieldmanager_media'] ) ); ?></br>
-
-				<?php if ( ! empty( $attr['attachment'] ) ) : ?>
-				<b>Attachment:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
-				<?php endif; ?>
-
+				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
 			</p>
 		</section>
 
@@ -61,6 +57,9 @@ add_action( 'init', function() {
 					'label' => 'Attachment',
 					'attr'  => 'attachment',
 					'type'  => 'attachment',
+					'libraryType' => array( 'image' ),
+					'addButton'   => 'Select Image',
+					'frameTitle'  => 'Select Image',
 				),
 				array(
 					'label' => 'Quote',
