@@ -355,7 +355,7 @@ var Shortcode_UI;
 
 	/**
 	 * Preview of rendered shortcode. Asynchronously fetches rendered shortcode content from WordPress and displays
-	 * in an &lt;iframe> to isolate editor styles.
+	 * in an <iframe> to isolate editor styles.
 	 *
 	 * @class sui.views.ShortcodePreview
 	 * @constructor
@@ -365,7 +365,17 @@ var Shortcode_UI;
 	sui.views.ShortcodePreview = Backbone.View.extend({
 
 		initialize: function( options ) {
-			this.stylesheets = this.getEditorStyles().join( "\n" );
+
+			var self = this;
+
+			self.head    = self.getEditorStyles().join( "\n" );
+			self.preview = wp.mce.View.prototype.loadingPlaceholder();
+
+			self.fetchShortcode( function( response ) {
+				self.preview = response;
+				self.render();
+			});
+
 		},
 
 		/**
@@ -374,13 +384,10 @@ var Shortcode_UI;
 		 * @returns {ShortcodePreview}
 		 */
 		render: function() {
-			var self = this;
-			var stylesheets = this.stylesheets;
 
-			self.renderIFrame({ body: wp.mce.View.prototype.loadingPlaceholder(), head: stylesheets });
-
-			this.fetchShortcode( function( result ) {
-				self.renderIFrame({ body: result, head: stylesheets });
+			this.renderIframe({
+				head: this.head,
+				body: this.preview,
 			});
 
 			return this;
@@ -392,10 +399,9 @@ var Shortcode_UI;
 		 *
 		 * @param params
 		 */
-		renderIFrame: function( params ) {
+		renderIframe: function( params ) {
 
-			var $iframe, resize;
-			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+			var self = this, $iframe, resize;
 
 			_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
 
@@ -407,11 +413,16 @@ var Shortcode_UI;
 				style: "width: 100%; display: block",
 			} );
 
+			// Resize iFrame to size inner document.
 			resize = function() {
-				// Make sure the iframe still exists.
 				$iframe && $iframe.height( $iframe.contents().find('body').height() );
 			};
 
+			/**
+			 * Render preview in iFrame once loaded.
+			 * This is required because you can't write to
+			 * an iFrame contents before it exists.
+			 */
 			$iframe.load( function() {
 
 				var head = $(this).contents().find('head'),
@@ -422,27 +433,35 @@ var Shortcode_UI;
 				body.addClass( params.body_classes );
 
 				resize();
-
-				if ( MutationObserver ) {
-					new MutationObserver( _.debounce( function() {
-						resize();
-					}, 100 ) )
-					.observe( $(this).contents().find('body')[0], {
-						attributes: true,
-						childList: true,
-						subtree: true
-					} );
-				} else {
-					for ( i = 1; i < 6; i++ ) {
-						setTimeout( resize, i * 700 );
-					}
-				}
+				self.observe( $(this)[0], resize );
 
 			} );
 
 			this.$el.html( $iframe );
 
 		},
+
+		observe: function( iframe, callback ) {
+
+			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+			var observer = false, doc;
+
+			if ( MutationObserver && ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) ) {
+				observer = new MutationObserver( callback ).observe( doc.body, {
+					attributes:	true,
+					childList:	true,
+					subtree:	true
+				} );
+			} else {
+				for ( i = 1; i < 6; i++ ) {
+					setTimeout( callback, i * 700 );
+				}
+			}
+
+			return observer;
+
+		},
+
 
 		/**
 		 * Makes an AJAX call to the server to render the shortcode based on user supplied attributes. Server-side
@@ -902,3 +921,4 @@ var Shortcode_UI;
 	});
 
 } )( jQuery );
+
