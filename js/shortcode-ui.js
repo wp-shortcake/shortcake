@@ -413,11 +413,6 @@ var Shortcode_UI;
 				style: "width: 100%; display: block",
 			} );
 
-			// Resize iFrame to size inner document.
-			resize = function() {
-				$iframe && $iframe.height( $iframe.contents().find('body').height() );
-			};
-
 			/**
 			 * Render preview in iFrame once loaded.
 			 * This is required because you can't write to
@@ -432,8 +427,7 @@ var Shortcode_UI;
 				body.html( params.body );
 				body.addClass( params.body_classes );
 
-				resize();
-				self.observe( $(this)[0], resize );
+				self.autoresizeIframe( $(this) );
 
 			} );
 
@@ -441,17 +435,29 @@ var Shortcode_UI;
 
 		},
 
-		observe: function( iframe, callback ) {
+		autoresizeIframe: function( $iframe ) {
 
 			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-			var observer = false, doc;
+			var doc = $iframe[0].contentWindow && $iframe[0].contentWindow.document;
+			var observer = false;
 
-			if ( MutationObserver && ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) ) {
-				observer = new MutationObserver( callback ).observe( doc.body, {
-					attributes:	true,
-					childList:	true,
-					subtree:	true
-				} );
+			if ( ! doc ) {
+				return;
+			}
+
+			// Resize iFrame to size inner document.
+			var resize = function() {
+				$iframe && $iframe.height( $iframe.contents().find('body').height() );
+				$iframe && $iframe.width( $iframe.contents().find('body').width() );
+			};
+
+			resize();
+
+			if ( MutationObserver ) {
+
+				observer = new MutationObserver( resize );
+				observer.observe( doc.body, { attributes: true, childList: true, subtree: true } );
+
 			} else {
 				for ( i = 1; i < 6; i++ ) {
 					setTimeout( callback, i * 700 );
