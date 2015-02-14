@@ -369,12 +369,7 @@ var Shortcode_UI;
 			var self = this;
 
 			self.head    = self.getEditorStyles().join( "\n" );
-			self.preview = wp.mce.View.prototype.loadingPlaceholder();
-
-			self.fetchShortcode( function( response ) {
-				self.preview = response;
-				self.render();
-			});
+			self.loading = wp.mce.View.prototype.loadingPlaceholder();
 
 		},
 
@@ -385,9 +380,18 @@ var Shortcode_UI;
 		 */
 		render: function() {
 
-			this.renderIframe({
-				head: this.head,
-				body: this.preview,
+			var self = this;
+
+			self.renderIframe({
+				head: self.head,
+				body: self.loading,
+			});
+
+			self.fetchShortcode( function( response ) {
+				self.renderIframe({
+					head: self.head,
+					body: response,
+				});
 			});
 
 			return this;
