@@ -65,12 +65,20 @@ class Shortcake_Field_Post_Select {
 		?>
 
 		<style>
+
 			.edit-shortcode-form .select2-container {
 				min-width: 300px;
 			}
+
+			.edit-shortcode-form .select2-container a {
+				transition: none;
+				-webkit-transition: none;
+			}
+
 			.wp-admin .select2-drop {
 				z-index: 160001;
 			}
+
 		</style>
 
 		<script type="text/html" id="tmpl-shortcake-field-post-select">
