@@ -37,6 +37,9 @@ class Shortcode_UI_Fields {
 		'date' => array(
 			'template' => 'shortcode-ui-field-date',
 		),
+		'color' => array(
+			'template' => 'shortcode-ui-field-color',
+		),
 	);
 
 	public static function get_instance() {
