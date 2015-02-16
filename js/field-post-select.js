@@ -13,9 +13,16 @@
 
 		render: function() {
 
-			this.$el.html( this.template( this.model.toJSON() ) );
+			var self = this,
+			    defaults = { multiple: false };
 
-			var multiple = false;
+			for ( var arg in defaults ) {
+				if ( ! this.model.get( arg ) ) {
+					this.model.set( arg, defaults[ arg ] );
+				}
+			}
+
+			this.$el.html( this.template( this.model.toJSON() ) );
 
 			var ajaxData = {
 				action    : 'shortcake_post_field',
@@ -24,9 +31,12 @@
 				attr      : this.model.get( 'attr' )
 			};
 
-			this.$el.find( '.shortcake-post-select' ).select2({
+			var $field = this.$el.find( '.shortcake-post-select' );
+
+			$field.select2({
 
 				placeholder: "Search",
+				multiple: this.model.get( 'multiple' ),
 				ajax: {
 					url: ajaxurl,
 					dataType: 'json',
@@ -42,6 +52,7 @@
 							return { results: {}, more: false };
 						}
 
+						// Cache data for quicker rendering later.
 						postSelectCache = $.extend( postSelectCache, response.data.posts );
 
 						var more = ( page * response.data.posts_per_page ) < response.data.found_posts; // whether or not there are more results available
@@ -57,23 +68,43 @@
 				 */
 				initSelection: function(element, callback) {
 
-					var val, cached;
+					var ids, parsedData = [], cached;
 
-					val = parseInt( $(element).val() );
+					// Convert stored value to array of IDs (int).
+					ids = $(element)
+						.val()
+						.split(',')
+						.map( function (str) { return str.trim(); } )
+						.map( function (str) { return parseInt( str ); } )
 
-					if ( ! val ) {
+					if ( ids.length < 1 ) {
 						return;
 					}
 
-					if ( cached = _.find( postSelectCache, _.matches( { id: val } )) ) {
+					// Check if there is already cached data.
+					for ( var i = 0; i < ids.length; i++ ) {
+						if ( cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) ) ) {
+							parsedData.push( cached );
+						}
+					};
 
-						callback( cached );
+					// If not multiple - return single value if we have one.
+					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
+						callback( parsedData[0] );
+						return;
+					}
+
+					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
+
+					if ( ! uncachedIds.length ) {
+
+						callback( parsedData );
 
 					} else {
 
 						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
 						initAjaxData.action   = 'shortcake_post_field';
-						initAjaxData.post__in = val;
+						initAjaxData.post__in = uncachedIds;
 
 						$.get( ajaxurl, initAjaxData ).done( function( response ) {
 
@@ -83,19 +114,41 @@
 
 							postSelectCache = $.extend( postSelectCache, response.data.posts );
 
-							// If not multi select - passing an array doesn't work.
-							if ( ! multiple ) {
-								response.data.posts = response.data.posts[0];
+							// If not multi-select, expects single object, not array of objects.
+							if ( ! self.model.get( 'multiple' ) ) {
+								callback( response.data.posts[0] );
+								return;
 							}
 
-							callback( response.data.posts );
+							// Append new data to cached data.
+							// Sort by original order.
+							parsedData = parsedData
+								.concat( response.data.posts )
+								.sort(function (a, b) {
+									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
+									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
+									return 0;
+								});
+
+							callback( parsedData );
+							return;
 
 						} );
 
 					}
+
 				},
 
 			} );
+
+			// Make multiple values sortable.
+			if ( this.model.get( 'multiple' ) ) {
+				$field.select2('container').find('ul.select2-choices').sortable({
+	    			containment: 'parent',
+	    			start: function() { $('.shortcake-post-select').select2('onSortStart'); },
+	    			update: function() { $('.shortcake-post-select').select2('onSortEnd'); }
+				});
+			}
 
 			return this;
 

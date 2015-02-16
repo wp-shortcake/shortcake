@@ -11,7 +11,14 @@ add_action( 'init', function() {
 		$attr = wp_parse_args( $attr, array(
 			'source' => '',
 			'post'   => '',
+			'page'   => '',
 		) );
+
+		if ( ! empty( $attr['page'] ) ) {
+ 			$attr['page'] = explode( ',', $attr['page'] );
+ 			$attr['page'] = array_map( 'get_the_title', $attr['page'] );
+ 			$attr['page'] = implode( ', ', $attr['page'] );
+ 		}
 
 		ob_start();
 
@@ -23,7 +30,7 @@ add_action( 'init', function() {
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
 				<b>Fieldmanager Textarea:</b> <?php echo esc_html( $attr['fieldmanager_textarea'] ); ?></br>
 				<b>Fieldmanager Media:</b> <?php echo esc_html( get_the_title( $attr['fieldmanager_media'] ) ); ?></br>
-				<b>Page:</b> <?php echo ($attr['page'] ) ? get_the_title( $attr['page'] ) : 'None'; ?></br>
+				<b>Page:</b> <?php echo esc_html( $attr['page'] ); ?></br>
 				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
 			</p>
 		</section>
@@ -64,10 +71,11 @@ add_action( 'init', function() {
 				),
 
 				array(
-					'label' => 'Select Page',
-					'attr'  => 'page',
-					'type'  => 'post_select',
-					'query' => array( 'post_type' => 'page' ),
+					'label'    => 'Select Page',
+					'attr'     => 'page',
+					'type'     => 'post_select',
+					'query'    => array( 'post_type' => 'page' ),
+					'multiple' => true,
 				),
 
 				array(

@@ -47,7 +47,7 @@ class Shortcake_Field_Post_Select {
 			array( 'shortcode-ui', 'select2' )
 		);
 
-		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ) , array( 'jquery' ), '3.5.2' );
+		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ) , array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
 		wp_enqueue_style( 'select2', plugins_url( 'lib/select2/select2.css', $plugin_dir ), null, '3.5.2' );
 
 		wp_localize_script( 'shortcake-field-post-select', 'shortcakePostFieldData', array(
@@ -140,6 +140,7 @@ class Shortcake_Field_Post_Select {
 		if ( ! empty( $_GET['post__in'] ) ) {
 			$post__in = is_array( $_GET['post__in'] ) ? $_GET['post__in'] : explode( ',', $_GET['post__in'] );
 			$query_args['post__in'] = array_map( 'intval', $post__in );
+			$query_args['orderby']  = 'post__in';
 		}
 
 		$query = new WP_Query( $query_args );
