@@ -23,6 +23,7 @@ add_action( 'init', function() {
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
 				<b>Fieldmanager Textarea:</b> <?php echo esc_html( $attr['fieldmanager_textarea'] ); ?></br>
 				<b>Fieldmanager Media:</b> <?php echo esc_html( get_the_title( $attr['fieldmanager_media'] ) ); ?></br>
+				<b>Page:</b> <?php echo ($attr['page'] ) ? get_the_title( $attr['page'] ) : 'None'; ?></br>
 				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
 			</p>
 		</section>
@@ -61,6 +62,14 @@ add_action( 'init', function() {
 					'addButton'   => 'Select Image',
 					'frameTitle'  => 'Select Image',
 				),
+
+				array(
+					'label' => 'Select Page',
+					'attr'  => 'page',
+					'type'  => 'post_select',
+					'query' => array( 'post_type' => 'page' ),
+				),
+
 				array(
 					'label' => 'Quote',
 					'attr'  => 'content',
