@@ -354,8 +354,9 @@ var Shortcode_UI;
 	} );
 
 	/**
-	 * Preview of rendered shortcode. Asynchronously fetches rendered shortcode content from WordPress and displays
-	 * in an <iframe> to isolate editor styles.
+	 * Preview of rendered shortcode.
+	 * Asynchronously fetches rendered shortcode content from WordPress.
+	 * Displayed in an iframe to isolate editor styles.
 	 *
 	 * @class sui.views.ShortcodePreview
 	 * @constructor
@@ -380,11 +381,14 @@ var Shortcode_UI;
 
 			var self = this;
 
+			// Render loading iFrame.
 			self.renderIframe({
 				head: self.head,
 				body: self.loading,
 			});
 
+			// Fetch shortcode preview.
+			// Render iFrame with shortcode preview.
 			self.fetchShortcode( function( response ) {
 				self.renderIframe({
 					head: self.head,
@@ -396,8 +400,9 @@ var Shortcode_UI;
 		},
 
 		/**
-		 * Render a child iframe, removing any previously rendered iframe. Additionally, observe the rendered iframe
-		 * for mutations and resize as necessary to match content.
+		 * Create and render an iframe.
+		 * Note - the iFrame element is returned, but the content is not added until iframe load event is triggered when inserted into the DOM.
+		 * Additionally, observe the rendered iframe for mutations and resize as necessary to match content.
 		 *
 		 * @param params
 		 */
@@ -437,6 +442,12 @@ var Shortcode_UI;
 
 		},
 
+		/**
+		 * Watch for mutations in iFrame content.
+		 * resize iFrame height on change.
+		 *
+		 * @param  jQuery object $iframe
+		 */
 		autoresizeIframe: function( $iframe ) {
 
 			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
