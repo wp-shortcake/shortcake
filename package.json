@@ -6,7 +6,8 @@
   "license": "GPL V2",
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-browserify": "^3.3.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-sass": "0.12.1"
+    "grunt-sass": "^0.18.0"
   }
 }

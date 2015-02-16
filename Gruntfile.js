@@ -34,13 +34,59 @@ module.exports = function( grunt ) {
 			}
 
 		},
+		
+		browserify : {
+			options: {
+				preBundleCB: function(b) {
+					b.plugin(remapify, [
+						{
+							cwd: 'js/models',
+							src: '*.js',
+							expose: 'sui-models'
+						},
+						{
+							cwd: 'js/controllers',
+							src: '*.js',
+							expose: 'sui-controllers'
+						},
+						{
+							cwd: 'js/collections',
+							src: '*.js',
+							expose: 'sui-collections'
+						},
+						{
+							cwd: 'js/views',
+							src: '*.js',
+							expose: 'sui-views'
+						},
+						{
+							cwd: 'js/utils',
+							src: '*.js',
+							expose: 'sui-utils'
+						}
+					]);
+
+				}
+			},
+			dist: {
+				files : {
+					'js/build/shortcode-ui.js' : ['js/**/*.js']
+				},
+				options: {
+					transform: ['browserify-shim']
+				}
+			},
+
+		},
 
 	} );
 
 	grunt.loadNpmTasks('grunt-sass');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-browserify');
 
-	grunt.registerTask( 'default', ['sass' ] );
+	grunt.registerTask( 'default', [ 'sass' ] );
+	grunt.registerTask( 'scripts', [ 'browserify' ]);
 
 	grunt.util.linefeed = '\n';
 
