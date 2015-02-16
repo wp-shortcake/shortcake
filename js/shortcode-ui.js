@@ -571,15 +571,11 @@ var Shortcode_UI;
 				tabs: {
 					edit: {
 						label: shortcodeUIData.strings.edit_tab_label,
-						content: new sui.views.EditShortcodeForm({
-							model: shortcode
-						})
+						content: new sui.views.EditShortcodeForm({ model: shortcode })
 					},
 					preview: {
 						label: shortcodeUIData.strings.preview_tab_label,
-						content: new sui.views.ShortcodePreview({
-							model: shortcode,
-						}),
+						content: new sui.views.ShortcodePreview({ model: shortcode }),
 						open: function() {
 							this.render();
 						}
