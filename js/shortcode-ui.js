@@ -457,9 +457,14 @@ var Shortcode_UI;
 				$iframe.height( $iframe.contents().find('body').outerHeight() );
 			};
 
+			resize();
+
 			if ( MutationObserver ) {
 
-				var observer = new MutationObserver( resize );
+				var observer = new MutationObserver( function() {
+					resize();
+					$iframe.contents().find('img,link').load( resize );
+				} );
 
 				observer.observe(
 					$iframe.contents()[0],
@@ -473,8 +478,6 @@ var Shortcode_UI;
 				}
 
 			}
-
-			return observer;
 
 		},
 
