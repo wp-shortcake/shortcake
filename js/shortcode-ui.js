@@ -141,6 +141,7 @@ var Shortcode_UI;
 			label: '',
 			shortcode_tag: '',
 			attrs: sui.models.ShortcodeAttributes,
+			content: '',
 		},
 
 		/**
@@ -194,14 +195,13 @@ var Shortcode_UI;
 					return;
 				}
 
-				// Handle content attribute as a special case.
-				if ( attr.get( 'attr' ) === 'content' ) {
-					content = attr.get( 'value' );
-				} else {
-					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
-				}
+				attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 
 			} );
+			
+			if( temp_content = this.get( 'content' ) ) {
+				content = temp_content.toString();
+			} 
 
 			template = "[{{ shortcode }} {{ attributes }}]"
 
@@ -385,6 +385,17 @@ var Shortcode_UI;
 
 			var t = this;
 
+			if ( content = this.model.get( 'content' ) ) {
+				var viewObjName = 'suiContent';
+				var tmplName    = 'shortcode-ui-content';
+
+				var view        = new sui.views[viewObjName]( { model: t.model } );
+				view.template   = wp.media.template( tmplName );
+				view.shortcode = t.model;
+
+				t.views.add( '.edit-shortcode-form-fields', view );
+			}
+			
 			this.model.get( 'attrs' ).each( function( attr ) {
 
 				// Get the field settings from localization data.
@@ -404,7 +415,7 @@ var Shortcode_UI;
 				t.views.add( '.edit-shortcode-form-fields', view );
 
 			} );
-
+			
 		},
 
 	});
@@ -445,6 +456,45 @@ var Shortcode_UI;
 				this.model.set( 'value', $el.val() );
 			}
 		},
+
+	} );
+	
+	sui.views.suiContent = Backbone.View.extend( {
+
+		tagName: "div",
+
+		events: {
+			'click a.button-edit': 'editContent',
+			'click a.button-save': 'saveContent'
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+			return this
+		},
+		
+		/** 
+		 * User wants to edit content
+		 */
+		editContent: function ( e ) {
+			e.preventDefault();
+			
+			$( '.content-edit-container' ).show();
+			$( '.content-display-container' ).hide();
+		},
+		
+		/**
+		 * save the content that was updated by user
+		 */
+		saveContent: function( e ) {
+			e.preventDefault();
+			var $el = $( '.content-edit' );
+			
+			this.model.set( 'content', $el.val() );
+			$( '.content-edit-container' ).hide();
+			$( '.content-display-container' ).show().find( '.content-display' ).html( $el.val() );
+			
+		}
 
 	} );
 

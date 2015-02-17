@@ -134,3 +134,16 @@
 		<# } #>
 	</div>
 </script>
+
+<script type="text/html" id="tmpl-shortcode-ui-content">
+	<div class="field-block">
+		<div class="content-display-container">
+			<p class="content-display">{{ data.content }}</p>
+			<a href="#" class="button-edit">Edit Content</a>
+		</div>
+		<div class="content-edit-container" style="display: none;">
+			<textarea class="content-edit">{{ data.content }}</textarea>
+			<a href="#" class="button-save">Save Content</a>
+		</div>
+	</div>
+</script>
