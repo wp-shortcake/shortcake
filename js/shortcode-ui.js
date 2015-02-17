@@ -454,7 +454,7 @@ var Shortcode_UI;
 
 			// Resize iFrame to size inner document.
 			var resize = function() {
-				$iframe.height( $iframe.contents().find('body').outerHeight() );
+				$iframe.height( $iframe.contents().find('html').height() );
 			};
 
 			resize();
