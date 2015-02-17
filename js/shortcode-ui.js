@@ -427,14 +427,14 @@ var Shortcode_UI;
 			 */
 			$iframe.load( function() {
 
+				self.autoresizeIframe( $(this) );
+
 				var head = $(this).contents().find('head'),
 				    body = $(this).contents().find('body');
 
 				head.html( params.head );
 				body.html( params.body );
 				body.addClass( params.body_classes );
-
-				self.autoresizeIframe( $(this) );
 
 			} );
 
@@ -451,29 +451,27 @@ var Shortcode_UI;
 		autoresizeIframe: function( $iframe ) {
 
 			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-			var doc = $iframe[0].contentWindow && $iframe[0].contentWindow.document;
-			var observer = false;
-
-			if ( ! doc ) {
-				return;
-			}
 
 			// Resize iFrame to size inner document.
 			var resize = function() {
-				$iframe && $iframe.height( $iframe.contents().find('body').outerHeight() );
+				$iframe.height( $iframe.contents().find('body').outerHeight() );
 			};
-
-			resize();
 
 			if ( MutationObserver ) {
 
-				observer = new MutationObserver( resize );
-				observer.observe( doc.body, { attributes: true, childList: true, subtree: true } );
+				var observer = new MutationObserver( resize );
+
+				observer.observe(
+					$iframe.contents()[0],
+					{ attributes: true, childList: true, subtree: true }
+				);
 
 			} else {
+
 				for ( i = 1; i < 6; i++ ) {
-					setTimeout( callback, i * 700 );
+					setTimeout( resize, i * 700 );
 				}
+
 			}
 
 			return observer;
