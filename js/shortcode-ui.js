@@ -367,7 +367,7 @@ var Shortcode_UI;
 
 		initialize: function( options ) {
 
-			this.head    = self.getEditorStyles().join( "\n" );
+			this.head    = this.getEditorStyles().join( "\n" );
 			this.loading = wp.mce.View.prototype.loadingPlaceholder();
 
 		},
