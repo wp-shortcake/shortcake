@@ -75,16 +75,6 @@ add_action( 'init', function() {
 					'type'  => 'text',
 					'placeholder' => 'Test placeholder',
 				),
-				array(
-					'label' => 'Fieldmanager Textarea',
-					'attr'  => 'fieldmanager_textarea',
-					'type'  => 'Fieldmanager_TextArea',
-				),
-				array(
-					'label' => 'Fieldmanager Media',
-					'attr'  => 'fieldmanager_media',
-					'type'  => 'Fieldmanager_Media',
-				),
 
 			),
 		)
