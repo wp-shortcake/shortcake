@@ -141,7 +141,7 @@ var Shortcode_UI;
 			label: '',
 			shortcode_tag: '',
 			attrs: sui.models.ShortcodeAttributes,
-			content: '',
+			shortcode_content: '',
 		},
 
 		/**
@@ -199,7 +199,7 @@ var Shortcode_UI;
 
 			} );
 			
-			if( temp_content = this.get( 'content' ) ) {
+			if( temp_content = this.get( 'shortcode_content' ) ) {
 				content = temp_content.toString();
 			} 
 
@@ -385,7 +385,7 @@ var Shortcode_UI;
 
 			var t = this;
 
-			if ( content = this.model.get( 'content' ) ) {
+			if ( shortcode_content = this.model.get( 'shortcode_content' ) ) {
 				var viewObjName = 'suiContent';
 				var tmplName    = 'shortcode-ui-content';
 
@@ -490,7 +490,7 @@ var Shortcode_UI;
 			e.preventDefault();
 			var $el = $( '.content-edit' );
 			
-			this.model.set( 'content', $el.val() );
+			this.model.set( 'shortcode_content', $el.val() );
 			$( '.content-edit-container' ).hide();
 			$( '.content-display-container' ).show().find( '.content-display' ).html( $el.val() );
 			

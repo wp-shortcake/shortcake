@@ -35,10 +35,10 @@ class Shortcode_UI {
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
 		$defaults = array(
-			'label'         => '',
-			'attrs'         => array(),
-			'listItemImage' => '',   // src or 'dashicons-' - used in insert list.
-			'content'       => true,
+			'label'             => '',
+			'attrs'             => array(),
+			'listItemImage'     => '',   // src or 'dashicons-' - used in insert list.
+			'shortcode_content' => true,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
