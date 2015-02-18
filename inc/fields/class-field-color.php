@@ -28,27 +28,11 @@ class Shortcake_Field_Color {
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
 		add_action( 'shortcode_ui_loaded_editor', array( $this, 'load_template' ) );
-		add_action( 'shortcode_ui_loaded_editor', array( $this, 'load_color_picker' ) );
 
 	}
-
-	public function filter_shortcode_ui_fields( $fields ) {
-		return array_merge( $fields, $this->fields );
-	}
-
-	public function action_admin_enqueue_scripts() {
-
-		$script = plugins_url( '/js/field-color.js', dirname( dirname( __FILE__ ) ) );
-
-		wp_enqueue_script( 'shortcake-field-color', $script, array( 'shortcode-ui' ) );
+	
+	private function color_attribute_present() {
 		
-	}
-
-	/**
-	 * Enqueue the color picker only when there's a color option used
-	 */
-	public function load_color_picker() {
-
 		foreach( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
 			if ( empty( $shortcode['attrs'] ) ) {
 				continue;
@@ -64,18 +48,43 @@ class Shortcake_Field_Color {
 					wp_enqueue_style( 'wp-color-picker' );
 					
 					// Enqueue once only
-					return;
+					return true;
 				}
 			}
 		}
 		
+		return false;
+		
+	}
+
+	public function filter_shortcode_ui_fields( $fields ) {
+		return array_merge( $fields, $this->fields );
+	}
+
+	public function action_admin_enqueue_scripts() {
+		
+		if ( ! $this->color_attribute_present() ) {
+			return;
+		}
+
+		$script = plugins_url( '/js/field-color.js', dirname( dirname( __FILE__ ) ) );
+
+		wp_enqueue_script( 'shortcake-field-color', $script, array( 'shortcode-ui' ) );
+		
 	}
 
 	/**
-	 * Output templates used by the colo field.
+	 * Output templates used by the color field.
 	 */
 	public function load_template() {
+		
+		if ( ! $this->color_attribute_present() ) {
+			return;
+		}
 
+		wp_enqueue_script( 'wp-color-picker' );
+		wp_enqueue_style( 'wp-color-picker' );
+		
 		?>
 
 		<script type="text/html" id="tmpl-fusion-shortcake-field-color">
