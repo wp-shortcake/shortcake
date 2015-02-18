@@ -1,6 +1,6 @@
 var Backbone = require('backbone'),
 	wp = require('wp'),
-	Shortcodes = require('collections/shortcodes');
+	Shortcodes = require('sui-collections/shortcodes');
 
 jQuery(document).ready(function(){
 

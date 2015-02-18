@@ -1,6 +1,6 @@
 var wp = require('wp'),
 	MediaController = require('sui-controllers/media-controller'),
-	Shortcode_UI = require('sui-views/shortcode-ui');
+	Shortcode_UI = require('./shortcode-ui');
 
 var shortcodeFrame = wp.media.view.MediaFrame.Post;
 wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
