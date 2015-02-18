@@ -23,6 +23,8 @@ require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-field-attachment.php';
 
+add_action( 'init', 'shortcode_ui_load_textdomain' );
+
 add_action( 'init', function() {
 
 	$shortcode_ui     = Shortcode_UI::get_instance();
@@ -30,6 +32,15 @@ add_action( 'init', function() {
 	$attachment_field = Shortcake_Field_Attachment::get_instance();
 
 }, 5 );
+
+/**
+ * Load translations
+ *
+ * @return null
+ */
+function shortcode_ui_load_textdomain() {
+	load_plugin_textdomain( 'shortcode-ui', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
 
 /**
  * Register UI for Shortcode
