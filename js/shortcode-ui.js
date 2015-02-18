@@ -383,16 +383,26 @@ var Shortcode_UI;
 
 			var t = this;
 
-			// add UI for inner_content
-			var viewObjName = 'suiContent';
-			var tmplName    = 'shortcode-ui-content';
+			var contentAttributeModel = new sui.models.ShortcodeAttribute( {
+				attr:  'inner_content',
+				label: 'Content',
+				type:  'textarea',
+				value: t.model.get('inner_content'),
+			} );
 
-			var view        = new sui.views[viewObjName]( { model: t.model } );
-			view.template   = wp.media.template( tmplName );
+			// Add field for inner_content
+			var view = new sui.views['editAttributeField']( { model: contentAttributeModel } );
+			view.template = wp.media.template( 'shortcode-ui-field-textarea' );
 			view.shortcode = t.model;
 
+			// Update changes.
+			contentAttributeModel.on( 'change:value', function() {
+				t.model.set( 'inner_content', contentAttributeModel.get( 'value' ) );
+			} );
+
 			t.views.add( '.edit-shortcode-form-fields', view );
-			
+
+			// Add fields for each attribute.
 			this.model.get( 'attrs' ).each( function( attr ) {
 
 				// Get the field settings from localization data.
@@ -454,29 +464,6 @@ var Shortcode_UI;
 			}
 		},
 
-	} );
-	
-	sui.views.suiContent = Backbone.View.extend( {
-
-		tagName: "div",
-
-		events: {
-			'keyup  textarea': 'updateValue',
-		},
-
-		render: function() {
-			this.$el.html( this.template( this.model.toJSON() ) );
-			return this
-		},
-		
-		/** 
-		 * User wants to edit content
-		 */
-		updateValue: function ( e ) {
-			var $el = $(this.el).find( '#inner_content' );	
-			this.model.set( 'inner_content', $el.val() );
-		},
-		
 	} );
 
 	/**
@@ -869,9 +856,9 @@ var Shortcode_UI;
 					}
 
 				});
-				
-				if ( 'content' in options.shortcode ) {
-					shortcode.set( 'content', options.shortcode.content )
+
+				if ( options.shortcode.content ) {
+					shortcode.set( 'inner_content', options.shortcode.content )
 				}
 
 				this.shortcode = shortcode;
@@ -957,7 +944,7 @@ var Shortcode_UI;
 			}
 
 			if ( matches[3] ) {
-				currentShortcode.set( 'content', matches[3] );
+				currentShortcode.set( 'inner_content', matches[3] );
 			}
 
 			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media( {
