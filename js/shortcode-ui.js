@@ -141,7 +141,7 @@ var Shortcode_UI;
 			label: '',
 			shortcode_tag: '',
 			attrs: sui.models.ShortcodeAttributes,
-			shortcode_content: '',
+			inner_content: '',
 		},
 
 		/**
@@ -199,9 +199,7 @@ var Shortcode_UI;
 
 			} );
 			
-			if( temp_content = this.get( 'shortcode_content' ) ) {
-				content = temp_content.toString();
-			} 
+			content = this.get( 'inner_content' ).toString();
 
 			template = "[{{ shortcode }} {{ attributes }}]"
 
@@ -385,16 +383,15 @@ var Shortcode_UI;
 
 			var t = this;
 
-			if ( shortcode_content = this.model.get( 'shortcode_content' ) ) {
-				var viewObjName = 'suiContent';
-				var tmplName    = 'shortcode-ui-content';
+			// add UI for inner_content
+			var viewObjName = 'suiContent';
+			var tmplName    = 'shortcode-ui-content';
 
-				var view        = new sui.views[viewObjName]( { model: t.model } );
-				view.template   = wp.media.template( tmplName );
-				view.shortcode = t.model;
+			var view        = new sui.views[viewObjName]( { model: t.model } );
+			view.template   = wp.media.template( tmplName );
+			view.shortcode = t.model;
 
-				t.views.add( '.edit-shortcode-form-fields', view );
-			}
+			t.views.add( '.edit-shortcode-form-fields', view );
 			
 			this.model.get( 'attrs' ).each( function( attr ) {
 
@@ -464,8 +461,7 @@ var Shortcode_UI;
 		tagName: "div",
 
 		events: {
-			'click a.button-edit': 'editContent',
-			'click a.button-save': 'saveContent'
+			'keyup  textarea': 'updateValue',
 		},
 
 		render: function() {
@@ -476,26 +472,11 @@ var Shortcode_UI;
 		/** 
 		 * User wants to edit content
 		 */
-		editContent: function ( e ) {
-			e.preventDefault();
-			
-			$( '.content-edit-container' ).show();
-			$( '.content-display-container' ).hide();
+		updateValue: function ( e ) {
+			var $el = $(this.el).find( '#inner_content' );			
+			this.model.set( 'content', $el.val() );
 		},
 		
-		/**
-		 * save the content that was updated by user
-		 */
-		saveContent: function( e ) {
-			e.preventDefault();
-			var $el = $( '.content-edit' );
-			
-			this.model.set( 'shortcode_content', $el.val() );
-			$( '.content-edit-container' ).hide();
-			$( '.content-display-container' ).show().find( '.content-display' ).html( $el.val() );
-			
-		}
-
 	} );
 
 	/**
@@ -887,11 +868,11 @@ var Shortcode_UI;
 						);
 					}
 
-					if ( attr.get( 'attr' ) === 'content' && ( 'content' in options.shortcode ) ) {
-						attr.set( 'value', options.shortcode.content );
-					}
-
 				});
+				
+				if ( 'content' in options.shortcode ) {
+					shortcode.set( 'content', options.shortcode.content )
+				}
 
 				this.shortcode = shortcode;
 
