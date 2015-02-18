@@ -44,10 +44,6 @@ class Shortcake_Field_Color {
 				}
 				
 				if ( $attribute['type'] == 'color' ) {
-					wp_enqueue_script( 'wp-color-picker' );
-					wp_enqueue_style( 'wp-color-picker' );
-					
-					// Enqueue once only
 					return true;
 				}
 			}
