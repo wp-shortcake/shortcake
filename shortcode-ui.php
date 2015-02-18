@@ -22,6 +22,7 @@
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-field-attachment.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-field-color.php';
 
 add_action( 'init', 'shortcode_ui_load_textdomain' );
 
@@ -30,6 +31,7 @@ add_action( 'init', function() {
 	$shortcode_ui     = Shortcode_UI::get_instance();
 	$fields           = Shortcode_UI_Fields::get_instance();
 	$attachment_field = Shortcake_Field_Attachment::get_instance();
+	$color_field      = Shortcake_Field_Color::get_instance();
 
 }, 5 );
 
