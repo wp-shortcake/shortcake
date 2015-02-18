@@ -199,8 +199,8 @@ var Shortcode_UI;
 
 			} );
 			
-			content = this.get( 'inner_content' ).toString();
-
+			content = this.get( 'inner_content' );
+			
 			template = "[{{ shortcode }} {{ attributes }}]"
 
 			if ( content && content.length > 0 ) {
@@ -473,8 +473,8 @@ var Shortcode_UI;
 		 * User wants to edit content
 		 */
 		updateValue: function ( e ) {
-			var $el = $(this.el).find( '#inner_content' );			
-			this.model.set( 'content', $el.val() );
+			var $el = $(this.el).find( '#inner_content' );	
+			this.model.set( 'inner_content', $el.val() );
 		},
 		
 	} );
@@ -957,10 +957,7 @@ var Shortcode_UI;
 			}
 
 			if ( matches[3] ) {
-				var content = currentShortcode.get( 'attrs' ).findWhere( { attr: 'content' } );
-				if ( content ) {
-					content.set( 'value', matches[3] );
-				}
+				currentShortcode.set( 'content', matches[3] );
 			}
 
 			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media( {

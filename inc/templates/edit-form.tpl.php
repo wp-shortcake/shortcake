@@ -138,6 +138,6 @@
 <script type="text/html" id="tmpl-shortcode-ui-content">
 	<div class="field-block">
 		<label for="inner_content">Inner Content</label>
-		<textarea class="content-edit">{{ data.inner_content }}</textarea>
+		<textarea id="inner_content" class="content-edit">{{ data.inner_content }}</textarea>
 	</div>
 </script>
