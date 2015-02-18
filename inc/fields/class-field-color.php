@@ -48,8 +48,8 @@ class Shortcake_Field_Color {
 	 * Enqueue the color picker only when there's a color option used
 	 */
 	public function load_color_picker() {
-		
-		foreach( Shortcode_UI::get_shortcodes() as $shortcode ) {
+
+		foreach( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
 			if ( empty( $shortcode['attrs'] ) ) {
 				continue;
 			}
