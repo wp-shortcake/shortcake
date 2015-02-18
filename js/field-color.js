@@ -7,7 +7,7 @@
 		render: function() {
 			this.$el.html( this.template( this.model.toJSON() ) );
 			
-			jQuery(this.$el).find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
+			this.$el.find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
 				change: function() {
 					jQuery(this).trigger('keyup');
 				}
