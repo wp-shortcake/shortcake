@@ -134,20 +134,3 @@
 		<# } #>
 	</div>
 </script>
-
-<script type="text/html" id="tmpl-shortcode-ui-field-color">
-	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}" data-default-color="{{ data.value }}"/>
-		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
-		<# } #>
-	</div>
-	<script>
-		jQuery('[id="{{ data.attr }}"]').wpColorPicker({
-			change: function() {
-				jQuery(this).trigger('keyup');
-			}
-		});
-	</script>
-</script>

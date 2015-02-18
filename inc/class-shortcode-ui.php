@@ -94,9 +94,6 @@ class Shortcode_UI {
 
 		do_action( 'shortcode_ui_loaded_editor' );
 
-		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'wp-color-picker' );
-
 	}
 
 	/**
