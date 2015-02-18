@@ -869,9 +869,9 @@ var Shortcode_UI;
 					}
 
 				});
-				
-				if ( 'content' in options.shortcode ) {
-					shortcode.set( 'content', options.shortcode.content )
+
+				if ( options.shortcode.content ) {
+					shortcode.set( 'inner_content', options.shortcode.content )
 				}
 
 				this.shortcode = shortcode;
@@ -957,7 +957,7 @@ var Shortcode_UI;
 			}
 
 			if ( matches[3] ) {
-				currentShortcode.set( 'content', matches[3] );
+				currentShortcode.set( 'inner_content', matches[3] );
 			}
 
 			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media( {
