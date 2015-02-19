@@ -141,7 +141,7 @@ var Shortcode_UI;
 			label: '',
 			shortcode_tag: '',
 			attrs: sui.models.ShortcodeAttributes,
-			inner_content: '',
+			inner_content: 'false',
 		},
 
 		/**
@@ -153,7 +153,7 @@ var Shortcode_UI;
 			if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof sui.models.ShortcodeAttributes ) ) {
 				attributes.attrs = new sui.models.ShortcodeAttributes( attributes.attrs );
 			}
-
+			
 			return Backbone.Model.prototype.set.call(this, attributes, options);
 		},
 
@@ -199,7 +199,9 @@ var Shortcode_UI;
 
 			} );
 			
-			content = this.get( 'inner_content' );
+			if ( this.get( 'inner_content') != 'false' ) {
+				content = this.get( 'inner_content' );
+			}
 			
 			template = "[{{ shortcode }} {{ attributes }}]"
 
@@ -384,14 +386,16 @@ var Shortcode_UI;
 			var t = this;
 
 			// add UI for inner_content
-			var viewObjName = 'suiContent';
-			var tmplName    = 'shortcode-ui-content';
-
-			var view        = new sui.views[viewObjName]( { model: t.model } );
-			view.template   = wp.media.template( tmplName );
-			view.shortcode = t.model;
-
-			t.views.add( '.edit-shortcode-form-fields', view );
+			if ( this.model.get( 'inner_content') != 'false' ) {
+				var viewObjName = 'suiContent';
+				var tmplName    = 'shortcode-ui-content';
+	
+				var view        = new sui.views[viewObjName]( { model: t.model } );
+				view.template   = wp.media.template( tmplName );
+				view.shortcode = t.model;
+	
+				t.views.add( '.edit-shortcode-form-fields', view );
+			}
 			
 			this.model.get( 'attrs' ).each( function( attr ) {
 

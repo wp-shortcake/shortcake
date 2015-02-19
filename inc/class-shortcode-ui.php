@@ -38,7 +38,7 @@ class Shortcode_UI {
 			'label'             => '',
 			'attrs'             => array(),
 			'listItemImage'     => '',   // src or 'dashicons-' - used in insert list.
-			'inner_content'     => '',
+			'inner_content'     => 'false',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
