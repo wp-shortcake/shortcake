@@ -115,3 +115,5 @@ var TabbedView = Backbone.View.extend({
 		}
 	}
 });
+
+module.exports = TabbedView;

@@ -100,3 +100,5 @@ var ShortcodePreview = Backbone.View.extend({
 		return styles;
 	}
 });
+
+module.exports = ShortcodePreview;

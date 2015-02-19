@@ -1,11 +1,13 @@
 var Backbone = require('backbone');
+var ShortcodeAttribute = require('sui-models/shortcode-attribute');
 
+console.log( ShortcodeAttribute );
 
 /**
  * Shortcode Attributes collection.
  */
 var ShortcodeAttributes = Backbone.Collection.extend({
-	model : sui.models.ShortcodeAttribute,
+	model : ShortcodeAttribute,
 	//  Deep Clone.
 	clone : function() {
 		return new this.constructor(_.map(this.models, function(m) {

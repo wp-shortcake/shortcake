@@ -1,4 +1,4 @@
-var wp = rerquire('wp');
+var wp = require('wp');
 
 /**
  * Single edit shortcode content view.
@@ -9,9 +9,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 	initialize : function() {
 
 		var t = this;
-
 		this.model.get('attrs').each(function(attr) {
-
 			// Get the field settings from localization data.
 			var type = attr.get('type');
 
@@ -35,3 +33,5 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 	},
 
 });
+
+module.exports = EditShortcodeForm;

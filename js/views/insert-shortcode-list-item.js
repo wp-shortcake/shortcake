@@ -26,3 +26,5 @@ var InsertShortcodeListItem = wp.Backbone.View.extend({
 
 	}
 });
+
+module.exports = InsertShortcodeListItem;

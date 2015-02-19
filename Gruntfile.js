@@ -1,9 +1,8 @@
 module.exports = function( grunt ) {
 
 	'use strict';
-
+	var remapify = require('remapify');
 	var banner = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
-
 	// Project configuration
 	grunt.initConfig( {
 
@@ -34,34 +33,35 @@ module.exports = function( grunt ) {
 			}
 
 		},
-		
+
 		browserify : {
 			options: {
 				preBundleCB: function(b) {
+
 					b.plugin(remapify, [
 						{
 							cwd: 'js/models',
-							src: '*.js',
+							src: '**/*.js',
 							expose: 'sui-models'
 						},
 						{
 							cwd: 'js/controllers',
-							src: '*.js',
+							src: '**/*.js',
 							expose: 'sui-controllers'
 						},
 						{
 							cwd: 'js/collections',
-							src: '*.js',
+							src: '**/*.js',
 							expose: 'sui-collections'
 						},
 						{
 							cwd: 'js/views',
-							src: '*.js',
+							src: '**/*.js',
 							expose: 'sui-views'
 						},
 						{
 							cwd: 'js/utils',
-							src: '*.js',
+							src: '**/*.js',
 							expose: 'sui-utils'
 						}
 					]);
@@ -70,7 +70,7 @@ module.exports = function( grunt ) {
 			},
 			dist: {
 				files : {
-					'js/build/shortcode-ui.js' : ['js/**/*.js']
+					'js/build/shortcode-ui.js' : ['js/shortcode-ui.js', 'js/collections/*.js', 'js/controllers/*.js', 'js/models/*.js', 'js/utils/*.js', 'js/views/*.js']
 				},
 				options: {
 					transform: ['browserify-shim']
