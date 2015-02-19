@@ -35,12 +35,40 @@ module.exports = function( grunt ) {
 
 		},
 
+		addtextdomain: {
+		    options: {
+		        textdomain: 'shortcode-ui',    // Project text domain.
+		    },
+		    target: {
+		        files: {
+		            src: [ '*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!bin/**' ]
+		        }
+		    }
+		}, //addtextdomain
+
+		makepot: {
+		    target: {
+		        options: {
+		            domainPath: '/languages',
+		            mainFile: 'shortcode-ui.php',
+		            potFilename: 'shortcode-ui.pot',
+		            potHeaders: {
+		                poedit: true,
+		                'x-poedit-keywordslist': true
+		            },
+		            type: 'wp-plugin',
+		            updateTimestamp: true
+		        }
+		    }
+		}, //makepot
 	} );
 
 	grunt.loadNpmTasks('grunt-sass');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks("grunt-wp-i18n");
 
 	grunt.registerTask( 'default', ['sass' ] );
+	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 
 	grunt.util.linefeed = '\n';
 
