@@ -70,7 +70,7 @@ module.exports = function( grunt ) {
 			},
 			dist: {
 				files : {
-					'js/build/shortcode-ui.js' : ['js/shortcode-ui.js', 'js/collections/*.js', 'js/controllers/*.js', 'js/models/*.js', 'js/utils/*.js', 'js/views/*.js']
+					'js/build/shortcode-ui.js' : ['js/**/*.js', '!js/build/**']
 				},
 				options: {
 					transform: ['browserify-shim']

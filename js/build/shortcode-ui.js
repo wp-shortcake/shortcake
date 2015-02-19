@@ -520,9 +520,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 	initialize : function() {
 
 		var t = this;
-		var attributes = this.model.get('attrs');
-		console.log( attributes );
-		attributes.each(function(attr) {
+		this.model.get('attrs').each(function(attr) {
 			// Get the field settings from localization data.
 			var type = attr.get('type');
 
@@ -615,7 +613,7 @@ module.exports = InsertShortcodeList;
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
 	MediaController = require('./../controllers/media-controller.js'),
-	Shortcode_UI = require('./shortcode-ui.js');
+	Shortcode_UI = require('./shortcode-ui');
 
 var shortcodeFrame = wp.media.view.MediaFrame.Post;
 wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
@@ -720,7 +718,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../controllers/media-controller.js":3,"./shortcode-ui.js":15}],14:[function(require,module,exports){
+},{"./../controllers/media-controller.js":3,"./shortcode-ui":15}],14:[function(require,module,exports){
 (function (global){
 var Backbonen = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
 	Dom = require('./../utils/dom.js')
@@ -1053,4 +1051,4 @@ var TabbedView = Backbone.View.extend({
 
 module.exports = TabbedView;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[6,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]);
