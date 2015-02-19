@@ -137,7 +137,7 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-content">
 	<div class="field-block">
-		<label for="inner_content">Inner Content</label>
+		<label for="inner_content"><?php esc_html_e( 'Inner Content', 'shortcode-ui' ); ?></label>
 		<textarea id="inner_content" class="content-edit">{{ data.inner_content }}</textarea>
 	</div>
 </script>
