@@ -476,7 +476,7 @@ var Shortcode_UI;
 			self.renderIFrame({ body: wp.mce.View.prototype.loadingPlaceholder(), head: stylesheets });
 
 			this.fetchShortcode( function( result ) {
-				self.renderIFrame({ body: result, head: stylesheets });
+				self.renderIFrame({ body: result.data, head: stylesheets });
 			});
 
 			return this;
