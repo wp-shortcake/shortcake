@@ -93,7 +93,6 @@ module.exports = ShortcodeAttribute;
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 var ShortcodeAttributes = require('./../collections/shortcode-attributes.js');
-var ShortcodeAttributeModel = require('./shortcode-attribute.js');
 
 var Shortcode = Backbone.Model.extend({
 
@@ -109,8 +108,8 @@ var Shortcode = Backbone.Model.extend({
 	 */
 	set: function( attributes, options ) {
 
-		if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof ShortcodeAttributeModel ) ) {
-			attributes.attrs = new ShortcodeAttributeModel( attributes.attrs );
+		if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof ShortcodeAttributes ) ) {
+			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
 
 		return Backbone.Model.prototype.set.call(this, attributes, options);
@@ -122,7 +121,7 @@ var Shortcode = Backbone.Model.extend({
 	 */
 	toJSON: function( options ) {
 		options = Backbone.Model.prototype.toJSON.call(this, options);
-		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributeModel ) ) {
+		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributes ) ) {
 			options.attrs = options.attrs.toJSON();
 		}
 		return options;
@@ -182,16 +181,18 @@ var Shortcode = Backbone.Model.extend({
 module.exports = Shortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcode-attributes.js":1,"./shortcode-attribute.js":4}],6:[function(require,module,exports){
+},{"./../collections/shortcode-attributes.js":1}],6:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
 	wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
-	Shortcodes = require('./collections/shortcodes.js');
+	Shortcodes = require('./collections/shortcodes.js'),
+	shortcodeViewConstructor = require('./utils/shortcode-view-constructor.js')
+
 	
 sui = {};
 
 jQuery(document).ready(function(){
-
+	console.log( shortcodeUIData.shortcodes );
 	var shortcodes = new Shortcodes( shortcodeUIData.shortcodes )
 	sui.shortcodes = shortcodes;
 	
@@ -209,7 +210,7 @@ jQuery(document).ready(function(){
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./collections/shortcodes.js":2}],7:[function(require,module,exports){
+},{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":8}],7:[function(require,module,exports){
 /**
  * DOM manipulation utilities.
  */
@@ -245,7 +246,7 @@ var Dom = {
 
 			iframe.onload = function() {
 				if (options.write !== false) {
-					sui.dom.IFrame.write(iframe, options);
+					Dom.IFrame.write(iframe, options);
 				}
 			};
 
@@ -277,7 +278,7 @@ var Dom = {
 			}
 
 			doc.open();
-			doc.write(sui.dom.IFrame.template(params));
+			doc.write(Dom.IFrame.template(params));
 			doc.close();
 		},
 
@@ -510,6 +511,7 @@ module.exports = EditAttributeField;
 },{}],10:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+var EditAttributeField = require('./edit-attribute-field');
 
 /**
  * Single edit shortcode content view.
@@ -517,7 +519,7 @@ var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefin
 var EditShortcodeForm = wp.Backbone.View.extend({
 	template : wp.template('shortcode-default-edit-form'),
 
-	initialize : function() {
+	initialize : function(options) {
 
 		var t = this;
 		this.model.get('attrs').each(function(attr) {
@@ -530,8 +532,11 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 			var viewObjName = shortcodeUIFieldData[type].view;
 			var tmplName = shortcodeUIFieldData[type].template;
+			
+			//@todo: figure out a way to load the view dynamically. 
+			//var tmplView = require('sui-views/' + viewObjName);
 
-			var view = new sui.views[viewObjName]({
+			var view = new EditAttributeField({
 				model : attr
 			});
 			view.template = wp.media.template(tmplName);
@@ -547,7 +552,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 module.exports = EditShortcodeForm;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],11:[function(require,module,exports){
+},{"./edit-attribute-field":9}],11:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
 

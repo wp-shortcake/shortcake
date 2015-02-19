@@ -33,7 +33,7 @@ var Dom = {
 
 			iframe.onload = function() {
 				if (options.write !== false) {
-					sui.dom.IFrame.write(iframe, options);
+					Dom.IFrame.write(iframe, options);
 				}
 			};
 
@@ -65,7 +65,7 @@ var Dom = {
 			}
 
 			doc.open();
-			doc.write(sui.dom.IFrame.template(params));
+			doc.write(Dom.IFrame.template(params));
 			doc.close();
 		},
 

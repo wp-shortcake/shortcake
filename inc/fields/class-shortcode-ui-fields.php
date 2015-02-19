@@ -7,7 +7,7 @@ class Shortcode_UI_Fields {
 	// Default Field Settings.
 	private $field_defaults = array(
 		'template' => 'shortcode-ui-field-text',
-		'view'     => 'editAttributeField',
+		'view'     => 'edit-attribute-field',
 	);
 
 	// Field Settings.

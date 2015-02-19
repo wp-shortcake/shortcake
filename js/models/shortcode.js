@@ -1,6 +1,5 @@
 var Backbone = require('backbone');
 var ShortcodeAttributes = require('sui-collections/shortcode-attributes');
-var ShortcodeAttributeModel = require('sui-models/shortcode-attribute');
 
 var Shortcode = Backbone.Model.extend({
 
@@ -16,8 +15,8 @@ var Shortcode = Backbone.Model.extend({
 	 */
 	set: function( attributes, options ) {
 
-		if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof ShortcodeAttributeModel ) ) {
-			attributes.attrs = new ShortcodeAttributeModel( attributes.attrs );
+		if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof ShortcodeAttributes ) ) {
+			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
 
 		return Backbone.Model.prototype.set.call(this, attributes, options);
@@ -29,7 +28,7 @@ var Shortcode = Backbone.Model.extend({
 	 */
 	toJSON: function( options ) {
 		options = Backbone.Model.prototype.toJSON.call(this, options);
-		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributeModel ) ) {
+		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributes ) ) {
 			options.attrs = options.attrs.toJSON();
 		}
 		return options;

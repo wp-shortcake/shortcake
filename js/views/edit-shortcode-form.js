@@ -1,4 +1,5 @@
 var wp = require('wp');
+var EditAttributeField = require('./edit-attribute-field');
 
 /**
  * Single edit shortcode content view.
@@ -6,7 +7,7 @@ var wp = require('wp');
 var EditShortcodeForm = wp.Backbone.View.extend({
 	template : wp.template('shortcode-default-edit-form'),
 
-	initialize : function() {
+	initialize : function(options) {
 
 		var t = this;
 		this.model.get('attrs').each(function(attr) {
@@ -19,8 +20,11 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 			var viewObjName = shortcodeUIFieldData[type].view;
 			var tmplName = shortcodeUIFieldData[type].template;
+			
+			//@todo: figure out a way to load the view dynamically. 
+			//var tmplView = require('sui-views/' + viewObjName);
 
-			var view = new sui.views[viewObjName]({
+			var view = new EditAttributeField({
 				model : attr
 			});
 			view.template = wp.media.template(tmplName);
