@@ -44,8 +44,8 @@ class Shortcake_Field_Attachment {
 		wp_localize_script( 'shortcake-field-attachment', 'ShorcakeImageFieldData', array(
 			'defaultArgs' => array(
 				'libraryType' => null, // array of mime types. eg image, image/jpg, application, application/pdf.
-				'addButton'   => __( 'Select Attachment', 'shortcake' ),
-				'frameTitle'  => __( 'Select Attachment', 'shortcake' ),
+				'addButton'   => __( 'Select Attachment', 'shortcode-ui' ),
+				'frameTitle'  => __( 'Select Attachment', 'shortcode-ui' ),
 			),
 		) );
 	}
