@@ -15,20 +15,6 @@
     <div class="edit-shortcode-tabs-content" data-role="tab-content"></div>
 </script>
 
-<script type="text/html" id="tmpl-iframe-doc">
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-            {{{ data.head }}}
-        </head>
-        <body class="{{{ data.body_classes }}}">
-            {{{ data.body }}}
-        </body>
-    </html>
-</script>
-
 <script type="text/html" id="tmpl-shortcode-ui-field-text">
 	<div class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
