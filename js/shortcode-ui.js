@@ -101,7 +101,7 @@ var Shortcode_UI;
 				// Handle content attribute as a special case.
 				if ( attr.get( 'attr' ) === 'content' ) {
 					content = attr.get( 'value' );
-					content = switchEditors.pre_wpautop( content );
+					content = sui.utils.stripParagraphTags( content );
 				} else {
 					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 				}
@@ -784,6 +784,16 @@ var Shortcode_UI;
 	});
 
 	/**
+	 * Strip 'p' and 'br' tags, replace with line breaks.
+	 * Reverse the effect of the WP editor autop functionality.
+	 */
+	sui.utils.stripParagraphTags = function( content ) {
+		content = content.replace( /<p[^>]*>/g, '' ).replace( /<\/p>/g, '\r\r' );
+		content = content.replace( /<br\s?\/?>/g, '\r' );
+		return content;
+	}
+
+	/**
 	 * Generic shortcode mce view constructor.
 	 * This is cloned and used by each shortcode when registering a view.
 	 */
@@ -903,7 +913,7 @@ var Shortcode_UI;
 			if ( matches[3] ) {
 				var content = currentShortcode.get( 'attrs' ).findWhere( { attr: 'content' } );
 				if ( content ) {
-					content.set( 'value', switchEditors.pre_wpautop( matches[3] ) );
+					content.set( 'value', sui.utils.stripParagraphTags( matches[3] ) );
 				}
 			}
 
