@@ -101,6 +101,7 @@ var Shortcode_UI;
 				// Handle content attribute as a special case.
 				if ( attr.get( 'attr' ) === 'content' ) {
 					content = attr.get( 'value' );
+					content = switchEditors._wp_Nop( content );
 				} else {
 					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 				}
@@ -902,7 +903,7 @@ var Shortcode_UI;
 			if ( matches[3] ) {
 				var content = currentShortcode.get( 'attrs' ).findWhere( { attr: 'content' } );
 				if ( content ) {
-					content.set( 'value', matches[3] );
+					content.set( 'value', switchEditors._wp_Nop( matches[3] ) );
 				}
 			}
 
