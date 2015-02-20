@@ -29,7 +29,11 @@ var EditAttributeField = Backbone.View.extend( {
 	 */
 	updateValue: function( e ) {
 		var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
-		this.model.set( 'value', $el.val() );
+		if ( 'checkbox' === this.model.attributes.type ) {
+			this.model.set( 'value', $el.is( ':checked' ) );
+		} else {
+			this.model.set( 'value', $el.val() );
+		}
 	},
 
 } );

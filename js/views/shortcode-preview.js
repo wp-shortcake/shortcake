@@ -1,12 +1,21 @@
-var Backbonen = require('backbone'),
-	Dom = require('sui-utils/dom')
+var Backbonen = require('backbone');
 
-
+/**
+ * Preview of rendered shortcode.
+ * Asynchronously fetches rendered shortcode content from WordPress.
+ * Displayed in an iframe to isolate editor styles.
+ *
+ * @class sui.views.ShortcodePreview
+ * @constructor
+ * @params options
+ * @params options.model {sui.models.Shortcode} Requires a valid shortcode.
+ */
 var ShortcodePreview = Backbone.View.extend({
 	initialize: function( options ) {
-		this.stylesheets = this.getEditorStyles().join( "\n" );
 
-		this.iframe = false;
+		this.head    = this.getEditorStyles().join( "\n" );
+		this.loading = wp.mce.View.prototype.loadingPlaceholder();
+
 	},
 
 	/**
@@ -15,13 +24,22 @@ var ShortcodePreview = Backbone.View.extend({
 	 * @returns {ShortcodePreview}
 	 */
 	render: function() {
+
 		var self = this;
-		var stylesheets = this.stylesheets;
 
-		self.renderIFrame({ body: wp.mce.View.prototype.loadingPlaceholder(), head: stylesheets });
+		// Render loading iFrame.
+		this.renderIFrame({
+			head: self.head,
+			body: self.loading,
+		});
 
-		this.fetchShortcode( function( result ) {
-			self.renderIFrame({ body: result, head: stylesheets });
+		// Fetch shortcode preview.
+		// Render iFrame with shortcode preview.
+		this.fetchShortcode( function( response ) {
+			self.renderIFrame({
+				head: self.head,
+				body: response,
+			});
 		});
 
 		return this;
@@ -34,24 +52,80 @@ var ShortcodePreview = Backbone.View.extend({
 	 * @param params
 	 */
 	renderIFrame: function( params ) {
-		var iframe = false;
 
-		_.defaults( params, { 'body_classes': "shortcake shortcake-preview" });
+		var self = this, $iframe, resize;
 
-		if ( iframe = this.iframe ) {
-			$( iframe ).remove();
+		_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
+
+		$iframe = $( '<iframe/>', {
+			src: tinymce.Env.ie ? 'javascript:""' : '',
+			frameBorder: '0',
+			allowTransparency: 'true',
+			scrolling: 'no',
+			style: "width: 100%; display: block",
+		} );
+
+		/**
+		 * Render preview in iFrame once loaded.
+		 * This is required because you can't write to
+		 * an iFrame contents before it exists.
+		 */
+		$iframe.load( function() {
+
+			self.autoresizeIframe( $(this) );
+
+			var head = $(this).contents().find('head'),
+			    body = $(this).contents().find('body');
+
+			head.html( params.head );
+			body.html( params.body );
+			body.addClass( params.body_classes );
+
+		} );
+
+		this.$el.html( $iframe );
+
+	},
+
+	/**
+	 * Watch for mutations in iFrame content.
+	 * resize iFrame height on change.
+	 *
+	 * @param  jQuery object $iframe
+	 */
+	autoresizeIframe: function( $iframe ) {
+
+		var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+
+		// Resize iFrame to size inner document.
+		var resize = function() {
+			$iframe.height( $iframe.contents().find('html').height() );
+		};
+
+		resize();
+
+		if ( MutationObserver ) {
+
+			var observer = new MutationObserver( function() {
+				resize();
+				$iframe.contents().find('img,link').load( resize );
+			} );
+
+			observer.observe(
+				$iframe.contents()[0],
+				{ attributes: true, childList: true, subtree: true }
+			);
+
+		} else {
+
+			for ( i = 1; i < 6; i++ ) {
+				setTimeout( resize, i * 700 );
+			}
+
 		}
 
-		iframe = this.iframe = Dom.IFrame.create( this.$el, params );
-
-		Dom.IFrame.observe( iframe, _.debounce( function() {
-			var doc;
-
-			if ( doc = ( iframe.contentWindow && iframe.contentWindow.document ) ) {
-				$( iframe ).height( $( doc.body ).height() );
-			}
-		}, 100 ) );
 	},
+
 
 	/**
 	 * Makes an AJAX call to the server to render the shortcode based on user supplied attributes. Server-side
@@ -62,19 +136,17 @@ var ShortcodePreview = Backbone.View.extend({
 	 * @returns {String} Rendered shortcode markup (HTML).
 	 */
 	fetchShortcode: function( callback ) {
-		var self = this;
-		var data;
-		var shortcode = this.model;
 
-		// Fetch shortcode markup using template tokens.
-		data = {
-			action: 'do_shortcode',
-			post_id: $('#post_ID').val(),
-			shortcode: shortcode.formatShortcode(),
-			nonce: shortcodeUIData.nonces.preview
-		};
+		wp.ajax.post( 'do_shortcode', {
+			post_id: $( '#post_ID' ).val(),
+			shortcode: this.model.formatShortcode(),
+			nonce: shortcodeUIData.nonces.preview,
+		}).done( function( response ) {
+			callback( response );
+		}).fail( function() {
+			callback( '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>' );
+		} );
 
-		$.post( ajaxurl, data, callback );
 	},
 
 	/**

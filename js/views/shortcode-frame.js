@@ -1,6 +1,7 @@
 var wp = require('wp'),
 	MediaController = require('sui-controllers/media-controller'),
-	Shortcode_UI = require('./shortcode-ui');
+	Shortcode_UI = require('./shortcode-ui'),
+	Toolbar = require('./toolbar');
 
 var shortcodeFrame = wp.media.view.MediaFrame.Post;
 wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
@@ -59,7 +60,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 			text = shortcodeUIData.strings.media_frame_toolbar_update_label;
 		}
 
-		toolbar.view = new  wp.media.view.Toolbar( {
+		toolbar.view = new  Toolbar( {
 			controller : this,
 			items: {
 				insert: {

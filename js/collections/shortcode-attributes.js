@@ -1,8 +1,6 @@
 var Backbone = require('backbone');
 var ShortcodeAttribute = require('sui-models/shortcode-attribute');
 
-console.log( ShortcodeAttribute );
-
 /**
  * Shortcode Attributes collection.
  */

@@ -33,7 +33,9 @@ add_action( 'init', function() {
 
 		<section class="pullquote">
 			<?php echo esc_html( $content ); ?><br/>
-			<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
+			<?php if ( ! empty( $attr['source'] ) ) : ?>
+				<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
+			<?php endif; ?>
 		</section>
 
 		<?php
@@ -70,6 +72,7 @@ add_action( 'init', function() {
 					'attr'        => 'source',
 					'type'        => 'text',
 					'placeholder' => 'Firstname Lastname',
+					'description' => 'Optional',
 				),
 			),
 		)

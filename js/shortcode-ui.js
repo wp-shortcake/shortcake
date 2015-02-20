@@ -7,7 +7,6 @@ var Backbone = require('backbone'),
 sui = {};
 
 jQuery(document).ready(function(){
-	console.log( shortcodeUIData.shortcodes );
 	var shortcodes = new Shortcodes( shortcodeUIData.shortcodes )
 	sui.shortcodes = shortcodes;
 	
@@ -21,5 +20,4 @@ jQuery(document).ready(function(){
 			);
 		}
 	} );
-
 });
