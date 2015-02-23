@@ -3,6 +3,8 @@
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 var ShortcodeAttribute = require('./../models/shortcode-attribute.js');
 
+sui = require('./../utils/sui.js');
+
 /**
  * Shortcode Attributes collection.
  */
@@ -16,12 +18,14 @@ var ShortcodeAttributes = Backbone.Collection.extend({
 	}
 });
 
+sui.collections.ShortcodeAttributes = ShortcodeAttributes;
 module.exports = ShortcodeAttributes;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../models/shortcode-attribute.js":4}],2:[function(require,module,exports){
+},{"./../models/shortcode-attribute.js":4,"./../utils/sui.js":9}],2:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 var Shortcode = require('./../models/shortcode.js');
+sui = require('./../utils/sui.js');
 
 
 // Shortcode Collection
@@ -29,12 +33,14 @@ var Shortcodes = Backbone.Collection.extend({
 	model : Shortcode
 });
 
+sui.collections.Shortcodes = Shortcodes;
 module.exports = Shortcodes;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../models/shortcode.js":5}],3:[function(require,module,exports){
+},{"./../models/shortcode.js":5,"./../utils/sui.js":9}],3:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+sui = require('./../utils/sui.js');
 
 var MediaController = wp.media.controller.State.extend({
 
@@ -71,11 +77,13 @@ var MediaController = wp.media.controller.State.extend({
 
 	});
 
+sui.controllers.MediaController = MediaController;
 module.exports = MediaController;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],4:[function(require,module,exports){
+},{"./../utils/sui.js":9}],4:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+sui = require('./../utils/sui.js');
 
 var ShortcodeAttribute = Backbone.Model.extend({
 	defaults: {
@@ -87,12 +95,14 @@ var ShortcodeAttribute = Backbone.Model.extend({
 	},
 });
 
+sui.models.ShortcodeAttribute = ShortcodeAttribute;
 module.exports = ShortcodeAttribute;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
+},{"./../utils/sui.js":9}],5:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 var ShortcodeAttributes = require('./../collections/shortcode-attributes.js');
+sui = require('./../utils/sui.js');
 
 var Shortcode = Backbone.Model.extend({
 
@@ -178,18 +188,20 @@ var Shortcode = Backbone.Model.extend({
 
 });
 
+sui.models.Shortcode = Shortcode;
 module.exports = Shortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcode-attributes.js":1}],6:[function(require,module,exports){
+},{"./../collections/shortcode-attributes.js":1,"./../utils/sui.js":9}],6:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
 	wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
 	Shortcodes = require('./collections/shortcodes.js'),
-	shortcodeViewConstructor = require('./utils/shortcode-view-constructor.js')
+	shortcodeViewConstructor = require('./utils/shortcode-view-constructor.js');
 
-	
-sui = {};
+sui = require('./utils/sui.js');
+
+window.Shortcode_UI = sui;
 
 jQuery(document).ready(function(){
 	var shortcodes = new Shortcodes( shortcodeUIData.shortcodes )
@@ -207,7 +219,7 @@ jQuery(document).ready(function(){
 	} );
 });
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":8}],7:[function(require,module,exports){
+},{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":8,"./utils/sui.js":9}],7:[function(require,module,exports){
 /**
  * DOM manipulation utilities.
  */
@@ -458,12 +470,24 @@ var shortcodeViewConstructor = {
 
 };
 
+sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
 module.exports = shortcodeViewConstructor;
 },{}],9:[function(require,module,exports){
+sui = {
+	collections: {},
+	controllers: {},
+	models: {},
+	views: {},
+	utils:{}
+};
+
+module.exports = sui;
+},{}],10:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+sui = require('./../utils/sui.js');
 
-var EditAttributeField = Backbone.View.extend( {
+var editAttributeField = Backbone.View.extend( {
 
 	tagName: "div",
 
@@ -501,11 +525,13 @@ var EditAttributeField = Backbone.View.extend( {
 
 } );
 
-module.exports = EditAttributeField;
+sui.views.editAttributeField = editAttributeField;
+module.exports = editAttributeField;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{"./../utils/sui.js":9}],11:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+sui = require('./../utils/sui.js');
 
 /**
  * Single edit shortcode content view.
@@ -527,12 +553,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			var viewObjName = shortcodeUIFieldData[type].view;
 			var tmplName = shortcodeUIFieldData[type].template;
 			
-			//@todo: figure out a way to load the view dynamically. 
-			var tmplView = require('./' + viewObjName);
-
-			var view = new tmplView({
-				model : attr
-			});
+			var view        = new sui.views[viewObjName]( { model: attr } );
 			view.template = wp.media.template(tmplName);
 			view.shortcode = t.model;
 
@@ -544,16 +565,18 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 });
 
+sui.views.EditShortcodeForm = EditShortcodeForm;
 module.exports = EditShortcodeForm;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],11:[function(require,module,exports){
+},{"./../utils/sui.js":9}],12:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+sui = require('./../utils/sui.js');
 
 /**
  * Single shortcode list item view.
  */
-var InsertShortcodeListItem = wp.Backbone.View.extend({
+var insertShortcodeListItem = wp.Backbone.View.extend({
 
 	tagName : 'li',
 	template : wp.template('add-shortcode-list-item'),
@@ -577,14 +600,16 @@ var InsertShortcodeListItem = wp.Backbone.View.extend({
 	}
 });
 
-module.exports = InsertShortcodeListItem;
+sui.views.insertShortcodeList = insertShortcodeListItem;
+module.exports = insertShortcodeListItem;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{"./../utils/sui.js":9}],13:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
-var InsertShortcodeListItem = require('./insert-shortcode-list-item.js');
+var insertShortcodeListItem = require('./insert-shortcode-list-item.js');
+sui = require('./../utils/sui.js');
 
-var InsertShortcodeList = wp.Backbone.View.extend({
+var insertShortcodeList = wp.Backbone.View.extend({
 
 	tagName : 'div',
 	template : wp.template('add-shortcode-list'),
@@ -597,7 +622,7 @@ var InsertShortcodeList = wp.Backbone.View.extend({
 		t.options.shortcodes = options.shortcodes;
 
 		t.options.shortcodes.each(function(shortcode) {
-			t.views.add('ul', new InsertShortcodeListItem({
+			t.views.add('ul', new insertShortcodeListItem({
 				model : shortcode
 			}));
 		});
@@ -606,14 +631,17 @@ var InsertShortcodeList = wp.Backbone.View.extend({
 
 });
 
-module.exports = InsertShortcodeList;
+sui.views.InsertShortcodeList = insertShortcodeList;
+module.exports = insertShortcodeList;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./insert-shortcode-list-item.js":11}],13:[function(require,module,exports){
+},{"./../utils/sui.js":9,"./insert-shortcode-list-item.js":12}],14:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
 	MediaController = require('./../controllers/media-controller.js'),
 	Shortcode_UI = require('./shortcode-ui'),
 	Toolbar = require('./toolbar');
+
+sui = require('./../utils/sui.js');
 
 var shortcodeFrame = wp.media.view.MediaFrame.Post;
 wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
@@ -718,9 +746,11 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../controllers/media-controller.js":3,"./shortcode-ui":15,"./toolbar":17}],14:[function(require,module,exports){
+},{"./../controllers/media-controller.js":3,"./../utils/sui.js":9,"./shortcode-ui":16,"./toolbar":18}],15:[function(require,module,exports){
 (function (global){
 var Backbonen = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+
+sui = require('./../utils/sui.js');
 
 /**
  * Preview of rendered shortcode.
@@ -895,17 +925,20 @@ var ShortcodePreview = Backbone.View.extend({
 	}
 });
 
+sui.views.ShortcodePreview = ShortcodePreview;
 module.exports = ShortcodePreview;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],15:[function(require,module,exports){
+},{"./../utils/sui.js":9}],16:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
-	InsertShortcodeList = require('./insert-shortcode-list.js'),
+	insertShortcodeList = require('./insert-shortcode-list.js'),
 	TabbedView = require('./tabbed-view.js'),
 	ShortcodePreview = require('./shortcode-preview.js'),
 	EditShortcodeForm = require('./edit-shortcode-form.js')
 	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+
+sui = require('./../utils/sui.js');
 
 var Shortcode_UI = Backbone.View.extend({
 	events: {
@@ -937,7 +970,7 @@ var Shortcode_UI = Backbone.View.extend({
 		this.views.unset();
 		this.views.add(
 			'',
-			new InsertShortcodeList( { shortcodes: sui.shortcodes } )
+			new insertShortcodeList( { shortcodes: sui.shortcodes } )
 		);
 	},
 
@@ -998,12 +1031,15 @@ var Shortcode_UI = Backbone.View.extend({
 
 });
 
+sui.views.Shortcode_UI = Shortcode_UI;
 module.exports = Shortcode_UI;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./edit-shortcode-form.js":10,"./insert-shortcode-list.js":12,"./shortcode-preview.js":14,"./tabbed-view.js":16}],16:[function(require,module,exports){
+},{"./../utils/sui.js":9,"./edit-shortcode-form.js":11,"./insert-shortcode-list.js":13,"./shortcode-preview.js":15,"./tabbed-view.js":17}],17:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+
+sui = require('./../utils/sui.js');
 
 /**
  * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with
@@ -1121,11 +1157,14 @@ var TabbedView = Backbone.View.extend({
 	}
 });
 
+sui.views.TabbedView = TabbedView;
 module.exports = TabbedView;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{"./../utils/sui.js":9}],18:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+
+sui = require('./../utils/sui.js');
 
 /**
  * sui Toolbar view that extends wp.media.view.Toolbar
@@ -1150,6 +1189,7 @@ var Toolbar = wp.media.view.Toolbar.extend({
 	}
 });
 
+sui.views.Toolbar = Toolbar;
 module.exports = Toolbar;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]);
+},{"./../utils/sui.js":9}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]);

@@ -1,5 +1,7 @@
 var wp = require('wp');
 
+sui = require('sui-utils/sui');
+
 /**
  * sui Toolbar view that extends wp.media.view.Toolbar
  * to define cusotm refresh method
@@ -23,4 +25,5 @@ var Toolbar = wp.media.view.Toolbar.extend({
 	}
 });
 
+sui.views.Toolbar = Toolbar;
 module.exports = Toolbar;

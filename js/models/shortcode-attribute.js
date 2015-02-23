@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+sui = require('sui-utils/sui');
 
 var ShortcodeAttribute = Backbone.Model.extend({
 	defaults: {
@@ -10,4 +11,5 @@ var ShortcodeAttribute = Backbone.Model.extend({
 	},
 });
 
+sui.models.ShortcodeAttribute = ShortcodeAttribute;
 module.exports = ShortcodeAttribute;

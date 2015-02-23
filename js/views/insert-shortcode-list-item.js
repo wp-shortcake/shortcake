@@ -1,9 +1,10 @@
 var wp = require('wp');
+sui = require('sui-utils/sui');
 
 /**
  * Single shortcode list item view.
  */
-var InsertShortcodeListItem = wp.Backbone.View.extend({
+var insertShortcodeListItem = wp.Backbone.View.extend({
 
 	tagName : 'li',
 	template : wp.template('add-shortcode-list-item'),
@@ -27,4 +28,5 @@ var InsertShortcodeListItem = wp.Backbone.View.extend({
 	}
 });
 
-module.exports = InsertShortcodeListItem;
+sui.views.insertShortcodeList = insertShortcodeListItem;
+module.exports = insertShortcodeListItem;

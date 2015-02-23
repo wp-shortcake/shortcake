@@ -3,6 +3,8 @@ var wp = require('wp'),
 	Shortcode_UI = require('./shortcode-ui'),
 	Toolbar = require('./toolbar');
 
+sui = require('sui-utils/sui');
+
 var shortcodeFrame = wp.media.view.MediaFrame.Post;
 wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 

@@ -1,5 +1,7 @@
 var Backbonen = require('backbone');
 
+sui = require('sui-utils/sui');
+
 /**
  * Preview of rendered shortcode.
  * Asynchronously fetches rendered shortcode content from WordPress.
@@ -173,4 +175,5 @@ var ShortcodePreview = Backbone.View.extend({
 	}
 });
 
+sui.views.ShortcodePreview = ShortcodePreview;
 module.exports = ShortcodePreview;

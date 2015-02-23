@@ -1,7 +1,8 @@
 var wp = require('wp');
-var InsertShortcodeListItem = require('sui-views/insert-shortcode-list-item');
+var insertShortcodeListItem = require('sui-views/insert-shortcode-list-item');
+sui = require('sui-utils/sui');
 
-var InsertShortcodeList = wp.Backbone.View.extend({
+var insertShortcodeList = wp.Backbone.View.extend({
 
 	tagName : 'div',
 	template : wp.template('add-shortcode-list'),
@@ -14,7 +15,7 @@ var InsertShortcodeList = wp.Backbone.View.extend({
 		t.options.shortcodes = options.shortcodes;
 
 		t.options.shortcodes.each(function(shortcode) {
-			t.views.add('ul', new InsertShortcodeListItem({
+			t.views.add('ul', new insertShortcodeListItem({
 				model : shortcode
 			}));
 		});
@@ -23,4 +24,5 @@ var InsertShortcodeList = wp.Backbone.View.extend({
 
 });
 
-module.exports = InsertShortcodeList;
+sui.views.InsertShortcodeList = insertShortcodeList;
+module.exports = insertShortcodeList;

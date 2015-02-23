@@ -1,5 +1,7 @@
 var Backbone = require('backbone');
 
+sui = require('sui-utils/sui');
+
 /**
  * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with
  * views for associated content are passed to initialize the tabbed view.
@@ -116,4 +118,5 @@ var TabbedView = Backbone.View.extend({
 	}
 });
 
+sui.views.TabbedView = TabbedView;
 module.exports = TabbedView;

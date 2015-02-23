@@ -1,10 +1,11 @@
 var Backbone = require('backbone'),
 	wp = require('wp'),
 	Shortcodes = require('sui-collections/shortcodes'),
-	shortcodeViewConstructor = require('sui-utils/shortcode-view-constructor')
+	shortcodeViewConstructor = require('sui-utils/shortcode-view-constructor');
 
-	
-sui = {};
+sui = require('sui-utils/sui');
+
+window.Shortcode_UI = sui;
 
 jQuery(document).ready(function(){
 	var shortcodes = new Shortcodes( shortcodeUIData.shortcodes )

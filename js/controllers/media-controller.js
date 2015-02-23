@@ -1,4 +1,5 @@
 var wp = require('wp');
+sui = require('sui-utils/sui');
 
 var MediaController = wp.media.controller.State.extend({
 
@@ -35,4 +36,5 @@ var MediaController = wp.media.controller.State.extend({
 
 	});
 
+sui.controllers.MediaController = MediaController;
 module.exports = MediaController;

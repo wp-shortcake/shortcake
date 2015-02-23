@@ -1,9 +1,11 @@
 var Backbone = require('backbone'),
-	InsertShortcodeList = require('sui-views/insert-shortcode-list'),
+	insertShortcodeList = require('sui-views/insert-shortcode-list'),
 	TabbedView = require('sui-views/tabbed-view'),
 	ShortcodePreview = require('sui-views/shortcode-preview'),
 	EditShortcodeForm = require('sui-views/edit-shortcode-form')
 	$ = require('jquery');
+
+sui = require('sui-utils/sui');
 
 var Shortcode_UI = Backbone.View.extend({
 	events: {
@@ -35,7 +37,7 @@ var Shortcode_UI = Backbone.View.extend({
 		this.views.unset();
 		this.views.add(
 			'',
-			new InsertShortcodeList( { shortcodes: sui.shortcodes } )
+			new insertShortcodeList( { shortcodes: sui.shortcodes } )
 		);
 	},
 
@@ -96,4 +98,5 @@ var Shortcode_UI = Backbone.View.extend({
 
 });
 
+sui.views.Shortcode_UI = Shortcode_UI;
 module.exports = Shortcode_UI;

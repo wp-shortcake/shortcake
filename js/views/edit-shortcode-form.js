@@ -1,4 +1,5 @@
 var wp = require('wp');
+sui = require('sui-utils/sui');
 
 /**
  * Single edit shortcode content view.
@@ -20,12 +21,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			var viewObjName = shortcodeUIFieldData[type].view;
 			var tmplName = shortcodeUIFieldData[type].template;
 			
-			//@todo: figure out a way to load the view dynamically. 
-			var tmplView = require('./' + viewObjName);
-
-			var view = new tmplView({
-				model : attr
-			});
+			var view        = new sui.views[viewObjName]( { model: attr } );
 			view.template = wp.media.template(tmplName);
 			view.shortcode = t.model;
 
@@ -37,4 +33,5 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 });
 
+sui.views.EditShortcodeForm = EditShortcodeForm;
 module.exports = EditShortcodeForm;

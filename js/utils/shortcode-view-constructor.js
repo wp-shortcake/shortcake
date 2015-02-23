@@ -140,4 +140,5 @@ var shortcodeViewConstructor = {
 
 };
 
+sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
 module.exports = shortcodeViewConstructor;

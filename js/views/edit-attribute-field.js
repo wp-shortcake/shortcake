@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
+sui = require('sui-utils/sui');
 
-var EditAttributeField = Backbone.View.extend( {
+var editAttributeField = Backbone.View.extend( {
 
 	tagName: "div",
 
@@ -38,4 +39,5 @@ var EditAttributeField = Backbone.View.extend( {
 
 } );
 
-module.exports = EditAttributeField;
+sui.views.editAttributeField = editAttributeField;
+module.exports = editAttributeField;
