@@ -414,7 +414,7 @@ var Shortcode_UI;
 				var viewObjName = 'editAttributeField';
 				var tmplName    = 'shortcode-ui-field-textarea';
 	
-				var view        = new sui.views[viewObjName]( { model: this.get( 'inner_content' ) } );
+				var view        = new sui.views[viewObjName]( { model: this.model.get( 'inner_content' ) } );
 				view.template   = wp.media.template( tmplName );
 				view.shortcode = t.model;
 	
