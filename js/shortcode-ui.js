@@ -966,13 +966,8 @@ var Shortcode_UI;
 			}
 
 			if ( matches[3] ) {
-				var content = currentShortcode.get( 'attrs' ).findWhere( { attr: 'content' } );
-				if ( content ) {
-					content.set( 'value', matches[3] );
-				} else {
-					var inner_content = currentShortcode.get( 'inner_content' );
-					inner_content.set( 'value', matches[3] );
-				}
+				var inner_content = currentShortcode.get( 'inner_content' );
+				inner_content.set( 'value', matches[3] );
 			}
 
 			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media( {
