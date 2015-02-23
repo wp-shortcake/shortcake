@@ -873,24 +873,11 @@ var Shortcode_UI;
 							options.shortcode.attrs.named[ attr.get( 'attr') ]
 						);
 					}
-					
-/*					if ( attr.get( 'attr' ) === 'content' && ( 'content' in options.shortcode ) ) {
-						var temp_content = [];
-						for ( props in attr.attributes ) {
-							if( props === 'attr') {
-								continue;
-							}
-							temp_content[props] == attr.attributes[props];
-						}
-						temp_content['value'] = options.shortcode.content ;
-						shortcode.set( 'inner_content', new sui.models.InnerContent( temp_content ) );
-					}*/
 
 				});
-				
+
 				if ( 'content' in options.shortcode ) {
 					var inner_content = shortcode.get( 'inner_content' );
-					console.log( inner_content );
 					inner_content.set( 'value', options.shortcode.content )
 				}
 
