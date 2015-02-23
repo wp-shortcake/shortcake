@@ -73,8 +73,10 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-checkbox">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="checkbox" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" <# if ( 'true' == data.value ){ print('checked'); } #>>
+		<label for="{{ data.attr }}">
+			<input type="checkbox" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" <# if ( 'true' == data.value ){ print('checked'); } #>>
+			{{ data.label }}
+		</label>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
