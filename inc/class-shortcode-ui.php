@@ -38,10 +38,30 @@ class Shortcode_UI {
 			'label'             => '',
 			'attrs'             => array(),
 			'listItemImage'     => '',   // src or 'dashicons-' - used in insert list.
-			'inner_content'     => 'false',
+			'inner_content'     => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+		
+		// inner_content=true is a valid argument, but we want more detail
+		if ( is_bool( $args['inner_content'] ) && true === $args['inner_content'] ) {
+			$args['inner_content'] = array(
+				'label'            => esc_html__( 'Inner Content', 'shortcode-ui' ),
+				'description'      => '',
+				'placeholder'      => '',
+			);
+		}
+		
+		if ( $args['attrs']['attr'] === 'content' ) {
+			foreach ( $args['attrs'] as $key => $value ) {
+				if ( $key == 'attr' ) {
+					continue;
+				}
+				$args['inner_content'][$key] = $value;
+			}
+			
+			unset( $args['attrs']['attr'] ); 
+		}
 
 		// strip invalid
 		foreach ( $args as $key => $value ) {
