@@ -165,7 +165,11 @@ var Shortcode_UI;
 			if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof sui.models.ShortcodeAttributes ) ) {
 				attributes.attrs = new sui.models.ShortcodeAttributes( attributes.attrs );
 			}
-			
+
+			if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof sui.models.InnerContent ) ) {
+				attributes.inner_content = new sui.models.InnerContent( attributes.inner_content );
+			}
+
 			return Backbone.Model.prototype.set.call(this, attributes, options);
 		},
 
@@ -174,10 +178,17 @@ var Shortcode_UI;
 		 * Handles converting the attribute collection to JSON.
 		 */
 		toJSON: function( options ) {
+
 			options = Backbone.Model.prototype.toJSON.call(this, options);
+
 			if ( options.attrs !== undefined && ( options.attrs instanceof sui.models.ShortcodeAttributes ) ) {
 				options.attrs = options.attrs.toJSON();
 			}
+
+			if ( options.inner_content !== undefined && ( options.inner_content instanceof sui.models.InnerContent ) ) {
+				options.inner_content = options.inner_content.toJSON();
+			}
+
 			return options;
 		},
 
@@ -188,6 +199,7 @@ var Shortcode_UI;
 		clone: function() {
 			var clone = Backbone.Model.prototype.clone.call( this );
 			clone.set( 'attrs', clone.get( 'attrs' ).clone() );
+			clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
 			return clone;
 		},
 
