@@ -9,17 +9,16 @@
 
 		render: function() {
 
-			this.$el.html( this.template( this.model.toJSON() ) );
-
 			var model = this.model;
 
 			// Set model default values.
 			for ( var arg in ShorcakeImageFieldData.defaultArgs ) {
-				var currentArg = model.get( arg );
-				if ( ! currentArg ) {
+				if ( ! model.get( arg ) ) {
 					model.set( arg, ShorcakeImageFieldData.defaultArgs[ arg ] );
 				}
 			}
+
+			this.$el.html( this.template( model.toJSON() ) );
 
 			var $container    = this.$el.find( '.shortcake-attachment-preview' );
 			var $addButton    = $container.find( 'button.add' );
