@@ -127,7 +127,7 @@ var Shortcode_UI;
 			label:       'Inner Content',
 			type:        'textarea',
 			value:       '',
-			placeholder: 'Enter inner content for Shortcode...',
+			placeholder: '',
 		},
 	});
 	
@@ -166,6 +166,10 @@ var Shortcode_UI;
 				attributes.attrs = new sui.models.ShortcodeAttributes( attributes.attrs );
 			}
 			
+			if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof sui.models.InnerContent ) ) {
+				attributes.inner_content = new sui.models.InnerContent( attributes.inner_content );
+			}
+			
 			return Backbone.Model.prototype.set.call(this, attributes, options);
 		},
 
@@ -178,6 +182,9 @@ var Shortcode_UI;
 			if ( options.attrs !== undefined && ( options.attrs instanceof sui.models.ShortcodeAttributes ) ) {
 				options.attrs = options.attrs.toJSON();
 			}
+			if ( options.inner_content !== undefined && ( options.inner_content instanceof sui.models.InnerContent ) ) {
+				options.inner_content = options.inner_content.toJSON();
+			}
 			return options;
 		},
 
@@ -188,6 +195,7 @@ var Shortcode_UI;
 		clone: function() {
 			var clone = Backbone.Model.prototype.clone.call( this );
 			clone.set( 'attrs', clone.get( 'attrs' ).clone() );
+			clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
 			return clone;
 		},
 
@@ -211,7 +219,7 @@ var Shortcode_UI;
 
 			} );
 			
-			if ( this.get( 'inner_content' ) ) {
+			if ( this.get( 'inner_content' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
 				content = this.get( 'inner_content' ).get( 'value' );
 			}
 			
@@ -398,11 +406,11 @@ var Shortcode_UI;
 			var t = this;
 
 			// add UI for inner_content
-			if ( this.model.get( 'inner_content') && this.model.get( 'inner_content').get( 'value' ).length > 0 ) {
+			if ( this.model.get( 'inner_content') ) {
 				var viewObjName = 'editAttributeField';
 				var tmplName    = 'shortcode-ui-field-textarea';
 	
-				var view        = new sui.views[viewObjName]( { model: this.get( 'inner_content' ) } );
+				var view        = new sui.views[viewObjName]( { model: this.model.get( 'inner_content' ) } );
 				view.template   = wp.media.template( tmplName );
 				view.shortcode = t.model;
 	
@@ -413,7 +421,7 @@ var Shortcode_UI;
 
 				// Get the field settings from localization data.
 				var type = attr.get('type');
-
+				
 				if ( ! shortcodeUIFieldData[ type ] ) {
 					return;
 				}
@@ -462,7 +470,11 @@ var Shortcode_UI;
 		 * then it should update the model.
 		 */
 		updateValue: function( e ) {
-			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			if( this.model.get( 'attr' ) ) { 
+				var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			} else {
+				var $el = $(this.el).find( '[name="inner_content"]' );
+			}
 			if ( 'checkbox' === this.model.attributes.type ) {
 				this.model.set( 'value', $el.is( ':checked' ) );
 			} else {
@@ -694,7 +706,6 @@ var Shortcode_UI;
 		insert: function() {
 			var shortcode = this.props.get('currentShortcode');
 			if ( shortcode ) {
-				console.log( 'namaste' );
 				send_to_editor( shortcode.formatShortcode() );
 				this.reset();
 				this.frame.close();
@@ -861,24 +872,11 @@ var Shortcode_UI;
 							options.shortcode.attrs.named[ attr.get( 'attr') ]
 						);
 					}
-					
-/*					if ( attr.get( 'attr' ) === 'content' && ( 'content' in options.shortcode ) ) {
-						var temp_content = [];
-						for ( props in attr.attributes ) {
-							if( props === 'attr') {
-								continue;
-							}
-							temp_content[props] == attr.attributes[props];
-						}
-						temp_content['value'] = options.shortcode.content ;
-						shortcode.set( 'inner_content', new sui.models.InnerContent( temp_content ) );
-					}*/
 
 				});
 				
 				if ( 'content' in options.shortcode ) {
 					var inner_content = shortcode.get( 'inner_content' );
-					console.log( inner_content );
 					inner_content.set( 'value', options.shortcode.content )
 				}
 
@@ -926,8 +924,6 @@ var Shortcode_UI;
 		 */
 		edit: function( node ) {
 			
-			console.log( "I am editing shortcode" );
-
 			var shortcodeString, model, attr;
 
 			shortcodeString = decodeURIComponent( $(node).attr( 'data-wpview-text' ) );
@@ -967,13 +963,8 @@ var Shortcode_UI;
 			}
 
 			if ( matches[3] ) {
-				var content = currentShortcode.get( 'attrs' ).findWhere( { attr: 'content' } );
-				if ( content ) {
-					content.set( 'value', matches[3] );
-				} else {
-					var inner_content = currentShortcode.get( 'inner_content' );
-					inner_content.set( 'value', matches[3] );
-				}
+				var inner_content = currentShortcode.get( 'inner_content' );
+				inner_content.set( 'value', matches[3] );
 			}
 
 			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media( {

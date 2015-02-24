@@ -52,7 +52,9 @@
 <script type="text/html" id="tmpl-shortcode-ui-field-textarea">
 	<div class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<textarea name="{{ data.attr }}" id="{{ data.attr }}" placeholder="{{ data.placeholder }}">{{ data.value }}</textarea>
+		<textarea name="<#if ( data.attr ) { #>{{ data.attr }}<#}else{#>inner_content<#}#>" 
+				  id="<#if ( data.attr ) { #>{{ data.attr }}<#}else{#>inner_content<#}#>" 
+				  placeholder="{{ data.placeholder }}">{{ data.value }}</textarea>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -132,12 +134,5 @@
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
-	</div>
-</script>
-
-<script type="text/html" id="tmpl-shortcode-ui-content">
-	<div class="field-block">
-		<label for="inner_content"><?php esc_html_e( 'Inner Content', 'shortcode-ui' ); ?></label>
-		<textarea id="inner_content" class="content-edit">{{ data.inner_content }}</textarea>
 	</div>
 </script>
