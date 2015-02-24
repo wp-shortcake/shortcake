@@ -164,6 +164,12 @@ class Shortcode_UI {
 			exit;
 		}
 
+		// Remove numeric attributes and just leave the value to make them work properly
+		$pattern = '/(\[\w+[^\]]*\s)(\d+=)((\'|")[^\]]+.*$)/s';
+		while ( preg_match( $pattern, $shortcode ) ) {
+			$shortcode = preg_replace( $pattern, '$1$3', $shortcode );
+		}
+
 		global $post;
 		$post = get_post( $post_id );
 		setup_postdata( $post );
