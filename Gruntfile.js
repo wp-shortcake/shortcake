@@ -112,8 +112,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks("grunt-wp-i18n");
 
-	grunt.registerTask( 'default', [ 'sass' ] );
-	grunt.registerTask( 'scripts', [ 'browserify' ]);
+	grunt.registerTask( 'default', [ 'sass', 'browserify' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 
 	grunt.util.linefeed = '\n';
