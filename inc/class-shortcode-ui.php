@@ -75,7 +75,7 @@ class Shortcode_UI {
 		$shortcodes = array_values( $this->shortcodes );
 		usort( $shortcodes, array( $this, 'compare_shortcodes_by_label' ) );
 
-		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
+		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/build/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
 		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 			'shortcodes' => $shortcodes,
