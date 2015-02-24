@@ -164,9 +164,11 @@ class Shortcode_UI {
 			exit;
 		}
 
-		global $post;
-		$post = get_post( $post_id );
-		setup_postdata( $post );
+		if ( ! empty( $post_id ) ) {
+			global $post;
+			$post = get_post( $post_id );
+			setup_postdata( $post );
+		}
 
 		ob_start();
 		do_action( 'shortcode_ui_before_do_shortcode', $shortcode );
