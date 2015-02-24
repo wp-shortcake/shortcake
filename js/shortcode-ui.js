@@ -198,7 +198,15 @@ var Shortcode_UI;
 				if ( attr.get( 'attr' ) === 'content' ) {
 					content = attr.get( 'value' );
 				} else {
-					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+					
+					// Numeric attribute names
+					if ( ! isNaN( attr.get( 'attr' ) ) ) {
+						attrs.push( '"' + attr.get( 'value' ) + '"' );
+						
+					// String attribute names
+					} else {
+						attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+					}
 				}
 
 			} );
@@ -834,6 +842,13 @@ var Shortcode_UI;
 						attr.set(
 							'value',
 							options.shortcode.attrs.named[ attr.get( 'attr') ]
+						);
+					}
+					
+					if ( attr.get( 'attr') in options.shortcode.attrs.numeric ) {
+						attr.set(
+							'value',
+							options.shortcode.attrs.numeric[ attr.get( 'attr') ]
 						);
 					}
 
