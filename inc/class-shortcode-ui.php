@@ -53,6 +53,8 @@ class Shortcode_UI {
 			);
 		}
 		
+		//following code is for backward compatibility
+		//which will be removed in the next version. (to supports 'attr' => 'content' special case) 
 		$num_attrs = count( $args['attrs'] );
 		for ( $i = 0; $i < $num_attrs; $i++) {
 			if ( ! isset( $args['attrs'][$i]['attr'] ) || $args['attrs'][$i]['attr'] !== 'content' ) {

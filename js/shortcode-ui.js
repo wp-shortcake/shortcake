@@ -124,7 +124,7 @@ var Shortcode_UI;
 	 */
 	sui.models.InnerContent = Backbone.Model.extend({
 		defaults: {
-			label:       'Inner Content',
+			label:       '',
 			type:        'textarea',
 			value:       '',
 			placeholder: '',
@@ -408,7 +408,7 @@ var Shortcode_UI;
 			// add UI for inner_content
 			if ( this.model.get( 'inner_content') ) {
 				var viewObjName = 'editAttributeField';
-				var tmplName    = 'shortcode-ui-field-textarea';
+				var tmplName    = 'shortcode-ui-content';
 	
 				var view        = new sui.views[viewObjName]( { model: this.model.get( 'inner_content' ) } );
 				view.template   = wp.media.template( tmplName );
