@@ -75,7 +75,9 @@ var Shortcode_UI = Backbone.View.extend({
 
 	},
 
-	cancelSelect: function() {
+	cancelSelect: function( e ) {
+		e.preventDefault();
+
 		this.controller.props.set( 'action', 'select' );
 		this.controller.props.set( 'currentShortcode', null );
 		this.render();
