@@ -748,7 +748,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../controllers/media-controller.js":3,"./../utils/sui.js":9,"./shortcode-ui":16,"./toolbar":18}],15:[function(require,module,exports){
 (function (global){
-var Backbonen = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 
 sui = require('./../utils/sui.js');
 
