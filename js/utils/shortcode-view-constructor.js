@@ -6,11 +6,16 @@ var shortcodeViewConstructor = {
 
 	View: {
 
-		shortcodeHTML: false,
-
 		initialize: function( options ) {
+			this.shortcode = this.getShortcode( options );
+			this.fetch();
+		},
 
-			var shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+		getShortcode: function( options ) {
+
+			var shortcodeModel, shortcode;
+
+			shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
 
 			if ( ! shortcodeModel ) {
 				return;
@@ -33,7 +38,7 @@ var shortcodeViewConstructor = {
 
 			});
 
-			this.shortcode = shortcode;
+			return shortcode;
 
 		},
 
@@ -42,13 +47,12 @@ var shortcodeViewConstructor = {
 		 *
 		 * If it includes a script tag, needs to be wrapped in an iframe
 		 */
-		setHtml: function( response ) {
+		setHtml: function( body ) {
 
 			var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-			var body = response.data;
 
 			if ( body.indexOf( '<script' ) === -1 ) {
-				this.shortcodeHTML = body;
+				this.parsed = body;
 				this.render( true );
 				return;
 			}
@@ -156,6 +160,26 @@ var shortcodeViewConstructor = {
 
 		},
 
+		fetch: function() {
+
+			var self = this;
+
+			if ( ! this.parsed ) {
+
+				wp.ajax.post( 'do_shortcode', {
+					post_id: $( '#post_ID' ).val(),
+					shortcode: this.shortcode.formatShortcode(),
+					nonce: shortcodeUIData.nonces.preview,
+				}).done( function( response ) {
+					self.setHtml( response );
+				}).fail( function() {
+					self.setHtml( '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>' );
+				} );
+
+			}
+
+		},
+
 		/**
 		 * Render the shortcode
 		 *
@@ -163,24 +187,7 @@ var shortcodeViewConstructor = {
 		 * @return string html
 		 */
 		getHtml: function() {
-
-			var data;
-
-			if ( false === this.shortcodeHTML ) {
-
-				data = {
-					action: 'do_shortcode',
-					post_id: $('#post_ID').val(),
-					shortcode: this.shortcode.formatShortcode(),
-					nonce: shortcodeUIData.nonces.preview
-				};
-
-				$.post( ajaxurl, data, $.proxy( this.setHtml, this ) );
-
-			}
-
-			return this.shortcodeHTML;
-
+			return this.parsed;
 		}
 
 	},
