@@ -65,7 +65,15 @@ var Shortcode = Backbone.Model.extend({
 			if ( attr.get( 'attr' ) === 'content' ) {
 				content = attr.get( 'value' );
 			} else {
-				attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+				
+				// Numeric attribute names
+				if ( ! isNaN( attr.get( 'attr' ) ) ) {
+					attrs.push( '"' + attr.get( 'value' ) + '"' );
+					
+				// String attribute names
+				} else {
+					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+				}
 			}
 
 		} );

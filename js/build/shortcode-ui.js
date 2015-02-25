@@ -167,7 +167,15 @@ var Shortcode = Backbone.Model.extend({
 			if ( attr.get( 'attr' ) === 'content' ) {
 				content = attr.get( 'value' );
 			} else {
-				attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+				
+				// Numeric attribute names
+				if ( ! isNaN( attr.get( 'attr' ) ) ) {
+					attrs.push( '"' + attr.get( 'value' ) + '"' );
+					
+				// String attribute names
+				} else {
+					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+				}
 			}
 
 		} );
@@ -356,6 +364,13 @@ var shortcodeViewConstructor = {
 						options.shortcode.attrs.named[ attr.get( 'attr') ]
 					);
 				}
+				
+				if ( attr.get( 'attr') in options.shortcode.attrs.numeric ) {
+					attr.set(
+						'value',
+						options.shortcode.attrs.numeric[ attr.get( 'attr') ]
+					);
+				}
 
 				if ( attr.get( 'attr' ) === 'content' && ( 'content' in options.shortcode ) ) {
 					attr.set( 'value', options.shortcode.content );
@@ -430,19 +445,37 @@ var shortcodeViewConstructor = {
 
 		if (matches[2]) {
 
-			attributeMatches = matches[2].match(/(\S+?=".*?")/g) || [];
+			// Get all the attributes
+			attributeMatches = matches[2].match(/([^\s]+)/g) || [];
 
-			// convert attribute strings to object.
+			// Keep track of all the unnamed attributes
+			var unnamedIndex = 0;
+
+			// convert attribute strings to object.				
 			for (var i = 0; i < attributeMatches.length; i++) {
+				
+				// Handler for named attributes
+				if (attributeMatches[i].match(/\S+?="(.*?)"/) !== null ) {
+					
+					var bitsRegEx = /(\S+?)="(.*?)"/g;
+					var bits = bitsRegEx.exec(attributeMatches[i]);
 
-				var bitsRegEx = /(\S+?)="(.*?)"/g;
-				var bits = bitsRegEx.exec(attributeMatches[i]);
-
-				attr = currentShortcode.get('attrs').findWhere({
-					attr : bits[1]
-				});
-				if (attr) {
-					attr.set('value', bits[2]);
+					attr = currentShortcode.get('attrs').findWhere({
+						attr : bits[1]
+					});
+					if (attr) {
+						attr.set('value', bits[2]);
+					}
+					
+				// Handler for numeric/unnamed attributes
+				} else {
+					
+					attr = currentShortcode.get('attrs').findWhere({
+						attr : (unnamedIndex++).toString()
+					});
+					if (attr) {
+						attr.set('value', attributeMatches[i].replace(/^"(.*)"$/, '$1'));
+					}
 				}
 
 			}
