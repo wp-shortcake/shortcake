@@ -49,6 +49,13 @@ class Shortcode_UI {
 			}
 		}
 
+		// Strip unwanted html in attribute descriptions
+		foreach ( $args['attrs'] as $attrKey => $attr ) {
+			if ( ! empty( $attr['description'] ) ) {
+				$args['attrs'][ $attrKey ]['description'] = wp_kses( $attr['description'], wp_kses_allowed_html( 'post' ) );
+			}
+		}
+
 		$args['shortcode_tag'] = $shortcode_tag;
 		$this->shortcodes[ $shortcode_tag ] = $args;
 
