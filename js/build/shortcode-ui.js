@@ -373,7 +373,6 @@ var shortcodeViewConstructor = {
 
 		initialize: function( options ) {
 			this.shortcode = this.getShortcode( options );
-			this.fetch();
 		},
 
 		getShortcode: function( options ) {
