@@ -90,12 +90,7 @@ sui = require('./../utils/sui.js');
  * Shortcode Attribute Model.
  */
 var InnerContent = Backbone.Model.extend({
-	defaults : {
-		label : '',
-		type : 'textarea',
-		value : '',
-		placeholder : '',
-	},
+	defaults : false,
 });
 
 sui.models.InnerContent = InnerContent;
@@ -706,7 +701,8 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 		var t = this;
 
 		// add UI for inner_content
-		if ( this.model.get( 'inner_content') ) {
+		var model = this.model.get( 'inner_content' );
+		if ( typeof model.attributes.type !== 'undefined' ) {
 			var viewObjName = 'editAttributeField';
 			var tmplName    = 'shortcode-ui-content';
 
@@ -743,6 +739,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 sui.views.EditShortcodeForm = EditShortcodeForm;
 module.exports = EditShortcodeForm;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":10}],13:[function(require,module,exports){
 (function (global){

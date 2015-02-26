@@ -12,7 +12,8 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 		var t = this;
 
 		// add UI for inner_content
-		if ( this.model.get( 'inner_content') ) {
+		var model = this.model.get( 'inner_content' );
+		if ( typeof model.attributes.type !== 'undefined' ) {
 			var viewObjName = 'editAttributeField';
 			var tmplName    = 'shortcode-ui-content';
 

@@ -6,12 +6,7 @@ sui = require('sui-utils/sui');
  * Shortcode Attribute Model.
  */
 var InnerContent = Backbone.Model.extend({
-	defaults : {
-		label : '',
-		type : 'textarea',
-		value : '',
-		placeholder : '',
-	},
+	defaults : false,
 });
 
 sui.models.InnerContent = InnerContent;
