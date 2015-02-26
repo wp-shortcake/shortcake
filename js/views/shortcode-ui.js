@@ -2,7 +2,9 @@ var Backbone = require('backbone'),
 	insertShortcodeList = require('sui-views/insert-shortcode-list'),
 	TabbedView = require('sui-views/tabbed-view'),
 	ShortcodePreview = require('sui-views/shortcode-preview'),
-	EditShortcodeForm = require('sui-views/edit-shortcode-form')
+	EditShortcodeForm = require('sui-views/edit-shortcode-form'),
+	Toolbar = require('sui-views/toolbar'),
+	SearchShortcode = require('sui-views/search-shortcode')
 	$ = require('jquery');
 
 sui = require('sui-utils/sui');
@@ -15,8 +17,26 @@ var Shortcode_UI = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.controller = options.controller.state();
+		this.createToolbar(options);
 	},
 
+	createToolbar: function(options) {
+		console.log( 'hola' );
+		toolbarOptions = {
+			controller: options.controller
+		}
+		
+		this.toolbar = new Toolbar( toolbarOptions );
+		
+		this.views.add( this.toolbar );
+		
+		this.toolbar.set( 'search', new SearchShortcode({
+			controller: this.controller,
+			model:      this.collection.props,
+			priority:   60
+		}).render() );
+	},
+	
 	render: function() {
 
 		this.$el.html('');
