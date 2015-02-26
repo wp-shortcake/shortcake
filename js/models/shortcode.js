@@ -68,7 +68,7 @@ var Shortcode = Backbone.Model.extend({
 				
 				// Numeric attribute names
 				if ( ! isNaN( attr.get( 'attr' ) ) ) {
-					attrs.push( '"' + attr.get( 'value' ) + '"' );
+					attrs.push( attr.get( 'value' ) );
 					
 				// String attribute names
 				} else {
