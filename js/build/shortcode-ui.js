@@ -199,8 +199,8 @@ Shortcode = Backbone.Model.extend({
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 
 		} );
-		
-		if ( this.get( 'inner_content' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
+
+		if ( 'undefined' !== typeof this.get( 'inner_content' ).get( 'value' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 		
