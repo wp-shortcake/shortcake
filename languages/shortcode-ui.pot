@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shortcode UI v0.2.0-dev\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/shortcode-ui\n"
-"POT-Creation-Date: 2015-02-17 17:16:53+00:00\n"
+"POT-Creation-Date: 2015-02-19 14:17:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,35 +24,35 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
-#: inc/class-shortcode-ui.php:86 inc/class-shortcode-ui.php:87
+#: inc/class-shortcode-ui.php:81 inc/class-shortcode-ui.php:82
 msgid "Insert Post Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:88
+#: inc/class-shortcode-ui.php:83
 msgid "Post Element Details"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:89
+#: inc/class-shortcode-ui.php:84
 msgid "Insert Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:90
+#: inc/class-shortcode-ui.php:85
 msgid "Update"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:91
+#: inc/class-shortcode-ui.php:86
 msgid "Edit"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:92
+#: inc/class-shortcode-ui.php:87
 msgid "Preview"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:93
+#: inc/class-shortcode-ui.php:88
 msgid "Failed to load preview"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:156
+#: inc/class-shortcode-ui.php:151
 msgid "Something's rotten in the state of Denmark"
 msgstr ""
 
@@ -63,6 +63,10 @@ msgstr ""
 
 #: inc/templates/edit-form.tpl.php:3
 msgid "Back to list"
+msgstr ""
+
+#: inc/templates/edit-form.tpl.php:140
+msgid "Inner Content"
 msgstr ""
 
 #. Plugin Name of the plugin/theme

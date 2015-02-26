@@ -6,63 +6,71 @@ var shortcodeViewConstructor = {
 
 	View : {
 
-		shortcodeHTML: false,
+		shortcodeHTML : false,
 
-		initialize: function( options ) {
+		initialize : function(options) {
 
-			var shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+			var shortcodeModel = sui.shortcodes.findWhere({
+				shortcode_tag : options.shortcode.tag
+			});
 
-			if ( ! shortcodeModel ) {
+			if (!shortcodeModel) {
 				return;
 			}
 
 			shortcode = shortcodeModel.clone();
 
-			shortcode.get( 'attrs' ).each( function( attr ) {
+			shortcode.get('attrs').each(
+					function(attr) {
 
-				if ( attr.get( 'attr') in options.shortcode.attrs.named ) {
-					attr.set(
-						'value',
-						options.shortcode.attrs.named[ attr.get( 'attr') ]
-					);
-				}
+						if (attr.get('attr') in options.shortcode.attrs.named) {
+							attr.set('value',
+									options.shortcode.attrs.named[attr
+											.get('attr')]);
+						}
 
-				if ( attr.get( 'attr' ) === 'content' && ( 'content' in options.shortcode ) ) {
-					attr.set( 'value', options.shortcode.content );
-				}
+					});
 
-			});
+			if ('content' in options.shortcode) {
+				var inner_content = shortcode.get('inner_content');
+				inner_content.set('value', options.shortcode.content)
+			}
 
 			this.shortcode = shortcode;
 
 			this.fetch();
 		},
 
-		fetch: function() {
+		fetch : function() {
 
 			var self = this;
 
-			wp.ajax.post( 'do_shortcode', {
-				post_id: $( '#post_ID' ).val(),
-				shortcode: this.shortcode.formatShortcode(),
-				nonce: shortcodeUIData.nonces.preview,
-			}).done( function( response ) {
+			wp.ajax.post('do_shortcode', {
+				post_id : $('#post_ID').val(),
+				shortcode : this.shortcode.formatShortcode(),
+				nonce : shortcodeUIData.nonces.preview,
+			}).done(function(response) {
 				self.parsed = response;
-				self.render( true );
-			}).fail( function() {
-				self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-				self.render( true );
-			} );
+				self.render(true);
+			}).fail(
+					function() {
+						self.parsed = '<span class="shortcake-error">'
+								+ shortcodeUIData.strings.mce_view_error
+								+ '</span>';
+						self.render(true);
+					});
 
-			},
+		},
 
 		/**
 		 * Render the shortcode
-		 *
-		 * To ensure consistent rendering - this makes an ajax request to the admin and displays.
+		 * 
+		 * To ensure consistent rendering - this makes an ajax request to the
+		 * admin and displays.
+		 * 
 		 * @return string html
 		 */
-		getHtml: function() {
+		getHtml : function() {
 			return this.parsed;
 		}
 
@@ -70,10 +78,11 @@ var shortcodeViewConstructor = {
 
 	/**
 	 * Edit shortcode.
-	 *
+	 * 
 	 * Parses the shortcode and creates shortcode mode.
-	 * @todo - I think there must be a cleaner way to get
-	 * the shortcode & args here that doesn't use regex.
+	 * 
+	 * @todo - I think there must be a cleaner way to get the shortcode & args
+	 *       here that doesn't use regex.
 	 */
 	edit : function(node) {
 
@@ -120,12 +129,8 @@ var shortcodeViewConstructor = {
 		}
 
 		if (matches[3]) {
-			var content = currentShortcode.get('attrs').findWhere({
-				attr : 'content'
-			});
-			if (content) {
-				content.set('value', matches[3]);
-			}
+			var inner_content = currentShortcode.get('inner_content');
+			inner_content.set('value', matches[3]);
 		}
 
 		var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
