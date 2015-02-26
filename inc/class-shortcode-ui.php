@@ -105,10 +105,13 @@ class Shortcode_UI {
 
 	public function action_wp_enqueue_editor() {
 
-		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
+		$shortcodes = array_values( $this->shortcodes );
+		usort( $shortcodes, array( $this, 'compare_shortcodes_by_label' ) );
+
+		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/build/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
 		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
-			'shortcodes' => array_values( $this->shortcodes ),
+			'shortcodes' => $shortcodes,
 			'strings' => array(
 				'media_frame_title'                => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
 				'media_frame_menu_insert_label'    => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
@@ -165,6 +168,16 @@ class Shortcode_UI {
 		include $template;
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Compare shortcodes by label
+	 *
+	 * @param array $a
+	 * @param array $b
+	 */
+	private function compare_shortcodes_by_label( $a, $b ) {
+		return strcmp( $a['label'], $b['label'] );
 	}
 
 	/**
