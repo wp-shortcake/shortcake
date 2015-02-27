@@ -416,7 +416,7 @@ var shortcodeViewConstructor = {
 					if ( response.indexOf( '<script' ) !== -1 ) {
 						self.setIframes( self.getEditorStyles(), response );
 					} else {
-						self.parsed = true;
+						self.parsed = response;
 						self.render( true );
 					}
 				}).fail( function() {
