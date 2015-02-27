@@ -1,4 +1,4 @@
-var Backbonen = require('backbone');
+var Backbone = require('backbone');
 
 sui = require('sui-utils/sui');
 
