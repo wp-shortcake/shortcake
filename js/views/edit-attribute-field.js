@@ -29,7 +29,11 @@ var editAttributeField = Backbone.View.extend( {
 	 * then it should update the model.
 	 */
 	updateValue: function( e ) {
-		var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
+		if( this.model.get( 'attr' ) ) { 
+			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
+		} else {
+			var $el = $(this.el).find( '[name="inner_content"]' );
+		}
 		if ( 'checkbox' === this.model.attributes.type ) {
 			this.model.set( 'value', $el.is( ':checked' ) );
 		} else {

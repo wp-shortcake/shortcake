@@ -4,67 +4,117 @@
  */
 var shortcodeViewConstructor = {
 
-	View : {
+	View: {
 
-		shortcodeHTML: false,
+		overlay: true,
 
 		initialize: function( options ) {
+			this.shortcode = this.getShortcode( options );
+		},
 
-			var shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+		getShortcode: function( options ) {
 
-			if ( ! shortcodeModel ) {
+			var shortcodeModel, shortcode;
+
+			shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+
+			if (!shortcodeModel) {
 				return;
 			}
 
 			shortcode = shortcodeModel.clone();
 
-			shortcode.get( 'attrs' ).each( function( attr ) {
+			shortcode.get('attrs').each(
+					function(attr) {
 
-				if ( attr.get( 'attr') in options.shortcode.attrs.named ) {
-					attr.set(
-						'value',
-						options.shortcode.attrs.named[ attr.get( 'attr') ]
-					);
-				}
+						if (attr.get('attr') in options.shortcode.attrs.named) {
+							attr.set('value',
+									options.shortcode.attrs.named[attr
+											.get('attr')]);
+						}
 
-				if ( attr.get( 'attr' ) === 'content' && ( 'content' in options.shortcode ) ) {
-					attr.set( 'value', options.shortcode.content );
-				}
+					});
 
-			});
+			if ('content' in options.shortcode) {
+				var inner_content = shortcode.get('inner_content');
+				inner_content.set('value', options.shortcode.content)
+			}
 
-			this.shortcode = shortcode;
+			return shortcode;
 
-			this.fetch();
 		},
 
-		fetch: function() {
+		fetch : function() {
 
 			var self = this;
 
-			wp.ajax.post( 'do_shortcode', {
-				post_id: $( '#post_ID' ).val(),
-				shortcode: this.shortcode.formatShortcode(),
-				nonce: shortcodeUIData.nonces.preview,
-			}).done( function( response ) {
-				self.parsed = response;
-				self.render( true );
-			}).fail( function() {
-				self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-				self.render( true );
-			} );
+			if ( ! this.parsed ) {
 
-			},
+				wp.ajax.post( 'do_shortcode', {
+					post_id: $( '#post_ID' ).val(),
+					shortcode: this.shortcode.formatShortcode(),
+					nonce: shortcodeUIData.nonces.preview,
+				}).done( function( response ) {
+					if ( response.indexOf( '<script' ) !== -1 ) {
+						self.setIframes( self.getEditorStyles(), response );
+					} else {
+						self.parsed = true;
+						self.render( true );
+					}
+				}).fail( function() {
+					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+					self.render( true );
+				} );
+
+			}
+
+		},
 
 		/**
 		 * Render the shortcode
 		 *
-		 * To ensure consistent rendering - this makes an ajax request to the admin and displays.
+		 * To ensure consistent rendering - this makes an ajax request to the
+		 * admin and displays.
+		 *
 		 * @return string html
 		 */
-		getHtml: function() {
+		getHtml : function() {
+
+			if ( ! this.parsed ) {
+				this.fetch();
+			}
+
 			return this.parsed;
-		}
+		},
+
+		/**
+		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
+		 *
+		 * @method getEditorStyles
+		 * @returns {Array}
+		 */
+		getEditorStyles: function() {
+
+			var styles = '';
+
+			this.getNodes( function ( editor, node, content ) {
+				var dom = editor.dom,
+					bodyClasses = editor.getBody().className || '',
+					iframe, iframeDoc, i, resize;
+
+				tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
+					if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
+						link.href.indexOf( 'skins/wordpress/wp-content.css' ) === -1 ) {
+
+						styles += dom.getOuterHTML( link ) + '\n';
+					}
+
+				});
+
+			} );
+
+			return styles;
+		},
 
 	},
 
@@ -72,8 +122,9 @@ var shortcodeViewConstructor = {
 	 * Edit shortcode.
 	 *
 	 * Parses the shortcode and creates shortcode mode.
-	 * @todo - I think there must be a cleaner way to get
-	 * the shortcode & args here that doesn't use regex.
+	 *
+	 * @todo - I think there must be a cleaner way to get the shortcode & args
+	 *       here that doesn't use regex.
 	 */
 	edit : function(node) {
 
@@ -120,12 +171,8 @@ var shortcodeViewConstructor = {
 		}
 
 		if (matches[3]) {
-			var content = currentShortcode.get('attrs').findWhere({
-				attr : 'content'
-			});
-			if (content) {
-				content.set('value', matches[3]);
-			}
+			var inner_content = currentShortcode.get('inner_content');
+			inner_content.set('value', matches[3]);
 		}
 
 		var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
