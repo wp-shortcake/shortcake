@@ -5,6 +5,10 @@ var SearchShortcode = wp.media.view.Search.extend({
 	tagName:   'input',
 	className: 'search',
 	id:        'media-search-input',
+	
+	initialize: function( options ) {
+		this.shortcodeList = options.shortcodeList;
+	}, 
 
 	attributes: {
 		type:        'search',
@@ -12,10 +16,7 @@ var SearchShortcode = wp.media.view.Search.extend({
 	},
 
 	events: {
-		'input':  'search',
 		'keyup':  'search',
-		'change': 'search',
-		'search': 'search'
 	},
 
 	/**
@@ -25,14 +26,17 @@ var SearchShortcode = wp.media.view.Search.extend({
 		this.el.value = this.model.escape('search');
 		return this;
 	},
+	
+	refreshShortcodes: function( shortcodeData ) {
+		this.shortcodeList.refresh( shortcodeData );
+	},
 
 	search: function( event ) {
-		console.log( 'I am searching' );
-//		if ( event.target.value ) {
-//			this.model.set( 'search', event.target.value );
-//		} else {
-//			this.model.unset('search');
-//		}
+		if ( event.target.value ) {
+			this.refreshShortcodes( this.controller.search( event.target.value ) );
+		} else {
+			this.model.unset('search');
+		}
 	}
 });
 

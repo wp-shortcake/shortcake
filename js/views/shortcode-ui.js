@@ -17,13 +17,13 @@ var Shortcode_UI = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.controller = options.controller.state();
-		this.createToolbar(options);
+		//toolbar model looks for controller.state()
+		this.toolbar_controller = options.controller;
 	},
 
 	createToolbar: function(options) {
-		console.log( 'hola' );
 		toolbarOptions = {
-			controller: options.controller
+			controller: this.toolbar_controller
 		}
 		
 		this.toolbar = new Toolbar( toolbarOptions );
@@ -31,8 +31,9 @@ var Shortcode_UI = Backbone.View.extend({
 		this.views.add( this.toolbar );
 		
 		this.toolbar.set( 'search', new SearchShortcode({
-			controller: this.controller,
-			model:      this.collection.props,
+			controller:    this.controller,
+			model:         this.controller.props,
+			shortcodeList: this.shortcodeList,
 			priority:   60
 		}).render() );
 	},
@@ -55,9 +56,12 @@ var Shortcode_UI = Backbone.View.extend({
 
 	renderSelectShortcodeView: function() {
 		this.views.unset();
+		this.shortcodeList = new insertShortcodeList( { shortcodes: sui.shortcodes } );
+		this.createToolbar();
+
 		this.views.add(
 			'',
-			new insertShortcodeList( { shortcodes: sui.shortcodes } )
+			this.shortcodeList
 		);
 	},
 
