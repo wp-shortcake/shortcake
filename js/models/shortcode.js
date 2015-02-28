@@ -56,22 +56,25 @@ var Shortcode = Backbone.Model.extend({
 
 		this.get( 'attrs' ).each( function( attr ) {
 
-			// Skip empty attributes.
-			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
-				return;
-			}
-
 			// Handle content attribute as a special case.
 			if ( attr.get( 'attr' ) === 'content' ) {
 				content = attr.get( 'value' );
 			} else {
 				
-				// Numeric attribute names
+				// Numeric/unnamed attributes
 				if ( ! isNaN( attr.get( 'attr' ) ) ) {
-					attrs.push( attr.get( 'value' ) );
+					
+					// Empty attributes are false to preserve attribute keys
+					attrs.push( attr.get( 'value' ).trim() === '' ? 'false' : attr.get( 'value' ) );
 					
 				// String attribute names
 				} else {
+					
+					// Skip empty attributes.
+					if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
+						return;
+					}
+			
 					attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 				}
 			}
