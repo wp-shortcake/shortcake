@@ -416,7 +416,7 @@ var shortcodeViewConstructor = {
 					if ( response.indexOf( '<script' ) !== -1 ) {
 						self.setIframes( self.getEditorStyles(), response );
 					} else {
-						self.parsed = true;
+						self.parsed = response;
 						self.render( true );
 					}
 				}).fail( function() {
@@ -844,7 +844,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../controllers/media-controller.js":3,"./../utils/sui.js":10,"./shortcode-ui":17,"./toolbar":19}],16:[function(require,module,exports){
 (function (global){
-var Backbonen = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 
 sui = require('./../utils/sui.js');
 
