@@ -32,6 +32,15 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			if ( ! shortcodeUIFieldData[ type ] ) {
 				return;
 			}
+			
+			// Support for custom attributes for the field input
+			_.each( _.difference( _.keys( attr.attributes ), _.keys( attr.defaults ) ), function(key, e) {
+				if ( _.isEmpty( attr.get( key ) ) ) {
+					attr.set( 'custom', attr.get( 'custom' ) + ' ' + key );
+				} else {
+					attr.set( 'custom', attr.get( 'custom' ) + ' ' + key + '="' + _.escape( attr.get( key ) ) + '"' );
+				}
+			});
 
 			var viewObjName = shortcodeUIFieldData[ type ].view;
 			var tmplName    = shortcodeUIFieldData[ type ].template;
