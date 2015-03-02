@@ -22,7 +22,7 @@ var insertShortcodeList = wp.Backbone.View.extend({
 	displayShortcodes: function(options) {
 		var t = this;
 		
-		t.views.unset();
+		t.$el.find('.add-shortcode-list').html('');
 		t.options = {};
 		t.options.shortcodes = options.shortcodes;
 

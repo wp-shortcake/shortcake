@@ -36,6 +36,7 @@ var Shortcode_UI = Backbone.View.extend({
 			shortcodeList: this.shortcodeList,
 			priority:   60
 		}).render() );
+		
 	},
 	
 	render: function() {
