@@ -12,7 +12,7 @@ var SearchShortcode = wp.media.view.Search.extend({
 
 	attributes: {
 		type:        'search',
-		placeholder: 'search'
+		placeholder: shortcodeUIData.strings.search_placeholder
 	},
 
 	events: {
@@ -32,10 +32,10 @@ var SearchShortcode = wp.media.view.Search.extend({
 	},
 
 	search: function( event ) {
-		if ( event.target.value ) {
-			this.refreshShortcodes( this.controller.search( event.target.value ) );
+		if ( event.target.value == '' ) {
+			this.refreshShortcodes( sui.shortcodes );
 		} else {
-			this.model.unset('search');
+			this.refreshShortcodes( this.controller.search( event.target.value ) );
 		}
 	}
 });

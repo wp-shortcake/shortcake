@@ -713,6 +713,7 @@ module.exports = insertShortcodeListItem;
 },{"./../utils/sui.js":10}],14:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 var insertShortcodeListItem = require('./insert-shortcode-list-item.js');
 var Shortcodes = require('./../collections/shortcodes.js');
 sui = require('./../utils/sui.js');
@@ -729,7 +730,11 @@ var insertShortcodeList = wp.Backbone.View.extend({
 	},
 	
 	refresh: function( shortcodeData ) {
-		var options = { shortcodes: new Shortcodes( shortcodeData ) };
+		if ( shortcodeData instanceof Backbone.Collection ) {
+			var options = { shortcodes: shortcodeData };
+		} else {
+			var options = { shortcodes: new Shortcodes( shortcodeData ) };
+		}
 		this.displayShortcodes( options );
 	},
 	
@@ -768,7 +773,7 @@ var SearchShortcode = wp.media.view.Search.extend({
 
 	attributes: {
 		type:        'search',
-		placeholder: 'search'
+		placeholder: shortcodeUIData.strings.search_placeholder
 	},
 
 	events: {
@@ -788,10 +793,10 @@ var SearchShortcode = wp.media.view.Search.extend({
 	},
 
 	search: function( event ) {
-		if ( event.target.value ) {
-			this.refreshShortcodes( this.controller.search( event.target.value ) );
+		if ( event.target.value == '' ) {
+			this.refreshShortcodes( sui.shortcodes );
 		} else {
-			this.model.unset('search');
+			this.refreshShortcodes( this.controller.search( event.target.value ) );
 		}
 	}
 });
@@ -1129,14 +1134,6 @@ var Shortcode_UI = Backbone.View.extend({
 		
 		this.views.add( this.toolbar );
 		
-		this.toolbar.set( 'searchLabel', new wp.media.view.Label({
-			value: 'Filter Shortcode',
-			attributes: {
-				'for': 'media-search-input'
-			},
-			priority:   60
-		}).render() );
-		
 		this.toolbar.set( 'search', new SearchShortcode({
 			controller:    this.controller,
 			model:         this.controller.props,
@@ -1167,10 +1164,7 @@ var Shortcode_UI = Backbone.View.extend({
 		this.shortcodeList = new insertShortcodeList( { shortcodes: sui.shortcodes } );
 		this.createToolbar();
 
-		this.views.add(
-			'',
-			this.shortcodeList
-		);
+		this.views.add('', this.shortcodeList);
 	},
 
 	renderEditShortcodeView: function() {

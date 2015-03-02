@@ -60,10 +60,7 @@ var Shortcode_UI = Backbone.View.extend({
 		this.shortcodeList = new insertShortcodeList( { shortcodes: sui.shortcodes } );
 		this.createToolbar();
 
-		this.views.add(
-			'',
-			this.shortcodeList
-		);
+		this.views.add('', this.shortcodeList);
 	},
 
 	renderEditShortcodeView: function() {
