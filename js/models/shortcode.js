@@ -1,13 +1,15 @@
 var Backbone = require('backbone');
 var ShortcodeAttributes = require('sui-collections/shortcode-attributes');
+var InnerContent = require('sui-models/inner-content');
 sui = require('sui-utils/sui');
 
-var Shortcode = Backbone.Model.extend({
+Shortcode = Backbone.Model.extend({
 
 	defaults: {
 		label: '',
 		shortcode_tag: '',
-		attrs: ShortcodeAttributes,
+		attrs: sui.models.ShortcodeAttributes,
+		inner_content: sui.models.InnerContent,
 	},
 
 	/**
@@ -19,7 +21,11 @@ var Shortcode = Backbone.Model.extend({
 		if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof ShortcodeAttributes ) ) {
 			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
-
+		
+		if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof InnerContent ) ) {
+			attributes.inner_content = new InnerContent( attributes.inner_content );
+		}
+		
 		return Backbone.Model.prototype.set.call(this, attributes, options);
 	},
 
@@ -32,6 +38,9 @@ var Shortcode = Backbone.Model.extend({
 		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributes ) ) {
 			options.attrs = options.attrs.toJSON();
 		}
+		if ( options.inner_content !== undefined && ( options.inner_content instanceof InnerContent ) ) {
+			options.inner_content = options.inner_content.toJSON();
+		}
 		return options;
 	},
 
@@ -42,6 +51,7 @@ var Shortcode = Backbone.Model.extend({
 	clone: function() {
 		var clone = Backbone.Model.prototype.clone.call( this );
 		clone.set( 'attrs', clone.get( 'attrs' ).clone() );
+		clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
 		return clone;
 	},
 
@@ -52,7 +62,7 @@ var Shortcode = Backbone.Model.extend({
 	 */
 	formatShortcode: function() {
 
-		var template, shortcodeAttributes, attrs = [], content;
+		var template, shortcodeAttributes, attrs = [], content, self = this;
 
 		this.get( 'attrs' ).each( function( attr ) {
 
@@ -61,15 +71,14 @@ var Shortcode = Backbone.Model.extend({
 				return;
 			}
 
-			// Handle content attribute as a special case.
-			if ( attr.get( 'attr' ) === 'content' ) {
-				content = attr.get( 'value' );
-			} else {
-				attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
-			}
+			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 
 		} );
 
+		if ( 'undefined' !== typeof this.get( 'inner_content' ).get( 'value' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
+			content = this.get( 'inner_content' ).get( 'value' );
+		}
+		
 		template = "[{{ shortcode }} {{ attributes }}]"
 
 		if ( content && content.length > 0 ) {

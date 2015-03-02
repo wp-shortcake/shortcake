@@ -30,6 +30,16 @@ module.exports = function( grunt ) {
 					livereload: true,
 					sourceMap: true
 				}
+			},
+
+			js: {
+				files: ['js/*/**/*.js', '!js/build/**/*'],
+				tasks: ['browserify'],
+				options: {
+					debounceDelay: 500,
+					livereload: true,
+					sourceMap: true
+				}
 			}
 
 		},
