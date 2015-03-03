@@ -14,6 +14,7 @@ class Shortcode_UI {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
+
 		return self::$instance;
 	}
 
@@ -27,53 +28,53 @@ class Shortcode_UI {
 
 	private function setup_actions() {
 		$this->add_editor_style();
-		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
-		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
+		add_action( 'wp_enqueue_editor',    array( $this, 'action_wp_enqueue_editor' ) );
+		add_action( 'wp_ajax_do_shortcode', array( $this, 'handle_ajax_do_shortcode' ) );
 	}
 
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
 		$defaults = array(
-			'label'             => '',
-			'attrs'             => array(),
-			'listItemImage'     => '',   // src or 'dashicons-' - used in insert list.
-			'inner_content'     => false,
+			'label'         => '',
+			'attrs'         => array(),
+			'listItemImage' => '',   // src or 'dashicons-' - used in insert list.
+			'inner_content' => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
-		
-		
+
+
 		// inner_content=true is a valid argument, but we want more detail
 		if ( is_bool( $args['inner_content'] ) && true === $args['inner_content'] ) {
 			$args['inner_content'] = array(
-				'label'            => esc_html__( 'Inner Content', 'shortcode-ui' ),
-				'description'      => '',
-				'placeholder'      => '',
+				'label'       => esc_html__( 'Inner Content', 'shortcode-ui' ),
+				'description' => '',
+				'placeholder' => '',
 			);
 		}
-		
+
 		//following code is for backward compatibility
 		//which will be removed in the next version. (to supports 'attr' => 'content' special case) 
 		$num_attrs = count( $args['attrs'] );
-		for ( $i = 0; $i < $num_attrs; $i++) {
-			if ( ! isset( $args['attrs'][$i]['attr'] ) || $args['attrs'][$i]['attr'] !== 'content' ) {
+		for ( $i = 0; $i < $num_attrs; $i++ ) {
+			if ( ! isset( $args['attrs'][ $i ]['attr'] ) || $args['attrs'][ $i ]['attr'] !== 'content' ) {
 				continue;
 			}
-			
+
 			$args['inner_content'] = array();
-			foreach ( $args['attrs'][$i] as $key => $value ) {
+			foreach ( $args['attrs'][ $i ] as $key => $value ) {
 				if ( $key == 'attr' ) {
 					continue;
 				}
-				$args['inner_content'][$key] = $value;
+				$args['inner_content'][ $key ] = $value;
 			}
-			
-			$index = $i;				
+
+			$index = $i;
 		}
 		if ( isset( $index ) ) {
 			array_splice( $args['attrs'], $index, 1 );
 		}
-		
+
 		// strip invalid
 		foreach ( $args as $key => $value ) {
 			if ( ! array_key_exists( $key, $defaults ) ) {
@@ -99,7 +100,7 @@ class Shortcode_UI {
 	}
 
 	public function add_editor_style() {
-		add_editor_style($this->plugin_url . '/css/shortcode-ui-editor-styles.css');
+		add_editor_style( $this->plugin_url . '/css/shortcode-ui-editor-styles.css' );
 	}
 
 	public function enqueue() {
@@ -118,24 +119,24 @@ class Shortcode_UI {
 		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 			'shortcodes' => $shortcodes,
-			'strings' => array(
+			'strings'    => array(
 				'media_frame_title'                => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
 				'media_frame_menu_insert_label'    => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
 				'media_frame_menu_update_label'    => esc_html__( 'Post Element Details', 'shortcode-ui' ),
 				'media_frame_toolbar_insert_label' => esc_html__( 'Insert Element', 'shortcode-ui' ),
 				'media_frame_toolbar_update_label' => esc_html__( 'Update', 'shortcode-ui' ),
 				'edit_tab_label'                   => esc_html__( 'Edit', 'shortcode-ui' ),
-				'preview_tab_label'	               => esc_html__( 'Preview', 'shortcode-ui' ),
+				'preview_tab_label'                => esc_html__( 'Preview', 'shortcode-ui' ),
 				'mce_view_error'                   => esc_html__( 'Failed to load preview', 'shortcode-ui' ),
 			),
-			'nonces' => array(
+			'nonces'     => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
 			)
 		) );
 
 		// queue templates
-		add_action( 'admin_print_footer_scripts', array( $this, 'print_templates' ) );
+		add_action( 'admin_print_footer_scripts', array( $this, 'action_print_media_templates' ) );
 
 		do_action( 'enqueue_shortcode_ui' );
 	}
@@ -155,7 +156,7 @@ class Shortcode_UI {
 	 *
 	 * @return null
 	 */
-	public function print_templates() {
+	public function action_print_media_templates() {
 		echo $this->get_view( 'media-frame' );
 		echo $this->get_view( 'list-item' );
 		echo $this->get_view( 'edit-form' );
@@ -167,15 +168,15 @@ class Shortcode_UI {
 	 * Helper function for displaying a PHP template file.
 	 * Template args array is extracted and passed to the template file.
 	 *
-	 * @param  string  $template      full template file path. Or name of template file in inc/templates.
+	 * @param  string $template full template file path. Or name of template file in inc/templates.
 	 * @return string                 the template contents
 	 */
 	public function get_view( $template ) {
 
 		if ( ! file_exists( $template ) ) {
 
-			$template_dir  = $this->plugin_dir . 'inc/templates/';
-			$template = $template_dir . $template . '.tpl.php';
+			$template_dir = $this->plugin_dir . 'inc/templates/';
+			$template     = $template_dir . $template . '.tpl.php';
 
 			if ( ! file_exists( $template ) ) {
 				return '';
@@ -194,6 +195,7 @@ class Shortcode_UI {
 	 *
 	 * @param array $a
 	 * @param array $b
+	 * @return int
 	 */
 	private function compare_shortcodes_by_label( $a, $b ) {
 		return strcmp( $a['label'], $b['label'] );
@@ -205,7 +207,7 @@ class Shortcode_UI {
 	 *
 	 * @return null
 	 */
-	public function handle_ajax_do_shortcode( ) {
+	public function handle_ajax_do_shortcode() {
 
 		// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
 		$shortcode = ! empty( $_POST['shortcode'] ) ? stripslashes( $_POST['shortcode'] ) : null;
