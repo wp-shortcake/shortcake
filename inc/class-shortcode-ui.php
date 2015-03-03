@@ -34,13 +34,46 @@ class Shortcode_UI {
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
 		$defaults = array(
-			'label'         => '',
-			'attrs'         => array(),
-			'listItemImage' => '',   // src or 'dashicons-' - used in insert list.
+			'label'             => '',
+			'attrs'             => array(),
+			'listItemImage'     => '',   // src or 'dashicons-' - used in insert list.
+			'inner_content'     => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
-
+		
+		
+		// inner_content=true is a valid argument, but we want more detail
+		if ( is_bool( $args['inner_content'] ) && true === $args['inner_content'] ) {
+			$args['inner_content'] = array(
+				'label'            => esc_html__( 'Inner Content', 'shortcode-ui' ),
+				'description'      => '',
+				'placeholder'      => '',
+			);
+		}
+		
+		//following code is for backward compatibility
+		//which will be removed in the next version. (to supports 'attr' => 'content' special case) 
+		$num_attrs = count( $args['attrs'] );
+		for ( $i = 0; $i < $num_attrs; $i++) {
+			if ( ! isset( $args['attrs'][$i]['attr'] ) || $args['attrs'][$i]['attr'] !== 'content' ) {
+				continue;
+			}
+			
+			$args['inner_content'] = array();
+			foreach ( $args['attrs'][$i] as $key => $value ) {
+				if ( $key == 'attr' ) {
+					continue;
+				}
+				$args['inner_content'][$key] = $value;
+			}
+			
+			$index = $i;				
+		}
+		if ( isset( $index ) ) {
+			array_splice( $args['attrs'], $index, 1 );
+		}
+		
 		// strip invalid
 		foreach ( $args as $key => $value ) {
 			if ( ! array_key_exists( $key, $defaults ) ) {
@@ -78,10 +111,13 @@ class Shortcode_UI {
 		// make sure media library is queued
 		wp_enqueue_media();
 
-		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
+		$shortcodes = array_values( $this->shortcodes );
+		usort( $shortcodes, array( $this, 'compare_shortcodes_by_label' ) );
+
+		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/build/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
 		wp_enqueue_style( 'shortcode-ui', $this->plugin_url . 'css/shortcode-ui.css', array(), $this->plugin_version );
 		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
-			'shortcodes' => array_values( $this->shortcodes ),
+			'shortcodes' => $shortcodes,
 			'strings' => array(
 				'media_frame_title'                => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
 				'media_frame_menu_insert_label'    => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
@@ -154,6 +190,16 @@ class Shortcode_UI {
 	}
 
 	/**
+	 * Compare shortcodes by label
+	 *
+	 * @param array $a
+	 * @param array $b
+	 */
+	private function compare_shortcodes_by_label( $a, $b ) {
+		return strcmp( $a['label'], $b['label'] );
+	}
+
+	/**
 	 * Output a shortcode.
 	 * ajax callback for displaying the shortcode in the TinyMCE editor.
 	 *
@@ -170,9 +216,11 @@ class Shortcode_UI {
 			exit;
 		}
 
-		global $post;
-		$post = get_post( $post_id );
-		setup_postdata( $post );
+		if ( ! empty( $post_id ) ) {
+			global $post;
+			$post = get_post( $post_id );
+			setup_postdata( $post );
+		}
 
 		ob_start();
 		do_action( 'shortcode_ui_before_do_shortcode', $shortcode );

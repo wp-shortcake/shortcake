@@ -1,0 +1,73 @@
+# Copyright (C) 2015 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/shortcode-ui\n"
+"POT-Creation-Date: 2015-02-17 17:16:53+00:00\n"
+"PO-Revision-Date: 2015-02-17 17:17-0000\n"
+"Last-Translator: WordPress Portugal <http;//wp-portugal.com>\n"
+"Language-Team: \n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: inc/class-shortcode-ui.php:86 inc/class-shortcode-ui.php:87
+msgid "Insert Post Element"
+msgstr "Inserir elemento"
+
+#: inc/class-shortcode-ui.php:88
+msgid "Post Element Details"
+msgstr "Detalhes do elemento"
+
+#: inc/class-shortcode-ui.php:89
+msgid "Insert Element"
+msgstr "Inserir elemento"
+
+#: inc/class-shortcode-ui.php:90
+msgid "Update"
+msgstr "Actualizar"
+
+#: inc/class-shortcode-ui.php:91
+msgid "Edit"
+msgstr "Editar"
+
+#: inc/class-shortcode-ui.php:92
+msgid "Preview"
+msgstr "Pré-visualizar"
+
+#: inc/class-shortcode-ui.php:93
+msgid "Failed to load preview"
+msgstr "Erro ao carregar a pré-visualização"
+
+#: inc/class-shortcode-ui.php:156
+msgid "Something's rotten in the state of Denmark"
+msgstr "Algo está podre no reino da Dinamarca"
+
+#: inc/fields/class-field-attachment.php:47
+#: inc/fields/class-field-attachment.php:48
+msgid "Select Attachment"
+msgstr "Escolha o anexo"
+
+#: inc/templates/edit-form.tpl.php:3
+msgid "Back to list"
+msgstr "Voltar à lista"
+
+#. Plugin Name of the plugin/theme
+msgid "Shortcode UI"
+msgstr "Shortcode UI"
+
+#. Description of the plugin/theme
+msgid "User Interface for adding shortcodes."
+msgstr "Interface para adicionar shortcodes"
+
+#. Author of the plugin/theme
+msgid "Fusion Engineering and community"
+msgstr "Fusion Engineering e a comunidade"
+
+#. Author URI of the plugin/theme
+msgid "http://next.fusion.net/tag/shortcode-ui/"
+msgstr "http://next.fusion.net/tag/shortcode-ui/"
