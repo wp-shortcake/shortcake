@@ -1,9 +1,7 @@
 var wp = require('wp'),
 	MediaController = require('sui-controllers/media-controller'),
 	Shortcode_UI = require('./shortcode-ui'),
-	Toolbar = require('./toolbar');
-
-sui = require('sui-utils/sui');
+	Toolbar = require('./media-toolbar');
 
 var shortcodeFrame = wp.media.view.MediaFrame.Post;
 wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
@@ -29,7 +27,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 			opts.title = shortcodeUIData.strings.media_frame_menu_update_label;
 		}
 
-		var controller = new sui.controllers.MediaController( opts );
+		var controller = new MediaController( opts );
 
 		if ( 'currentShortcode' in this.options ) {
 			controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
