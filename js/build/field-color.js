@@ -1,28 +1,24 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
-var sui    = require('./utils/sui.js'),
-    jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
-    editAttributeField = require('./views/edit-attribute-field.js');
+var sui = require('./utils/sui.js'),
+    editAttributeField = require('./views/edit-attribute-field.js'),
+    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
-( function( $, sui ) {
+sui.views.editAttributeFieldColor = editAttributeField.extend( {
 
-	sui.views.editAttributeFieldColor = editAttributeField.extend( {
+	render: function() {
+		this.$el.html( this.template( this.model.toJSON() ) );
 
-		render: function() {
-			this.$el.html( this.template( this.model.toJSON() ) );
+		this.$el.find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
+			change: function() {
+				jQuery(this).trigger('keyup');
+			}
+		});
 
-			this.$el.find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
-				change: function() {
-					jQuery(this).trigger('keyup');
-				}
-			});
+		return this;
+	}
 
-			return this;
-		}
-
-	} );
-
-} )( jQuery, sui );
+} );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./utils/sui.js":2,"./views/edit-attribute-field.js":3}],2:[function(require,module,exports){
