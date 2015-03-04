@@ -81,7 +81,6 @@ module.exports = function( grunt ) {
 			dist: {
 				files : {
 					'js/build/shortcode-ui.js' : ['js/shortcode-ui.js'],
-					'js/build/wp-editor.js' : ['js/wp-editor.js'],
 					'js/build/field-attachment.js' : ['js/field-attachment.js'],
 					'js/build/field-color.js' : ['js/field-color.js'],
 				},

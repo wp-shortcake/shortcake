@@ -3,12 +3,12 @@ var wp = require('wp'),
 	Shortcode_UI = require('./shortcode-ui'),
 	Toolbar = require('./media-toolbar');
 
-var shortcodeFrame = wp.media.view.MediaFrame.Post;
-wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
+var postMediaFrame = wp.media.view.MediaFrame.Post;
+var mediaFrame = postMediaFrame.extend( {
 
 	initialize: function() {
 
-		shortcodeFrame.prototype.initialize.apply( this, arguments );
+		postMediaFrame.prototype.initialize.apply( this, arguments );
 
 		var id = 'shortcode-ui';
 
@@ -103,4 +103,6 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 		this.controller.state().insert();
 	},
 
-});
+} );
+
+module.exports = mediaFrame;
