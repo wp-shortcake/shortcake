@@ -136,7 +136,7 @@ class Shortcode_UI {
 		) );
 
 		// queue templates
-		add_action( 'admin_print_footer_scripts', array( $this, 'action_print_media_templates' ) );
+		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
 
 		do_action( 'enqueue_shortcode_ui' );
 	}
@@ -156,7 +156,7 @@ class Shortcode_UI {
 	 *
 	 * @return null
 	 */
-	public function action_print_media_templates() {
+	public function action_admin_print_footer_scripts() {
 		echo $this->get_view( 'media-frame' );
 		echo $this->get_view( 'list-item' );
 		echo $this->get_view( 'edit-form' );
