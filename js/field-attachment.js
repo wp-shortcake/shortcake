@@ -1,11 +1,13 @@
-( function( $ ) {
+var sui    = require('sui-utils/sui'),
+    jQuery = require('jquery'),
+    editAttributeField = require( 'sui-views/edit-attribute-field' );
 
-	var sui = window.Shortcode_UI;
+( function( $, sui ) {
 
 	// Cache attachment IDs for quicker loading.
 	var iDCache = {};
 
-	sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
+	sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 
 		render: function() {
 
@@ -147,4 +149,4 @@
 
 	} );
 
-} )( jQuery );
+} )( jQuery, sui );

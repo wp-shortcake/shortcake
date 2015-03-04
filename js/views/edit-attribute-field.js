@@ -29,7 +29,7 @@ var editAttributeField = Backbone.View.extend( {
 	 * then it should update the model.
 	 */
 	updateValue: function( e ) {
-		if( this.model.get( 'attr' ) ) { 
+		if( this.model.get( 'attr' ) ) {
 			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		} else {
 			var $el = $(this.el).find( '[name="inner_content"]' );

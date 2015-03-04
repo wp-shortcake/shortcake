@@ -1,9 +1,8 @@
-sui = {
-	collections: {},
-	controllers: {},
-	models: {},
+
+// Globally
+window.Shortcode_UI = window.Shortcode_UI || {
+	shortcodes: {},
 	views: {},
-	utils:{}
 };
 
-module.exports = sui;
+module.exports = window.Shortcode_UI;

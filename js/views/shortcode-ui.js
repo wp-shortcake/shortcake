@@ -3,11 +3,11 @@ var Backbone = require('backbone'),
 	TabbedView = require('sui-views/tabbed-view'),
 	ShortcodePreview = require('sui-views/shortcode-preview'),
 	EditShortcodeForm = require('sui-views/edit-shortcode-form')
+	sui = require('sui-utils/sui');
 	$ = require('jquery');
 
-sui = require('sui-utils/sui');
-
 var Shortcode_UI = Backbone.View.extend({
+
 	events: {
 		"click .add-shortcode-list li":      "select",
 		"click .edit-shortcode-form-cancel": "cancelSelect"
@@ -43,7 +43,7 @@ var Shortcode_UI = Backbone.View.extend({
 
 	renderEditShortcodeView: function() {
 		var shortcode = this.controller.props.get( 'currentShortcode' );
-		var view = new sui.views.TabbedView({
+		var view = new TabbedView({
 			tabs: {
 				edit: {
 					label: shortcodeUIData.strings.edit_tab_label,
@@ -100,5 +100,4 @@ var Shortcode_UI = Backbone.View.extend({
 
 });
 
-sui.views.Shortcode_UI = Shortcode_UI;
 module.exports = Shortcode_UI;

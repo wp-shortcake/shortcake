@@ -1,6 +1,5 @@
 var wp = require('wp');
 var insertShortcodeListItem = require('sui-views/insert-shortcode-list-item');
-sui = require('sui-utils/sui');
 
 var insertShortcodeList = wp.Backbone.View.extend({
 
@@ -24,5 +23,4 @@ var insertShortcodeList = wp.Backbone.View.extend({
 
 });
 
-sui.views.InsertShortcodeList = insertShortcodeList;
 module.exports = insertShortcodeList;

@@ -1,3 +1,5 @@
+sui = require('sui-utils/sui');
+
 /**
  * Generic shortcode mce view constructor.
  * This is cloned and used by each shortcode when registering a view.
@@ -256,5 +258,4 @@ var shortcodeViewConstructor = {
 
 };
 
-sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
 module.exports = shortcodeViewConstructor;
