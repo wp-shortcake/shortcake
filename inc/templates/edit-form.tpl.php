@@ -122,3 +122,13 @@
 		<# } #>
 	</div>
 </script>
+
+<script type="text/html" id="tmpl-shortcode-ui-content">
+	<div class="field-block">
+		<label for="inner_content">{{ data.label }}</label>
+		<textarea id="inner_content" name="inner_content" class="content-edit">{{ data.value }}</textarea>
+		<# if ( typeof data.description == 'string' ) { #>
+			<p class="description">{{ data.description }}</p>
+		<# } #>
+	</div>
+</script>

@@ -4,26 +4,28 @@
  */
 var shortcodeViewConstructor = {
 
-	View : {
+	initialize: function( options ) {
+		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
+	},
 
-		shortcodeHTML: false,
+	getShortcodeModel: function( options ) {
 
-		initialize: function( options ) {
+		var shortcodeModel;
 
-			var shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+		shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.tag } );
 
-			if ( ! shortcodeModel ) {
-				return;
-			}
+		if ( ! shortcodeModel ) {
+			return;
+		}
 
-			shortcode = shortcodeModel.clone();
+		shortcodeModel = shortcodeModel.clone();
 
-			shortcode.get( 'attrs' ).each( function( attr ) {
-
-				if ( attr.get( 'attr') in options.shortcode.attrs.named ) {
+		shortcodeModel.get('attrs').each(
+			function( attr ) {
+				if ( attr.get('attr') in options.attrs.named ) {
 					attr.set(
 						'value',
-						options.shortcode.attrs.named[ attr.get( 'attr') ]
+						options.attrs.named[ attr.get('attr') ]
 					);
 				}
 				
@@ -33,44 +35,44 @@ var shortcodeViewConstructor = {
 						options.shortcode.attrs.numeric[ attr.get( 'attr') ]
 					);
 				}
+				
+			}
+		);
 
-				if ( attr.get( 'attr' ) === 'content' && ( 'content' in options.shortcode ) ) {
-					attr.set( 'value', options.shortcode.content );
-				}
+		if ('content' in options) {
+			var inner_content = shortcodeModel.get('inner_content');
+			inner_content.set('value', options.content)
+		}
 
-			});
+		return shortcodeModel;
 
-			this.shortcode = shortcode;
+	},
 
+	getContent : function() {
+		if ( ! this.content ) {
 			this.fetch();
-		},
+		}
+		return this.content;
+	},
 
-		fetch: function() {
+	fetch : function() {
 
-			var self = this;
+		var self = this;
+
+		if ( ! this.content ) {
 
 			wp.ajax.post( 'do_shortcode', {
 				post_id: $( '#post_ID' ).val(),
-				shortcode: this.shortcode.formatShortcode(),
+				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
-				self.parsed = response;
+				self.content = response;
 				self.render( true );
 			}).fail( function() {
-				self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 				self.render( true );
 			} );
 
-			},
-
-		/**
-		 * Render the shortcode
-		 *
-		 * To ensure consistent rendering - this makes an ajax request to the admin and displays.
-		 * @return string html
-		 */
-		getHtml: function() {
-			return this.parsed;
 		}
 
 	},
@@ -79,14 +81,18 @@ var shortcodeViewConstructor = {
 	 * Edit shortcode.
 	 *
 	 * Parses the shortcode and creates shortcode mode.
-	 * @todo - I think there must be a cleaner way to get
-	 * the shortcode & args here that doesn't use regex.
+	 *
+	 * @todo - I think there must be a cleaner way to get the shortcode & args
+	 *       here that doesn't use regex.
 	 */
-	edit : function(node) {
+	edit : function( shortcodeString ) {
 
-		var shortcodeString, model, attr;
+		// Backwards compatability for WP pre-4.2
+		if ( 'object' === typeof( shortcodeString ) ) {
+			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
+		}
 
-		shortcodeString = decodeURIComponent($(node).attr('data-wpview-text'));
+		var model, attr;
 
 		var megaRegex = /\[([^\s\]]+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
 		var matches = shortcodeString.match(megaRegex);
@@ -145,12 +151,8 @@ var shortcodeViewConstructor = {
 		}
 
 		if (matches[3]) {
-			var content = currentShortcode.get('attrs').findWhere({
-				attr : 'content'
-			});
-			if (content) {
-				content.set('value', matches[3]);
-			}
+			var inner_content = currentShortcode.get('inner_content');
+			inner_content.set('value', matches[3]);
 		}
 
 		var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
@@ -161,7 +163,122 @@ var shortcodeViewConstructor = {
 
 		wp_media_frame.open();
 
-	}
+	},
+
+	// Backwards compatability for Pre WP 4.2.
+	View: {
+
+		overlay: true,
+
+		initialize: function( options ) {
+			this.shortcode = this.getShortcode( options );
+		},
+
+		getShortcode: function( options ) {
+
+			var shortcodeModel, shortcode;
+
+			shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
+
+			if (!shortcodeModel) {
+				return;
+			}
+
+			shortcode = shortcodeModel.clone();
+
+			shortcode.get('attrs').each(
+					function(attr) {
+
+						if (attr.get('attr') in options.shortcode.attrs.named) {
+							attr.set('value',
+									options.shortcode.attrs.named[attr
+											.get('attr')]);
+						}
+
+					});
+
+			if ('content' in options.shortcode) {
+				var inner_content = shortcode.get('inner_content');
+				inner_content.set('value', options.shortcode.content)
+			}
+
+			return shortcode;
+
+		},
+
+		fetch : function() {
+
+			var self = this;
+
+			if ( ! this.parsed ) {
+
+				wp.ajax.post( 'do_shortcode', {
+					post_id: $( '#post_ID' ).val(),
+					shortcode: this.shortcode.formatShortcode(),
+					nonce: shortcodeUIData.nonces.preview,
+				}).done( function( response ) {
+					if ( response.indexOf( '<script' ) !== -1 ) {
+						self.setIframes( self.getEditorStyles(), response );
+					} else {
+						self.parsed = response;
+						self.render( true );
+					}
+				}).fail( function() {
+					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+					self.render( true );
+				} );
+
+			}
+
+		},
+
+		/**
+		 * Render the shortcode
+		 *
+		 * To ensure consistent rendering - this makes an ajax request to the
+		 * admin and displays.
+		 *
+		 * @return string html
+		 */
+		getHtml : function() {
+
+			if ( ! this.parsed ) {
+				this.fetch();
+			}
+
+			return this.parsed;
+		},
+
+		/**
+		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
+		 *
+		 * @method getEditorStyles
+		 * @returns {Array}
+		 */
+		getEditorStyles: function() {
+
+			var styles = '';
+
+			this.getNodes( function ( editor, node, content ) {
+				var dom = editor.dom,
+					bodyClasses = editor.getBody().className || '',
+					iframe, iframeDoc, i, resize;
+
+				tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
+					if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
+						link.href.indexOf( 'skins/wordpress/wp-content.css' ) === -1 ) {
+
+						styles += dom.getOuterHTML( link ) + '\n';
+					}
+
+				});
+
+			} );
+
+			return styles;
+		},
+
+	},
 
 };
 

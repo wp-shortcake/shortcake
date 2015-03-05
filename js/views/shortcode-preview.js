@@ -1,4 +1,4 @@
-var Backbonen = require('backbone');
+var Backbone = require('backbone');
 
 sui = require('sui-utils/sui');
 
@@ -14,10 +14,14 @@ sui = require('sui-utils/sui');
  */
 var ShortcodePreview = Backbone.View.extend({
 	initialize: function( options ) {
+		this.head = this.getEditorStyles().join( "\n" );
+	},
 
-		this.head    = this.getEditorStyles().join( "\n" );
-		this.loading = wp.mce.View.prototype.loadingPlaceholder();
-
+	getLoading: function() {
+		return '<div class="loading-placeholder">' +
+			'<div class="dashicons dashicons-admin-media"></div>' +
+			'<div class="wpview-loading"><ins></ins></div>' +
+		'</div>';
 	},
 
 	/**
@@ -32,7 +36,7 @@ var ShortcodePreview = Backbone.View.extend({
 		// Render loading iFrame.
 		this.renderIFrame({
 			head: self.head,
-			body: self.loading,
+			body: self.getLoading(),
 		});
 
 		// Fetch shortcode preview.
