@@ -11,6 +11,9 @@ add_action( 'init', function() {
 		$attr = wp_parse_args( $attr, array(
 			'source' => '',
 			'post'   => '',
+			'fieldmanager_textarea' => '',
+			'fieldmanager_media'    => '',
+			'image'  => 0
 		) );
 
 		ob_start();

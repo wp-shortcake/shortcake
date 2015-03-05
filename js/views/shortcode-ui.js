@@ -43,7 +43,7 @@ var Shortcode_UI = Backbone.View.extend({
 
 	renderEditShortcodeView: function() {
 		var shortcode = this.controller.props.get( 'currentShortcode' );
-		var view = new TabbedView({
+		var view = new sui.views.TabbedView({
 			tabs: {
 				edit: {
 					label: shortcodeUIData.strings.edit_tab_label,
