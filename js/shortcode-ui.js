@@ -8,10 +8,9 @@ sui = require('sui-utils/sui');
 window.Shortcode_UI = sui;
 
 jQuery(document).ready(function(){
-	var shortcodes = new Shortcodes( shortcodeUIData.shortcodes )
-	sui.shortcodes = shortcodes;
+	sui.shortcodes = new Shortcodes( shortcodeUIData.shortcodes )
 	
-	shortcodes.each( function( shortcode ) {
+	sui.shortcodes.each( function( shortcode ) {
 		if( wp.mce.views ) {
 			// Register the mce view for each shortcode.
 			// Note - clone the constructor.

@@ -16,6 +16,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 
 		var opts = {
 			id      : id,
+			search  : true,
 			router  : false,
 			toolbar : id + '-toolbar',
 			menu    : 'default',
