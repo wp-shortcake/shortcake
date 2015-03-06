@@ -15,7 +15,9 @@ var Toolbar = wp.media.view.Toolbar.extend({
 
 	refresh : function() {
 		var action = this.controller.state().props.get('action');
-		this.get('insert').model.set('disabled', action == 'select');
+		if( this.get('insert') ) {
+			this.get('insert').model.set('disabled', action == 'select');
+		}
 		/**
 		 * call 'refresh' directly on the parent class
 		 */

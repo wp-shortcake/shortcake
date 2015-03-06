@@ -1,5 +1,6 @@
 var Backbone = require('backbone'),
-    wp = require('wp');
+    wp = require('wp'); 	
+    Shortcodes = require('sui-collections/shortcodes');
 
 var MediaController = wp.media.controller.State.extend({
 
@@ -8,6 +9,7 @@ var MediaController = wp.media.controller.State.extend({
 		this.props = new Backbone.Model({
 			currentShortcode: null,
 			action: 'select',
+			search: null
 		});
 
 		this.props.on( 'change:action', this.refresh, this );
@@ -18,6 +20,14 @@ var MediaController = wp.media.controller.State.extend({
 		if ( this.frame && this.frame.toolbar ) {
 			this.frame.toolbar.get().refresh();
 		}
+	},
+
+	search: function( searchTerm ) {
+		var pattern = new RegExp( searchTerm, "gi" );
+		var filteredModels = sui.shortcodes.filter( function( model ) {
+			return pattern.test( model.get( "label" ) );
+		});
+		return filteredModels;
 	},
 
 	insert: function() {
@@ -32,6 +42,7 @@ var MediaController = wp.media.controller.State.extend({
 	reset: function() {
 		this.props.set( 'action', 'select' );
 		this.props.set( 'currentShortcode', null );
+		this.props.set( 'search', null );
 	},
 
 });

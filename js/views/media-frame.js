@@ -14,6 +14,7 @@ var mediaFrame = postMediaFrame.extend( {
 
 		var opts = {
 			id      : id,
+			search  : true,
 			router  : false,
 			toolbar : id + '-toolbar',
 			menu    : 'default',
