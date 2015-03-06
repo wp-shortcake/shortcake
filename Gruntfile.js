@@ -22,9 +22,9 @@ module.exports = function( grunt ) {
 
 		watch:  {
 
-			sass: {
+			styles: {
 				files: ['css/*/**/*.scss'],
-				tasks: ['sass'],
+				tasks: ['styles'],
 				options: {
 					debounceDelay: 500,
 					livereload: true,
@@ -32,9 +32,9 @@ module.exports = function( grunt ) {
 				}
 			},
 
-			js: {
-				files: ['js/*/**/*.js', '!js/build/**/*'],
-				tasks: ['browserify'],
+			scripts: {
+				files: ['js/*/**/*.js', 'js-tests/src/**/*.js', '!js/build/**/*'],
+				tasks: ['scripts'],
 				options: {
 					debounceDelay: 500,
 					livereload: true,
@@ -45,6 +45,7 @@ module.exports = function( grunt ) {
 		},
 
 		browserify : {
+
 			options: {
 				preBundleCB: function(b) {
 
@@ -78,6 +79,7 @@ module.exports = function( grunt ) {
 
 				}
 			},
+
 			dist: {
 				files : {
 					'js/build/shortcode-ui.js' : ['js/shortcode-ui.js'],
@@ -89,6 +91,33 @@ module.exports = function( grunt ) {
 				}
 			},
 
+			// Proccess Jasmine Tests.
+			specs: {
+				files : {
+					'js-tests/build/specs.js' : ['js-tests/src/**/*Spec.js'],
+					// 'js-tests/build/mainHelper.js' : ['js-tests/src/*Helper.js'],
+				},
+				options: {
+					transform: ['browserify-shim']
+				}
+			}
+
+		},
+
+		jasmine: {
+			shortcodeUI: {
+				// src: ['js/build/*.js'],
+				// src: ['js/*.js', '!js/build/*' ],
+				options: {
+					specs: 'js-tests/build/specs.js',
+					helpers: 'js-tests/build/helpers.js',
+					vendor: [
+						'js-tests/vendor/jquery.js',
+						'js-tests/vendor/underscore.js',
+						'js-tests/vendor/backbone.js',
+					],
+				}
+			}
 		},
 
 		addtextdomain: {
@@ -119,12 +148,15 @@ module.exports = function( grunt ) {
 		}, //makepot
 	} );
 
-	grunt.loadNpmTasks('grunt-sass');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-browserify');
-    grunt.loadNpmTasks("grunt-wp-i18n");
+	grunt.loadNpmTasks( 'grunt-sass' );
+	grunt.loadNpmTasks( 'grunt-contrib-watch' );
+	grunt.loadNpmTasks( 'grunt-browserify' );
+    grunt.loadNpmTasks( 'grunt-wp-i18n' );
+    grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
 
-	grunt.registerTask( 'default', [ 'sass', 'browserify' ] );
+    grunt.registerTask( 'scripts', [ 'browserify', 'jasmine' ] );
+    grunt.registerTask( 'styles', [ 'sass' ] );
+	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 
 	grunt.util.linefeed = '\n';
