@@ -132,29 +132,30 @@ describe( "MCE View Constructor", function() {
 
 	} );
 
-	it( 'parses shortcode strings correctly', function() {
+	it( 'parses simple shortcode', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value"]')
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'attr' }).get('value') ).toEqual( 'test value' );
+	});
 
-		// Test standard.
-		var shortcode1 = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value"]')
-		expect( shortcode1 instanceof Shortcode ).toEqual( true );
-		expect( shortcode1.get( 'attrs' ).findWhere( { attr: 'attr' }).get('value') ).toEqual( 'test value' );
+	it( 'parses shortcode with content', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value 1"]test content [/test_shortcode]')
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'attr' }).get('value') ).toEqual( 'test value 1' );
+		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( 'test content ' );
+	});
 
-		// Test with content.
-		var shortcode1 = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value 1"]test content [/test_shortcode]')
-		expect( shortcode1 instanceof Shortcode ).toEqual( true );
-		expect( shortcode1.get( 'attrs' ).findWhere( { attr: 'attr' }).get('value') ).toEqual( 'test value 1' );
-		expect( shortcode1.get( 'inner_content' ).get('value') ).toEqual( 'test content ' );
+	it( 'parses shortcode with dashes in name and attribute', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]')
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test value 2' );
+	});
 
-		// Test dashes in shortcode and attribute names.
-		var shortcode2 = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]')
-		expect( shortcode2 instanceof Shortcode ).toEqual( true );
-		expect( shortcode2.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test value 2' );
-
-		// Test content with line breaks.
-		var shortcode3 = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ncontent \r2 [/test_shortcode]")
-		expect( shortcode1 instanceof Shortcode ).toEqual( true );
-		expect( shortcode1.get( 'inner_content' ).get('value') ).toEqual( "test \ncontent \r2 " );
-
+	// https://github.com/fusioneng/Shortcake/issues/171
+	xit( 'parses shortcode with line breaks in inner content', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ncontent \r2 [/test_shortcode]")
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ncontent \r2 " );
 	} );
 
 } );
