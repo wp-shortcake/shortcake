@@ -1,7 +1,7 @@
+var Shortcodes = require('sui-collections/shortcodes');
 
-// Globally
 window.Shortcode_UI = window.Shortcode_UI || {
-	shortcodes: {},
+	shortcodes: new Shortcodes,
 	views: {},
 };
 
