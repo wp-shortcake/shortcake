@@ -8,7 +8,7 @@ var sui = require('sui-utils/sui'),
 $(document).ready(function(){
 
 	// Create collection of shortcode models from data.
-	sui.shortcodes = new Shortcodes( shortcodeUIData.shortcodes );
+	sui.shortcodes.add( shortcodeUIData.shortcodes );
 
 	wp.media.view.MediaFrame.Post = mediaFrame;
 
