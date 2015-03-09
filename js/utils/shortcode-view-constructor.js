@@ -1,4 +1,6 @@
 sui = require('sui-utils/sui');
+wp = require('wp');
+$ = require('jquery');
 
 /**
  * Generic shortcode mce view constructor.
@@ -82,7 +84,7 @@ var shortcodeViewConstructor = {
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
-				self.fetching = false;
+				delete self.fetching;
 				self.render( true );
 			} );
 

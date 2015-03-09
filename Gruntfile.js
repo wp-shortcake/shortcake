@@ -95,7 +95,7 @@ module.exports = function( grunt ) {
 			specs: {
 				files : {
 					'js-tests/build/specs.js' : ['js-tests/src/**/*Spec.js'],
-					// 'js-tests/build/mainHelper.js' : ['js-tests/src/*Helper.js'],
+					'js-tests/build/helpers.js' : ['js-tests/src/**/*Helper.js'],
 				},
 				options: {
 					transform: ['browserify-shim']
@@ -106,8 +106,6 @@ module.exports = function( grunt ) {
 
 		jasmine: {
 			shortcodeUI: {
-				// src: ['js/build/*.js'],
-				// src: ['js/*.js', '!js/build/*' ],
 				options: {
 					specs: 'js-tests/build/specs.js',
 					helpers: 'js-tests/build/helpers.js',
@@ -115,6 +113,8 @@ module.exports = function( grunt ) {
 						'js-tests/vendor/jquery.js',
 						'js-tests/vendor/underscore.js',
 						'js-tests/vendor/backbone.js',
+						'js-tests/vendor/wp-util.js',
+						'js-tests/vendor/mock-ajax.js',
 					],
 				}
 			}

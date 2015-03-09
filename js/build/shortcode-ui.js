@@ -248,7 +248,10 @@ $(document).ready(function(){
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":8,"./utils/sui.js":9,"./views/media-frame.js":14}],8:[function(require,module,exports){
+(function (global){
 sui = require('./sui.js');
+wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 /**
  * Generic shortcode mce view constructor.
@@ -332,7 +335,7 @@ var shortcodeViewConstructor = {
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
-				self.fetching = false;
+				delete self.fetching;
 				self.render( true );
 			} );
 
@@ -551,6 +554,7 @@ var shortcodeViewConstructor = {
 
 module.exports = shortcodeViewConstructor;
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./sui.js":9}],9:[function(require,module,exports){
 var Shortcodes = require('./../collections/shortcodes.js');
 

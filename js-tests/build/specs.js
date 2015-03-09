@@ -99,6 +99,19 @@ describe( "Shortcode Model", function() {
 		expect( json.attrs[0].label ).toEqual( data.attrs[0].label );
 	});
 
+	it( 'Format shortcode.', function() {
+
+		var _shortcode = $.extend( true, {}, shortcode );
+
+		// Test with attribute and with content.
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]test content[/test_shortcode]' );
+
+		// Test without content.
+		_shortcode.get('inner_content').unset( 'value' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]' );
+
+	});
+
 });
 
 },{"../../js/collections/shortcode-attributes":6,"../../js/models/inner-content":8,"../../js/models/shortcode":10,"../../js/models/shortcode-attribute":9}],4:[function(require,module,exports){
@@ -107,6 +120,7 @@ var Shortcode = require('./../../../js/models/shortcode.js');
 var MceViewConstructor = require('./../../../js/utils/shortcode-view-constructor.js');
 var sui = require('./../../../js/utils/sui.js');
 var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
 
 describe( "MCE View Constructor", function() {
 
@@ -165,13 +179,74 @@ describe( "MCE View Constructor", function() {
 
 		spyOn( constructor, 'fetch' );
 
+		// If content is set - just return and don't fetch data.
 		constructor.content = '<h1>test content</h1>';
 		expect( constructor.getContent() ).toEqual( '<h1>test content</h1>' );
 		expect( constructor.fetch ).not.toHaveBeenCalled();
 
-	    constructor.content = null;
-	    expect( constructor.getContent() ).toEqual( null );
-        expect( constructor.fetch ).toHaveBeenCalled();
+		// If content is empty - just null and fetch should be called.
+		constructor.content = null;
+		expect( constructor.getContent() ).toEqual( null );
+		expect( constructor.fetch ).toHaveBeenCalled();
+
+	} );
+
+	describe( "Fetch preview HTML", function() {
+
+		beforeEach(function() {
+			jasmine.Ajax.install();
+		});
+
+		afterEach(function() {
+			jasmine.Ajax.uninstall();
+		});
+
+		var constructor = $.extend( true, {
+			render: function( force ) {},
+		}, MceViewConstructor );
+
+		// Mock shortcode model data.
+		constructor.shortcodeModel = $.extend( true, {}, sui.shortcodes.first() );
+
+		it( 'Fetches data success', function(){
+
+			spyOn( wp.ajax, "post" ).and.callThrough();
+			spyOn( constructor, "render" );
+
+			constructor.fetch();
+
+			expect( constructor.fetching ).toEqual( true );
+			expect( constructor.content ).toEqual( undefined );
+			expect( wp.ajax.post ).toHaveBeenCalled();
+			expect( constructor.render ).not.toHaveBeenCalled();
+
+			jasmine.Ajax.requests.mostRecent().respondWith( {
+				'status': 200,
+				'responseText': '{"success":true,"data":"test preview response body"}'
+			} );
+
+			expect( constructor.fetching ).toEqual( undefined );
+			expect( constructor.content ).toEqual( 'test preview response body' );
+			expect( constructor.render ).toHaveBeenCalled();
+
+		});
+
+		it( 'Handles errors when fetching data', function() {
+
+			spyOn( constructor, "render" );
+
+			constructor.fetch();
+
+			jasmine.Ajax.requests.mostRecent().respondWith( {
+				'status': 500,
+				'responseText': '{"success":false}'
+			});
+
+			expect( constructor.fetching ).toEqual( undefined );
+			expect( constructor.content ).toContain( 'shortcake-error' );
+			expect( constructor.render ).toHaveBeenCalled();
+
+		} );
 
 	} );
 
@@ -387,7 +462,10 @@ module.exports = Shortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcode-attributes.js":6,"./inner-content.js":8}],11:[function(require,module,exports){
+(function (global){
 sui = require('./sui.js');
+wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 /**
  * Generic shortcode mce view constructor.
@@ -471,7 +549,7 @@ var shortcodeViewConstructor = {
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
-				self.fetching = false;
+				delete self.fetching;
 				self.render( true );
 			} );
 
@@ -690,6 +768,7 @@ var shortcodeViewConstructor = {
 
 module.exports = shortcodeViewConstructor;
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./sui.js":12}],12:[function(require,module,exports){
 var Shortcodes = require('./../collections/shortcodes.js');
 

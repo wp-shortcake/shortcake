@@ -2,6 +2,7 @@ var Shortcode = require('sui-models/shortcode');
 var MceViewConstructor = require('sui-utils/shortcode-view-constructor');
 var sui = require('sui-utils/sui');
 var $ = require('jquery');
+var wp = require('wp');
 
 describe( "MCE View Constructor", function() {
 
@@ -60,13 +61,74 @@ describe( "MCE View Constructor", function() {
 
 		spyOn( constructor, 'fetch' );
 
+		// If content is set - just return and don't fetch data.
 		constructor.content = '<h1>test content</h1>';
 		expect( constructor.getContent() ).toEqual( '<h1>test content</h1>' );
 		expect( constructor.fetch ).not.toHaveBeenCalled();
 
-	    constructor.content = null;
-	    expect( constructor.getContent() ).toEqual( null );
-        expect( constructor.fetch ).toHaveBeenCalled();
+		// If content is empty - just null and fetch should be called.
+		constructor.content = null;
+		expect( constructor.getContent() ).toEqual( null );
+		expect( constructor.fetch ).toHaveBeenCalled();
+
+	} );
+
+	describe( "Fetch preview HTML", function() {
+
+		beforeEach(function() {
+			jasmine.Ajax.install();
+		});
+
+		afterEach(function() {
+			jasmine.Ajax.uninstall();
+		});
+
+		var constructor = $.extend( true, {
+			render: function( force ) {},
+		}, MceViewConstructor );
+
+		// Mock shortcode model data.
+		constructor.shortcodeModel = $.extend( true, {}, sui.shortcodes.first() );
+
+		it( 'Fetches data success', function(){
+
+			spyOn( wp.ajax, "post" ).and.callThrough();
+			spyOn( constructor, "render" );
+
+			constructor.fetch();
+
+			expect( constructor.fetching ).toEqual( true );
+			expect( constructor.content ).toEqual( undefined );
+			expect( wp.ajax.post ).toHaveBeenCalled();
+			expect( constructor.render ).not.toHaveBeenCalled();
+
+			jasmine.Ajax.requests.mostRecent().respondWith( {
+				'status': 200,
+				'responseText': '{"success":true,"data":"test preview response body"}'
+			} );
+
+			expect( constructor.fetching ).toEqual( undefined );
+			expect( constructor.content ).toEqual( 'test preview response body' );
+			expect( constructor.render ).toHaveBeenCalled();
+
+		});
+
+		it( 'Handles errors when fetching data', function() {
+
+			spyOn( constructor, "render" );
+
+			constructor.fetch();
+
+			jasmine.Ajax.requests.mostRecent().respondWith( {
+				'status': 500,
+				'responseText': '{"success":false}'
+			});
+
+			expect( constructor.fetching ).toEqual( undefined );
+			expect( constructor.content ).toContain( 'shortcake-error' );
+			expect( constructor.render ).toHaveBeenCalled();
+
+		} );
 
 	} );
 
