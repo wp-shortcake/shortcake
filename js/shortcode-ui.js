@@ -15,10 +15,9 @@ $(document).ready(function(){
 	// Register a view for each shortcode.
 	sui.shortcodes.each( function( shortcode ) {
 		if ( wp.mce.views ) {
-			// Note - clone the constructor.
 			wp.mce.views.register(
 				shortcode.get('shortcode_tag'),
-				$.extend( true, {}, shortcodeViewConstructor )
+				shortcodeViewConstructor
 			);
 		}
 	} );
