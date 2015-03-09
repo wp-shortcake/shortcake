@@ -269,6 +269,7 @@ describe( "MCE View Constructor", function() {
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test value 2' );
 	});
 
+	// https://github.com/fusioneng/Shortcake/issues/171
 	xit( 'parses shortcode with line breaks in inner content', function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ncontent \r2 [/test_shortcode]")
 		expect( shortcode instanceof Shortcode ).toEqual( true );
