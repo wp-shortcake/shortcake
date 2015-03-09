@@ -7,8 +7,8 @@ Shortcode = Backbone.Model.extend({
 	defaults: {
 		label: '',
 		shortcode_tag: '',
-		attrs: ShortcodeAttributes,
-		inner_content: InnerContent,
+		attrs: new ShortcodeAttributes,
+		inner_content: new InnerContent,
 	},
 
 	/**
