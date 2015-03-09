@@ -10,6 +10,10 @@ var shortcodeViewConstructor = {
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
 	},
 
+	/**
+	 * Get the shortcode model given the view shortcode options.
+	 * Must be a registered shortcode (see sui.shortcodes)
+	 */
 	getShortcodeModel: function( options ) {
 
 		var shortcodeModel;
@@ -42,6 +46,12 @@ var shortcodeViewConstructor = {
 
 	},
 
+	/**
+	 * Return the preview HTML.
+	 * If empty, fetches data.
+	 *
+	 * @return string
+	 */
 	getContent : function() {
 		if ( ! this.content ) {
 			this.fetch();
@@ -49,6 +59,12 @@ var shortcodeViewConstructor = {
 		return this.content;
 	},
 
+	/**
+	 * Fetch preview.
+	 * Async. Sets this.content and calls this.render.
+	 *
+	 * @return undefined
+	 */
 	fetch : function() {
 
 		var self = this;
@@ -76,11 +92,8 @@ var shortcodeViewConstructor = {
 
 	/**
 	 * Edit shortcode.
+	 * Get shortcode model and open edit modal.
 	 *
-	 * Parses the shortcode and creates shortcode mode.
-	 *
-	 * @todo - I think there must be a cleaner way to get the shortcode & args
-	 *       here that doesn't use regex.
 	 */
 	edit : function( shortcodeString ) {
 
@@ -107,6 +120,16 @@ var shortcodeViewConstructor = {
 
 	},
 
+	/**
+	 * Parse a shortcode string and return shortcode model.
+	 * Must be a registered shortcode - see window.Shortcode_UI.shortcodes.
+	 *
+	 * @todo - I think there must be a cleaner way to get the
+	 * shortcode & args here that doesn't use regex.
+	 *
+	 * @param  string shortcodeString
+	 * @return Shortcode
+	 */
 	parseShortcodeString: function( shortcodeString ) {
 
 		var model, attr;
