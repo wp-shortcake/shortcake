@@ -52,4 +52,17 @@ describe( "Shortcode Model", function() {
 		expect( json.attrs[0].label ).toEqual( data.attrs[0].label );
 	});
 
+	it( 'Format shortcode.', function() {
+
+		var _shortcode = $.extend( true, {}, shortcode );
+
+		// Test with attribute and with content.
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]test content[/test_shortcode]' );
+
+		// Test without content.
+		_shortcode.get('inner_content').unset( 'value' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]' );
+
+	});
+
 });
