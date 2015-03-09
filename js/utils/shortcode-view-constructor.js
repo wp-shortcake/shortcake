@@ -53,7 +53,9 @@ var shortcodeViewConstructor = {
 
 		var self = this;
 
-		if ( ! this.content ) {
+		if ( ! this.fetching ) {
+
+			this.fetching = true;
 
 			wp.ajax.post( 'do_shortcode', {
 				post_id: $( '#post_ID' ).val(),
@@ -61,9 +63,10 @@ var shortcodeViewConstructor = {
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
 				self.content = response;
-				self.render( true );
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+			} ).always( function() {
+				self.fetching = false;
 				self.render( true );
 			} );
 

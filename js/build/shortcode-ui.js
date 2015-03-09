@@ -304,7 +304,9 @@ var shortcodeViewConstructor = {
 
 		var self = this;
 
-		if ( ! this.content ) {
+		if ( ! this.fetching ) {
+
+			this.fetching = true;
 
 			wp.ajax.post( 'do_shortcode', {
 				post_id: $( '#post_ID' ).val(),
@@ -312,9 +314,10 @@ var shortcodeViewConstructor = {
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
 				self.content = response;
-				self.render( true );
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+			} ).always( function() {
+				self.fetching = false;
 				self.render( true );
 			} );
 
@@ -877,10 +880,10 @@ var SearchShortcode = wp.media.view.Search.extend({
 	tagName:   'input',
 	className: 'search',
 	id:        'media-search-input',
-
+	
 	initialize: function( options ) {
 		this.shortcodeList = options.shortcodeList;
-	},
+	}, 
 
 	attributes: {
 		type:        'search',
@@ -898,7 +901,7 @@ var SearchShortcode = wp.media.view.Search.extend({
 		this.el.value = this.model.escape('search');
 		return this;
 	},
-
+	
 	refreshShortcodes: function( shortcodeData ) {
 		this.shortcodeList.refresh( shortcodeData );
 	},
@@ -914,7 +917,6 @@ var SearchShortcode = wp.media.view.Search.extend({
 
 sui.views.SearchShortcode = SearchShortcode;
 module.exports = SearchShortcode;
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":9}],17:[function(require,module,exports){
 (function (global){
