@@ -1,6 +1,6 @@
 var InnerContent = require('../../js/models/inner-content');
 
-describe( "Shortcode Attribute Model Tests", function() {
+describe( "Shortcode Inner Content Model", function() {
 
 	var data = {
 		label:       'Inner Content',
@@ -9,12 +9,12 @@ describe( "Shortcode Attribute Model Tests", function() {
 		placeholder: 'test placeholder',
 	};
 
-	it( 'should correctly set defaults.', function() {
+	it( 'sets defaults correctly.', function() {
 		var content = new InnerContent();
-		expect( content.toJSON() ).toEqual( false );
+		expect( content.toJSON() ).toEqual( {} );
 	});
 
-	it( 'should correctly set data.', function() {
+	it( 'sets data correctly.', function() {
 		var content = new InnerContent( data );
 		expect( content.toJSON() ).toEqual( data );
 	});

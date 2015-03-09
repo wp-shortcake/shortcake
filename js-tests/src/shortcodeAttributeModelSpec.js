@@ -1,6 +1,6 @@
 var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
 
-describe( "Shortcode Attribute Model Tests", function() {
+describe( "Shortcode Attribute Model", function() {
 
 	var attrData = {
 		attr:        'attr',
