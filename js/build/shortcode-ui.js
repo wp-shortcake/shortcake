@@ -35,7 +35,7 @@ module.exports = Shortcodes;
 },{"./../models/shortcode.js":6}],3:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
-    wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null); 	
+    wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
     Shortcodes = require('./../collections/shortcodes.js');
 
 var MediaController = wp.media.controller.State.extend({
@@ -83,6 +83,7 @@ var MediaController = wp.media.controller.State.extend({
 
 });
 
+sui.controllers.MediaController = MediaController;
 module.exports = MediaController;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -561,6 +562,7 @@ var Shortcodes = require('./../collections/shortcodes.js');
 window.Shortcode_UI = window.Shortcode_UI || {
 	shortcodes: new Shortcodes,
 	views: {},
+	controllers: {},
 };
 
 module.exports = window.Shortcode_UI;
@@ -1259,6 +1261,7 @@ module.exports = Shortcode_UI;
 },{"./../utils/sui.js":9,"./edit-shortcode-form.js":11,"./insert-shortcode-list.js":13,"./media-toolbar.js":15,"./search-shortcode.js":16,"./shortcode-preview.js":17,"./tabbed-view.js":19}],19:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var sui = require('./../utils/sui.js');
 
 /**
  * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with
@@ -1376,7 +1379,8 @@ var TabbedView = Backbone.View.extend({
 	}
 });
 
+sui.views.TabbedView = TabbedView;
 module.exports = TabbedView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[7]);
+},{"./../utils/sui.js":9}]},{},[7]);

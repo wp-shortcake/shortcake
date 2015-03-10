@@ -193,6 +193,7 @@ var Shortcodes = require('./../collections/shortcodes.js');
 window.Shortcode_UI = window.Shortcode_UI || {
 	shortcodes: new Shortcodes,
 	views: {},
+	controllers: {},
 };
 
 module.exports = window.Shortcode_UI;
