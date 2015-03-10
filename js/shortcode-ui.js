@@ -1,25 +1,23 @@
-var sui = require('sui-utils/sui'),
-	Shortcodes = require('sui-collections/shortcodes'),
-	shortcodeViewConstructor = require('sui-utils/shortcode-view-constructor'),
-	mediaFrame = require('sui-views/media-frame'),
+var Backbone = require('backbone'),
 	wp = require('wp'),
-	$ = require('jquery');
+	Shortcodes = require('sui-collections/shortcodes'),
+	shortcodeViewConstructor = require('sui-utils/shortcode-view-constructor');
 
-$(document).ready(function(){
+sui = require('sui-utils/sui');
 
-	// Create collection of shortcode models from data.
-	sui.shortcodes.add( shortcodeUIData.shortcodes );
+window.Shortcode_UI = sui;
 
-	wp.media.view.MediaFrame.Post = mediaFrame;
-
-	// Register a view for each shortcode.
+jQuery(document).ready(function(){
+	sui.shortcodes = new Shortcodes( shortcodeUIData.shortcodes )
+	
 	sui.shortcodes.each( function( shortcode ) {
-		if ( wp.mce.views ) {
+		if( wp.mce.views ) {
+			// Register the mce view for each shortcode.
+			// Note - clone the constructor.
 			wp.mce.views.register(
 				shortcode.get('shortcode_tag'),
-				shortcodeViewConstructor
+				$.extend( true, {}, shortcodeViewConstructor )
 			);
 		}
 	} );
-
 });

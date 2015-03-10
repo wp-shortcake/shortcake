@@ -37,7 +37,7 @@ class Shortcake_Field_Attachment {
 
 	public function action_admin_enqueue_scripts() {
 
-		$script = plugins_url( '/js/build/field-attachment.js', dirname( dirname( __FILE__ ) ) );
+		$script = plugins_url( '/js/field-attachment.js', dirname( dirname( __FILE__ ) ) );
 
 		wp_enqueue_script( 'shortcake-field-attachment', $script, array( 'shortcode-ui' ) );
 

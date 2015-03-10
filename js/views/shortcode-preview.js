@@ -1,14 +1,16 @@
 var Backbone = require('backbone');
 
+sui = require('sui-utils/sui');
+
 /**
  * Preview of rendered shortcode.
  * Asynchronously fetches rendered shortcode content from WordPress.
  * Displayed in an iframe to isolate editor styles.
  *
- * @class ShortcodePreview
+ * @class sui.views.ShortcodePreview
  * @constructor
  * @params options
- * @params options.model {Shortcode} Requires a valid shortcode.
+ * @params options.model {sui.models.Shortcode} Requires a valid shortcode.
  */
 var ShortcodePreview = Backbone.View.extend({
 	initialize: function( options ) {
@@ -177,4 +179,5 @@ var ShortcodePreview = Backbone.View.extend({
 	}
 });
 
+sui.views.ShortcodePreview = ShortcodePreview;
 module.exports = ShortcodePreview;

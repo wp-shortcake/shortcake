@@ -1,19 +1,21 @@
-var sui = require('sui-utils/sui'),
-    editAttributeField = require( 'sui-views/edit-attribute-field' ),
-    $ = require('jquery');
+( function( $ ) {
 
-sui.views.editAttributeFieldColor = editAttributeField.extend( {
+	var sui = window.Shortcode_UI;
 
-	render: function() {
-		this.$el.html( this.template( this.model.toJSON() ) );
+	sui.views.editAttributeFieldColor = sui.views.editAttributeField.extend( {
 
-		this.$el.find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
-			change: function() {
-				jQuery(this).trigger('keyup');
-			}
-		});
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+			
+			this.$el.find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
+				change: function() {
+					jQuery(this).trigger('keyup');
+				}
+			});
+			
+			return this;
+		}
 
-		return this;
-	}
+	} );
 
-} );
+} )( jQuery );
