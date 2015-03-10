@@ -1,9 +1,9 @@
-sui = {
-	collections: {},
-	controllers: {},
-	models: {},
+var Shortcodes = require('sui-collections/shortcodes');
+
+window.Shortcode_UI = window.Shortcode_UI || {
+	shortcodes: new Shortcodes,
 	views: {},
-	utils:{}
+	controllers: {},
 };
 
-module.exports = sui;
+module.exports = window.Shortcode_UI;
