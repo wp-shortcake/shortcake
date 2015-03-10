@@ -1,15 +1,14 @@
 var Backbone = require('backbone');
 var ShortcodeAttributes = require('sui-collections/shortcode-attributes');
 var InnerContent = require('sui-models/inner-content');
-sui = require('sui-utils/sui');
 
 Shortcode = Backbone.Model.extend({
 
 	defaults: {
 		label: '',
 		shortcode_tag: '',
-		attrs: sui.models.ShortcodeAttributes,
-		inner_content: sui.models.InnerContent,
+		attrs: new ShortcodeAttributes,
+		inner_content: new InnerContent,
 	},
 
 	/**
@@ -21,11 +20,11 @@ Shortcode = Backbone.Model.extend({
 		if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof ShortcodeAttributes ) ) {
 			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
-		
+
 		if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof InnerContent ) ) {
 			attributes.inner_content = new InnerContent( attributes.inner_content );
 		}
-		
+
 		return Backbone.Model.prototype.set.call(this, attributes, options);
 	},
 
@@ -78,7 +77,7 @@ Shortcode = Backbone.Model.extend({
 		if ( 'undefined' !== typeof this.get( 'inner_content' ).get( 'value' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
-		
+
 		template = "[{{ shortcode }} {{ attributes }}]"
 
 		if ( content && content.length > 0 ) {
@@ -95,5 +94,4 @@ Shortcode = Backbone.Model.extend({
 
 });
 
-sui.models.Shortcode = Shortcode;
 module.exports = Shortcode;
