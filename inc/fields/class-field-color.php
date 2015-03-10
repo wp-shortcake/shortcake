@@ -30,27 +30,27 @@ class Shortcake_Field_Color {
 		add_action( 'shortcode_ui_loaded_editor', array( $this, 'load_template' ) );
 
 	}
-
+	
 	private function color_attribute_present() {
-
+		
 		foreach( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
 			if ( empty( $shortcode['attrs'] ) ) {
 				continue;
 			}
-
+			
 			foreach ( $shortcode['attrs'] as $attribute ) {
 				if ( empty( $attribute['type'] ) ) {
 					continue;
 				}
-
+				
 				if ( $attribute['type'] == 'color' ) {
 					return true;
 				}
 			}
 		}
-
+		
 		return false;
-
+		
 	}
 
 	public function filter_shortcode_ui_fields( $fields ) {
@@ -58,29 +58,29 @@ class Shortcake_Field_Color {
 	}
 
 	public function action_admin_enqueue_scripts() {
-
+		
 		if ( ! $this->color_attribute_present() ) {
 			return;
 		}
 
-		$script = plugins_url( '/js/build/field-color.js', dirname( dirname( __FILE__ ) ) );
+		$script = plugins_url( '/js/field-color.js', dirname( dirname( __FILE__ ) ) );
 
 		wp_enqueue_script( 'shortcake-field-color', $script, array( 'shortcode-ui' ) );
-
+		
 	}
 
 	/**
 	 * Output templates used by the color field.
 	 */
 	public function load_template() {
-
+		
 		if ( ! $this->color_attribute_present() ) {
 			return;
 		}
 
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'wp-color-picker' );
-
+		
 		?>
 
 		<script type="text/html" id="tmpl-fusion-shortcake-field-color">

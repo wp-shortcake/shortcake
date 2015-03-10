@@ -1,6 +1,5 @@
-var wp = require('wp'),
-sui = require('sui-utils/sui'),
-editAttributeField = require( 'sui-views/edit-attribute-field' );
+var wp = require('wp');
+sui = require('sui-utils/sui');
 
 /**
  * Single edit shortcode content view.
@@ -13,19 +12,23 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 		var t = this;
 
 		// add UI for inner_content
-		var view = new editAttributeField( {
-			model:     this.model.get( 'inner_content' ),
-			shortcode: t.model,
-		} );
+		var model = this.model.get( 'inner_content' );
+		if ( typeof model.attributes.type !== 'undefined' ) {
+			var viewObjName = 'editAttributeField';
+			var tmplName    = 'shortcode-ui-content';
 
-		view.template = wp.media.template( 'shortcode-ui-content' );
-		t.views.add( '.edit-shortcode-form-fields', view );
+			var view        = new sui.views[viewObjName]( { model: this.model.get( 'inner_content' ) } );
+			view.template   = wp.media.template( tmplName );
+			view.shortcode = t.model;
 
+			t.views.add( '.edit-shortcode-form-fields', view );
+		}
+		
 		this.model.get( 'attrs' ).each( function( attr ) {
 
 			// Get the field settings from localization data.
 			var type = attr.get('type');
-
+			
 			if ( ! shortcodeUIFieldData[ type ] ) {
 				return;
 			}
@@ -40,9 +43,10 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			t.views.add( '.edit-shortcode-form-fields', view );
 
 		} );
-
+		
 	},
 
 });
 
+sui.views.EditShortcodeForm = EditShortcodeForm;
 module.exports = EditShortcodeForm;

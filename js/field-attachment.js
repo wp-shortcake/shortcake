@@ -1,148 +1,150 @@
-var sui = require('sui-utils/sui'),
-    editAttributeField = require( 'sui-views/edit-attribute-field' ),
-    $ = require('jquery');
+( function( $ ) {
 
-// Cache attachment IDs for quicker loading.
-var iDCache = {};
+	var sui = window.Shortcode_UI;
 
-sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
+	// Cache attachment IDs for quicker loading.
+	var iDCache = {};
 
-	render: function() {
+	sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
-		var model = this.model;
+		render: function() {
 
-		// Set model default values.
-		for ( var arg in ShorcakeImageFieldData.defaultArgs ) {
-			if ( ! model.get( arg ) ) {
-				model.set( arg, ShorcakeImageFieldData.defaultArgs[ arg ] );
-			}
-		}
+			var model = this.model;
 
-		this.$el.html( this.template( model.toJSON() ) );
-
-		var $container    = this.$el.find( '.shortcake-attachment-preview' );
-		var $addButton    = $container.find( 'button.add' );
-		var $removeButton = $container.find( 'button.remove' );
-
-		var frame = wp.media( {
-			multiple: false,
-			title: model.get( 'frameTitle' ),
-			library: {
-				type: model.get( 'libraryType' ),
-			},
-		} );
-
-		/**
-		 * Update the field attachment.
-		 * Re-renders UI.
-		 * If ID is empty - does nothing.
-		 *
-		 * @param {int} id Attachment ID
-		 */
-		var updateAttachment = function( id ) {
-
-			if ( ! id ) {
-				return;
+			// Set model default values.
+			for ( var arg in ShorcakeImageFieldData.defaultArgs ) {
+				if ( ! model.get( arg ) ) {
+					model.set( arg, ShorcakeImageFieldData.defaultArgs[ arg ] );
+				}
 			}
 
-			model.set( 'value', id );
+			this.$el.html( this.template( model.toJSON() ) );
 
-			if ( iDCache[ id ] ) {
-				renderPreview( iDCache[ id ] );
-				return;
-			}
+			var $container    = this.$el.find( '.shortcake-attachment-preview' );
+			var $addButton    = $container.find( 'button.add' );
+			var $removeButton = $container.find( 'button.remove' );
 
-			$container.addClass( 'loading' );
-
-			wp.ajax.post( 'get-attachment', {
-				'id': id
-			} ).done( function( attachment ) {
-				// Cache for later.
-				iDCache[ id ] = attachment;
-				renderPreview( attachment );
-				$container.removeClass( 'loading' );
+			var frame = wp.media( {
+				multiple: false,
+				title: model.get( 'frameTitle' ),
+				library: {
+					type: model.get( 'libraryType' ),
+				},
 			} );
 
-		}
+			/**
+			 * Update the field attachment.
+			 * Re-renders UI.
+			 * If ID is empty - does nothing.
+			 *
+			 * @param {int} id Attachment ID
+			 */
+			var updateAttachment = function( id ) {
 
-		/**
-		 * Renders attachment preview in field.
-		 * @param {object} attachment model
-		 * @return null
-		 */
-		var renderPreview = function( attachment ) {
+				if ( ! id ) {
+					return;
+				}
 
-			var $thumbnail = $('<div class="thumbnail"></div>');
+				model.set( 'value', id );
 
-			if ( 'image' !== attachment.type ) {
+				if ( iDCache[ id ] ) {
+					renderPreview( iDCache[ id ] );
+					return;
+				}
 
-				$( '<img/>', {
-					src: attachment.icon,
-					alt: attachment.title,
-				} ).appendTo( $thumbnail );
+				$container.addClass( 'loading' );
 
-				$( '<div/>', {
-					class: 'filename',
-					html:  '<div>' + attachment.title + '</div>',
-				} ).appendTo( $thumbnail );
-
-			} else {
-
-				$( '<img/>', {
-					src:    attachment.sizes.thumbnail.url,
-					width:  attachment.sizes.thumbnail.width,
-					height: attachment.sizes.thumbnail.height,
-					alt:    attachment.alt,
-				} ) .appendTo( $thumbnail )
+				wp.ajax.post( 'get-attachment', {
+					'id': id
+				} ).done( function( attachment ) {
+					// Cache for later.
+					iDCache[ id ] = attachment;
+					renderPreview( attachment );
+					$container.removeClass( 'loading' );
+				} );
 
 			}
 
-			$thumbnail.find( 'img' ).wrap( '<div class="centered"></div>' );
-			$container.append( $thumbnail );
-			$container.toggleClass( 'has-attachment', true );
+			/**
+			 * Renders attachment preview in field.
+			 * @param {object} attachment model
+			 * @return null
+			 */
+			var renderPreview = function( attachment ) {
+
+				var $thumbnail = $('<div class="thumbnail"></div>');
+
+				if ( 'image' !== attachment.type ) {
+
+					$( '<img/>', {
+						src: attachment.icon,
+						alt: attachment.title,
+					} ).appendTo( $thumbnail );
+
+					$( '<div/>', {
+						class: 'filename',
+						html:  '<div>' + attachment.title + '</div>',
+					} ).appendTo( $thumbnail );
+
+				} else {
+
+					$( '<img/>', {
+						src:    attachment.sizes.thumbnail.url,
+						width:  attachment.sizes.thumbnail.width,
+						height: attachment.sizes.thumbnail.height,
+						alt:    attachment.alt,
+					} ) .appendTo( $thumbnail )
+
+				}
+
+				$thumbnail.find( 'img' ).wrap( '<div class="centered"></div>' );
+				$container.append( $thumbnail );
+				$container.toggleClass( 'has-attachment', true );
+
+			}
+
+			/**
+			 * Remove the attachment.
+			 * Render preview & Update the model.
+			 */
+			var removeAttachment = function() {
+
+				model.set( 'value', null );
+
+				$container.toggleClass( 'has-attachment', false );
+				$container.toggleClass( 'has-attachment', false );
+				$container.find( '.thumbnail' ).remove();
+			}
+
+			// Add initial Attachment if available.
+			updateAttachment( model.get( 'value' ) );
+
+			// Remove file when the button is clicked.
+			$removeButton.click( function(e) {
+				e.preventDefault();
+				removeAttachment();
+			});
+
+			// Open media frame when add button is clicked
+			$addButton.click( function(e) {
+				e.preventDefault();
+				frame.open();
+			} );
+
+			// Update the attachment when an item is selected.
+			frame.on( 'select', function() {
+
+				var selection  = frame.state().get('selection');
+				    attachment = selection.first();
+
+				updateAttachment( attachment.id );
+
+				frame.close();
+
+			});
 
 		}
 
-		/**
-		 * Remove the attachment.
-		 * Render preview & Update the model.
-		 */
-		var removeAttachment = function() {
+	} );
 
-			model.set( 'value', null );
-
-			$container.toggleClass( 'has-attachment', false );
-			$container.toggleClass( 'has-attachment', false );
-			$container.find( '.thumbnail' ).remove();
-		}
-
-		// Add initial Attachment if available.
-		updateAttachment( model.get( 'value' ) );
-
-		// Remove file when the button is clicked.
-		$removeButton.click( function(e) {
-			e.preventDefault();
-			removeAttachment();
-		});
-
-		// Open media frame when add button is clicked
-		$addButton.click( function(e) {
-			e.preventDefault();
-			frame.open();
-		} );
-
-		// Update the attachment when an item is selected.
-		frame.on( 'select', function() {
-
-			var selection  = frame.state().get('selection');
-			    attachment = selection.first();
-
-			updateAttachment( attachment.id );
-
-			frame.close();
-
-		});
-
-	}
-
-} );
+} )( jQuery );
