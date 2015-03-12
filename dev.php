@@ -64,11 +64,7 @@ add_action( 'init', function() {
 					'addButton'   => 'Select Image',
 					'frameTitle'  => 'Select Image',
 				),
-				array(
-					'label' => 'Quote',
-					'attr'  => 'content',
-					'type'  => 'textarea',
-				),
+
 				array(
 					'label' => 'Cite',
 					'attr'  => 'source',
@@ -76,7 +72,11 @@ add_action( 'init', function() {
 					'placeholder' => 'Test placeholder',
 				),
 
+			'inner_content' => array(
+				'label' => 'Quote',
+				'attr'  => 'content',
 			),
+
 		)
 	);
 
