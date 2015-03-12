@@ -95,7 +95,10 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
  * Shortcode Attribute Model.
  */
 var InnerContent = Backbone.Model.extend({
-	defaults : false,
+	defaults: {
+		label:       shortcodeUIData.strings.default_content_label,
+		placeholder: '',
+	},
 });
 
 module.exports = InnerContent;
@@ -300,7 +303,7 @@ var shortcodeViewConstructor = {
 		);
 
 		if ( ( 'content' in options ) && shortcodeModel.get('inner_content') ) {
-			shortcodeModel.set( 'value', options.content )
+			shortcodeModel.get('inner_content').set( 'value', options.content )
 		}
 
 		return shortcodeModel;
@@ -427,7 +430,7 @@ var shortcodeViewConstructor = {
 				});
 
 				if ( attr ) {
-					attr.set('value', bits[2] );
+					attr.set( 'value', bits[2] );
 				}
 
 			}
@@ -575,8 +578,10 @@ module.exports = window.Shortcode_UI;
 
 },{"./../collections/shortcodes.js":2}],10:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
-sui = require('./../utils/sui.js');
+var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+    ShortcodeAttribute = require('./../models/shortcode-attribute.js'),
+    InnerContent = require('./../models/inner-content.js'),
+    sui = require('./../utils/sui.js');
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -596,7 +601,7 @@ var editAttributeField = Backbone.View.extend( {
 
 	render: function() {
 		this.$el.html( this.template( this.model.toJSON() ) );
-		return this
+		return this;
 	},
 
 	/**
@@ -607,10 +612,12 @@ var editAttributeField = Backbone.View.extend( {
 	 */
 	updateValue: function( e ) {
 
-		if ( this.model.get( 'attr' ) ) {
+		if ( this.model instanceof ShortcodeAttribute ) {
 			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
-		} else {
+		} else if ( this.model instanceof InnerContent ) {
 			var $el = $( this.el ).find( '[name="inner_content"]' );
+		} else {
+			return;
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
@@ -628,7 +635,7 @@ sui.views.editAttributeField = editAttributeField;
 module.exports = editAttributeField;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":9}],11:[function(require,module,exports){
+},{"./../models/inner-content.js":4,"./../models/shortcode-attribute.js":5,"./../utils/sui.js":9}],11:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
 sui = require('./../utils/sui.js'),
