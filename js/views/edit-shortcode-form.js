@@ -12,14 +12,18 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 		var t = this;
 
-		// add UI for inner_content
-		var view = new editAttributeField( {
-			model:     this.model.get( 'inner_content' ),
-			shortcode: t.model,
-		} );
+		if ( this.model.get( 'inner_content' ) ) {
 
-		view.template = wp.media.template( 'shortcode-ui-content' );
-		t.views.add( '.edit-shortcode-form-fields', view );
+			// add UI for inner_content
+			var view = new editAttributeField( {
+				model:     this.model.get( 'inner_content' ),
+				shortcode: t.model,
+			} );
+
+			view.template = wp.media.template( 'shortcode-ui-content' );
+			t.views.add( '.edit-shortcode-form-fields', view );
+
+		}
 
 		this.model.get( 'attrs' ).each( function( attr ) {
 
