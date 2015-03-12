@@ -79,7 +79,7 @@ describe( "Shortcode Model", function() {
 		expect( defaultShortcode.get( 'shortcode_tag' ) ).toEqual( '' );
 		expect( defaultShortcode.get( 'attrs' ) instanceof ShortcodeAttributes ).toEqual( true );
 		expect( defaultShortcode.get( 'attrs' ).length ).toEqual( 0 );
-		expect( defaultShortcode.get( 'inner_content' ) instanceof InnerContent ).toEqual( true );
+		expect( defaultShortcode.get( 'inner_content' ) ).toEqual( false );
 	});
 
 	it( 'Attribute data set correctly..', function() {
@@ -373,7 +373,7 @@ Shortcode = Backbone.Model.extend({
 		label: '',
 		shortcode_tag: '',
 		attrs: new ShortcodeAttributes,
-		inner_content: new InnerContent,
+		inner_content: false,
 	},
 
 	/**
@@ -386,7 +386,7 @@ Shortcode = Backbone.Model.extend({
 			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
 
-		if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof InnerContent ) ) {
+		if ( attributes.inner_content && ! ( attributes.inner_content instanceof InnerContent ) ) {
 			attributes.inner_content = new InnerContent( attributes.inner_content );
 		}
 
@@ -413,9 +413,17 @@ Shortcode = Backbone.Model.extend({
 	 * Make sure we don't clone a reference to attributes.
 	 */
 	clone: function() {
+
 		var clone = Backbone.Model.prototype.clone.call( this );
-		clone.set( 'attrs', clone.get( 'attrs' ).clone() );
-		clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+
+		if ( clone.get( 'attrs' ) && ( clone.get( 'attrs' ) instanceof InnerContent ) ) {
+			clone.set( 'attrs', clone.get( 'attrs' ).clone() );
+		}
+
+		if ( clone.get( 'inner_content' ) && ( clone.get( 'inner_content' ) instanceof InnerContent ) ) {
+			clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		}
+
 		return clone;
 	},
 
@@ -439,7 +447,7 @@ Shortcode = Backbone.Model.extend({
 
 		} );
 
-		if ( 'undefined' !== typeof this.get( 'inner_content' ).get( 'value' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
+		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
@@ -505,9 +513,8 @@ var shortcodeViewConstructor = {
 			}
 		);
 
-		if ('content' in options) {
-			var inner_content = shortcodeModel.get('inner_content');
-			inner_content.set('value', options.content)
+		if ( ( 'content' in options ) && shortcodeModel.get('inner_content') ) {
+			shortcodeModel.set( 'value', options.content )
 		}
 
 		return shortcodeModel;
@@ -634,16 +641,15 @@ var shortcodeViewConstructor = {
 				});
 
 				if ( attr ) {
-					attr.set('value', bits[2]);
+					attr.set('value', bits[2] );
 				}
 
 			}
 
 		}
 
-		if ( matches[3] ) {
-			var inner_content = currentShortcode.get( 'inner_content' );
-			inner_content.set( 'value', matches[3] );
+		if ( matches[3] && currentShortcode.get( 'inner_content' ) ) {
+			currentShortcode.get( 'inner_content' ).set( 'value', matches[3] );
 		}
 
 		return currentShortcode;
@@ -682,7 +688,7 @@ var shortcodeViewConstructor = {
 
 					});
 
-			if ('content' in options.shortcode) {
+			if ( ( 'content' in options.shortcode ) && shortcode.get('inner_content') ) {
 				var inner_content = shortcode.get('inner_content');
 				inner_content.set('value', options.shortcode.content)
 			}
