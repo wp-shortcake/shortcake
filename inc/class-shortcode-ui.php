@@ -129,6 +129,7 @@ class Shortcode_UI {
 				'preview_tab_label'                => esc_html__( 'Preview', 'shortcode-ui' ),
 				'mce_view_error'                   => esc_html__( 'Failed to load preview', 'shortcode-ui' ),
 				'search_placeholder'               => esc_html__( 'Search', 'shortcode-ui' ),
+				'default_content_label'            => esc_html__( 'Content', 'shortcode-ui' ),
 			),
 			'nonces'     => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
