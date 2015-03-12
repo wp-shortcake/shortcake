@@ -12,7 +12,10 @@ describe( "Shortcode Inner Content Model", function() {
 
 	it( 'sets defaults correctly.', function() {
 		var content = new InnerContent();
-		expect( content.toJSON() ).toEqual( {} );
+		expect( content.toJSON() ).toEqual( {
+			'label':window.shortcodeUIData.strings.default_content_label,
+			'placeholder':''
+		} );
 	});
 
 	it( 'sets data correctly.', function() {
@@ -338,7 +341,10 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
  * Shortcode Attribute Model.
  */
 var InnerContent = Backbone.Model.extend({
-	defaults : false,
+	defaults: {
+		label:       shortcodeUIData.strings.default_content_label,
+		placeholder: '',
+	},
 });
 
 module.exports = InnerContent;
@@ -514,7 +520,7 @@ var shortcodeViewConstructor = {
 		);
 
 		if ( ( 'content' in options ) && shortcodeModel.get('inner_content') ) {
-			shortcodeModel.set( 'value', options.content )
+			shortcodeModel.get('inner_content').set( 'value', options.content )
 		}
 
 		return shortcodeModel;
@@ -641,7 +647,7 @@ var shortcodeViewConstructor = {
 				});
 
 				if ( attr ) {
-					attr.set('value', bits[2] );
+					attr.set( 'value', bits[2] );
 				}
 
 			}

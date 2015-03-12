@@ -13,7 +13,8 @@ window.shortcodeUIData = {
         "edit_tab_label":"Edit",
         "preview_tab_label":"Preview",
         "mce_view_error":"Failed to load preview",
-        "search_placeholder":"Search"
+        "search_placeholder":"Search",
+        'default_content_label':'Content',
     },
 
     "nonces":{

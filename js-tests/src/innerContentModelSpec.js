@@ -11,7 +11,10 @@ describe( "Shortcode Inner Content Model", function() {
 
 	it( 'sets defaults correctly.', function() {
 		var content = new InnerContent();
-		expect( content.toJSON() ).toEqual( {} );
+		expect( content.toJSON() ).toEqual( {
+			'label':window.shortcodeUIData.strings.default_content_label,
+			'placeholder':''
+		} );
 	});
 
 	it( 'sets data correctly.', function() {
