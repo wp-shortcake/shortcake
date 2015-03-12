@@ -39,9 +39,8 @@ var shortcodeViewConstructor = {
 			}
 		);
 
-		if ('content' in options) {
-			var inner_content = shortcodeModel.get('inner_content');
-			inner_content.set('value', options.content)
+		if ( ( 'content' in options ) && shortcodeModel.get('inner_content') ) {
+			shortcodeModel.set( 'value', options.content )
 		}
 
 		return shortcodeModel;
@@ -168,16 +167,15 @@ var shortcodeViewConstructor = {
 				});
 
 				if ( attr ) {
-					attr.set('value', bits[2]);
+					attr.set( 'value', bits[2] );
 				}
 
 			}
 
 		}
 
-		if ( matches[3] ) {
-			var inner_content = currentShortcode.get( 'inner_content' );
-			inner_content.set( 'value', matches[3] );
+		if ( matches[3] && currentShortcode.get( 'inner_content' ) ) {
+			currentShortcode.get( 'inner_content' ).set( 'value', matches[3] );
 		}
 
 		return currentShortcode;
@@ -216,7 +214,7 @@ var shortcodeViewConstructor = {
 
 					});
 
-			if ('content' in options.shortcode) {
+			if ( ( 'content' in options.shortcode ) && shortcode.get('inner_content') ) {
 				var inner_content = shortcode.get('inner_content');
 				inner_content.set('value', options.shortcode.content)
 			}
