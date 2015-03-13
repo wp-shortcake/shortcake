@@ -43,18 +43,8 @@ class Shortcode_UI {
 
 		$args = wp_parse_args( $args, $defaults );
 
-
-		// inner_content=true is a valid argument, but we want more detail
-		if ( is_bool( $args['inner_content'] ) && true === $args['inner_content'] ) {
-			$args['inner_content'] = array(
-				'label'       => esc_html__( 'Inner Content', 'shortcode-ui' ),
-				'description' => '',
-				'placeholder' => '',
-			);
-		}
-
 		//following code is for backward compatibility
-		//which will be removed in the next version. (to supports 'attr' => 'content' special case) 
+		//which will be removed in the next version. (to supports 'attr' => 'content' special case)
 		$num_attrs = count( $args['attrs'] );
 		for ( $i = 0; $i < $num_attrs; $i++ ) {
 			if ( ! isset( $args['attrs'][ $i ]['attr'] ) || $args['attrs'][ $i ]['attr'] !== 'content' ) {
@@ -129,6 +119,7 @@ class Shortcode_UI {
 				'preview_tab_label'                => esc_html__( 'Preview', 'shortcode-ui' ),
 				'mce_view_error'                   => esc_html__( 'Failed to load preview', 'shortcode-ui' ),
 				'search_placeholder'               => esc_html__( 'Search', 'shortcode-ui' ),
+				'default_content_label'            => esc_html__( 'Content', 'shortcode-ui' ),
 			),
 			'nonces'     => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),

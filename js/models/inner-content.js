@@ -1,14 +1,13 @@
 var Backbone = require('backbone');
 
-sui = require('sui-utils/sui');
-
 /**
  * Shortcode Attribute Model.
  */
 var InnerContent = Backbone.Model.extend({
-	defaults : false,
+	defaults: {
+		label:       shortcodeUIData.strings.default_content_label,
+		placeholder: '',
+	},
 });
 
-sui.models.InnerContent = InnerContent;
 module.exports = InnerContent;
-

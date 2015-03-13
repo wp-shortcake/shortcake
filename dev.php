@@ -10,10 +10,7 @@ add_action( 'init', function() {
 
 		$attr = wp_parse_args( $attr, array(
 			'source' => '',
-			'post'   => '',
-			'fieldmanager_textarea' => '',
-			'fieldmanager_media'    => '',
-			'image'  => 0
+			'attachment' => '',
 		) );
 
 		ob_start();
@@ -24,8 +21,6 @@ add_action( 'init', function() {
 			<p style="margin:0; padding: 0;">
 				<b>Content:</b> <?php echo esc_html( $content ); ?></br>
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
-				<b>Fieldmanager Textarea:</b> <?php echo esc_html( $attr['fieldmanager_textarea'] ); ?></br>
-				<b>Fieldmanager Media:</b> <?php echo esc_html( get_the_title( $attr['fieldmanager_media'] ) ); ?></br>
 				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
 			</p>
 		</section>
@@ -64,11 +59,7 @@ add_action( 'init', function() {
 					'addButton'   => 'Select Image',
 					'frameTitle'  => 'Select Image',
 				),
-				array(
-					'label' => 'Quote',
-					'attr'  => 'content',
-					'type'  => 'textarea',
-				),
+
 				array(
 					'label' => 'Cite',
 					'attr'  => 'source',
@@ -77,6 +68,12 @@ add_action( 'init', function() {
 				),
 
 			),
+
+			'inner_content' => array(
+				'label' => 'Quote',
+				'attr'  => 'content',
+			),
+
 		)
 	);
 

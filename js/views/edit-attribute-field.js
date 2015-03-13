@@ -1,5 +1,7 @@
-var Backbone = require('backbone');
-sui = require('sui-utils/sui');
+var Backbone = require('backbone'),
+    ShortcodeAttribute = require('sui-models/shortcode-attribute'),
+    InnerContent = require('sui-models/inner-content'),
+    sui = require('sui-utils/sui');
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -19,7 +21,7 @@ var editAttributeField = Backbone.View.extend( {
 
 	render: function() {
 		this.$el.html( this.template( this.model.toJSON() ) );
-		return this
+		return this;
 	},
 
 	/**
@@ -30,10 +32,10 @@ var editAttributeField = Backbone.View.extend( {
 	 */
 	updateValue: function( e ) {
 
-		if ( this.model.get( 'attr' ) ) {
-			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
-		} else {
+		if ( this.model instanceof InnerContent ) {
 			var $el = $( this.el ).find( '[name="inner_content"]' );
+		} else {
+			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
