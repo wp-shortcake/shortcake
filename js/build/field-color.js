@@ -245,12 +245,11 @@ var editAttributeField = Backbone.View.extend( {
 	 */
 	updateValue: function( e ) {
 
-		if ( this.model instanceof ShortcodeAttribute ) {
-			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
-		} else if ( this.model instanceof InnerContent ) {
+		if ( this.model instanceof InnerContent ) {
+			console.log( this.model );
 			var $el = $( this.el ).find( '[name="inner_content"]' );
 		} else {
-			return;
+			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
