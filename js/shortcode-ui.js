@@ -17,7 +17,9 @@ $(document).ready(function(){
 		if ( wp.mce.views ) {
 			wp.mce.views.register(
 				shortcode.get('shortcode_tag'),
-				shortcodeViewConstructor
+				// Must extend for 4.1.
+				// This is handled by wp.mce.views.register in 4.2.
+				$.extend( true, {}, shortcodeViewConstructor )
 			);
 		}
 	} );
