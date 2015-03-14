@@ -23,7 +23,7 @@ module.exports = function( grunt ) {
 		watch:  {
 
 			styles: {
-				files: ['css/*/**/*.scss'],
+				files: ['css/**/*.scss'],
 				tasks: ['styles'],
 				options: {
 					debounceDelay: 500,
@@ -33,7 +33,7 @@ module.exports = function( grunt ) {
 			},
 
 			scripts: {
-				files: ['js/*/**/*.js', 'js-tests/src/**/*.js', '!js/build/**/*'],
+				files: ['js/**/*.js', 'js-tests/src/**/*.js', '!js/build/**/*'],
 				tasks: ['scripts'],
 				options: {
 					debounceDelay: 500,
