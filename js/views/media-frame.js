@@ -1,16 +1,14 @@
 var wp = require('wp'),
 	MediaController = require('sui-controllers/media-controller'),
 	Shortcode_UI = require('./shortcode-ui'),
-	Toolbar = require('./toolbar');
+	Toolbar = require('./media-toolbar');
 
-sui = require('sui-utils/sui');
-
-var shortcodeFrame = wp.media.view.MediaFrame.Post;
-wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
+var postMediaFrame = wp.media.view.MediaFrame.Post;
+var mediaFrame = postMediaFrame.extend( {
 
 	initialize: function() {
 
-		shortcodeFrame.prototype.initialize.apply( this, arguments );
+		postMediaFrame.prototype.initialize.apply( this, arguments );
 
 		var id = 'shortcode-ui';
 
@@ -30,7 +28,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 			opts.title = shortcodeUIData.strings.media_frame_menu_update_label;
 		}
 
-		var controller = new sui.controllers.MediaController( opts );
+		var controller = new MediaController( opts );
 
 		if ( 'currentShortcode' in this.options ) {
 			controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
@@ -106,4 +104,6 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 		this.controller.state().insert();
 	},
 
-});
+} );
+
+module.exports = mediaFrame;
