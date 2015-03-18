@@ -36,7 +36,7 @@ module.exports = Shortcodes;
 (function (global){
 var sui = require('./utils/sui.js'),
     editAttributeField = require('./views/edit-attribute-field.js'),
-    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+    jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 // Cache attachment IDs for quicker loading.
 var iDCache = {};
@@ -108,23 +108,23 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 		 */
 		var renderPreview = function( attachment ) {
 
-			var $thumbnail = $('<div class="thumbnail"></div>');
+			var $thumbnail = jQuery('<div class="thumbnail"></div>');
 
 			if ( 'image' !== attachment.type ) {
 
-				$( '<img/>', {
+				jQuery( '<img/>', {
 					src: attachment.icon,
 					alt: attachment.title,
 				} ).appendTo( $thumbnail );
 
-				$( '<div/>', {
+				jQuery( '<div/>', {
 					class: 'filename',
 					html:  '<div>' + attachment.title + '</div>',
 				} ).appendTo( $thumbnail );
 
 			} else {
 
-				$( '<img/>', {
+				jQuery( '<img/>', {
 					src:    attachment.sizes.thumbnail.url,
 					width:  attachment.sizes.thumbnail.width,
 					height: attachment.sizes.thumbnail.height,
@@ -362,9 +362,9 @@ var editAttributeField = Backbone.View.extend( {
 	updateValue: function( e ) {
 
 		if ( this.model.get( 'attr' ) ) {
-			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			var $el = jQuery( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		} else {
-			var $el = $( this.el ).find( '[name="inner_content"]' );
+			var $el = jQuery( this.el ).find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {

@@ -226,9 +226,9 @@ var sui = require('./utils/sui.js'),
 	shortcodeViewConstructor = require('./utils/shortcode-view-constructor.js'),
 	mediaFrame = require('./views/media-frame.js'),
 	wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
-	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+	jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
-$(document).ready(function(){
+jQuery(document).ready(function(){
 
 	// Create collection of shortcode models from data.
 	sui.shortcodes.add( shortcodeUIData.shortcodes );
@@ -242,7 +242,7 @@ $(document).ready(function(){
 				shortcode.get('shortcode_tag'),
 				// Must extend for 4.1.
 				// This is handled by wp.mce.views.register in 4.2.
-				$.extend( true, {}, shortcodeViewConstructor )
+				jQuery.extend( true, {}, shortcodeViewConstructor )
 			);
 		}
 	} );
@@ -254,7 +254,7 @@ $(document).ready(function(){
 (function (global){
 sui = require('./sui.js');
 wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
-$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 /**
  * Generic shortcode mce view constructor.
@@ -330,7 +330,7 @@ var shortcodeViewConstructor = {
 			this.fetching = true;
 
 			wp.ajax.post( 'do_shortcode', {
-				post_id: $( '#post_ID' ).val(),
+				post_id: jQuery( '#post_ID' ).val(),
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
@@ -357,7 +357,7 @@ var shortcodeViewConstructor = {
 
 		// Backwards compatability for WP pre-4.2
 		if ( 'object' === typeof( shortcodeString ) ) {
-			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
+			shortcodeString = decodeURIComponent( jQuery(shortcodeString).attr('data-wpview-text') );
 		}
 
 		currentShortcode = this.parseShortcodeString( shortcodeString );
@@ -486,7 +486,7 @@ var shortcodeViewConstructor = {
 			if ( ! this.parsed ) {
 
 				wp.ajax.post( 'do_shortcode', {
-					post_id: $( '#post_ID' ).val(),
+					post_id: jQuery( '#post_ID' ).val(),
 					shortcode: this.shortcode.formatShortcode(),
 					nonce: shortcodeUIData.nonces.preview,
 				}).done( function( response ) {
@@ -604,9 +604,9 @@ var editAttributeField = Backbone.View.extend( {
 	updateValue: function( e ) {
 
 		if ( this.model.get( 'attr' ) ) {
-			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			var $el = jQuery( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		} else {
-			var $el = $( this.el ).find( '[name="inner_content"]' );
+			var $el = jQuery( this.el ).find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
@@ -1018,7 +1018,7 @@ var ShortcodePreview = Backbone.View.extend({
 
 		_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
 
-		$iframe = $( '<iframe/>', {
+		$iframe = jQuery( '<iframe/>', {
 			src: tinymce.Env.ie ? 'javascript:""' : '',
 			frameBorder: '0',
 			allowTransparency: 'true',
@@ -1033,10 +1033,10 @@ var ShortcodePreview = Backbone.View.extend({
 		 */
 		$iframe.load( function() {
 
-			self.autoresizeIframe( $(this) );
+			self.autoresizeIframe( jQuery(this) );
 
-			var head = $(this).contents().find('head'),
-			    body = $(this).contents().find('body');
+			var head = jQuery(this).contents().find('head'),
+			    body = jQuery(this).contents().find('body');
 
 			head.html( params.head );
 			body.html( params.body );
@@ -1099,7 +1099,7 @@ var ShortcodePreview = Backbone.View.extend({
 	fetchShortcode: function( callback ) {
 
 		wp.ajax.post( 'do_shortcode', {
-			post_id: $( '#post_ID' ).val(),
+			post_id: jQuery( '#post_ID' ).val(),
 			shortcode: this.model.formatShortcode(),
 			nonce: shortcodeUIData.nonces.preview,
 		}).done( function( response ) {
@@ -1127,7 +1127,7 @@ var ShortcodePreview = Backbone.View.extend({
 		});
 
 		styles = _.map( _.keys( styles ), function( href ) {
-			return $( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
+			return jQuery( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
 		});
 
 		return styles;
@@ -1147,7 +1147,7 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
 	Toolbar = require('./media-toolbar.js'),
 	SearchShortcode = require('./search-shortcode.js'),
 	sui = require('./../utils/sui.js');
-	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+	jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 var Shortcode_UI = Backbone.View.extend({
 
@@ -1247,7 +1247,7 @@ var Shortcode_UI = Backbone.View.extend({
 
 	select: function(e) {
 		this.controller.props.set( 'action', 'insert' );
-		var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
+		var target    = jQuery(e.currentTarget).closest( '.shortcode-list-item' );
 		var shortcode = sui.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
 
 		if ( ! shortcode ) {
@@ -1341,7 +1341,7 @@ var TabbedView = Backbone.View.extend({
 		event.stopPropagation();
 		event.preventDefault();
 
-		var target = $(event.currentTarget).attr('data-target');
+		var target = jQuery(event.currentTarget).attr('data-target');
 
 		this.select(target);
 	},

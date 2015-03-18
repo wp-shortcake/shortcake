@@ -1,6 +1,6 @@
 var sui = require('sui-utils/sui'),
     editAttributeField = require( 'sui-views/edit-attribute-field' ),
-    $ = require('jquery');
+    jQuery = require('jquery');
 
 sui.views.editAttributeFieldColor = editAttributeField.extend( {
 

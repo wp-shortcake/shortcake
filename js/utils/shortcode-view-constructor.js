@@ -1,6 +1,6 @@
 sui = require('sui-utils/sui');
 wp = require('wp');
-$ = require('jquery');
+jQuery = require('jquery');
 
 /**
  * Generic shortcode mce view constructor.
@@ -76,7 +76,7 @@ var shortcodeViewConstructor = {
 			this.fetching = true;
 
 			wp.ajax.post( 'do_shortcode', {
-				post_id: $( '#post_ID' ).val(),
+				post_id: jQuery( '#post_ID' ).val(),
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
@@ -103,7 +103,7 @@ var shortcodeViewConstructor = {
 
 		// Backwards compatability for WP pre-4.2
 		if ( 'object' === typeof( shortcodeString ) ) {
-			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
+			shortcodeString = decodeURIComponent( jQuery(shortcodeString).attr('data-wpview-text') );
 		}
 
 		currentShortcode = this.parseShortcodeString( shortcodeString );
@@ -232,7 +232,7 @@ var shortcodeViewConstructor = {
 			if ( ! this.parsed ) {
 
 				wp.ajax.post( 'do_shortcode', {
-					post_id: $( '#post_ID' ).val(),
+					post_id: jQuery( '#post_ID' ).val(),
 					shortcode: this.shortcode.formatShortcode(),
 					nonce: shortcodeUIData.nonces.preview,
 				}).done( function( response ) {
