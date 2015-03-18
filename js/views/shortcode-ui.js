@@ -5,7 +5,7 @@ var Backbone = require('backbone'),
 	EditShortcodeForm = require('sui-views/edit-shortcode-form'),
 	Toolbar = require('sui-views/media-toolbar'),
 	SearchShortcode = require('sui-views/search-shortcode'),
-	sui = require('sui-utils/sui');
+	sui = require('sui-utils/sui'),
 	$ = require('jquery');
 
 var Shortcode_UI = Backbone.View.extend({

@@ -1,5 +1,6 @@
-var Backbone = require('backbone');
-sui = require('sui-utils/sui');
+var Backbone = require('backbone'),
+sui = require('sui-utils/sui'),
+$ = require('jquery');
 
 var editAttributeField = Backbone.View.extend( {
 

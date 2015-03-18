@@ -200,8 +200,9 @@ module.exports = window.Shortcode_UI;
 
 },{"./../collections/shortcodes.js":2}],8:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
-sui = require('./../utils/sui.js');
+var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+sui = require('./../utils/sui.js'),
+$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 var editAttributeField = Backbone.View.extend( {
 

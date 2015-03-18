@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var sui = require('sui-utils/sui');
+var $ = require('jquery');
 
 /**
  * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with

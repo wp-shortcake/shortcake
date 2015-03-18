@@ -1,6 +1,6 @@
-sui = require('sui-utils/sui');
-wp = require('wp');
-$ = require('jquery');
+var sui = require('sui-utils/sui'),
+    wp = require('wp'),
+    $ = require('jquery');
 
 /**
  * Generic shortcode mce view constructor.

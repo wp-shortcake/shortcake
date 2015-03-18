@@ -45,10 +45,12 @@ describe( "Shortcode Attribute Model", function() {
 } );
 
 },{"../../js/models/shortcode-attribute":9}],3:[function(require,module,exports){
+(function (global){
 var Shortcode = require('../../js/models/shortcode');
 var InnerContent = require('../../js/models/inner-content');
 var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
 var ShortcodeAttributes = require('../../js/collections/shortcode-attributes');
+var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 describe( "Shortcode Model", function() {
 
@@ -114,6 +116,7 @@ describe( "Shortcode Model", function() {
 
 });
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../js/collections/shortcode-attributes":6,"../../js/models/inner-content":8,"../../js/models/shortcode":10,"../../js/models/shortcode-attribute":9}],4:[function(require,module,exports){
 (function (global){
 var Shortcode = require('./../../../js/models/shortcode.js');
@@ -464,9 +467,9 @@ module.exports = Shortcode;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcode-attributes.js":6,"./inner-content.js":8}],11:[function(require,module,exports){
 (function (global){
-sui = require('./sui.js');
-wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
-$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var sui = require('./sui.js'),
+    wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 /**
  * Generic shortcode mce view constructor.
