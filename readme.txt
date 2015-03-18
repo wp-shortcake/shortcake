@@ -30,6 +30,14 @@ Shortcake can be installed like any other WordPress plugins. [Follow these integ
 
 = 0.2.0 (March 18, 2015) =
 
+* JS abstracted using Browserify.
+* Enhancements to "Add Post Element" UI: shortcodes sorted alphabetically; search based on label.
+* Much easier to select shortcode previews that include iframes.
+* WordPress 4.2 compatibility.
+* Added color picker to list of potential fields.
+* Bug fix: IE11 compatibility.
+* Bug fix: Checkbox field can now be unchecked.
+
 = 0.1.0 (December 23, 2014) =
 
 * Supports all HTML5 input types for form fields.
