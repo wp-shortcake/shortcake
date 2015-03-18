@@ -1,7 +1,7 @@
 var Shortcode = require('sui-models/shortcode');
 var MceViewConstructor = require('sui-utils/shortcode-view-constructor');
 var sui = require('sui-utils/sui');
-var $ = require('jquery');
+var jQuery = require('jquery');
 var wp = require('wp');
 
 describe( "MCE View Constructor", function() {
@@ -36,7 +36,7 @@ describe( "MCE View Constructor", function() {
 
 	it ( 'test get shortcode model', function() {
 
-		var constructor = $.extend( true, {}, MceViewConstructor );
+		var constructor = jQuery.extend( true, {}, MceViewConstructor );
 
 		constructor.shortcode = {
 			tag: "test_shortcode",
@@ -57,7 +57,7 @@ describe( "MCE View Constructor", function() {
 
 	it ( 'test getContent.', function() {
 
-		var constructor = $.extend( true, {}, MceViewConstructor );
+		var constructor = jQuery.extend( true, {}, MceViewConstructor );
 
 		spyOn( constructor, 'fetch' );
 
@@ -83,12 +83,12 @@ describe( "MCE View Constructor", function() {
 			jasmine.Ajax.uninstall();
 		});
 
-		var constructor = $.extend( true, {
+		var constructor = jQuery.extend( true, {
 			render: function( force ) {},
 		}, MceViewConstructor );
 
 		// Mock shortcode model data.
-		constructor.shortcodeModel = $.extend( true, {}, sui.shortcodes.first() );
+		constructor.shortcodeModel = jQuery.extend( true, {}, sui.shortcodes.first() );
 
 		it( 'Fetches data success', function(){
 
