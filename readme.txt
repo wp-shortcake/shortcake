@@ -3,7 +3,7 @@ Contributors: mattheu, danielbachhuber, jitendraharpalani, sanchothefat, bfintal
 Tags: shortcodes
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,10 @@ Shortcake can be installed like any other WordPress plugin. Once you've done so,
 4. Add new shortcodes to your post through "Add Media".
 
 == Changelog ==
+
+= 0.2.1 (March 18, 2015) =
+
+* Ensure use of jQuery respects jQuery.noConflict() mode in WP.
 
 = 0.2.0 (March 18, 2015) =
 
