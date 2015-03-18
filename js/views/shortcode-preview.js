@@ -62,7 +62,7 @@ var ShortcodePreview = Backbone.View.extend({
 
 		_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
 
-		$iframe = $( '<iframe/>', {
+		$iframe = jQuery( '<iframe/>', {
 			src: tinymce.Env.ie ? 'javascript:""' : '',
 			frameBorder: '0',
 			allowTransparency: 'true',
@@ -77,10 +77,10 @@ var ShortcodePreview = Backbone.View.extend({
 		 */
 		$iframe.load( function() {
 
-			self.autoresizeIframe( $(this) );
+			self.autoresizeIframe( jQuery(this) );
 
-			var head = $(this).contents().find('head'),
-			    body = $(this).contents().find('body');
+			var head = jQuery(this).contents().find('head'),
+			    body = jQuery(this).contents().find('body');
 
 			head.html( params.head );
 			body.html( params.body );
@@ -143,7 +143,7 @@ var ShortcodePreview = Backbone.View.extend({
 	fetchShortcode: function( callback ) {
 
 		wp.ajax.post( 'do_shortcode', {
-			post_id: $( '#post_ID' ).val(),
+			post_id: jQuery( '#post_ID' ).val(),
 			shortcode: this.model.formatShortcode(),
 			nonce: shortcodeUIData.nonces.preview,
 		}).done( function( response ) {
@@ -171,7 +171,7 @@ var ShortcodePreview = Backbone.View.extend({
 		});
 
 		styles = _.map( _.keys( styles ), function( href ) {
-			return $( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
+			return jQuery( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
 		});
 
 		return styles;

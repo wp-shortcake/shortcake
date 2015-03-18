@@ -55,7 +55,7 @@ describe( "Shortcode Model", function() {
 
 	it( 'Format shortcode.', function() {
 
-		var _shortcode = $.extend( true, {}, shortcode );
+		var _shortcode = jQuery.extend( true, {}, shortcode );
 
 		// Test with attribute and with content.
 		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]test content[/test_shortcode]' );

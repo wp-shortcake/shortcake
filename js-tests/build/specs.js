@@ -103,7 +103,7 @@ describe( "Shortcode Model", function() {
 
 	it( 'Format shortcode.', function() {
 
-		var _shortcode = $.extend( true, {}, shortcode );
+		var _shortcode = jQuery.extend( true, {}, shortcode );
 
 		// Test with attribute and with content.
 		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]test content[/test_shortcode]' );
@@ -122,7 +122,7 @@ describe( "Shortcode Model", function() {
 var Shortcode = require('./../../../js/models/shortcode.js');
 var MceViewConstructor = require('./../../../js/utils/shortcode-view-constructor.js');
 var sui = require('./../../../js/utils/sui.js');
-var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
 
 describe( "MCE View Constructor", function() {
@@ -157,7 +157,7 @@ describe( "MCE View Constructor", function() {
 
 	it ( 'test get shortcode model', function() {
 
-		var constructor = $.extend( true, {}, MceViewConstructor );
+		var constructor = jQuery.extend( true, {}, MceViewConstructor );
 
 		constructor.shortcode = {
 			tag: "test_shortcode",
@@ -178,7 +178,7 @@ describe( "MCE View Constructor", function() {
 
 	it ( 'test getContent.', function() {
 
-		var constructor = $.extend( true, {}, MceViewConstructor );
+		var constructor = jQuery.extend( true, {}, MceViewConstructor );
 
 		spyOn( constructor, 'fetch' );
 
@@ -204,12 +204,12 @@ describe( "MCE View Constructor", function() {
 			jasmine.Ajax.uninstall();
 		});
 
-		var constructor = $.extend( true, {
+		var constructor = jQuery.extend( true, {
 			render: function( force ) {},
 		}, MceViewConstructor );
 
 		// Mock shortcode model data.
-		constructor.shortcodeModel = $.extend( true, {}, sui.shortcodes.first() );
+		constructor.shortcodeModel = jQuery.extend( true, {}, sui.shortcodes.first() );
 
 		it( 'Fetches data success', function(){
 
