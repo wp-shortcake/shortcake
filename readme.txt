@@ -17,7 +17,7 @@ See the [Github README](https://github.com/fusioneng/Shortcake/blob/master/READM
 
 == Installation ==
 
-Shortcake can be installed like any other WordPress plugins. [Follow these integration steps](https://github.com/fusioneng/Shortcake#usage) to register UI for your shortcode.
+Shortcake can be installed like any other WordPress plugin. Once you've done so, [follow these integration steps](https://github.com/fusioneng/Shortcake#usage) to register UI for your shortcode.
 
 == Screenshots ==
 
@@ -37,6 +37,7 @@ Shortcake can be installed like any other WordPress plugins. [Follow these integ
 * Added color picker to list of potential fields.
 * Bug fix: IE11 compatibility.
 * Bug fix: Checkbox field can now be unchecked.
+* [Full release notes](http://fusion.net/story/105889/shortcake-v0-2-0-js-abstraction-add-post-element-enhancements-inner-content-field/).
 
 = 0.1.0 (December 23, 2014) =
 
@@ -44,5 +45,5 @@ Shortcake can be installed like any other WordPress plugins. [Follow these integ
 * Shortcode preview tab within the editing experience.
 * Re-labeled the UI around “Post Elements”, which is more descriptive than “Content Items.”
 * Many bug fixes.
-* [Full release notes](http://next.fusion.net/2014/12/23/shortcake-v0-1-0-live-previews-fieldmanager-integration/)
+* [Full release notes](http://next.fusion.net/2014/12/23/shortcake-v0-1-0-live-previews-fieldmanager-integration/).
 
