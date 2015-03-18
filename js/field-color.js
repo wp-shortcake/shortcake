@@ -1,6 +1,6 @@
 var sui = require('sui-utils/sui'),
     editAttributeField = require( 'sui-views/edit-attribute-field' ),
-    jQuery = require('jquery');
+    $ = require('jquery');
 
 sui.views.editAttributeFieldColor = editAttributeField.extend( {
 
@@ -9,7 +9,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend( {
 
 		this.$el.find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
 			change: function() {
-				jQuery(this).trigger('keyup');
+				$(this).trigger('keyup');
 			}
 		});
 

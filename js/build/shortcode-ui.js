@@ -227,9 +227,11 @@ var sui = require('./utils/sui.js'),
 	shortcodeViewConstructor = require('./utils/shortcode-view-constructor.js'),
 	mediaFrame = require('./views/media-frame.js'),
 	wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
-	jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
-jQuery(document).ready(function(){
+jQuery.noConflict();
+
+$(document).ready(function(){
 
 	// Create collection of shortcode models from data.
 	sui.shortcodes.add( shortcodeUIData.shortcodes );
@@ -243,7 +245,7 @@ jQuery(document).ready(function(){
 				shortcode.get('shortcode_tag'),
 				// Must extend for 4.1.
 				// This is handled by wp.mce.views.register in 4.2.
-				jQuery.extend( true, {}, shortcodeViewConstructor )
+				$.extend( true, {}, shortcodeViewConstructor )
 			);
 		}
 	} );
@@ -606,9 +608,9 @@ var editAttributeField = Backbone.View.extend( {
 	updateValue: function( e ) {
 
 		if ( this.model.get( 'attr' ) ) {
-			var $el = jQuery( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		} else {
-			var $el = jQuery( this.el ).find( '[name="inner_content"]' );
+			var $el = $( this.el ).find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
@@ -1021,7 +1023,7 @@ var ShortcodePreview = Backbone.View.extend({
 
 		_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
 
-		$iframe = jQuery( '<iframe/>', {
+		$iframe = $( '<iframe/>', {
 			src: tinymce.Env.ie ? 'javascript:""' : '',
 			frameBorder: '0',
 			allowTransparency: 'true',
@@ -1036,10 +1038,10 @@ var ShortcodePreview = Backbone.View.extend({
 		 */
 		$iframe.load( function() {
 
-			self.autoresizeIframe( jQuery(this) );
+			self.autoresizeIframe( $(this) );
 
-			var head = jQuery(this).contents().find('head'),
-			    body = jQuery(this).contents().find('body');
+			var head = $(this).contents().find('head'),
+			    body = $(this).contents().find('body');
 
 			head.html( params.head );
 			body.html( params.body );
@@ -1055,7 +1057,7 @@ var ShortcodePreview = Backbone.View.extend({
 	 * Watch for mutations in iFrame content.
 	 * resize iFrame height on change.
 	 *
-	 * @param  jQuery object $iframe
+	 * @param  $ object $iframe
 	 */
 	autoresizeIframe: function( $iframe ) {
 
@@ -1102,7 +1104,7 @@ var ShortcodePreview = Backbone.View.extend({
 	fetchShortcode: function( callback ) {
 
 		wp.ajax.post( 'do_shortcode', {
-			post_id: jQuery( '#post_ID' ).val(),
+			post_id: $( '#post_ID' ).val(),
 			shortcode: this.model.formatShortcode(),
 			nonce: shortcodeUIData.nonces.preview,
 		}).done( function( response ) {
@@ -1130,7 +1132,7 @@ var ShortcodePreview = Backbone.View.extend({
 		});
 
 		styles = _.map( _.keys( styles ), function( href ) {
-			return jQuery( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
+			return $( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
 		});
 
 		return styles;
@@ -1345,7 +1347,7 @@ var TabbedView = Backbone.View.extend({
 		event.stopPropagation();
 		event.preventDefault();
 
-		var target = jQuery(event.currentTarget).attr('data-target');
+		var target = $(event.currentTarget).attr('data-target');
 
 		this.select(target);
 	},

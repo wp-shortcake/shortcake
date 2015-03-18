@@ -73,7 +73,7 @@ var TabbedView = Backbone.View.extend({
 		event.stopPropagation();
 		event.preventDefault();
 
-		var target = jQuery(event.currentTarget).attr('data-target');
+		var target = $(event.currentTarget).attr('data-target');
 
 		this.select(target);
 	},

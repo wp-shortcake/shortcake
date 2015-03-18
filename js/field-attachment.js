@@ -1,6 +1,6 @@
 var sui = require('sui-utils/sui'),
     editAttributeField = require( 'sui-views/edit-attribute-field' ),
-    jQuery = require('jquery');
+    $ = require('jquery');
 
 // Cache attachment IDs for quicker loading.
 var iDCache = {};
@@ -72,23 +72,23 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 		 */
 		var renderPreview = function( attachment ) {
 
-			var $thumbnail = jQuery('<div class="thumbnail"></div>');
+			var $thumbnail = $('<div class="thumbnail"></div>');
 
 			if ( 'image' !== attachment.type ) {
 
-				jQuery( '<img/>', {
+				$( '<img/>', {
 					src: attachment.icon,
 					alt: attachment.title,
 				} ).appendTo( $thumbnail );
 
-				jQuery( '<div/>', {
+				$( '<div/>', {
 					class: 'filename',
 					html:  '<div>' + attachment.title + '</div>',
 				} ).appendTo( $thumbnail );
 
 			} else {
 
-				jQuery( '<img/>', {
+				$( '<img/>', {
 					src:    attachment.sizes.thumbnail.url,
 					width:  attachment.sizes.thumbnail.width,
 					height: attachment.sizes.thumbnail.height,
