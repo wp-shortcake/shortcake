@@ -12,7 +12,8 @@ window.shortcodeUIData = {
         "edit_tab_label":"Edit",
         "preview_tab_label":"Preview",
         "mce_view_error":"Failed to load preview",
-        "search_placeholder":"Search"
+        "search_placeholder":"Search",
+        "insert_content_label":"Insert Content"
     },
 
     "nonces":{
