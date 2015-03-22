@@ -97,7 +97,7 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
 var InnerContent = Backbone.Model.extend({
 	defaults : {
 		label:       shortcodeUIData.strings.media_frame_toolbar_insert_label,
-		type:        'textbox',
+		type:        'textarea',
 		value:       '',
 		placeholder: '',
 	},
