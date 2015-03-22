@@ -11,7 +11,7 @@ describe( "Shortcode Inner Content Model", function() {
 
 	it( 'sets defaults correctly.', function() {
 		var content = new InnerContent();
-		expect( content.toJSON() ).toEqual( {} );
+		expect( content.toJSON() ).toEqual( data );
 	});
 
 	it( 'sets data correctly.', function() {
