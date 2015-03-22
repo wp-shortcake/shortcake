@@ -338,7 +338,12 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
  * Shortcode Attribute Model.
  */
 var InnerContent = Backbone.Model.extend({
-	defaults : false,
+	defaults : {
+		label:       shortcodeUIData.strings.media_frame_toolbar_insert_label,
+		type:        'textbox',
+		value:       '',
+		placeholder: '',
+	},
 });
 
 module.exports = InnerContent;
