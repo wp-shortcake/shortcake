@@ -12,7 +12,12 @@ describe( "Shortcode Inner Content Model", function() {
 
 	it( 'sets defaults correctly.', function() {
 		var content = new InnerContent();
-		expect( content.toJSON() ).toEqual( {} );
+		expect( content.toJSON() ).toEqual( {
+			label:       'Inner Content',
+			type:        'textarea',
+			value:       '',
+			placeholder: '',
+		} );
 	});
 
 	it( 'sets data correctly.', function() {
@@ -338,7 +343,12 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
  * Shortcode Attribute Model.
  */
 var InnerContent = Backbone.Model.extend({
-	defaults : false,
+	defaults : {
+		label:       shortcodeUIData.strings.insert_content_label,
+		type:        'textarea',
+		value:       '',
+		placeholder: '',
+	},
 });
 
 module.exports = InnerContent;
