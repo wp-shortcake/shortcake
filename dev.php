@@ -9,11 +9,8 @@ add_action( 'init', function() {
 	add_shortcode( 'shortcake_dev', function( $attr, $content = '' ) {
 
 		$attr = wp_parse_args( $attr, array(
-			'source' => '',
-			'post'   => '',
-			'fieldmanager_textarea' => '',
-			'fieldmanager_media'    => '',
-			'image'  => 0
+			'source'     => '',
+			'attachment' => 0
 		) );
 
 		ob_start();
@@ -24,8 +21,6 @@ add_action( 'init', function() {
 			<p style="margin:0; padding: 0;">
 				<b>Content:</b> <?php echo esc_html( $content ); ?></br>
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
-				<b>Fieldmanager Textarea:</b> <?php echo esc_html( $attr['fieldmanager_textarea'] ); ?></br>
-				<b>Fieldmanager Media:</b> <?php echo esc_html( get_the_title( $attr['fieldmanager_media'] ) ); ?></br>
 				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
 			</p>
 		</section>
@@ -51,6 +46,10 @@ add_action( 'init', function() {
 			// Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 			'listItemImage' => 'dashicons-editor-quote',
 
+			'inner_content' => array(
+				'label' => 'Quote',
+			),
+
 			// Available shortcode attributes and default values. Required. Array.
 			// Attribute model expects 'attr', 'type' and 'label'
 			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
@@ -64,11 +63,7 @@ add_action( 'init', function() {
 					'addButton'   => 'Select Image',
 					'frameTitle'  => 'Select Image',
 				),
-				array(
-					'label' => 'Quote',
-					'attr'  => 'content',
-					'type'  => 'textarea',
-				),
+
 				array(
 					'label' => 'Cite',
 					'attr'  => 'source',
@@ -77,6 +72,7 @@ add_action( 'init', function() {
 				),
 
 			),
+
 		)
 	);
 
