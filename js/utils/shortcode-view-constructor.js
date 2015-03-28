@@ -220,7 +220,9 @@ var shortcodeViewConstructor = {
 
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
-				inner_content.set('value', options.shortcode.content)
+				if ( inner_content ) {
+					inner_content.set('value', options.shortcode.content)
+				}
 			}
 
 			return shortcode;
