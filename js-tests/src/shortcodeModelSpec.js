@@ -32,7 +32,7 @@ describe( "Shortcode Model", function() {
 		expect( defaultShortcode.get( 'shortcode_tag' ) ).toEqual( '' );
 		expect( defaultShortcode.get( 'attrs' ) instanceof ShortcodeAttributes ).toEqual( true );
 		expect( defaultShortcode.get( 'attrs' ).length ).toEqual( 0 );
-		expect( defaultShortcode.get( 'inner_content' ) instanceof InnerContent ).toEqual( true );
+		expect( defaultShortcode.get( 'inner_content' ) ).toEqual( undefined );
 	});
 
 	it( 'Attribute data set correctly..', function() {
