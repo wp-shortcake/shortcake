@@ -34,18 +34,8 @@ class Shortcode_UI {
 
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
-		$defaults = array(
-			'label'         => '',
-			'attrs'         => array(),
-			'listItemImage' => '',   // src or 'dashicons-' - used in insert list.
-			'inner_content' => false,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
-
-
 		// inner_content=true is a valid argument, but we want more detail
-		if ( is_bool( $args['inner_content'] ) && true === $args['inner_content'] ) {
+		if ( isset( $args['inner_content'] ) && true === $args['inner_content'] ) {
 			$args['inner_content'] = array(
 				'label'       => esc_html__( 'Inner Content', 'shortcode-ui' ),
 				'description' => '',
@@ -54,9 +44,9 @@ class Shortcode_UI {
 		}
 
 		//following code is for backward compatibility
-		//which will be removed in the next version. (to supports 'attr' => 'content' special case) 
-		$num_attrs = count( $args['attrs'] );
-		for ( $i = 0; $i < $num_attrs; $i++ ) {
+		//which will be removed in the next version. (to supports 'attr' => 'content' special case)
+		for ( $i = 0; $i < count( $args['attrs'] ); $i++ ) {
+
 			if ( ! isset( $args['attrs'][ $i ]['attr'] ) || $args['attrs'][ $i ]['attr'] !== 'content' ) {
 				continue;
 			}
@@ -73,13 +63,6 @@ class Shortcode_UI {
 		}
 		if ( isset( $index ) ) {
 			array_splice( $args['attrs'], $index, 1 );
-		}
-
-		// strip invalid
-		foreach ( $args as $key => $value ) {
-			if ( ! array_key_exists( $key, $defaults ) ) {
-				unset( $args[ $key ] );
-			}
 		}
 
 		$args['shortcode_tag'] = $shortcode_tag;
