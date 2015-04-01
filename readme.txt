@@ -13,11 +13,80 @@ Shortcake makes using WordPress shortcodes a piece of cake.
 
 Used alongside `add_shortcode`, Shortcake supplies a user-friendly interface for adding a shortcode to a post, and viewing and editing it from within the content editor.
 
-See the [Github README](https://github.com/fusioneng/Shortcake/blob/master/README.md) for implementation notes. To report bugs or feature requests, [please use Github issues](https://github.com/fusioneng/Shortcake/issues).
+See the "Installation" for implementation notes. To report bugs or feature requests, [please use Github issues](https://github.com/fusioneng/Shortcake/issues).
 
 == Installation ==
 
-Shortcake can be installed like any other WordPress plugin. Once you've done so, [follow these integration steps](https://github.com/fusioneng/Shortcake#usage) to register UI for your shortcode.
+Shortcake can be installed like any other WordPress plugin. Once you've done so, you'll need to register the UI for your code:
+
+```
+add_action( 'init', function() {
+
+	/**
+	 * Register your shortcode as you would normally.
+	 * This is a simple example for a pullquote with a citation.
+	 */
+	add_shortcode( 'pullquote', function( $attr, $content = '' ) {
+
+		$attr = wp_parse_args( $attr, array(
+			'source' => ''
+		) );
+
+		ob_start();
+
+		?>
+
+		<section class="pullquote">
+			<?php echo esc_html( $content ); ?><br/>
+			<?php if ( ! empty( $attr['source'] ) ) : ?>
+				<cite><em><?php echo esc_html( $attr['source'] ); ?></em></cite>
+			<?php endif; ?>
+		</section>
+
+		<?php
+
+		return ob_get_clean();
+	} );
+
+	/**
+	 * Register a UI for the Shortcode.
+	 * Pass the shortcode tag (string)
+	 * and an array or args.
+	 */
+	shortcode_ui_register_for_shortcode(
+		'pullquote',
+		array(
+
+			// Display label. String. Required.
+			'label' => 'Pullquote',
+
+			// Icon/image for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
+			'listItemImage' => 'dashicons-editor-quote',
+
+			// Available shortcode attributes and default values. Required. Array.
+			// Attribute model expects 'attr', 'type' and 'label'
+			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
+			'attrs' => array(
+				array(
+					'label' => 'Quote',
+					'attr'  => 'content',
+					'type'  => 'textarea',
+				),
+				array(
+					'label'       => 'Cite',
+					'attr'        => 'source',
+					'type'        => 'text',
+					'placeholder' => 'Firstname Lastname',
+					'description' => 'Optional',
+				),
+			),
+		)
+	);
+
+} );
+```
+
+Or, [install the demo plugin using this snippet](https://gist.github.com/Mte90/cb8a0e37565d219062ec).
 
 == Screenshots ==
 

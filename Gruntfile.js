@@ -131,6 +131,15 @@ module.exports = function( grunt ) {
 		    }
 		}, //addtextdomain
 
+		wp_readme_to_markdown: {
+			your_target: {
+				files: {
+					'README.md': 'readme.txt'
+				},
+				screenshot_url: 'https://s.wordpress.org/extend/plugins/shortcode-ui/{screenshot}.png',
+			},
+		},
+
 		makepot: {
 		    target: {
 		        options: {
@@ -152,12 +161,14 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-browserify' );
     grunt.loadNpmTasks( 'grunt-wp-i18n' );
+    grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
     grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
 
     grunt.registerTask( 'scripts', [ 'browserify', 'jasmine' ] );
     grunt.registerTask( 'styles', [ 'sass' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
+	grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
 
 	grunt.util.linefeed = '\n';
 

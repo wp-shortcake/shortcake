@@ -1,20 +1,25 @@
-Shortcake
-============
+# Shortcake (Shortcode UI) #
+**Contributors:** mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver  
+**Tags:** shortcodes  
+**Requires at least:** 4.1  
+**Tested up to:** 4.2  
+**Stable tag:** 0.2.1  
+**License:** GPLv2 or later  
+**License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
-Shortcake makes WordPress shortcodes a piece of cake.
+Shortcake makes using WordPress shortcodes a piece of cake.
+
+## Description ##
 
 Used alongside `add_shortcode`, Shortcake supplies a user-friendly interface for adding a shortcode to a post, and viewing and editing it from within the content editor.
 
-See:
+See the "Installation" for implementation notes. To report bugs or feature requests, [please use Github issues](https://github.com/fusioneng/Shortcake/issues).
 
-* [Usage](#usage)
-* [Examples](#examples)
-* [Screenshots](#screenshots)
-* [Known Issues](#known-issues)
+## Installation ##
 
-## Usage
+Shortcake can be installed like any other WordPress plugin. Once you've done so, you'll need to register the UI for your code:
 
-```php
+```
 add_action( 'init', function() {
 
 	/**
@@ -60,7 +65,7 @@ add_action( 'init', function() {
 
 			// Available shortcode attributes and default values. Required. Array.
 			// Attribute model expects 'attr', 'type' and 'label'
-			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
+**			// Supported field types:** text, checkbox, textarea, radio, select, email, url, number, and date.  
 			'attrs' => array(
 				array(
 					'label' => 'Quote',
@@ -79,33 +84,47 @@ add_action( 'init', function() {
 	);
 
 } );
+```
 
-````
+Or, [install the demo plugin using this snippet](https://gist.github.com/Mte90/cb8a0e37565d219062ec).
 
-[Install the demo plugin using this snippet](https://gist.github.com/Mte90/cb8a0e37565d219062ec)
+## Screenshots ##
 
-## Examples
+### 1. Without Shortcake, shortcodes have a minimal UI. ###
+![Without Shortcake, shortcodes have a minimal UI.](http://s.wordpress.org/extend/plugins/shortcake-(shortcode-ui)/screenshot-1.png)
 
-* Per Søderlind [@soderlind](https://twitter.com/soderlind) uses Shortcake to insert charts and tables. [See the screencast](http://screencast.com/t/ZJ1u3CvKF5uq)
+### 2. But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view. ###
+![But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view.](http://s.wordpress.org/extend/plugins/shortcake-(shortcode-ui)/screenshot-2.png)
 
-## Screenshots
+### 3. And add a user-friendly UI to edit shortcode content and attributes. ###
+![And add a user-friendly UI to edit shortcode content and attributes.](http://s.wordpress.org/extend/plugins/shortcake-(shortcode-ui)/screenshot-3.png)
 
-Take a look at this demo of Fusion's pullquote shortcode.
+### 4. Add new shortcodes to your post through "Add Media". ###
+![Add new shortcodes to your post through "Add Media".](http://s.wordpress.org/extend/plugins/shortcake-(shortcode-ui)/screenshot-4.png)
 
-Without Shortcake, shortcodes have a minimal UI:
-![no-shortcake](https://cloud.githubusercontent.com/assets/36432/5930132/7351524e-a640-11e4-9246-543ee8138397.png)
 
-But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view:
-![shortcake](https://cloud.githubusercontent.com/assets/36432/5930148/99c404c6-a640-11e4-995d-76f6101277fe.png)
+## Changelog ##
 
-And add a user-friendly UI to edit shortcode content and attributes:
-![editor](https://cloud.githubusercontent.com/assets/36432/5930154/ad46c38a-a640-11e4-904e-20b09c15b980.png)
+### 0.2.1 (March 18, 2015) ###
 
-Add new shortcodes to your post through "Add Media":
+* Ensure use of jQuery respects jQuery.noConflict() mode in WP.
 
-![add-new](https://cloud.githubusercontent.com/assets/36432/5930160/caca5ba6-a640-11e4-9cc7-3b8ae92c422f.png)
+### 0.2.0 (March 18, 2015) ###
 
-## Known issues
+* JS abstracted using Browserify.
+* Enhancements to "Add Post Element" UI: shortcodes sorted alphabetically; search based on label.
+* Much easier to select shortcode previews that include iframes.
+* WordPress 4.2 compatibility.
+* Added color picker to list of potential fields.
+* Bug fix: IE11 compatibility.
+* Bug fix: Checkbox field can now be unchecked.
+* [Full release notes](http://fusion.net/story/105889/shortcake-v0-2-0-js-abstraction-add-post-element-enhancements-inner-content-field/).
 
-* You cannot use camelcase or hyphens in attribute names.
-* If your shortcode output is not a block level element, it may display oddly in the TinyMCE editor.
+### 0.1.0 (December 23, 2014) ###
+
+* Supports all HTML5 input types for form fields.
+* Shortcode preview tab within the editing experience.
+* Re-labeled the UI around “Post Elements”, which is more descriptive than “Content Items.”
+* Many bug fixes.
+* [Full release notes](http://next.fusion.net/2014/12/23/shortcake-v0-1-0-live-previews-fieldmanager-integration/).
+
