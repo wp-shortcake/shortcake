@@ -27,7 +27,7 @@ class Shortcode_UI {
 	}
 
 	private function setup_actions() {
-		$this->add_editor_style();
+		add_action( 'after_setup_theme',    array( $this, 'action_after_setup_theme' ) );
 		add_action( 'wp_enqueue_editor',    array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode', array( $this, 'handle_ajax_do_shortcode' ) );
 	}
@@ -82,7 +82,7 @@ class Shortcode_UI {
 
 	}
 
-	public function add_editor_style() {
+	public function action_after_setup_theme() {
 		add_editor_style( $this->plugin_url . '/css/shortcode-ui-editor-styles.css' );
 	}
 
