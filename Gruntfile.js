@@ -137,7 +137,7 @@ module.exports = function( grunt ) {
 					'README.md': 'readme.txt'
 				},
 				options: {
-					screenshot_url: 'https://s.wordpress.org/extend/plugins/shortcode-ui/{screenshot}.png',
+					screenshot_url: 'http://s.wordpress.org/extend/plugins/shortcode-ui/{screenshot}.png',
 				}
 			},
 		},
