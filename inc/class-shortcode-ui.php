@@ -27,25 +27,15 @@ class Shortcode_UI {
 	}
 
 	private function setup_actions() {
-		$this->add_editor_style();
+		add_action( 'after_setup_theme',    array( $this, 'action_after_setup_theme' ) );
 		add_action( 'wp_enqueue_editor',    array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode', array( $this, 'handle_ajax_do_shortcode' ) );
 	}
 
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
-		$defaults = array(
-			'label'         => '',
-			'attrs'         => array(),
-			'listItemImage' => '',   // src or 'dashicons-' - used in insert list.
-			'inner_content' => false,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
-
-
 		// inner_content=true is a valid argument, but we want more detail
-		if ( is_bool( $args['inner_content'] ) && true === $args['inner_content'] ) {
+		if ( isset( $args['inner_content'] ) && true === $args['inner_content'] ) {
 			$args['inner_content'] = array(
 				'label'       => esc_html__( 'Inner Content', 'shortcode-ui' ),
 				'description' => '',
@@ -54,9 +44,9 @@ class Shortcode_UI {
 		}
 
 		//following code is for backward compatibility
-		//which will be removed in the next version. (to supports 'attr' => 'content' special case) 
-		$num_attrs = count( $args['attrs'] );
-		for ( $i = 0; $i < $num_attrs; $i++ ) {
+		//which will be removed in the next version. (to supports 'attr' => 'content' special case)
+		for ( $i = 0; $i < count( $args['attrs'] ); $i++ ) {
+
 			if ( ! isset( $args['attrs'][ $i ]['attr'] ) || $args['attrs'][ $i ]['attr'] !== 'content' ) {
 				continue;
 			}
@@ -73,13 +63,6 @@ class Shortcode_UI {
 		}
 		if ( isset( $index ) ) {
 			array_splice( $args['attrs'], $index, 1 );
-		}
-
-		// strip invalid
-		foreach ( $args as $key => $value ) {
-			if ( ! array_key_exists( $key, $defaults ) ) {
-				unset( $args[ $key ] );
-			}
 		}
 
 		$args['shortcode_tag'] = $shortcode_tag;
@@ -99,7 +82,7 @@ class Shortcode_UI {
 
 	}
 
-	public function add_editor_style() {
+	public function action_after_setup_theme() {
 		add_editor_style( $this->plugin_url . '/css/shortcode-ui-editor-styles.css' );
 	}
 
@@ -128,6 +111,8 @@ class Shortcode_UI {
 				'edit_tab_label'                   => esc_html__( 'Edit', 'shortcode-ui' ),
 				'preview_tab_label'                => esc_html__( 'Preview', 'shortcode-ui' ),
 				'mce_view_error'                   => esc_html__( 'Failed to load preview', 'shortcode-ui' ),
+				'search_placeholder'               => esc_html__( 'Search', 'shortcode-ui' ),
+				'insert_content_label'             => esc_html__( 'Insert Content', 'shortcode-ui' ),
 			),
 			'nonces'     => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),

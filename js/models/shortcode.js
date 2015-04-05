@@ -1,15 +1,13 @@
 var Backbone = require('backbone');
 var ShortcodeAttributes = require('sui-collections/shortcode-attributes');
 var InnerContent = require('sui-models/inner-content');
-sui = require('sui-utils/sui');
 
 Shortcode = Backbone.Model.extend({
 
 	defaults: {
 		label: '',
 		shortcode_tag: '',
-		attrs: sui.models.ShortcodeAttributes,
-		inner_content: sui.models.InnerContent,
+		attrs: new ShortcodeAttributes,
 	},
 
 	/**
@@ -21,11 +19,11 @@ Shortcode = Backbone.Model.extend({
 		if ( attributes.attrs !== undefined && ! ( attributes.attrs instanceof ShortcodeAttributes ) ) {
 			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
-		
-		if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof InnerContent ) ) {
+
+		if ( attributes.inner_content && ! ( attributes.inner_content instanceof InnerContent ) ) {
 			attributes.inner_content = new InnerContent( attributes.inner_content );
 		}
-		
+
 		return Backbone.Model.prototype.set.call(this, attributes, options);
 	},
 
@@ -35,10 +33,10 @@ Shortcode = Backbone.Model.extend({
 	 */
 	toJSON: function( options ) {
 		options = Backbone.Model.prototype.toJSON.call(this, options);
-		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributes ) ) {
+		if ( options.attrs && ( options.attrs instanceof ShortcodeAttributes ) ) {
 			options.attrs = options.attrs.toJSON();
 		}
-		if ( options.inner_content !== undefined && ( options.inner_content instanceof InnerContent ) ) {
+		if ( options.inner_content && ( options.inner_content instanceof InnerContent ) ) {
 			options.inner_content = options.inner_content.toJSON();
 		}
 		return options;
@@ -51,7 +49,9 @@ Shortcode = Backbone.Model.extend({
 	clone: function() {
 		var clone = Backbone.Model.prototype.clone.call( this );
 		clone.set( 'attrs', clone.get( 'attrs' ).clone() );
-		clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		if ( clone.get( 'inner_content' ) ) {
+			clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		}
 		return clone;
 	},
 
@@ -75,10 +75,10 @@ Shortcode = Backbone.Model.extend({
 
 		} );
 
-		if ( 'undefined' !== typeof this.get( 'inner_content' ).get( 'value' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
+		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
-		
+
 		template = "[{{ shortcode }} {{ attributes }}]"
 
 		if ( content && content.length > 0 ) {
@@ -95,5 +95,4 @@ Shortcode = Backbone.Model.extend({
 
 });
 
-sui.models.Shortcode = Shortcode;
 module.exports = Shortcode;
