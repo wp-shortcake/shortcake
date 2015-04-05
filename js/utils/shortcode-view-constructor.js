@@ -114,13 +114,13 @@ var shortcodeViewConstructor = {
 		if (matches[2]) {
 
 			// Get all the attributes
-			attributeMatches = matches[2].match(/([^\s]+)/g) || [];
+			attributeMatches = matches[2].match(/(\S+?="(.*?)"|([^\s\]]+))/g) || [];
 
 			// Keep track of all the unnamed attributes
 			var unnamedIndex = 0;
 
 			// convert attribute strings to object.				
-			for (var i = 0; i < attributeMatches.length; i++) {
+			for (var i = 1; i < attributeMatches.length; i++) {
 				
 				// Handler for named attributes
 				if (attributeMatches[i].match(/\S+?="(.*?)"/) !== null ) {
@@ -193,6 +193,13 @@ var shortcodeViewConstructor = {
 							attr.set('value',
 									options.shortcode.attrs.named[attr
 											.get('attr')]);
+						}
+				
+						if ( attr.get( 'attr') in options.shortcode.attrs.numeric ) {
+							attr.set(
+								'value',
+								options.shortcode.attrs.numeric[ attr.get( 'attr') ]
+							);
 						}
 
 					});

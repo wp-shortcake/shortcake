@@ -195,7 +195,7 @@ Shortcode = Backbone.Model.extend({
 				if ( ! isNaN( attr.get( 'attr' ) ) ) {
 					
 					// Empty attributes are false to preserve attribute keys
-					attrs.push( attr.get( 'value' ).trim() === '' ? 'false' : attr.get( 'value' ) );
+					attrs.push( typeof attr.get( 'value' ) === 'undefined' || attr.get( 'value' ).trim() === '' ? 'false' : attr.get( 'value' ) );
 					
 				// String attribute names
 				} else {
@@ -488,13 +488,14 @@ var shortcodeViewConstructor = {
 		if (matches[2]) {
 
 			// Get all the attributes
-			attributeMatches = matches[2].match(/([^\s]+)/g) || [];
+			// attributeMatches = matches[2].match(/([^\s]+)/g) || [];
+			attributeMatches = matches[2].match(/(\S+?="(.*?)"|([^\s\]]+))/g) || [];
 
 			// Keep track of all the unnamed attributes
 			var unnamedIndex = 0;
 
 			// convert attribute strings to object.				
-			for (var i = 0; i < attributeMatches.length; i++) {
+			for (var i = 1; i < attributeMatches.length; i++) {
 				
 				// Handler for named attributes
 				if (attributeMatches[i].match(/\S+?="(.*?)"/) !== null ) {
@@ -567,6 +568,13 @@ var shortcodeViewConstructor = {
 							attr.set('value',
 									options.shortcode.attrs.named[attr
 											.get('attr')]);
+						}
+				
+						if ( attr.get( 'attr') in options.shortcode.attrs.numeric ) {
+							attr.set(
+								'value',
+								options.shortcode.attrs.numeric[ attr.get( 'attr') ]
+							);
 						}
 
 					});
@@ -851,6 +859,198 @@ module.exports = insertShortcodeList;
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
 	MediaController = require('./../controllers/media-controller.js'),
 	Shortcode_UI = require('./shortcode-ui'),
+	Toolbar = require('./media-toolbar');
+
+var postMediaFrame = wp.media.view.MediaFrame.Post;
+var mediaFrame = postMediaFrame.extend( {
+
+	initialize: function() {
+
+		postMediaFrame.prototype.initialize.apply( this, arguments );
+
+		var id = 'shortcode-ui';
+
+		var opts = {
+			id      : id,
+			search  : true,
+			router  : false,
+			toolbar : id + '-toolbar',
+			menu    : 'default',
+			title   : shortcodeUIData.strings.media_frame_menu_insert_label,
+			tabs    : [ 'insert' ],
+			priority:  66,
+			content : id + '-content-insert',
+		};
+
+		if ( 'currentShortcode' in this.options ) {
+			opts.title = shortcodeUIData.strings.media_frame_menu_update_label;
+		}
+
+		var controller = new MediaController( opts );
+
+		if ( 'currentShortcode' in this.options ) {
+			controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
+			controller.props.set( 'action', 'update' );
+		}
+
+		this.states.add([ controller]);
+
+		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
+		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
+		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
+		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
+
+	},
+
+	contentRender : function( id, tab ) {
+		this.content.set(
+			new Shortcode_UI( {
+				controller: this,
+				className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
+			} )
+		);
+	},
+
+	toolbarRender: function( toolbar ) {},
+
+	toolbarCreate : function( toolbar ) {
+		var text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
+		if ( 'currentShortcode' in this.options ) {
+			text = shortcodeUIData.strings.media_frame_toolbar_update_label;
+		}
+
+		toolbar.view = new  Toolbar( {
+			controller : this,
+			items: {
+				insert: {
+					text: text,
+					style: 'primary',
+					priority: 80,
+					requires: false,
+					click: this.insertAction,
+				}
+			}
+		} );
+	},
+
+	renderShortcodeUIMenu: function( view ) {
+
+		// Add a menu separator link.
+		view.set({
+			'shortcode-ui-separator': new wp.media.View({
+				className: 'separator',
+				priority: 65
+			})
+		});
+
+		// Hide menu if editing.
+		// @todo - fix this.
+		// This is a hack.
+		// I just can't work out how to do it properly...
+		if (
+			view.controller.state().props
+			&& view.controller.state().props.get( 'currentShortcode' )
+		) {
+			window.setTimeout( function() {
+				view.controller.$el.addClass( 'hide-menu' );
+			} );
+		}
+
+	},
+
+	insertAction: function() {
+		this.controller.state().insert();
+	},
+
+} );
+
+module.exports = mediaFrame;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./../controllers/media-controller.js":3,"./media-toolbar":16,"./shortcode-ui":20}],16:[function(require,module,exports){
+(function (global){
+var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+
+/**
+ * Toolbar view that extends wp.media.view.Toolbar
+ * to define cusotm refresh method
+ */
+var Toolbar = wp.media.view.Toolbar.extend({
+	initialize : function() {
+		_.defaults(this.options, {
+			requires : false
+		});
+		// Call 'initialize' directly on the parent class.
+		wp.media.view.Toolbar.prototype.initialize.apply(this, arguments);
+	},
+
+	refresh : function() {
+		var action = this.controller.state().props.get('action');
+		if( this.get('insert') ) {
+			this.get('insert').model.set('disabled', action == 'select');
+		}
+		/**
+		 * call 'refresh' directly on the parent class
+		 */
+		wp.media.view.Toolbar.prototype.refresh.apply(this, arguments);
+	}
+});
+
+module.exports = Toolbar;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],17:[function(require,module,exports){
+(function (global){
+var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+sui = require('./../utils/sui.js');
+
+var SearchShortcode = wp.media.view.Search.extend({
+	tagName:   'input',
+	className: 'search',
+	id:        'media-search-input',
+	
+	initialize: function( options ) {
+		this.shortcodeList = options.shortcodeList;
+	}, 
+
+	attributes: {
+		type:        'search',
+		placeholder: shortcodeUIData.strings.search_placeholder
+	},
+
+	events: {
+		'keyup':  'search',
+	},
+
+	/**
+	 * @returns {wp.media.view.Search} Returns itself to allow chaining
+	 */
+	render: function() {
+		this.el.value = this.model.escape('search');
+		return this;
+	},
+	
+	refreshShortcodes: function( shortcodeData ) {
+		this.shortcodeList.refresh( shortcodeData );
+	},
+
+	search: function( event ) {
+		if ( event.target.value == '' ) {
+			this.refreshShortcodes( sui.shortcodes );
+		} else {
+			this.refreshShortcodes( this.controller.search( event.target.value ) );
+		}
+	}
+});
+
+sui.views.SearchShortcode = SearchShortcode;
+module.exports = SearchShortcode;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./../utils/sui.js":10}],18:[function(require,module,exports){
+(function (global){
+var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+	MediaController = require('./../controllers/media-controller.js'),
+	Shortcode_UI = require('./shortcode-ui'),
 	Toolbar = require('./toolbar');
 
 sui = require('./../utils/sui.js');
@@ -958,7 +1158,7 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../controllers/media-controller.js":3,"./../utils/sui.js":10,"./shortcode-ui":17,"./toolbar":19}],16:[function(require,module,exports){
+},{"./../controllers/media-controller.js":3,"./../utils/sui.js":10,"./shortcode-ui":20,"./toolbar":22}],19:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 
@@ -1145,7 +1345,7 @@ sui.views.ShortcodePreview = ShortcodePreview;
 module.exports = ShortcodePreview;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10}],17:[function(require,module,exports){
+},{"./../utils/sui.js":10}],20:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
 	insertShortcodeList = require('./insert-shortcode-list.js'),
@@ -1253,7 +1453,7 @@ sui.views.Shortcode_UI = Shortcode_UI;
 module.exports = Shortcode_UI;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10,"./edit-shortcode-form.js":12,"./insert-shortcode-list.js":14,"./shortcode-preview.js":16,"./tabbed-view.js":18}],18:[function(require,module,exports){
+},{"./../utils/sui.js":10,"./edit-shortcode-form.js":12,"./insert-shortcode-list.js":14,"./shortcode-preview.js":19,"./tabbed-view.js":21}],21:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 
@@ -1378,7 +1578,7 @@ var TabbedView = Backbone.View.extend({
 sui.views.TabbedView = TabbedView;
 module.exports = TabbedView;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10}],19:[function(require,module,exports){
+},{"./../utils/sui.js":10}],22:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
 
@@ -1410,4 +1610,4 @@ var Toolbar = wp.media.view.Toolbar.extend({
 sui.views.Toolbar = Toolbar;
 module.exports = Toolbar;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]);
+},{"./../utils/sui.js":10}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]);

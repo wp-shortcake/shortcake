@@ -75,7 +75,7 @@ Shortcode = Backbone.Model.extend({
 				if ( ! isNaN( attr.get( 'attr' ) ) ) {
 					
 					// Empty attributes are false to preserve attribute keys
-					attrs.push( attr.get( 'value' ).trim() === '' ? 'false' : attr.get( 'value' ) );
+					attrs.push( typeof attr.get( 'value' ) === 'undefined' || attr.get( 'value' ).trim() === '' ? 'false' : attr.get( 'value' ) );
 					
 				// String attribute names
 				} else {
