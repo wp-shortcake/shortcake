@@ -3,7 +3,7 @@
 **Tags:** shortcodes  
 **Requires at least:** 4.1  
 **Tested up to:** 4.2  
-**Stable tag:** 0.2.1  
+**Stable tag:** 0.2.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -39,6 +39,9 @@ Once you've done so, you'll need to [register the UI for your code](https://gith
 
 
 ## Changelog ##
+
+### 0.2.2 (April 6, 2015) ###
+* Update arguments passed to TinyMCE View Render for WP 4.2 compatibility. Previously passed argument wasn't necessary, so removing doesn't break backwards compatibility.
 
 ### 0.2.1 (March 18, 2015) ###
 
