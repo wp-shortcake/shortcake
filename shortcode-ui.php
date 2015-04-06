@@ -19,6 +19,8 @@
  * GNU General Public License for more details.
  */
 
+define( 'SHORTCODE_UI_VERSION', '0.2.2' );
+
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-field-attachment.php';
