@@ -45,24 +45,26 @@ class Shortcode_UI {
 
 		//following code is for backward compatibility
 		//which will be removed in the next version. (to supports 'attr' => 'content' special case)
-		for ( $i = 0; $i < count( $args['attrs'] ); $i++ ) {
+		if ( ! empty( $args['attrs'] ) ) {
+			for ( $i = 0; $i < count( $args['attrs'] ); $i++ ) {
 
-			if ( ! isset( $args['attrs'][ $i ]['attr'] ) || $args['attrs'][ $i ]['attr'] !== 'content' ) {
-				continue;
-			}
-
-			$args['inner_content'] = array();
-			foreach ( $args['attrs'][ $i ] as $key => $value ) {
-				if ( $key == 'attr' ) {
+				if ( ! isset( $args['attrs'][ $i ]['attr'] ) || $args['attrs'][ $i ]['attr'] !== 'content' ) {
 					continue;
 				}
-				$args['inner_content'][ $key ] = $value;
-			}
 
-			$index = $i;
-		}
-		if ( isset( $index ) ) {
-			array_splice( $args['attrs'], $index, 1 );
+				$args['inner_content'] = array();
+				foreach ( $args['attrs'][ $i ] as $key => $value ) {
+					if ( $key == 'attr' ) {
+						continue;
+					}
+					$args['inner_content'][ $key ] = $value;
+				}
+
+				$index = $i;
+			}
+			if ( isset( $index ) ) {
+				array_splice( $args['attrs'], $index, 1 );
+			}
 		}
 
 		$args['shortcode_tag'] = $shortcode_tag;
