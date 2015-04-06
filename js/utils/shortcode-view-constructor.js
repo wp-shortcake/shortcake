@@ -85,7 +85,7 @@ var shortcodeViewConstructor = {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
 				delete self.fetching;
-				self.render( true );
+				self.render();
 			} );
 
 		}
@@ -240,11 +240,11 @@ var shortcodeViewConstructor = {
 						self.setIframes( self.getEditorStyles(), response );
 					} else {
 						self.parsed = response;
-						self.render( true );
+						self.render();
 					}
 				}).fail( function() {
 					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-					self.render( true );
+					self.render();
 				} );
 
 			}
