@@ -20,7 +20,7 @@ class Shortcode_UI {
 
 	function __construct() {
 
-		$this->plugin_version = '0.1';
+		$this->plugin_version = SHORTCODE_UI_VERSION;
 		$this->plugin_dir     = plugin_dir_path( dirname( __FILE__ ) );
 		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
 
