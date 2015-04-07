@@ -43,6 +43,10 @@ class Shortcode_UI {
 			);
 		}
 
+		if ( ! isset( $args['attrs'] ) ) {
+			$args['attrs'] = array();
+		}
+
 		$args['shortcode_tag'] = $shortcode_tag;
 		$this->shortcodes[ $shortcode_tag ] = $args;
 
