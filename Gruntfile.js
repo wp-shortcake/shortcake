@@ -121,14 +121,14 @@ module.exports = function( grunt ) {
 		},
 
 		addtextdomain: {
-		    options: {
-		        textdomain: 'shortcode-ui',    // Project text domain.
-		    },
-		    target: {
-		        files: {
-		            src: [ '*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!bin/**' ]
-		        }
-		    }
+			options: {
+				textdomain: 'shortcode-ui',    // Project text domain.
+			},
+			target: {
+				files: {
+					src: [ '*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!bin/**' ]
+				}
+			}
 		}, //addtextdomain
 
 		wp_readme_to_markdown: {
@@ -143,31 +143,31 @@ module.exports = function( grunt ) {
 		},
 
 		makepot: {
-		    target: {
-		        options: {
-		            domainPath: '/languages',
-		            mainFile: 'shortcode-ui.php',
-		            potFilename: 'shortcode-ui.pot',
-		            potHeaders: {
-		                poedit: true,
-		                'x-poedit-keywordslist': true
-		            },
-		            type: 'wp-plugin',
-		            updateTimestamp: true
-		        }
-		    }
+			target: {
+				options: {
+					domainPath: '/languages',
+					mainFile: 'shortcode-ui.php',
+					potFilename: 'shortcode-ui.pot',
+					potHeaders: {
+						poedit: true,
+						'x-poedit-keywordslist': true
+					},
+					type: 'wp-plugin',
+					updateTimestamp: true
+				}
+			}
 		}, //makepot
 	} );
 
 	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-browserify' );
-    grunt.loadNpmTasks( 'grunt-wp-i18n' );
-    grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
-    grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
+	grunt.loadNpmTasks( 'grunt-wp-i18n' );
+	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
+	grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
 
-    grunt.registerTask( 'scripts', [ 'browserify', 'jasmine' ] );
-    grunt.registerTask( 'styles', [ 'sass' ] );
+	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine' ] );
+	grunt.registerTask( 'styles', [ 'sass' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
