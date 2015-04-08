@@ -721,11 +721,11 @@ var shortcodeViewConstructor = {
 						self.setIframes( self.getEditorStyles(), response );
 					} else {
 						self.parsed = response;
-						self.render();
+						self.render( true );
 					}
 				}).fail( function() {
 					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-					self.render();
+					self.render( true );
 				} );
 
 			}
