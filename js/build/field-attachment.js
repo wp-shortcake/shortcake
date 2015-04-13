@@ -48,9 +48,9 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 		var model = this.model;
 
 		// Set model default values.
-		for ( var arg in ShorcakeImageFieldData.defaultArgs ) {
+		for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 			if ( ! model.get( arg ) ) {
-				model.set( arg, ShorcakeImageFieldData.defaultArgs[ arg ] );
+				model.set( arg, ShortcakeImageFieldData.defaultArgs[ arg ] );
 			}
 		}
 
