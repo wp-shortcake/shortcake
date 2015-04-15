@@ -21,6 +21,15 @@
 
 add_action( 'init', function() {
 
+	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
+		add_action( 'admin_notices', function(){
+			if ( current_user_can( 'activate_plugins' ) ) {
+				echo '<div class="error message"><p>Shortcode UI plugin must be active for Shortcode UI Example plugin to function.</p></div>';
+			}
+		});
+		return;
+	}
+
 	/**
 	 * Register your shortcode as you would normally.
 	 * This is a simple example for a pullquote with a citation.
