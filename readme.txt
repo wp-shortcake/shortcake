@@ -32,6 +32,9 @@ Once you've done so, you'll need to [register the UI for your code](https://gith
 
 == Changelog ==
 
+= 0.3 (???) =
+* Example plugin can be activated through the WordPress admin.
+
 = 0.2.3 (April 8, 2015) =
 * Fix WP 4.1 backwards compatibility issue by restoring arguments passed to TinyMCE view compatibility shim.
 
