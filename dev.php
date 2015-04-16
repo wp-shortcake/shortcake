@@ -30,6 +30,11 @@ add_action( 'init', function() {
 		return;
 	}
 
+	add_shortcode( 'shortcake-no-attributes', '__return_false' );
+	shortcode_ui_register_for_shortcode( 'no-attributes', array(
+		'label'        => 'Shortcake With No Attributes',
+		) );
+
 	/**
 	 * Register your shortcode as you would normally.
 	 * This is a simple example for a pullquote with a citation.
