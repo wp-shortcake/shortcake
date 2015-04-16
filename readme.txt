@@ -33,6 +33,7 @@ Once you've done so, you'll need to [register the UI for your code](https://gith
 == Changelog ==
 
 = 0.3 (???) =
+* Shows a helpful message when a shortcode doesn't have attributes to configure.
 * Example plugin can be activated through the WordPress admin.
 
 = 0.2.3 (April 8, 2015) =
