@@ -800,7 +800,7 @@ var mediaFrame = postMediaFrame.extend( {
 		};
 
 		if ( 'currentShortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label;
+			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
 		}
 
 		var controller = new MediaController( opts );
