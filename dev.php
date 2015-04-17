@@ -78,6 +78,8 @@ add_action( 'init', function() {
 				'label' => 'Quote',
 			),
 
+			'post_type'     => array( 'post' ),
+
 			// Available shortcode attributes and default values. Required. Array.
 			// Attribute model expects 'attr', 'type' and 'label'
 			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.

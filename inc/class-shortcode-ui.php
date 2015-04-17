@@ -78,6 +78,19 @@ class Shortcode_UI {
 		wp_enqueue_media();
 
 		$shortcodes = array_values( $this->shortcodes );
+		$screen = get_current_screen();
+		if ( $screen && ! empty( $screen->post_type ) ) {
+			foreach( $shortcodes as $key => $args ) {
+				if ( ! empty( $args['post_type'] ) && ! in_array( $screen->post_type, $args['post_type'] ) ) {
+					unset( $shortcodes[ $key ] );
+				}
+			}
+		}
+
+		if ( empty( $shortcodes ) ) {
+			return;
+		}
+
 		usort( $shortcodes, array( $this, 'compare_shortcodes_by_label' ) );
 
 		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/build/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view' ), $this->plugin_version );
