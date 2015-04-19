@@ -39,9 +39,11 @@ var shortcodeViewConstructor = {
 			}
 		);
 
-		if ('content' in options) {
-			var inner_content = shortcodeModel.get('inner_content');
-			inner_content.set('value', options.content)
+		if ( 'content' in options ) {
+			var innerContent = shortcodeModel.get('inner_content');
+			if ( innerContent ) {
+				innerContent.set('value', options.content)
+			}
 		}
 
 		return shortcodeModel;
@@ -85,7 +87,7 @@ var shortcodeViewConstructor = {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
 				delete self.fetching;
-				self.render( true );
+				self.render();
 			} );
 
 		}
@@ -218,7 +220,9 @@ var shortcodeViewConstructor = {
 
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
-				inner_content.set('value', options.shortcode.content)
+				if ( inner_content ) {
+					inner_content.set('value', options.shortcode.content)
+				}
 			}
 
 			return shortcode;

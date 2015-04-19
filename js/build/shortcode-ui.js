@@ -96,7 +96,12 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
  * Shortcode Attribute Model.
  */
 var InnerContent = Backbone.Model.extend({
-	defaults : false,
+	defaults : {
+		label:       shortcodeUIData.strings.insert_content_label,
+		type:        'textarea',
+		value:       '',
+		placeholder: '',
+	},
 });
 
 module.exports = InnerContent;
@@ -131,7 +136,6 @@ Shortcode = Backbone.Model.extend({
 		label: '',
 		shortcode_tag: '',
 		attrs: new ShortcodeAttributes,
-		inner_content: new InnerContent,
 	},
 
 	/**
@@ -144,7 +148,7 @@ Shortcode = Backbone.Model.extend({
 			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
 
-		if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof InnerContent ) ) {
+		if ( attributes.inner_content && ! ( attributes.inner_content instanceof InnerContent ) ) {
 			attributes.inner_content = new InnerContent( attributes.inner_content );
 		}
 
@@ -157,10 +161,10 @@ Shortcode = Backbone.Model.extend({
 	 */
 	toJSON: function( options ) {
 		options = Backbone.Model.prototype.toJSON.call(this, options);
-		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributes ) ) {
+		if ( options.attrs && ( options.attrs instanceof ShortcodeAttributes ) ) {
 			options.attrs = options.attrs.toJSON();
 		}
-		if ( options.inner_content !== undefined && ( options.inner_content instanceof InnerContent ) ) {
+		if ( options.inner_content && ( options.inner_content instanceof InnerContent ) ) {
 			options.inner_content = options.inner_content.toJSON();
 		}
 		return options;
@@ -173,7 +177,9 @@ Shortcode = Backbone.Model.extend({
 	clone: function() {
 		var clone = Backbone.Model.prototype.clone.call( this );
 		clone.set( 'attrs', clone.get( 'attrs' ).clone() );
-		clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		if ( clone.get( 'inner_content' ) ) {
+			clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		}
 		return clone;
 	},
 
@@ -197,7 +203,7 @@ Shortcode = Backbone.Model.extend({
 
 		} );
 
-		if ( 'undefined' !== typeof this.get( 'inner_content' ).get( 'value' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
+		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
@@ -296,9 +302,11 @@ var shortcodeViewConstructor = {
 			}
 		);
 
-		if ('content' in options) {
-			var inner_content = shortcodeModel.get('inner_content');
-			inner_content.set('value', options.content)
+		if ( 'content' in options ) {
+			var innerContent = shortcodeModel.get('inner_content');
+			if ( innerContent ) {
+				innerContent.set('value', options.content)
+			}
 		}
 
 		return shortcodeModel;
@@ -342,7 +350,7 @@ var shortcodeViewConstructor = {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
 				delete self.fetching;
-				self.render( true );
+				self.render();
 			} );
 
 		}
@@ -475,7 +483,9 @@ var shortcodeViewConstructor = {
 
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
-				inner_content.set('value', options.shortcode.content)
+				if ( inner_content ) {
+					inner_content.set('value', options.shortcode.content)
+				}
 			}
 
 			return shortcode;
@@ -632,6 +642,7 @@ module.exports = editAttributeField;
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
 sui = require('./../utils/sui.js'),
+backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
 editAttributeField = require('./edit-attribute-field.js');
 
 /**
@@ -645,7 +656,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 		var t = this;
 
 		var innerContent = this.model.get( 'inner_content' );
-		if ( typeof innerContent.attributes.type !== 'undefined' ) {
+		if ( innerContent && typeof innerContent.attributes.type !== 'undefined' ) {
 
 			// add UI for inner_content
 			var view = new editAttributeField( {
@@ -677,6 +688,19 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			t.views.add( '.edit-shortcode-form-fields', view );
 
 		} );
+
+		if ( 0 == this.model.get( 'attrs' ).length && ( ! innerContent || typeof innerContent == 'undefined' ) ) {
+			var messageView = new Backbone.View({
+				tagName:      'div',
+				className:    'notice updated',
+			});
+			messageView.render = function() {
+				this.$el.append( '<p>' );
+				this.$el.find('p').text( shortcodeUIData.strings.media_frame_no_attributes_message );
+				return this;
+			};
+			t.views.add( '.edit-shortcode-form-fields', messageView );
+		}
 
 	},
 
@@ -794,7 +818,7 @@ var mediaFrame = postMediaFrame.extend( {
 		};
 
 		if ( 'currentShortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label;
+			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
 		}
 
 		var controller = new MediaController( opts );

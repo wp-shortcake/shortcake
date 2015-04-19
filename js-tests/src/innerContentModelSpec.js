@@ -11,7 +11,12 @@ describe( "Shortcode Inner Content Model", function() {
 
 	it( 'sets defaults correctly.', function() {
 		var content = new InnerContent();
-		expect( content.toJSON() ).toEqual( {} );
+		expect( content.toJSON() ).toEqual( {
+			label:       'Inner Content',
+			type:        'textarea',
+			value:       '',
+			placeholder: '',
+		} );
 	});
 
 	it( 'sets data correctly.', function() {
