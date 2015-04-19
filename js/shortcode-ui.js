@@ -5,8 +5,6 @@ var sui = require('sui-utils/sui'),
 	wp = require('wp'),
 	$ = require('jquery');
 
-jQuery.noConflict();
-
 $(document).ready(function(){
 
 	// Create collection of shortcode models from data.

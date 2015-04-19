@@ -235,8 +235,6 @@ var sui = require('./utils/sui.js'),
 	wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
 	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
-jQuery.noConflict();
-
 $(document).ready(function(){
 
 	// Create collection of shortcode models from data.
