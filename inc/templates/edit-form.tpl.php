@@ -73,8 +73,10 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-checkbox">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="checkbox" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" <# if ( 'true' == data.value ){ print('checked'); } #>>
+		<label for="{{ data.attr }}">
+			<input type="checkbox" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" <# if ( 'true' == data.value ){ print('checked'); } #>>
+			{{ data.label }}
+		</label>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -115,6 +117,16 @@
 	<div class="field-block">
 		<label for="{{ data.attr }}">{{ data.label }}</label>
 		<input type="date" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}"/>
+		<# if ( typeof data.description == 'string' ) { #>
+			<p class="description">{{ data.description }}</p>
+		<# } #>
+	</div>
+</script>
+
+<script type="text/html" id="tmpl-shortcode-ui-content">
+	<div class="field-block">
+		<label for="inner_content">{{ data.label }}</label>
+		<textarea id="inner_content" name="inner_content" class="content-edit">{{ data.value }}</textarea>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>

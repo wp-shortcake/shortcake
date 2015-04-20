@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Shortcode UI
- * Version: v0.2.0-dev
+ * Version: v0.3-alpha
  * Description: User Interface for adding shortcodes.
  * Author: Fusion Engineering and community
  * Author URI: http://next.fusion.net/tag/shortcode-ui/
@@ -18,6 +18,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+
+define( 'SHORTCODE_UI_VERSION', '0.3-alpha' );
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
@@ -64,4 +66,11 @@ function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) 
  */
 function shortcode_ui_get_register_shortcode( $shortcode_tag, $args = array() ) {
 	return Shortcode_UI::get_instance()->get_shortcode( $shortcode_tag );
+}
+
+/**
+ * Queue the shortcode UI scripts & templates manually
+ */
+function shortcode_ui_enqueue_assets() {
+	Shortcode_UI::get_instance()->enqueue();
 }
