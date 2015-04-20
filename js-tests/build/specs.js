@@ -663,7 +663,6 @@ var shortcodeViewConstructor = {
 		if ( matches[3] ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
 			inner_content.set( 'value', this.unAutoP( matches[3] ) );
-			// inner_content.set( 'value', matches[3] );
 		}
 
 		return currentShortcode;
@@ -718,8 +717,7 @@ var shortcodeViewConstructor = {
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
 				if ( inner_content ) {
-					// inner_content.set( 'value', shortcodeViewConstructor.unAutoP( options.shortcode.content ) );
-					inner_content.set( 'value', options.shortcode.content );
+					inner_content.set('value', options.shortcode.content)
 				}
 			}
 
