@@ -22,7 +22,10 @@
 				}
 			}
 
-			this.$el.html( this.template( this.model.toJSON() ) );
+			var data = this.model.toJSON();
+			data.id = 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid;
+
+			this.$el.html( this.template( data ) );
 
 			var ajaxData = {
 				action    : 'shortcode_ui_post_field',
