@@ -262,10 +262,10 @@ describe( "MCE View Constructor", function() {
 	});
 
 	it( 'parses shortcode with content', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value 1"]test content [/test_shortcode]')
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value 1"]test content[/test_shortcode]')
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'attr' }).get('value') ).toEqual( 'test value 1' );
-		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( 'test content ' );
+		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( 'test content' );
 	});
 
 	it( 'parses shortcode with dashes in name and attribute', function() {
