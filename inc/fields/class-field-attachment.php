@@ -26,7 +26,7 @@ class Shortcake_Field_Attachment {
 	private function setup_actions() {
 
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
+		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 
 	}
@@ -35,7 +35,7 @@ class Shortcake_Field_Attachment {
 		return array_merge( $fields, $this->fields );
 	}
 
-	public function action_admin_enqueue_scripts() {
+	public function action_enqueue_shortcode_ui() {
 
 		$script = plugins_url( '/js/build/field-attachment.js', dirname( dirname( __FILE__ ) ) );
 
