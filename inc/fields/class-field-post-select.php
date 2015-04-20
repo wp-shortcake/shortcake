@@ -1,6 +1,6 @@
 <?php
 
-class Shortcake_Field_Post_Select {
+class Shortcode_UI_Field_Post_Select {
 
 	private static $instance = null;
 
@@ -10,7 +10,7 @@ class Shortcake_Field_Post_Select {
 	// Field Settings.
 	private $fields = array(
 		'post_select' => array(
-			'template' => 'shortcake-field-post-select',
+			'template' => 'shortcode-ui-field-post-select',
 			'view'     => 'editAttributeFieldPostSelect',
 		),
 	);
@@ -25,15 +25,15 @@ class Shortcake_Field_Post_Select {
 
 	private function setup_actions() {
 
-		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcake_fields' ) );
+		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
-		add_action( 'wp_ajax_shortcake_post_field', array( $this, 'action_wp_ajax_shortcake_post_field' ) );
+		add_action( 'wp_ajax_shortcode_ui_post_field', array( $this, 'action_wp_ajax_shortcode_ui_post_field' ) );
 		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 
 	}
 
-	public function filter_shortcake_fields( $fields ) {
+	public function filter_shortcode_ui_fields( $fields ) {
 		return array_merge( $fields, $this->fields );
 	}
 
@@ -42,7 +42,7 @@ class Shortcake_Field_Post_Select {
 		$plugin_dir =  dirname( dirname( __FILE__ ) );
 
 		wp_enqueue_script(
-			'shortcake-field-post-select',
+			'shortcode-ui-field-post-select',
 			plugins_url( '/js/field-post-select.js', $plugin_dir ),
 			array( 'shortcode-ui', 'select2' )
 		);
@@ -50,8 +50,8 @@ class Shortcake_Field_Post_Select {
 		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ) , array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
 		wp_enqueue_style( 'select2', plugins_url( 'lib/select2/select2.css', $plugin_dir ), null, '3.5.2' );
 
-		wp_localize_script( 'shortcake-field-post-select', 'shortcakePostFieldData', array(
-			'nonce' => wp_create_nonce( 'shortcake_field_post_select' ),
+		wp_localize_script( 'shortcode-ui-field-post-select', 'shortcodeUiPostFieldData', array(
+			'nonce' => wp_create_nonce( 'shortcode_ui_field_post_select' ),
 		) );
 
 	}
@@ -81,10 +81,10 @@ class Shortcake_Field_Post_Select {
 
 		</style>
 
-		<script type="text/html" id="tmpl-shortcake-field-post-select">
+		<script type="text/html" id="tmpl-shortcode-ui-field-post-select">
 			<div class="field-block">
-				<label for="{{ data.attr }}">{{ data.label }}</label>
-				<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="shortcake-post-select" />
+				<label for="{{ data.id }}">{{ data.label }}</label>
+				<input type="text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="shortcode-ui-post-select" />
 			</div>
 		</script>
 
@@ -100,7 +100,7 @@ class Shortcake_Field_Post_Select {
 	 *
 	 * @return null
 	 */
-	public function action_wp_ajax_shortcake_post_field() {
+	public function action_wp_ajax_shortcode_ui_post_field() {
 
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
@@ -109,7 +109,7 @@ class Shortcake_Field_Post_Select {
 
 		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 
-		if ( ! wp_verify_nonce( $nonce, 'shortcake_field_post_select' ) ) {
+		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_post_select' ) ) {
 			wp_send_json_error( $response );
 		}
 

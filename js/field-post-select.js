@@ -8,7 +8,7 @@
 	sui.views.editAttributeFieldPostSelect = sui.views.editAttributeField.extend( {
 
 		events: {
-			'change .shortcake-post-select': 'updateValue',
+			'change .shortcode-ui-post-select': 'updateValue',
 		},
 
 		render: function() {
@@ -25,13 +25,13 @@
 			this.$el.html( this.template( this.model.toJSON() ) );
 
 			var ajaxData = {
-				action    : 'shortcake_post_field',
-				nonce     : shortcakePostFieldData.nonce,
+				action    : 'shortcode_ui_post_field',
+				nonce     : shortcodeUiPostFieldData.nonce,
 				shortcode : this.shortcode.get( 'shortcode_tag'),
 				attr      : this.model.get( 'attr' )
 			};
 
-			var $field = this.$el.find( '.shortcake-post-select' );
+			var $field = this.$el.find( '.shortcode-ui-post-select' );
 
 			$field.select2({
 
@@ -103,7 +103,7 @@
 					} else {
 
 						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
-						initAjaxData.action   = 'shortcake_post_field';
+						initAjaxData.action   = 'shortcode_ui_post_field';
 						initAjaxData.post__in = uncachedIds;
 
 						$.get( ajaxurl, initAjaxData ).done( function( response ) {
@@ -145,8 +145,8 @@
 			if ( this.model.get( 'multiple' ) ) {
 				$field.select2('container').find('ul.select2-choices').sortable({
 	    			containment: 'parent',
-	    			start: function() { $('.shortcake-post-select').select2('onSortStart'); },
-	    			update: function() { $('.shortcake-post-select').select2('onSortEnd'); }
+	    			start: function() { $('.shortcode-ui-post-select').select2('onSortStart'); },
+	    			update: function() { $('.shortcode-ui-post-select').select2('onSortEnd'); }
 				});
 			}
 
@@ -177,7 +177,7 @@
 		},
 
 		destroySelect2UI: function() {
-			$('.shortcake-post-select.select2-container').select2( "close" );
+			$('.shortcode-ui-post-select.select2-container').select2( "close" );
 		}
 
 	});
@@ -189,7 +189,7 @@
 	sui.views.TabbedView = tabbedView.extend({
 		tabSwitcher: function() {
 			tabbedView.prototype.tabSwitcher.apply( this, arguments );
-			$('.shortcake-post-select.select2-container').select2( "close" );
+			$('.shortcode-ui-post-select.select2-container').select2( "close" );
 		}
 	});
 

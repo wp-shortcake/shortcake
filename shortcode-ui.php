@@ -35,7 +35,7 @@ add_action( 'init', function() {
 	$fields           = Shortcode_UI_Fields::get_instance();
 	$attachment_field = Shortcake_Field_Attachment::get_instance();
 	$color_field      = Shortcake_Field_Color::get_instance();
-	$post_field       = Shortcake_Field_Post_Select::get_instance();
+	$post_field       = Shortcode_UI_Field_Post_Select::get_instance();
 
 }, 5 );
 
