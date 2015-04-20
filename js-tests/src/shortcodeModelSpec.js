@@ -2,6 +2,7 @@ var Shortcode = require('../../js/models/shortcode');
 var InnerContent = require('../../js/models/inner-content');
 var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
 var ShortcodeAttributes = require('../../js/collections/shortcode-attributes');
+var $ = require('jquery');
 
 describe( "Shortcode Model", function() {
 

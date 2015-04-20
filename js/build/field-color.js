@@ -36,7 +36,7 @@ module.exports = Shortcodes;
 (function (global){
 var sui = require('./utils/sui.js'),
     editAttributeField = require('./views/edit-attribute-field.js'),
-    jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 sui.views.editAttributeFieldColor = editAttributeField.extend( {
 
@@ -45,7 +45,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend( {
 
 		this.$el.find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
 			change: function() {
-				jQuery(this).trigger('keyup');
+				$(this).trigger('keyup');
 			}
 		});
 
@@ -206,8 +206,9 @@ module.exports = window.Shortcode_UI;
 
 },{"./../collections/shortcodes.js":2}],8:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
-sui = require('./../utils/sui.js');
+var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+sui = require('./../utils/sui.js'),
+$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -239,9 +240,9 @@ var editAttributeField = Backbone.View.extend( {
 	updateValue: function( e ) {
 
 		if ( this.model.get( 'attr' ) ) {
-			var $el = jQuery( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		} else {
-			var $el = jQuery( this.el ).find( '[name="inner_content"]' );
+			var $el = $( this.el ).find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
