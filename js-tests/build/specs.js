@@ -275,10 +275,16 @@ describe( "MCE View Constructor", function() {
 	});
 
 	// https://github.com/fusioneng/Shortcake/issues/171
-	xit( 'parses shortcode with line breaks in inner content', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ncontent \r2 [/test_shortcode]")
+	it( 'parses shortcode with line breaks in inner content', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ntest \rtest[/test_shortcode]")
 		expect( shortcode instanceof Shortcode ).toEqual( true );
-		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ncontent \r2 " );
+		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ntest \rtest" );
+	} );
+
+	it( 'parses shortcode with paragraph and br tags in inner content', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]<p>test</p><p>test<br/>test</p>[/test_shortcode]")
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test\n\ntest\ntest" );
 	} );
 
 } );
@@ -656,10 +662,24 @@ var shortcodeViewConstructor = {
 
 		if ( matches[3] ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
-			inner_content.set( 'value', matches[3] );
+			inner_content.set( 'value', this.unAutoP( matches[3] ) );
+			// inner_content.set( 'value', matches[3] );
 		}
 
 		return currentShortcode;
+
+	},
+
+ 	/**
+	 * Strip 'p' and 'br' tags, replace with line breaks.
+	 * Reverse the effect of the WP editor autop functionality.
+	 */
+	unAutoP: function( content ) {
+		if ( switchEditors && switchEditors.pre_wpautop ) {
+			content = switchEditors.pre_wpautop( content );
+		}
+
+		return content;
 
 	},
 
@@ -698,7 +718,8 @@ var shortcodeViewConstructor = {
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
 				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content)
+					// inner_content.set( 'value', shortcodeViewConstructor.unAutoP( options.shortcode.content ) );
+					inner_content.set( 'value', options.shortcode.content );
 				}
 			}
 

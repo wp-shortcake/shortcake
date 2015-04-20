@@ -152,10 +152,16 @@ describe( "MCE View Constructor", function() {
 	});
 
 	// https://github.com/fusioneng/Shortcake/issues/171
-	xit( 'parses shortcode with line breaks in inner content', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ncontent \r2 [/test_shortcode]")
+	it( 'parses shortcode with line breaks in inner content', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ntest \rtest[/test_shortcode]")
 		expect( shortcode instanceof Shortcode ).toEqual( true );
-		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ncontent \r2 " );
+		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ntest \rtest" );
+	} );
+
+	it( 'parses shortcode with paragraph and br tags in inner content', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]<p>test</p><p>test<br/>test</p>[/test_shortcode]")
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test\n\ntest\ntest" );
 	} );
 
 } );
