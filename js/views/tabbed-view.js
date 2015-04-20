@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var sui = require('sui-utils/sui');
+var $ = require('jquery');
 
 /**
  * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with
@@ -72,7 +73,7 @@ var TabbedView = Backbone.View.extend({
 		event.stopPropagation();
 		event.preventDefault();
 
-		var target = jQuery(event.currentTarget).attr('data-target');
+		var target = $(event.currentTarget).attr('data-target');
 
 		this.select(target);
 	},

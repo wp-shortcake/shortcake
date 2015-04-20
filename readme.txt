@@ -1,9 +1,9 @@
 === Shortcake (Shortcode UI) ===
-Contributors: mattheu, danielbachhuber, jitendraharpalani, sanchothefat, bfintal, davisshaver
+Contributors: mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver
 Tags: shortcodes
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 0.2.1
+Stable tag: 0.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,11 +13,15 @@ Shortcake makes using WordPress shortcodes a piece of cake.
 
 Used alongside `add_shortcode`, Shortcake supplies a user-friendly interface for adding a shortcode to a post, and viewing and editing it from within the content editor.
 
-See the [Github README](https://github.com/fusioneng/Shortcake/blob/master/README.md) for implementation notes. To report bugs or feature requests, [please use Github issues](https://github.com/fusioneng/Shortcake/issues).
+Once you've installed the plugin, you'll need to [register UI for your shortcodes](https://github.com/fusioneng/Shortcake/wiki/Registering-Shortcode-UI). For inspiration, check out [examples of Shortcake in the wild](https://github.com/fusioneng/Shortcake/wiki/Shortcode-UI-Examples).
+
+To report bugs or feature requests, [please use Github issues](https://github.com/fusioneng/Shortcake/issues).
 
 == Installation ==
 
-Shortcake can be installed like any other WordPress plugin. Once you've done so, [follow these integration steps](https://github.com/fusioneng/Shortcake#usage) to register UI for your shortcode.
+Shortcake can be installed like any other WordPress plugin.
+
+Once you've done so, you'll need to [register the UI for your code](https://github.com/fusioneng/Shortcake/wiki/Registering-Shortcode-UI).
 
 == Screenshots ==
 
@@ -27,6 +31,16 @@ Shortcake can be installed like any other WordPress plugin. Once you've done so,
 4. Add new shortcodes to your post through "Add Media".
 
 == Changelog ==
+
+= 0.3 (???) =
+* Shows a helpful message when a shortcode doesn't have attributes to configure.
+* Example plugin can be activated through the WordPress admin.
+
+= 0.2.3 (April 8, 2015) =
+* Fix WP 4.1 backwards compatibility issue by restoring arguments passed to TinyMCE view compatibility shim.
+
+= 0.2.2 (April 6, 2015) =
+* Update arguments passed to TinyMCE View Render for WP 4.2 compatibility. Previously passed argument wasn't necessary, so removing doesn't break backwards compatibility.
 
 = 0.2.1 (March 18, 2015) =
 

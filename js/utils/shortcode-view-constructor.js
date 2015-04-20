@@ -1,6 +1,6 @@
-sui = require('sui-utils/sui');
-wp = require('wp');
-jQuery = require('jquery');
+var sui = require('sui-utils/sui'),
+    wp = require('wp'),
+    $ = require('jquery');
 
 /**
  * Generic shortcode mce view constructor.
@@ -39,9 +39,11 @@ var shortcodeViewConstructor = {
 			}
 		);
 
-		if ('content' in options) {
-			var inner_content = shortcodeModel.get('inner_content');
-			inner_content.set('value', options.content)
+		if ( 'content' in options ) {
+			var innerContent = shortcodeModel.get('inner_content');
+			if ( innerContent ) {
+				innerContent.set('value', options.content)
+			}
 		}
 
 		return shortcodeModel;
@@ -76,7 +78,7 @@ var shortcodeViewConstructor = {
 			this.fetching = true;
 
 			wp.ajax.post( 'do_shortcode', {
-				post_id: jQuery( '#post_ID' ).val(),
+				post_id: $( '#post_ID' ).val(),
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
@@ -85,7 +87,7 @@ var shortcodeViewConstructor = {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
 				delete self.fetching;
-				self.render( true );
+				self.render();
 			} );
 
 		}
@@ -103,7 +105,7 @@ var shortcodeViewConstructor = {
 
 		// Backwards compatability for WP pre-4.2
 		if ( 'object' === typeof( shortcodeString ) ) {
-			shortcodeString = decodeURIComponent( jQuery(shortcodeString).attr('data-wpview-text') );
+			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
 		}
 
 		currentShortcode = this.parseShortcodeString( shortcodeString );
@@ -235,7 +237,9 @@ var shortcodeViewConstructor = {
 
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
-				inner_content.set('value', options.shortcode.content)
+				if ( inner_content ) {
+					inner_content.set('value', options.shortcode.content)
+				}
 			}
 
 			return shortcode;
@@ -249,7 +253,7 @@ var shortcodeViewConstructor = {
 			if ( ! this.parsed ) {
 
 				wp.ajax.post( 'do_shortcode', {
-					post_id: jQuery( '#post_ID' ).val(),
+					post_id: $( '#post_ID' ).val(),
 					shortcode: this.shortcode.formatShortcode(),
 					nonce: shortcodeUIData.nonces.preview,
 				}).done( function( response ) {

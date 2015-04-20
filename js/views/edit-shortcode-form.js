@@ -1,5 +1,6 @@
 var wp = require('wp'),
 sui = require('sui-utils/sui'),
+backbone = require('backbone'),
 editAttributeField = require( 'sui-views/edit-attribute-field' );
 
 /**
@@ -13,7 +14,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 		var t = this;
 
 		var innerContent = this.model.get( 'inner_content' );
-		if ( typeof innerContent.attributes.type !== 'undefined' ) {
+		if ( innerContent && typeof innerContent.attributes.type !== 'undefined' ) {
 
 			// add UI for inner_content
 			var view = new editAttributeField( {
@@ -45,6 +46,19 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			t.views.add( '.edit-shortcode-form-fields', view );
 
 		} );
+
+		if ( 0 == this.model.get( 'attrs' ).length && ( ! innerContent || typeof innerContent == 'undefined' ) ) {
+			var messageView = new Backbone.View({
+				tagName:      'div',
+				className:    'notice updated',
+			});
+			messageView.render = function() {
+				this.$el.append( '<p>' );
+				this.$el.find('p').text( shortcodeUIData.strings.media_frame_no_attributes_message );
+				return this;
+			};
+			t.views.add( '.edit-shortcode-form-fields', messageView );
+		}
 
 	},
 

@@ -36,7 +36,7 @@ module.exports = Shortcodes;
 (function (global){
 var sui = require('./utils/sui.js'),
     editAttributeField = require('./views/edit-attribute-field.js'),
-    jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 // Cache attachment IDs for quicker loading.
 var iDCache = {};
@@ -48,9 +48,9 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 		var model = this.model;
 
 		// Set model default values.
-		for ( var arg in ShorcakeImageFieldData.defaultArgs ) {
+		for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 			if ( ! model.get( arg ) ) {
-				model.set( arg, ShorcakeImageFieldData.defaultArgs[ arg ] );
+				model.set( arg, ShortcakeImageFieldData.defaultArgs[ arg ] );
 			}
 		}
 
@@ -108,23 +108,23 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 		 */
 		var renderPreview = function( attachment ) {
 
-			var $thumbnail = jQuery('<div class="thumbnail"></div>');
+			var $thumbnail = $('<div class="thumbnail"></div>');
 
 			if ( 'image' !== attachment.type ) {
 
-				jQuery( '<img/>', {
+				$( '<img/>', {
 					src: attachment.icon,
 					alt: attachment.title,
 				} ).appendTo( $thumbnail );
 
-				jQuery( '<div/>', {
+				$( '<div/>', {
 					class: 'filename',
 					html:  '<div>' + attachment.title + '</div>',
 				} ).appendTo( $thumbnail );
 
 			} else {
 
-				jQuery( '<img/>', {
+				$( '<img/>', {
 					src:    attachment.sizes.thumbnail.url,
 					width:  attachment.sizes.thumbnail.width,
 					height: attachment.sizes.thumbnail.height,
@@ -232,7 +232,6 @@ Shortcode = Backbone.Model.extend({
 		label: '',
 		shortcode_tag: '',
 		attrs: new ShortcodeAttributes,
-		inner_content: new InnerContent,
 	},
 
 	/**
@@ -245,7 +244,7 @@ Shortcode = Backbone.Model.extend({
 			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
 
-		if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof InnerContent ) ) {
+		if ( attributes.inner_content && ! ( attributes.inner_content instanceof InnerContent ) ) {
 			attributes.inner_content = new InnerContent( attributes.inner_content );
 		}
 
@@ -258,10 +257,10 @@ Shortcode = Backbone.Model.extend({
 	 */
 	toJSON: function( options ) {
 		options = Backbone.Model.prototype.toJSON.call(this, options);
-		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributes ) ) {
+		if ( options.attrs && ( options.attrs instanceof ShortcodeAttributes ) ) {
 			options.attrs = options.attrs.toJSON();
 		}
-		if ( options.inner_content !== undefined && ( options.inner_content instanceof InnerContent ) ) {
+		if ( options.inner_content && ( options.inner_content instanceof InnerContent ) ) {
 			options.inner_content = options.inner_content.toJSON();
 		}
 		return options;
@@ -274,7 +273,9 @@ Shortcode = Backbone.Model.extend({
 	clone: function() {
 		var clone = Backbone.Model.prototype.clone.call( this );
 		clone.set( 'attrs', clone.get( 'attrs' ).clone() );
-		clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		if ( clone.get( 'inner_content' ) ) {
+			clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		}
 		return clone;
 	},
 
@@ -298,7 +299,7 @@ Shortcode = Backbone.Model.extend({
 
 		} );
 
-		if ( 'undefined' !== typeof this.get( 'inner_content' ).get( 'value' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
+		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
@@ -334,8 +335,9 @@ module.exports = window.Shortcode_UI;
 
 },{"./../collections/shortcodes.js":2}],8:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
-sui = require('./../utils/sui.js');
+var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+sui = require('./../utils/sui.js'),
+$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -354,7 +356,13 @@ var editAttributeField = Backbone.View.extend( {
 	},
 
 	render: function() {
-		this.$el.html( this.template( this.model.toJSON() ) );
+
+		var data = jQuery.extend( {
+			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
+		}, this.model.toJSON() );
+
+		this.$el.html( this.template( data ) );
+
 		return this
 	},
 
@@ -367,9 +375,9 @@ var editAttributeField = Backbone.View.extend( {
 	updateValue: function( e ) {
 
 		if ( this.model.get( 'attr' ) ) {
-			var $el = jQuery( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		} else {
-			var $el = jQuery( this.el ).find( '[name="inner_content"]' );
+			var $el = $( this.el ).find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {

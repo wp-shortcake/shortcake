@@ -50,10 +50,12 @@ describe( "Shortcode Attribute Model", function() {
 } );
 
 },{"../../js/models/shortcode-attribute":9}],3:[function(require,module,exports){
+(function (global){
 var Shortcode = require('../../js/models/shortcode');
 var InnerContent = require('../../js/models/inner-content');
 var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
 var ShortcodeAttributes = require('../../js/collections/shortcode-attributes');
+var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 describe( "Shortcode Model", function() {
 
@@ -84,7 +86,7 @@ describe( "Shortcode Model", function() {
 		expect( defaultShortcode.get( 'shortcode_tag' ) ).toEqual( '' );
 		expect( defaultShortcode.get( 'attrs' ) instanceof ShortcodeAttributes ).toEqual( true );
 		expect( defaultShortcode.get( 'attrs' ).length ).toEqual( 0 );
-		expect( defaultShortcode.get( 'inner_content' ) instanceof InnerContent ).toEqual( true );
+		expect( defaultShortcode.get( 'inner_content' ) ).toEqual( undefined );
 	});
 
 	it( 'Attribute data set correctly..', function() {
@@ -119,6 +121,7 @@ describe( "Shortcode Model", function() {
 
 });
 
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../js/collections/shortcode-attributes":6,"../../js/models/inner-content":8,"../../js/models/shortcode":10,"../../js/models/shortcode-attribute":9}],4:[function(require,module,exports){
 (function (global){
 var Shortcode = require('./../../../js/models/shortcode.js');
@@ -383,7 +386,6 @@ Shortcode = Backbone.Model.extend({
 		label: '',
 		shortcode_tag: '',
 		attrs: new ShortcodeAttributes,
-		inner_content: new InnerContent,
 	},
 
 	/**
@@ -396,7 +398,7 @@ Shortcode = Backbone.Model.extend({
 			attributes.attrs = new ShortcodeAttributes( attributes.attrs );
 		}
 
-		if ( attributes.inner_content !== undefined && ! ( attributes.inner_content instanceof InnerContent ) ) {
+		if ( attributes.inner_content && ! ( attributes.inner_content instanceof InnerContent ) ) {
 			attributes.inner_content = new InnerContent( attributes.inner_content );
 		}
 
@@ -409,10 +411,10 @@ Shortcode = Backbone.Model.extend({
 	 */
 	toJSON: function( options ) {
 		options = Backbone.Model.prototype.toJSON.call(this, options);
-		if ( options.attrs !== undefined && ( options.attrs instanceof ShortcodeAttributes ) ) {
+		if ( options.attrs && ( options.attrs instanceof ShortcodeAttributes ) ) {
 			options.attrs = options.attrs.toJSON();
 		}
-		if ( options.inner_content !== undefined && ( options.inner_content instanceof InnerContent ) ) {
+		if ( options.inner_content && ( options.inner_content instanceof InnerContent ) ) {
 			options.inner_content = options.inner_content.toJSON();
 		}
 		return options;
@@ -425,7 +427,9 @@ Shortcode = Backbone.Model.extend({
 	clone: function() {
 		var clone = Backbone.Model.prototype.clone.call( this );
 		clone.set( 'attrs', clone.get( 'attrs' ).clone() );
-		clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		if ( clone.get( 'inner_content' ) ) {
+			clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
+		}
 		return clone;
 	},
 
@@ -449,7 +453,7 @@ Shortcode = Backbone.Model.extend({
 
 		} );
 
-		if ( 'undefined' !== typeof this.get( 'inner_content' ).get( 'value' ) && this.get( 'inner_content' ).get( 'value').length > 0 ) {
+		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
@@ -474,9 +478,9 @@ module.exports = Shortcode;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcode-attributes.js":6,"./inner-content.js":8}],11:[function(require,module,exports){
 (function (global){
-sui = require('./sui.js');
-wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
-jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var sui = require('./sui.js'),
+    wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 /**
  * Generic shortcode mce view constructor.
@@ -515,9 +519,11 @@ var shortcodeViewConstructor = {
 			}
 		);
 
-		if ('content' in options) {
-			var inner_content = shortcodeModel.get('inner_content');
-			inner_content.set('value', options.content)
+		if ( 'content' in options ) {
+			var innerContent = shortcodeModel.get('inner_content');
+			if ( innerContent ) {
+				innerContent.set('value', options.content)
+			}
 		}
 
 		return shortcodeModel;
@@ -552,7 +558,7 @@ var shortcodeViewConstructor = {
 			this.fetching = true;
 
 			wp.ajax.post( 'do_shortcode', {
-				post_id: jQuery( '#post_ID' ).val(),
+				post_id: $( '#post_ID' ).val(),
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
@@ -561,7 +567,7 @@ var shortcodeViewConstructor = {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
 				delete self.fetching;
-				self.render( true );
+				self.render();
 			} );
 
 		}
@@ -579,7 +585,7 @@ var shortcodeViewConstructor = {
 
 		// Backwards compatability for WP pre-4.2
 		if ( 'object' === typeof( shortcodeString ) ) {
-			shortcodeString = decodeURIComponent( jQuery(shortcodeString).attr('data-wpview-text') );
+			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
 		}
 
 		currentShortcode = this.parseShortcodeString( shortcodeString );
@@ -694,7 +700,9 @@ var shortcodeViewConstructor = {
 
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
-				inner_content.set('value', options.shortcode.content)
+				if ( inner_content ) {
+					inner_content.set('value', options.shortcode.content)
+				}
 			}
 
 			return shortcode;
@@ -708,7 +716,7 @@ var shortcodeViewConstructor = {
 			if ( ! this.parsed ) {
 
 				wp.ajax.post( 'do_shortcode', {
-					post_id: jQuery( '#post_ID' ).val(),
+					post_id: $( '#post_ID' ).val(),
 					shortcode: this.shortcode.formatShortcode(),
 					nonce: shortcodeUIData.nonces.preview,
 				}).done( function( response ) {

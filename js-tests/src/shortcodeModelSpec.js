@@ -2,6 +2,7 @@ var Shortcode = require('../../js/models/shortcode');
 var InnerContent = require('../../js/models/inner-content');
 var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
 var ShortcodeAttributes = require('../../js/collections/shortcode-attributes');
+var $ = require('jquery');
 
 describe( "Shortcode Model", function() {
 
@@ -32,7 +33,7 @@ describe( "Shortcode Model", function() {
 		expect( defaultShortcode.get( 'shortcode_tag' ) ).toEqual( '' );
 		expect( defaultShortcode.get( 'attrs' ) instanceof ShortcodeAttributes ).toEqual( true );
 		expect( defaultShortcode.get( 'attrs' ).length ).toEqual( 0 );
-		expect( defaultShortcode.get( 'inner_content' ) instanceof InnerContent ).toEqual( true );
+		expect( defaultShortcode.get( 'inner_content' ) ).toEqual( undefined );
 	});
 
 	it( 'Attribute data set correctly..', function() {
