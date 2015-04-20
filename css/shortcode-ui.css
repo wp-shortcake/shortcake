@@ -55,6 +55,11 @@
 .shortcode-ui-content .edit-shortcode-tabs-content {
   padding: 10px;
   border-top: 1px solid #ddd; }
+.shortcode-ui-content a.wp-color-result {
+  border-bottom: 1px solid #ccc; }
+.shortcode-ui-content .media-toolbar {
+  position: relative;
+  height: auto; }
 
 .edit-shortcode-form {
   padding: 5px 20px; }

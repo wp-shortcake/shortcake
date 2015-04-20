@@ -15,24 +15,10 @@
     <div class="edit-shortcode-tabs-content" data-role="tab-content"></div>
 </script>
 
-<script type="text/html" id="tmpl-iframe-doc">
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-            {{{ data.head }}}
-        </head>
-        <body class="{{{ data.body_classes }}}">
-            {{{ data.body }}}
-        </body>
-    </html>
-</script>
-
 <script type="text/html" id="tmpl-shortcode-ui-field-text">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}"/>
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<input type="text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}"/>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -41,8 +27,8 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-url">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="url" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" class="code" placeholder="{{ data.placeholder }}"/>
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<input type="url" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="code" placeholder="{{ data.placeholder }}"/>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -51,8 +37,8 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-textarea">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<textarea name="{{ data.attr }}" id="{{ data.attr }}" placeholder="{{ data.placeholder }}">{{ data.value }}</textarea>
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<textarea name="{{ data.attr }}" id="{{ data.id }}" placeholder="{{ data.placeholder }}">{{ data.value }}</textarea>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -61,8 +47,8 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-select">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<select name="{{ data.attr }}" id="{{ data.attr }}">
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<select name="{{ data.attr }}" id="{{ data.id }}">
 			<# _.each( data.options, function( label, value ) { #>
 				<option value="{{ value }}" <# if ( value == data.value ){ print('selected'); } #>>{{ label }}</option>
 			<# }); #>
@@ -75,9 +61,12 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-radio">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
+		<label>{{ data.label }}</label>
 		<# _.each( data.options, function( label, value ) { #>
-			<input type="radio" name="{{ data.attr }}" value="{{ value }}" <# if ( value == data.value ){ print('checked'); } #>>{{ label }}<br />
+			<label>
+				<input type="radio" name="{{ data.attr }}" value="{{ value }}" <# if ( value == data.value ) { print('checked'); } #> />
+				{{ label }}
+			</label>
 		<# }); #>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
@@ -87,8 +76,10 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-checkbox">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="checkbox" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" <# if ( 'true' == data.value ){ print('checked'); } #>>
+		<label for="{{ data.id }}">
+			<input type="checkbox" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" <# if ( 'true' == data.value ){ print('checked'); } #>>
+			{{ data.label }}
+		</label>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -97,8 +88,8 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-email">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="email" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value}}" placeholder="{{ data.placeholder }}"/>
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<input type="email" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" placeholder="{{ data.placeholder }}"/>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -107,8 +98,8 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-number">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="number" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value}}" placeholder="{{ data.placeholder }}"/>
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<input type="number" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" placeholder="{{ data.placeholder }}"/>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -117,8 +108,8 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-hidden">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="hidden" name="{{ data.attr }}" id="{{ data.attr }}" value="true" />
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<input type="hidden" name="{{ data.attr }}" id="{{ data.id }}" value="true" />
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
@@ -127,8 +118,18 @@
 
 <script type="text/html" id="tmpl-shortcode-ui-field-date">
 	<div class="field-block">
-		<label for="{{ data.attr }}">{{ data.label }}</label>
-		<input type="date" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}"/>
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<input type="date" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}"/>
+		<# if ( typeof data.description == 'string' ) { #>
+			<p class="description">{{ data.description }}</p>
+		<# } #>
+	</div>
+</script>
+
+<script type="text/html" id="tmpl-shortcode-ui-content">
+	<div class="field-block">
+		<label for="inner_content">{{ data.label }}</label>
+		<textarea id="inner_content" name="inner_content" class="content-edit">{{ data.value }}</textarea>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
 		<# } #>
