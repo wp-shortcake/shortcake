@@ -52,7 +52,7 @@ add_action( 'init', function() {
 
 		<section class="pullquote" style="padding: 20px; background: rgba(0,0,0,0.1);">
 			<p style="margin:0; padding: 0;">
-				<b>Content:</b> <?php echo esc_html( $content ); ?></br>
+				<b>Content:</b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
 				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
 			</p>
