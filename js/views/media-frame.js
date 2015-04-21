@@ -52,8 +52,10 @@ var mediaFrame = postMediaFrame.extend( {
 	},
 
 	resetMediaController: function( event ) {
-		this.mediaController.reset();
-		this.contentRender( 'shortcode-ui', 'insert' );
+		if ( this.state().props.get('currentShortcode') ) {
+			this.mediaController.reset();
+			this.contentRender( 'shortcode-ui', 'insert' );
+		}
 	},
 
 	contentRender : function( id, tab ) {
