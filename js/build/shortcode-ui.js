@@ -862,6 +862,7 @@ var mediaFrame = postMediaFrame.extend( {
 	resetMediaController: function( event ) {
 		if ( $( event.target ).hasClass( 'media-menu-item' ) ) {
 			this.mediaController.reset();
+			this.contentRender( 'shortcode-ui', 'insert' );
 		}
 	},
 
