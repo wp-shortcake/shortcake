@@ -43,6 +43,7 @@ Once you've done so, you'll need to [register the UI for your code](https://gith
 ### 0.3 (???) ###
 * Shows a helpful message when a shortcode doesn't have attributes to configure.
 * Example plugin can be activated through the WordPress admin.
+* Clicking "Insert Post Element" in the left menu effectively acts as back button to selecting a shortcode.
 * Bug fix: "Insert Post Element" experience should work when visual editor is disabled. Shortcake is only loosely coupled with TinyMCE.
 
 ### 0.2.3 (April 8, 2015) ###
