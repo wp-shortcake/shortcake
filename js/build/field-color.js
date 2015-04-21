@@ -84,8 +84,21 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		label:       '',
 		type:        '',
 		value:       '',
-		placeholder: '',
+		description: '',
+		customAttributes: {
+			placeholder: '',
+		}
 	},
+
+	initialize: function() {
+
+		// Handle legacy custom attributes.
+		if ( this.get('placeholder' ) ) {
+			var customAttributes = this.get('customAttributes');
+			customAttributes[ 'placeholder' ] = this.get('placeholder');
+		}
+	}
+
 });
 
 module.exports = ShortcodeAttribute;
@@ -231,6 +244,28 @@ var editAttributeField = Backbone.View.extend( {
 		var data = jQuery.extend( {
 			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
 		}, this.model.toJSON() );
+
+		// Convert attribute JSON to attribute string.
+		var _attributes = [];
+		for ( var key in data.customAttributes ) {
+
+			// Boolean attributes can only require attribute key, not value.
+			if ( 'boolean' === typeof( data.customAttributes[ key ] ) ) {
+
+				// Only set truthy boolean attributes.
+				if ( data.customAttributes[ key ] ) {
+					_attributes.push( _.escape( key ) );
+				}
+
+			} else {
+
+				_attributes.push( _.escape( key ) + '="' + _.escape( data.customAttributes[ key ] ) + '"' );
+
+			}
+
+		}
+
+		data.customAttributes = _attributes.join( ' ' );
 
 		this.$el.html( this.template( data ) );
 

@@ -103,9 +103,12 @@ add_action( 'init', function() {
 					'label' => 'Cite',
 					'attr'  => 'source',
 					'type'  => 'text',
-					'placeholder' => 'Test placeholder',
+					'customAttributes' => array(
+						'placeholder'  => 'Test placeholder',
+						'data-test'    => 1,
+					),
 				),
-				
+
 				array(
 					'label'    => 'Select Page',
 					'attr'     => 'page',

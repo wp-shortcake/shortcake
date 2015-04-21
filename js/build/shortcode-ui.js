@@ -117,10 +117,21 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		label:       '',
 		type:        '',
 		value:       '',
-		placeholder: '',
 		description: '',
-		custom:      ''
+		customAttributes: {
+			placeholder: '',
+		}
 	},
+
+	initialize: function() {
+
+		// Handle legacy custom attributes.
+		if ( this.get('placeholder' ) ) {
+			var customAttributes = this.get('customAttributes');
+			customAttributes[ 'placeholder' ] = this.get('placeholder');
+		}
+	}
+
 });
 
 module.exports = ShortcodeAttribute;
@@ -621,6 +632,28 @@ var editAttributeField = Backbone.View.extend( {
 			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
 		}, this.model.toJSON() );
 
+		// Convert attribute JSON to attribute string.
+		var _attributes = [];
+		for ( var key in data.customAttributes ) {
+
+			// Boolean attributes can only require attribute key, not value.
+			if ( 'boolean' === typeof( data.customAttributes[ key ] ) ) {
+
+				// Only set truthy boolean attributes.
+				if ( data.customAttributes[ key ] ) {
+					_attributes.push( _.escape( key ) );
+				}
+
+			} else {
+
+				_attributes.push( _.escape( key ) + '="' + _.escape( data.customAttributes[ key ] ) + '"' );
+
+			}
+
+		}
+
+		data.customAttributes = _attributes.join( ' ' );
+
 		this.$el.html( this.template( data ) );
 
 		return this
@@ -694,21 +727,19 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			if ( ! shortcodeUIFieldData[ type ] ) {
 				return;
 			}
-			
-			// Support for custom attributes for the field input
-			_.each( _.difference( _.keys( attr.attributes ), _.keys( attr.defaults ) ), function(key, e) {
-				if ( _.isEmpty( attr.get( key ) ) ) {
-					attr.set( 'custom', attr.get( 'custom' ) + ' ' + key );
-				} else {
-					attr.set( 'custom', attr.get( 'custom' ) + ' ' + key + '="' + _.escape( attr.get( key ) ) + '"' );
+
+			var templateData = {
+				value: attr.get('value'),
+				attr_raw: {
+					name: attr.get('value')
 				}
-			});
+			}
 
 			var viewObjName = shortcodeUIFieldData[ type ].view;
 			var tmplName    = shortcodeUIFieldData[ type ].template;
 
-			var view        = new sui.views[viewObjName]( { model: attr } );
-			view.template   = wp.media.template( tmplName );
+			var view       = new sui.views[viewObjName]( { model: attr } );
+			view.template  = wp.media.template( tmplName );
 			view.shortcode = t.model;
 
 			t.views.add( '.edit-shortcode-form-fields', view );
