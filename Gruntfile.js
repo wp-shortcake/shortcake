@@ -44,6 +44,16 @@ module.exports = function( grunt ) {
 
 		},
 
+		phpcs: {
+			plugin: {
+				src: './'
+			},
+			options: {
+				bin: "vendor/bin/phpcs --extensions=php --ignore=\"*/vendor/*,*/node_modules/*\"",
+				standard: "WordPress"
+			}
+		},
+
 		browserify : {
 
 			options: {
@@ -162,6 +172,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-browserify' );
+	grunt.loadNpmTasks( 'grunt-phpcs' );
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 	grunt.loadNpmTasks( 'grunt-contrib-jasmine' );

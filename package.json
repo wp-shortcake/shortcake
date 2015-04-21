@@ -12,6 +12,7 @@
     "grunt-contrib-jasmine": "^0.8.2",
     "grunt-contrib-jshint": "^0.11.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-phpcs": "^0.4.0",
     "grunt-sass": "^0.18.0",
     "grunt-wp-i18n": "^0.5.0",
     "grunt-wp-readme-to-markdown": "~0.9.0",
