@@ -49,7 +49,7 @@ class Shortcode_UI_Fields {
 
 	private function setup_actions() {
 		add_action( 'init', array( $this, 'action_init' ) );
-		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ), 100 );
+		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ), 100 );
 	}
 
 	/**
@@ -66,11 +66,13 @@ class Shortcode_UI_Fields {
 
 		// set default args for each field.
 		$field_defaults = $this->field_defaults;
-		$this->fields = array_map( function( $args ) use ( $field_defaults ) { return wp_parse_args( $args, $field_defaults ); }, $this->fields );
+		$this->fields = array_map( function( $args ) use ( $field_defaults ) {
+			return wp_parse_args( $args, $field_defaults );
+		}, $this->fields );
 
 	}
 
-	public function action_shortcode_ui_loaded_editor() {
+	public function action_enqueue_shortcode_ui() {
 
 		wp_localize_script( 'shortcode-ui', 'shortcodeUIFieldData', $this->fields );
 

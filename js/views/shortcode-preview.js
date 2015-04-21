@@ -1,23 +1,26 @@
-var Backbone = require('backbone');
-
-sui = require('sui-utils/sui');
+var Backbone = require('backbone'),
+    $ = require('jquery');
 
 /**
  * Preview of rendered shortcode.
  * Asynchronously fetches rendered shortcode content from WordPress.
  * Displayed in an iframe to isolate editor styles.
  *
- * @class sui.views.ShortcodePreview
+ * @class ShortcodePreview
  * @constructor
  * @params options
- * @params options.model {sui.models.Shortcode} Requires a valid shortcode.
+ * @params options.model {Shortcode} Requires a valid shortcode.
  */
 var ShortcodePreview = Backbone.View.extend({
 	initialize: function( options ) {
+		this.head = this.getEditorStyles().join( "\n" );
+	},
 
-		this.head    = this.getEditorStyles().join( "\n" );
-		this.loading = wp.mce.View.prototype.loadingPlaceholder();
-
+	getLoading: function() {
+		return '<div class="loading-placeholder">' +
+			'<div class="dashicons dashicons-admin-media"></div>' +
+			'<div class="wpview-loading"><ins></ins></div>' +
+		'</div>';
 	},
 
 	/**
@@ -32,7 +35,7 @@ var ShortcodePreview = Backbone.View.extend({
 		// Render loading iFrame.
 		this.renderIFrame({
 			head: self.head,
-			body: self.loading,
+			body: self.getLoading(),
 		});
 
 		// Fetch shortcode preview.
@@ -59,8 +62,10 @@ var ShortcodePreview = Backbone.View.extend({
 
 		_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
 
+		var isIE = typeof tinymce != 'undefined' ? tinymce.Env.ie : false;
+
 		$iframe = $( '<iframe/>', {
-			src: tinymce.Env.ie ? 'javascript:""' : '',
+			src: isIE ? 'javascript:""' : '',
 			frameBorder: '0',
 			allowTransparency: 'true',
 			scrolling: 'no',
@@ -93,7 +98,7 @@ var ShortcodePreview = Backbone.View.extend({
 	 * Watch for mutations in iFrame content.
 	 * resize iFrame height on change.
 	 *
-	 * @param  jQuery object $iframe
+	 * @param  $ object $iframe
 	 */
 	autoresizeIframe: function( $iframe ) {
 
@@ -160,7 +165,8 @@ var ShortcodePreview = Backbone.View.extend({
 	getEditorStyles: function() {
 		var styles = {};
 
-		_.each( tinymce.editors, function( editor ) {
+		var editors = typeof tinymce != 'undefined' ? tinymce.editors : [];
+		_.each( editors, function( editor ) {
 			_.each( editor.dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
 				var href;
 				( href = link.href ) && ( styles[href] = true );	// Poor man's de-duping.
@@ -175,5 +181,4 @@ var ShortcodePreview = Backbone.View.extend({
 	}
 });
 
-sui.views.ShortcodePreview = ShortcodePreview;
 module.exports = ShortcodePreview;

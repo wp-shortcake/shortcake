@@ -1,21 +1,21 @@
 var wp = require('wp'),
+	$ = require('jquery'),
 	MediaController = require('sui-controllers/media-controller'),
 	Shortcode_UI = require('./shortcode-ui'),
-	Toolbar = require('./toolbar');
+	Toolbar = require('./media-toolbar');
 
-sui = require('sui-utils/sui');
-
-var shortcodeFrame = wp.media.view.MediaFrame.Post;
-wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
+var postMediaFrame = wp.media.view.MediaFrame.Post;
+var mediaFrame = postMediaFrame.extend( {
 
 	initialize: function() {
 
-		shortcodeFrame.prototype.initialize.apply( this, arguments );
+		postMediaFrame.prototype.initialize.apply( this, arguments );
 
 		var id = 'shortcode-ui';
 
 		var opts = {
 			id      : id,
+			search  : true,
 			router  : false,
 			toolbar : id + '-toolbar',
 			menu    : 'default',
@@ -26,23 +26,36 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 		};
 
 		if ( 'currentShortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label;
+			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
 		}
 
-		var controller = new MediaController( opts );
+		this.mediaController = new MediaController( opts );
 
 		if ( 'currentShortcode' in this.options ) {
-			controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
-			controller.props.set( 'action', 'update' );
+			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
+			this.mediaController.props.set( 'action', 'update' );
 		}
 
-		this.states.add([ controller]);
+		this.states.add([ this.mediaController ]);
 
 		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
 		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
 		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
 		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
+	},
+
+	events: function() {
+		return _.extend( {}, postMediaFrame.prototype.events, {
+			'click .media-menu-item'    : 'resetMediaController',
+		} );
+	},
+
+	resetMediaController: function( event ) {
+		if ( this.state().props.get('currentShortcode') ) {
+			this.mediaController.reset();
+			this.contentRender( 'shortcode-ui', 'insert' );
+		}
 	},
 
 	contentRender : function( id, tab ) {
@@ -105,4 +118,6 @@ wp.media.view.MediaFrame.Post = shortcodeFrame.extend({
 		this.controller.state().insert();
 	},
 
-});
+} );
+
+module.exports = mediaFrame;

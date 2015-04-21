@@ -1,9 +1,7 @@
 var wp = require('wp');
 
-sui = require('sui-utils/sui');
-
 /**
- * sui Toolbar view that extends wp.media.view.Toolbar
+ * Toolbar view that extends wp.media.view.Toolbar
  * to define cusotm refresh method
  */
 var Toolbar = wp.media.view.Toolbar.extend({
@@ -17,7 +15,9 @@ var Toolbar = wp.media.view.Toolbar.extend({
 
 	refresh : function() {
 		var action = this.controller.state().props.get('action');
-		this.get('insert').model.set('disabled', action == 'select');
+		if( this.get('insert') ) {
+			this.get('insert').model.set('disabled', action == 'select');
+		}
 		/**
 		 * call 'refresh' directly on the parent class
 		 */
@@ -25,5 +25,4 @@ var Toolbar = wp.media.view.Toolbar.extend({
 	}
 });
 
-sui.views.Toolbar = Toolbar;
 module.exports = Toolbar;

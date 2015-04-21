@@ -1,18 +1,18 @@
 var Backbone = require('backbone');
-
-sui = require('sui-utils/sui');
+var sui = require('sui-utils/sui');
+var $ = require('jquery');
 
 /**
  * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with
  * views for associated content are passed to initialize the tabbed view.
- * 
+ *
  * @class TabbedView
  * @constructor
  * @extends Backbone.View
  * @params [options]
  * @params [options.tabs] {Object} A hash of key:value pairs, where each value
  *         is itself an object with the following properties:
- * 
+ *
  * label: The label to display on the tab. content: The `Backbone.View`
  * associated with the tab content.
  */
@@ -81,7 +81,7 @@ var TabbedView = Backbone.View.extend({
 	/**
 	 * Programmatically select (activate) a specific tab. Used internally to
 	 * process tab click events.
-	 * 
+	 *
 	 * @method select
 	 * @param selector
 	 *            {number|string} The index (zero based) or key of the target

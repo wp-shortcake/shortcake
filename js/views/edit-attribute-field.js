@@ -1,5 +1,6 @@
-var Backbone = require('backbone');
-sui = require('sui-utils/sui');
+var Backbone = require('backbone'),
+sui = require('sui-utils/sui'),
+$ = require('jquery');
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -18,7 +19,13 @@ var editAttributeField = Backbone.View.extend( {
 	},
 
 	render: function() {
-		this.$el.html( this.template( this.model.toJSON() ) );
+
+		var data = jQuery.extend( {
+			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
+		}, this.model.toJSON() );
+
+		this.$el.html( this.template( data ) );
+
 		return this
 	},
 
@@ -29,12 +36,16 @@ var editAttributeField = Backbone.View.extend( {
 	 * then it should update the model.
 	 */
 	updateValue: function( e ) {
-		if( this.model.get( 'attr' ) ) { 
-			var $el = $(this.el).find( '[name=' + this.model.get( 'attr' ) + ']' );
+
+		if ( this.model.get( 'attr' ) ) {
+			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		} else {
-			var $el = $(this.el).find( '[name="inner_content"]' );
+			var $el = $( this.el ).find( '[name="inner_content"]' );
 		}
-		if ( 'checkbox' === this.model.attributes.type ) {
+
+		if ( 'radio' === this.model.attributes.type ) {
+			this.model.set( 'value', $el.filter(':checked').first().val() );
+		} else if ( 'checkbox' === this.model.attributes.type ) {
 			this.model.set( 'value', $el.is( ':checked' ) );
 		} else {
 			this.model.set( 'value', $el.val() );
