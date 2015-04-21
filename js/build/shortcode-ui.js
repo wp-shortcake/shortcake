@@ -807,6 +807,7 @@ module.exports = insertShortcodeList;
 },{"./../collections/shortcodes.js":2,"./insert-shortcode-list-item.js":12}],14:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 	MediaController = require('./../controllers/media-controller.js'),
 	Shortcode_UI = require('./shortcode-ui'),
 	Toolbar = require('./media-toolbar');
@@ -836,20 +837,32 @@ var mediaFrame = postMediaFrame.extend( {
 			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
 		}
 
-		var controller = new MediaController( opts );
+		this.mediaController = new MediaController( opts );
 
 		if ( 'currentShortcode' in this.options ) {
-			controller.props.set( 'currentShortcode', arguments[0].currentShortcode );
-			controller.props.set( 'action', 'update' );
+			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
+			this.mediaController.props.set( 'action', 'update' );
 		}
 
-		this.states.add([ controller]);
+		this.states.add([ this.mediaController ]);
 
 		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
 		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
 		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
 		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
+	},
+
+	events: function() {
+		return _.extend( {}, postMediaFrame.prototype.events, {
+			'click'    : 'resetMediaController',
+		} );
+	},
+
+	resetMediaController: function( event ) {
+		if ( $( event.target ).hasClass( 'media-menu-item' ) ) {
+			this.mediaController.reset();
+		}
 	},
 
 	contentRender : function( id, tab ) {
