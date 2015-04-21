@@ -1051,8 +1051,10 @@ var ShortcodePreview = Backbone.View.extend({
 
 		_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
 
+		var isIE = typeof tinymce != 'undefined' ? tinymce.Env.ie : false;
+
 		$iframe = $( '<iframe/>', {
-			src: tinymce.Env.ie ? 'javascript:""' : '',
+			src: isIE ? 'javascript:""' : '',
 			frameBorder: '0',
 			allowTransparency: 'true',
 			scrolling: 'no',
@@ -1152,7 +1154,8 @@ var ShortcodePreview = Backbone.View.extend({
 	getEditorStyles: function() {
 		var styles = {};
 
-		_.each( tinymce.editors, function( editor ) {
+		var editors = typeof tinymce != 'undefined' ? tinymce.editors : [];
+		_.each( editors, function( editor ) {
 			_.each( editor.dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
 				var href;
 				( href = link.href ) && ( styles[href] = true );	// Poor man's de-duping.
