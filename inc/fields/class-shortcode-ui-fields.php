@@ -2,7 +2,7 @@
 
 class Shortcode_UI_Fields {
 
-	private static $instance = null;
+	private static $instance;
 
 	// Default Field Settings.
 	private $field_defaults = array(
@@ -40,7 +40,7 @@ class Shortcode_UI_Fields {
 	);
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
@@ -70,6 +70,15 @@ class Shortcode_UI_Fields {
 			return wp_parse_args( $args, $field_defaults );
 		}, $this->fields );
 
+	}
+
+	/**
+	 * Get all registered fields
+	 *
+	 * @return array
+	 */
+	public function get_fields() {
+		return $this->fields;
 	}
 
 	public function action_enqueue_shortcode_ui() {
