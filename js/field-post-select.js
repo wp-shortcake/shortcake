@@ -159,41 +159,4 @@
 
 	} );
 
-	/**
-	 * Extending SUI Media Controller to hide Select2 UI Drop-Down when menu
-	 * changes in Meida modal
-	 * 1. going back/forth between different shortcakes (refresh)
-	 * 2. changing the menu in left column (deactivate)
-	 * 3. @TODO closing the modal.
-	 */
-	var mediaController = sui.controllers.MediaController;
-	sui.controllers.MediaController = mediaController.extend({
-
-		refresh: function(){
-			mediaController.prototype.refresh.apply( this, arguments );
-			this.destroySelect2UI();
-		},
-
-		//doesn't need to call parent as it already an "abstract" method in parent to provide callback
-		deactivate: function() {
-			this.destroySelect2UI();
-		},
-
-		destroySelect2UI: function() {
-			$('.shortcode-ui-post-select.select2-container').select2( "close" );
-		}
-
-	});
-
-	/**
-	 * Extending the SUI Tabbed View to hide Select2 UI dropdown when previewing the shortcake
-	 */
-	var tabbedView = sui.views.TabbedView;
-	sui.views.TabbedView = tabbedView.extend({
-		tabSwitcher: function() {
-			tabbedView.prototype.tabSwitcher.apply( this, arguments );
-			$('.shortcode-ui-post-select.select2-container').select2( "close" );
-		}
-	});
-
 } )( jQuery );
