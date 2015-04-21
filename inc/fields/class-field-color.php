@@ -2,7 +2,7 @@
 
 class Shortcake_Field_Color {
 
-	private static $instance = null;
+	private static $instance;
 
 	// All registered post fields.
 	private $post_fields  = array();
@@ -16,7 +16,7 @@ class Shortcake_Field_Color {
 	);
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
@@ -33,7 +33,7 @@ class Shortcake_Field_Color {
 
 	private function color_attribute_present() {
 
-		foreach( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
+		foreach( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ){
 			if ( empty( $shortcode['attrs'] ) ) {
 				continue;
 			}
@@ -43,7 +43,7 @@ class Shortcake_Field_Color {
 					continue;
 				}
 
-				if ( $attribute['type'] == 'color' ) {
+				if ( 'color' === $attribute['type'] ) {
 					return true;
 				}
 			}

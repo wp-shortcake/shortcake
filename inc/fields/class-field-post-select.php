@@ -2,7 +2,7 @@
 
 class Shortcode_UI_Field_Post_Select {
 
-	private static $instance = null;
+	private static $instance;
 
 	// All registered post fields.
 	private $post_fields  = array();
@@ -16,7 +16,7 @@ class Shortcode_UI_Field_Post_Select {
 	);
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
