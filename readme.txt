@@ -1,5 +1,5 @@
 === Shortcake (Shortcode UI) ===
-Contributors: mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver
+Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver
 Tags: shortcodes
 Requires at least: 4.1
 Tested up to: 4.2
