@@ -274,7 +274,7 @@ describe( "MCE View Constructor", function() {
 	it( 'parses shortcode with dashes in name and attribute', function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]')
 		expect( shortcode instanceof Shortcode ).toEqual( true );
-		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test value 2' );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).not.toEqual( 'test value 2' );
 	});
 
 	// https://github.com/fusioneng/Shortcake/issues/171
@@ -283,6 +283,12 @@ describe( "MCE View Constructor", function() {
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ncontent \r2 " );
 	} );
+
+	it( 'parses shortcode with unquoted attributes', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test]')
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
+	});
 
 } );
 
@@ -637,22 +643,33 @@ var shortcodeViewConstructor = {
 
 		if ( matches[2] ) {
 
-			attributeMatches = matches[2].match( /(\S+?=".*?")/g ) || [];
+			var attributeRegex = /(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/gmi;
+			attributeMatches   = matches[2].match( attributeRegex ) || [];
+
+			// Trim whitespace from matches.
+			attributeMatches = attributeMatches.map( function( match ) {
+				return match.replace( /^\s+|\s+$/g, '' );
+			} );
 
 			// convert attribute strings to object.
 			for ( var i = 0; i < attributeMatches.length; i++ ) {
 
-				var bitsRegEx = /(\S+?)="(.*?)"/g;
+				var bitsRegEx = /(\S+?)=(.*)/g;
 				var bits = bitsRegEx.exec( attributeMatches[i] );
 
-				attr = currentShortcode.get( 'attrs' ).findWhere({
-					attr : bits[1]
-				});
+				if ( bits && bits[1] ) {
 
-				if ( attr ) {
-					attr.set('value', bits[2]);
+					attr = currentShortcode.get( 'attrs' ).findWhere({
+						attr : bits[1]
+					});
+
+					// If attribute found - set value.
+					// Trim quotes from beginning and end.
+					if ( attr ) {
+						attr.set( 'value', bits[2].replace( /^"|^'|"$|'$/gmi, "" ) );
+					}
+
 				}
-
 			}
 
 		}

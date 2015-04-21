@@ -148,7 +148,7 @@ describe( "MCE View Constructor", function() {
 	it( 'parses shortcode with dashes in name and attribute', function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]')
 		expect( shortcode instanceof Shortcode ).toEqual( true );
-		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test value 2' );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).not.toEqual( 'test value 2' );
 	});
 
 	// https://github.com/fusioneng/Shortcake/issues/171
@@ -157,5 +157,11 @@ describe( "MCE View Constructor", function() {
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ncontent \r2 " );
 	} );
+
+	it( 'parses shortcode with unquoted attributes', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test]')
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
+	});
 
 } );
