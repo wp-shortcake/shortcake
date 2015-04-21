@@ -37,7 +37,10 @@ describe( "Shortcode Attribute Model", function() {
 		label:       'Attribute',
 		type:        'text',
 		value:       'test value',
-		placeholder: 'test placeholder',
+		description: 'test description',
+		customAttributes: {
+			placeholder: 'test placeholder'
+		}
 	};
 
 	var attr = new ShortcodeAttribute( attrData );
