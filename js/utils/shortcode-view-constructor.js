@@ -156,14 +156,9 @@ var shortcodeViewConstructor = {
 		currentShortcode = defaultShortcode.clone();
 
 		if ( matches[2] ) {
-			// Use the regex from the WordPress do_shortcode() parser.
-			var attributeRegex = /(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*'([^']*)'(?:\s|$)|(\w+)\s*=\s*([^\s'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/gmi;
-			attributeMatches = matches[2].match( attributeRegex ) || [];
 
-			// Get rid of any extra spaces at the end of the matches.
-			for(var i in attributeMatches){
-				attributeMatches[i] = attributeMatches[i].replace(/^\s+|\s+$/g,'');
-			}
+			var attributeRegex = /(\S+=".+")|(\S+=\S+)/gmi;
+			attributeMatches   = matches[2].match( attributeRegex ) || [];
 
 			// convert attribute strings to object.
 			for ( var i = 0; i < attributeMatches.length; i++ ) {
@@ -171,23 +166,18 @@ var shortcodeViewConstructor = {
 				var bitsRegEx = /(\S+?)=(.*)/g;
 				var bits = bitsRegEx.exec( attributeMatches[i] );
 
-				attr = currentShortcode.get( 'attrs' ).findWhere({
-					attr : bits[1]
-				});
+				if ( bits[1] ) {
+					attr = currentShortcode.get( 'attrs' ).findWhere({
+						attr : bits[1]
+					});
+				}
 
 				if ( attr ) {
-					// Make a copy of the result to strip any quotation marks off of.
-					var val = bits[2];
-					
-					// Remove a quotation mark at the beginning of the string.
-					val = val.replace( /^"/, '' );
-					
-					// Check to see if we actually removed a quotation mark, if so then we have to remove the one at the end.  If not then we don't have to as if there is a quotation mark at the end it is part of the data.
-					if( val != bits[2] ) {
-						val = val.replace( /"$/, '' );
-					}
-					
-					attr.set('value', val);
+
+					// Set value
+					// Trim quotes from beginning and end.
+					attr.set( 'value', bits[2].replace( /^\"|"$/g, "" ) );
+
 				}
 
 			}

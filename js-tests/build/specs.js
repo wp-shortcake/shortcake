@@ -284,6 +284,13 @@ describe( "MCE View Constructor", function() {
 		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ncontent \r2 " );
 	} );
 
+	it( 'parses shortcode with unquoted attributes', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test test-attr-2=test 2]')
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr=2' }).get('value') ).toEqual( 'test 2' );
+	});
+
 } );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -637,20 +644,27 @@ var shortcodeViewConstructor = {
 
 		if ( matches[2] ) {
 
-			attributeMatches = matches[2].match( /(\S+?=".*?")/g ) || [];
+			var attributeRegex = /(\S+=".+")|(\S+=\S+)/gmi;
+			attributeMatches   = matches[2].match( attributeRegex ) || [];
 
 			// convert attribute strings to object.
 			for ( var i = 0; i < attributeMatches.length; i++ ) {
 
-				var bitsRegEx = /(\S+?)="(.*?)"/g;
+				var bitsRegEx = /(\S+?)=(.*)/g;
 				var bits = bitsRegEx.exec( attributeMatches[i] );
 
-				attr = currentShortcode.get( 'attrs' ).findWhere({
-					attr : bits[1]
-				});
+				if ( bits[1] ) {
+					attr = currentShortcode.get( 'attrs' ).findWhere({
+						attr : bits[1]
+					});
+				}
 
 				if ( attr ) {
-					attr.set('value', bits[2]);
+
+					// Set value
+					// Trim quotes from beginning and end.
+					attr.set( 'value', bits[2].replace( /^\"|"$/g, "" ) );
+
 				}
 
 			}

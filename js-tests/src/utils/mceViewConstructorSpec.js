@@ -158,4 +158,11 @@ describe( "MCE View Constructor", function() {
 		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ncontent \r2 " );
 	} );
 
+	it( 'parses shortcode with unquoted attributes', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test test-attr-2=test 2]')
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr=2' }).get('value') ).toEqual( 'test' );
+	});
+
 } );
