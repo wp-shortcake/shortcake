@@ -105,6 +105,14 @@ add_action( 'init', function() {
 					'type'  => 'text',
 					'placeholder' => 'Test placeholder',
 				),
+				
+				array(
+					'label'    => 'Select Page',
+					'attr'     => 'page',
+					'type'     => 'post_select',
+					'query'    => array( 'post_type' => 'page' ),
+					'multiple' => true,
+				),
 
 			),
 
