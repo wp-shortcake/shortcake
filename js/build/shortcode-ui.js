@@ -855,15 +855,13 @@ var mediaFrame = postMediaFrame.extend( {
 
 	events: function() {
 		return _.extend( {}, postMediaFrame.prototype.events, {
-			'click'    : 'resetMediaController',
+			'click .media-menu-item'    : 'resetMediaController',
 		} );
 	},
 
 	resetMediaController: function( event ) {
-		if ( $( event.target ).hasClass( 'media-menu-item' ) ) {
-			this.mediaController.reset();
-			this.contentRender( 'shortcode-ui', 'insert' );
-		}
+		this.mediaController.reset();
+		this.contentRender( 'shortcode-ui', 'insert' );
 	},
 
 	contentRender : function( id, tab ) {
