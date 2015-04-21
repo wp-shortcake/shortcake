@@ -26,8 +26,7 @@ class Shortcode_UI_Field_Post_Select {
 	private function setup_actions() {
 
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
-
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
+		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_post_field', array( $this, 'action_wp_ajax_shortcode_ui_post_field' ) );
 		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 
@@ -37,7 +36,7 @@ class Shortcode_UI_Field_Post_Select {
 		return array_merge( $fields, $this->fields );
 	}
 
-	public function action_admin_enqueue_scripts() {
+	public function action_enqueue_shortcode_ui() {
 
 		$plugin_dir =  dirname( dirname( __FILE__ ) );
 
