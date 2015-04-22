@@ -103,8 +103,8 @@ add_action( 'init', function() {
 					'label' => 'Cite',
 					'attr'  => 'source',
 					'type'  => 'text',
-					'placeholder' => 'Test placeholder (old)',
-					'attributes' => array(
+					'meta' => array(
+						'placeholder' => 'Test placeholder',
 						'data-test'    => 1,
 					),
 				),
