@@ -24,34 +24,34 @@ var editAttributeField = Backbone.View.extend( {
 			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
 		}, this.model.toJSON() );
 
-		// Handle legacy custom attributes.
+		// Handle legacy custom meta.
 		// Can be removed in 0.4.
 		if ( data.placeholder ) {
-			data.attributes.placeholder = data.placeholder;
+			data.meta.placeholder = data.placeholder;
 			delete data.placeholder;
 		}
 
-		// Convert attribute JSON to attribute string.
-		var _attributes = [];
-		for ( var key in data.attributes ) {
+		// Convert meta JSON to attribute string.
+		var _meta = [];
+		for ( var key in data.meta ) {
 
 			// Boolean attributes can only require attribute key, not value.
-			if ( 'boolean' === typeof( data.attributes[ key ] ) ) {
+			if ( 'boolean' === typeof( data.meta[ key ] ) ) {
 
 				// Only set truthy boolean attributes.
-				if ( data.attributes[ key ] ) {
-					_attributes.push( _.escape( key ) );
+				if ( data.meta[ key ] ) {
+					_meta.push( _.escape( key ) );
 				}
 
 			} else {
 
-				_attributes.push( _.escape( key ) + '="' + _.escape( data.attributes[ key ] ) + '"' );
+				_meta.push( _.escape( key ) + '="' + _.escape( data.meta[ key ] ) + '"' );
 
 			}
 
 		}
 
-		data.attributes = _attributes.join( ' ' );
+		data.meta = _meta.join( ' ' );
 
 		this.$el.html( this.template( data ) );
 
