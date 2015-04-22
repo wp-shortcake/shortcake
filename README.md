@@ -1,5 +1,5 @@
 # Shortcake (Shortcode UI) #
-**Contributors:** mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver  
+**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver  
 **Tags:** shortcodes  
 **Requires at least:** 4.1  
 **Tested up to:** 4.2  
@@ -38,13 +38,29 @@ Once you've done so, you'll need to [register the UI for your code](https://gith
 ![Add new shortcodes to your post through "Add Media".](http://s.wordpress.org/extend/plugins/shortcode-ui/screenshot-4.png)
 
 
+## Upgrade Notice ##
+
+### 0.3 ###
+
+We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
+
 ## Changelog ##
 
 ### 0.3 (???) ###
-* Shows a helpful message when a shortcode doesn't have attributes to configure.
-* Example plugin can be activated through the WordPress admin.
+* **Breaking change**: We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
+* New `post_select` field type for selecting from a list of posts. Supports an additional `query` parameter to modify the search query.
+* Using a new `post_type` argument, shortcode UI can be registered for specific post types. This is helpful if you want the UI for a given shortcode to only appear on specific post types.
+* For each shortcode attribute, a `meta` argument can be specified to add arbitrary HTML attributes to the field. We've added a compatibility shim for the existing `placeholder` argument. This compatibility shim will be removed in v0.4.
+* When inserting a shortcode, UI shows a helpful message when the shortcode doesn't have attributes to configure. Previously, the user was presented with a relatively blank screen.
+* Our example plugin can be activated through the WordPress admin.
 * Clicking "Insert Post Element" in the left menu effectively acts as back button to selecting a shortcode.
+* Language around the editing experience reflects the shortcode you're editing. For instance, with a pullquote shortcode,  "Edit Post Element" becomes "Edit Pullquote"
+* Source JavaScript files moved to `js/src` for clarity between source and built JavaScript.
+* PHP files are scanned using PHP_CodeSniffer.
+* Bug fix: Unquoted shortcode attributes are properly supported.
+* Bug fix: Attachment field properly registers dependencies.
 * Bug fix: "Insert Post Element" experience should work when visual editor is disabled. Shortcake is only loosely coupled with TinyMCE.
+* Bug fix: Editor styles are loaded on `after_setup_theme` to prevent fatals.
 
 ### 0.2.3 (April 8, 2015) ###
 * Fix WP 4.1 backwards compatibility issue by restoring arguments passed to TinyMCE view compatibility shim.
