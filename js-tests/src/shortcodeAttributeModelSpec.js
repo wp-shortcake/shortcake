@@ -8,7 +8,7 @@ describe( "Shortcode Attribute Model", function() {
 		type:        'text',
 		value:       'test value',
 		description: 'test description',
-		customAttributes: {
+		attributes:  {
 			placeholder: 'test placeholder'
 		}
 	};

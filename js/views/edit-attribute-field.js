@@ -26,25 +26,25 @@ var editAttributeField = Backbone.View.extend( {
 
 		// Convert attribute JSON to attribute string.
 		var _attributes = [];
-		for ( var key in data.customAttributes ) {
+		for ( var key in data.attributes ) {
 
 			// Boolean attributes can only require attribute key, not value.
-			if ( 'boolean' === typeof( data.customAttributes[ key ] ) ) {
+			if ( 'boolean' === typeof( data.attributes[ key ] ) ) {
 
 				// Only set truthy boolean attributes.
-				if ( data.customAttributes[ key ] ) {
+				if ( data.attributes[ key ] ) {
 					_attributes.push( _.escape( key ) );
 				}
 
 			} else {
 
-				_attributes.push( _.escape( key ) + '="' + _.escape( data.customAttributes[ key ] ) + '"' );
+				_attributes.push( _.escape( key ) + '="' + _.escape( data.attributes[ key ] ) + '"' );
 
 			}
 
 		}
 
-		data.customAttributes = _attributes.join( ' ' );
+		data.attributes = _attributes.join( ' ' );
 
 		this.$el.html( this.template( data ) );
 

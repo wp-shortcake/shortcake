@@ -38,7 +38,7 @@ describe( "Shortcode Attribute Model", function() {
 		type:        'text',
 		value:       'test value',
 		description: 'test description',
-		customAttributes: {
+		attributes:  {
 			placeholder: 'test placeholder'
 		}
 	};
@@ -377,20 +377,10 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		type:        '',
 		value:       '',
 		description: '',
-		customAttributes: {
+		attributes: {
 			placeholder: '',
 		}
 	},
-
-	initialize: function() {
-
-		// Handle legacy custom attributes.
-		if ( this.get('placeholder' ) ) {
-			var customAttributes = this.get('customAttributes');
-			customAttributes[ 'placeholder' ] = this.get('placeholder');
-		}
-	}
-
 });
 
 module.exports = ShortcodeAttribute;
