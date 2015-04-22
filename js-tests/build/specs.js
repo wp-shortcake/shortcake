@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var InnerContent = require('../../js/models/inner-content');
+var InnerContent = require('../../js/src/models/inner-content');
 
 describe( "Shortcode Inner Content Model", function() {
 
@@ -27,8 +27,8 @@ describe( "Shortcode Inner Content Model", function() {
 
 } );
 
-},{"../../js/models/inner-content":8}],2:[function(require,module,exports){
-var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
+},{"../../js/src/models/inner-content":8}],2:[function(require,module,exports){
+var ShortcodeAttribute = require('../../js/src/models/shortcode-attribute');
 
 describe( "Shortcode Attribute Model", function() {
 
@@ -52,12 +52,12 @@ describe( "Shortcode Attribute Model", function() {
 
 } );
 
-},{"../../js/models/shortcode-attribute":9}],3:[function(require,module,exports){
+},{"../../js/src/models/shortcode-attribute":9}],3:[function(require,module,exports){
 (function (global){
-var Shortcode = require('../../js/models/shortcode');
-var InnerContent = require('../../js/models/inner-content');
-var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
-var ShortcodeAttributes = require('../../js/collections/shortcode-attributes');
+var Shortcode = require('../../js/src/models/shortcode');
+var InnerContent = require('../../js/src/models/inner-content');
+var ShortcodeAttribute = require('../../js/src/models/shortcode-attribute');
+var ShortcodeAttributes = require('../../js/src/collections/shortcode-attributes');
 var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 describe( "Shortcode Model", function() {
@@ -125,11 +125,11 @@ describe( "Shortcode Model", function() {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../js/collections/shortcode-attributes":6,"../../js/models/inner-content":8,"../../js/models/shortcode":10,"../../js/models/shortcode-attribute":9}],4:[function(require,module,exports){
+},{"../../js/src/collections/shortcode-attributes":6,"../../js/src/models/inner-content":8,"../../js/src/models/shortcode":10,"../../js/src/models/shortcode-attribute":9}],4:[function(require,module,exports){
 (function (global){
-var Shortcode = require('./../../../js/models/shortcode.js');
-var MceViewConstructor = require('./../../../js/utils/shortcode-view-constructor.js');
-var sui = require('./../../../js/utils/sui.js');
+var Shortcode = require('./../../../js/src/models/shortcode.js');
+var MceViewConstructor = require('./../../../js/src/utils/shortcode-view-constructor.js');
+var sui = require('./../../../js/src/utils/sui.js');
 var jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
 
@@ -296,9 +296,9 @@ describe( "MCE View Constructor", function() {
 } );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../../../js/models/shortcode.js":10,"./../../../js/utils/shortcode-view-constructor.js":11,"./../../../js/utils/sui.js":12}],5:[function(require,module,exports){
-var Shortcodes = require('./../../../js/collections/shortcodes.js');
-var sui = require('./../../../js/utils/sui.js');
+},{"./../../../js/src/models/shortcode.js":10,"./../../../js/src/utils/shortcode-view-constructor.js":11,"./../../../js/src/utils/sui.js":12}],5:[function(require,module,exports){
+var Shortcodes = require('./../../../js/src/collections/shortcodes.js');
+var sui = require('./../../../js/src/utils/sui.js');
 
 describe( "SUI Util", function() {
 
@@ -313,7 +313,7 @@ describe( "SUI Util", function() {
 
 } );
 
-},{"./../../../js/collections/shortcodes.js":7,"./../../../js/utils/sui.js":12}],6:[function(require,module,exports){
+},{"./../../../js/src/collections/shortcodes.js":7,"./../../../js/src/utils/sui.js":12}],6:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 var ShortcodeAttribute = require('./../models/shortcode-attribute.js');

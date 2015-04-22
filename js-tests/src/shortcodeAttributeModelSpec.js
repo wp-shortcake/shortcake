@@ -1,4 +1,4 @@
-var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
+var ShortcodeAttribute = require('../../js/src/models/shortcode-attribute');
 
 describe( "Shortcode Attribute Model", function() {
 
