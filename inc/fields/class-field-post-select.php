@@ -2,7 +2,7 @@
 
 class Shortcode_UI_Field_Post_Select {
 
-	private static $instance = null;
+	private static $instance;
 
 	// All registered post fields.
 	private $post_fields  = array();
@@ -16,7 +16,7 @@ class Shortcode_UI_Field_Post_Select {
 	);
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
@@ -38,7 +38,7 @@ class Shortcode_UI_Field_Post_Select {
 
 	public function action_enqueue_shortcode_ui() {
 
-		$plugin_dir =  dirname( dirname( __FILE__ ) );
+		$plugin_dir = dirname( dirname( __FILE__ ) );
 
 		wp_enqueue_script(
 			'shortcode-ui-field-post-select',
@@ -104,7 +104,7 @@ class Shortcode_UI_Field_Post_Select {
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
-		$response            = array( 'posts' => array(), 'found_posts'=> 0, 'posts_per_page' => 0 );
+		$response            = array( 'posts' => array(), 'found_posts' => 0, 'posts_per_page' => 0 );
 
 		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 

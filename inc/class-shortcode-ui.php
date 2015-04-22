@@ -7,10 +7,10 @@ class Shortcode_UI {
 
 	private $shortcodes = array();
 
-	private static $instance = null;
+	private static $instance;
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
@@ -80,7 +80,7 @@ class Shortcode_UI {
 		$shortcodes = array_values( $this->shortcodes );
 		$screen = get_current_screen();
 		if ( $screen && ! empty( $screen->post_type ) ) {
-			foreach( $shortcodes as $key => $args ) {
+			foreach ( $shortcodes as $key => $args ){
 				if ( ! empty( $args['post_type'] ) && ! in_array( $screen->post_type, $args['post_type'] ) ) {
 					unset( $shortcodes[ $key ] );
 				}
@@ -98,17 +98,17 @@ class Shortcode_UI {
 		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 			'shortcodes'      => $shortcodes,
 			'strings'         => array(
-				'media_frame_title'                => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
-				'media_frame_menu_insert_label'    => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
-				'media_frame_menu_update_label'    => esc_html__( '%s Details', 'shortcode-ui' ), // Substituted in JS
-				'media_frame_toolbar_insert_label' => esc_html__( 'Insert Element', 'shortcode-ui' ),
-				'media_frame_toolbar_update_label' => esc_html__( 'Update', 'shortcode-ui' ),
-				'media_frame_no_attributes_message'=> esc_html__( 'There are no attributes to configure for this Post Element.', 'shortcode-ui' ),
-				'edit_tab_label'                   => esc_html__( 'Edit', 'shortcode-ui' ),
-				'preview_tab_label'                => esc_html__( 'Preview', 'shortcode-ui' ),
-				'mce_view_error'                   => esc_html__( 'Failed to load preview', 'shortcode-ui' ),
-				'search_placeholder'               => esc_html__( 'Search', 'shortcode-ui' ),
-				'insert_content_label'             => esc_html__( 'Insert Content', 'shortcode-ui' ),
+				'media_frame_title'                 => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
+				'media_frame_menu_insert_label'     => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
+				'media_frame_menu_update_label'     => esc_html__( '%s Details', 'shortcode-ui' ), // Substituted in JS
+				'media_frame_toolbar_insert_label'  => esc_html__( 'Insert Element', 'shortcode-ui' ),
+				'media_frame_toolbar_update_label'  => esc_html__( 'Update', 'shortcode-ui' ),
+				'media_frame_no_attributes_message' => esc_html__( 'There are no attributes to configure for this Post Element.', 'shortcode-ui' ),
+				'edit_tab_label'                    => esc_html__( 'Edit', 'shortcode-ui' ),
+				'preview_tab_label'                 => esc_html__( 'Preview', 'shortcode-ui' ),
+				'mce_view_error'                    => esc_html__( 'Failed to load preview', 'shortcode-ui' ),
+				'search_placeholder'                => esc_html__( 'Search', 'shortcode-ui' ),
+				'insert_content_label'              => esc_html__( 'Insert Content', 'shortcode-ui' ),
 			),
 			'nonces'     => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
@@ -138,9 +138,9 @@ class Shortcode_UI {
 	 * @return null
 	 */
 	public function action_admin_print_footer_scripts() {
-		echo $this->get_view( 'media-frame' );
-		echo $this->get_view( 'list-item' );
-		echo $this->get_view( 'edit-form' );
+		echo $this->get_view( 'media-frame' ); // WPCS: xss ok
+		echo $this->get_view( 'list-item' ); // WPCS: xss ok
+		echo $this->get_view( 'edit-form' ); // WPCS: xss ok
 
 		do_action( 'print_shortcode_ui_templates' );
 	}
@@ -162,7 +162,6 @@ class Shortcode_UI {
 			if ( ! file_exists( $template ) ) {
 				return '';
 			}
-
 		}
 
 		ob_start();
@@ -191,8 +190,16 @@ class Shortcode_UI {
 	public function handle_ajax_do_shortcode() {
 
 		// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
-		$shortcode = ! empty( $_POST['shortcode'] ) ? stripslashes( $_POST['shortcode'] ) : null;
-		$post_id   = ! empty( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : null;
+		if ( ! empty( $_POST['shortcode'] ) ) {
+			$shortcode = stripslashes( $_POST['shortcode'] );
+		} else {
+			$shortcode = null;
+		}
+		if ( isset( $_POST['post_id'] ) ) {
+			$post_id = intval( $_POST['post_id'] );
+		} else {
+			$post_id = null;
+		}
 
 		if ( ! current_user_can( 'edit_post', $post_id ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-preview' ) ) {
 			echo esc_html__( "Something's rotten in the state of Denmark", 'shortcode-ui' );
@@ -200,14 +207,16 @@ class Shortcode_UI {
 		}
 
 		if ( ! empty( $post_id ) ) {
+			// @codingStandardsIgnoreStart
 			global $post;
 			$post = get_post( $post_id );
 			setup_postdata( $post );
+			// @codingStandardsIgnoreStart
 		}
 
 		ob_start();
 		do_action( 'shortcode_ui_before_do_shortcode', $shortcode );
-		echo do_shortcode( $shortcode );
+		echo do_shortcode( $shortcode ); // WPCS: xss ok
 		do_action( 'shortcode_ui_after_do_shortcode', $shortcode );
 
 		wp_send_json_success( ob_get_clean() );
