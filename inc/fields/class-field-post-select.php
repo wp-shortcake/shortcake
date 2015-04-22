@@ -101,9 +101,9 @@ class Shortcode_UI_Field_Post_Select {
 	 */
 	public function action_wp_ajax_shortcode_ui_post_field() {
 
-		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null; // WPCS: input var okay
-		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null; // WPCS: input var okay
-		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null; // WPCS: input var okay
+		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
+		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
+		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 		$response            = array( 'posts' => array(), 'found_posts' => 0, 'posts_per_page' => 0 );
 
 		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
@@ -137,15 +137,15 @@ class Shortcode_UI_Field_Post_Select {
 		$query_args['perm']   = 'readable';
 
 		if ( isset( $_GET['page'] ) ) {
-			$query_args['paged'] = sanitize_text_field( $_GET['page'] ); // WPCS: input var okay
+			$query_args['paged'] = sanitize_text_field( $_GET['page'] );
 		}
 
 		if ( ! empty( $_GET['s'] ) ) {
-			$query_args['s'] = sanitize_text_field( $_GET['s'] ); // WPCS: input var okay
+			$query_args['s'] = sanitize_text_field( $_GET['s'] );
 		}
 
 		if ( ! empty( $_GET['post__in'] ) ) {
-			$post__in = is_array( $_GET['post__in'] ) ? $_GET['post__in'] : explode( ',', $_GET['post__in'] ); // WPCS: input var okay
+			$post__in = is_array( $_GET['post__in'] ) ? $_GET['post__in'] : explode( ',', $_GET['post__in'] );
 			$query_args['post__in'] = array_map( 'intval', $post__in );
 			$query_args['orderby']  = 'post__in';
 		}
