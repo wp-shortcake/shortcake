@@ -1,4 +1,4 @@
-var InnerContent = require('../../js/models/inner-content');
+var InnerContent = require('../../js/src/models/inner-content');
 
 describe( "Shortcode Inner Content Model", function() {
 
