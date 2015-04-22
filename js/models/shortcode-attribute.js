@@ -6,7 +6,10 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		label:       '',
 		type:        '',
 		value:       '',
-		placeholder: '',
+		description: '',
+		meta: {
+			placeholder: '',
+		}
 	},
 });
 

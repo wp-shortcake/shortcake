@@ -24,6 +24,35 @@ var editAttributeField = Backbone.View.extend( {
 			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
 		}, this.model.toJSON() );
 
+		// Handle legacy custom meta.
+		// Can be removed in 0.4.
+		if ( data.placeholder ) {
+			data.meta.placeholder = data.placeholder;
+			delete data.placeholder;
+		}
+
+		// Convert meta JSON to attribute string.
+		var _meta = [];
+		for ( var key in data.meta ) {
+
+			// Boolean attributes can only require attribute key, not value.
+			if ( 'boolean' === typeof( data.meta[ key ] ) ) {
+
+				// Only set truthy boolean attributes.
+				if ( data.meta[ key ] ) {
+					_meta.push( _.escape( key ) );
+				}
+
+			} else {
+
+				_meta.push( _.escape( key ) + '="' + _.escape( data.meta[ key ] ) + '"' );
+
+			}
+
+		}
+
+		data.meta = _meta.join( ' ' );
+
 		this.$el.html( this.template( data ) );
 
 		return this
