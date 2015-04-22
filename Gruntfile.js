@@ -50,7 +50,7 @@ module.exports = function( grunt ) {
 			},
 			options: {
 				bin: "vendor/bin/phpcs --extensions=php --ignore=\"*/vendor/*,*/node_modules/*,dev.php\"",
-				standard: "WordPress"
+				standard: "phpcs.ruleset.xml"
 			}
 		},
 
