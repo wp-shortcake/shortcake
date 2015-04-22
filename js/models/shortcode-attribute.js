@@ -11,16 +11,6 @@ var ShortcodeAttribute = Backbone.Model.extend({
 			placeholder: '',
 		}
 	},
-
-	initialize: function() {
-
-		// Handle legacy custom attributes.
-		if ( this.get('placeholder' ) ) {
-			var customAttributes = this.get('customAttributes');
-			customAttributes[ 'placeholder' ] = this.get('placeholder');
-		}
-	}
-
 });
 
 module.exports = ShortcodeAttribute;
