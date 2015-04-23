@@ -95,6 +95,7 @@ module.exports = function( grunt ) {
 					'js/build/shortcode-ui.js' : ['js/src/shortcode-ui.js'],
 					'js/build/field-attachment.js' : ['js/src/field-attachment.js'],
 					'js/build/field-color.js' : ['js/src/field-color.js'],
+					'js/build/field-post-select.js' : ['js/src/field-post-select.js'],
 				},
 				options: {
 					transform: ['browserify-shim']
