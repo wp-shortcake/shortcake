@@ -42,7 +42,7 @@ class Shortcode_UI_Field_Post_Select {
 
 		wp_enqueue_script(
 			'shortcode-ui-field-post-select',
-			plugins_url( '/js/field-post-select.js', $plugin_dir ),
+			plugins_url( 'js/build/field-post-select.js', $plugin_dir ),
 			array( 'shortcode-ui', 'select2' )
 		);
 

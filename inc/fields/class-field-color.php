@@ -64,7 +64,7 @@ class Shortcake_Field_Color {
 			return;
 		}
 
-		$script = plugins_url( '/js/build/field-color.js', dirname( dirname( __FILE__ ) ) );
+		$script = plugins_url( 'js/build/field-color.js', dirname( dirname( __FILE__ ) ) );
 
 		wp_enqueue_script( 'shortcake-field-color', $script, array( 'shortcode-ui' ) );
 
