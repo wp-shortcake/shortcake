@@ -5,6 +5,10 @@
   .wpview-wrap .shortcake-error {
     color: red;
     font-weight: bold; }
+  .wpview-wrap .shortcake-empty {
+    font-family: Consolas, Monaco, monospace;
+    color: #666;
+    font-size: 14px; }
 
 .shortcake-preview .loading-placeholder .wpview-loading {
   width: 60px;

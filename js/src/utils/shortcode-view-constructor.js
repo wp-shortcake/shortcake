@@ -70,7 +70,15 @@ var shortcodeViewConstructor = {
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
-				self.content = response;
+
+				response = '';
+
+				if ( '' === response ) {
+					self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
+				} else {
+					self.content = response;
+				}
+
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {

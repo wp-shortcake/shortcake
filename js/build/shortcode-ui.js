@@ -316,16 +316,6 @@ var shortcodeViewConstructor = {
 	},
 
 	/**
-	 * Return the preview HTML.
-	 * If empty, fetches data.
-	 *
-	 * @return string
-	 */
-	getContent : function() {
-		return this.content;
-	},
-
-	/**
 	 * Fetch preview.
 	 * Async. Sets this.content and calls this.render.
 	 *
@@ -344,7 +334,15 @@ var shortcodeViewConstructor = {
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
-				self.content = response;
+
+				response = '';
+
+				if ( '' === response ) {
+					self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
+				} else {
+					self.content = response;
+				}
+
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
