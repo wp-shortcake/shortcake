@@ -188,17 +188,9 @@ describe( "MCE View Constructor", function() {
 
 		var constructor = jQuery.extend( true, {}, MceViewConstructor );
 
-		spyOn( constructor, 'fetch' );
-
-		// If content is set - just return and don't fetch data.
+		// Get content should return constructor.content
 		constructor.content = '<h1>test content</h1>';
 		expect( constructor.getContent() ).toEqual( '<h1>test content</h1>' );
-		expect( constructor.fetch ).not.toHaveBeenCalled();
-
-		// If content is empty - just null and fetch should be called.
-		constructor.content = null;
-		expect( constructor.getContent() ).toEqual( null );
-		expect( constructor.fetch ).toHaveBeenCalled();
 
 	} );
 
@@ -502,6 +494,7 @@ var shortcodeViewConstructor = {
 
 	initialize: function( options ) {
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
+		this.fetch();
 	},
 
 	/**
@@ -549,9 +542,6 @@ var shortcodeViewConstructor = {
 	 * @return string
 	 */
 	getContent : function() {
-		if ( ! this.content ) {
-			this.fetch();
-		}
 		return this.content;
 	},
 
@@ -696,6 +686,7 @@ var shortcodeViewConstructor = {
 
 		initialize: function( options ) {
 			this.shortcode = this.getShortcode( options );
+			this.fetch();
 		},
 
 		getShortcode: function( options ) {
@@ -767,11 +758,6 @@ var shortcodeViewConstructor = {
 		 * @return string html
 		 */
 		getHtml : function() {
-
-			if ( ! this.parsed ) {
-				this.fetch();
-			}
-
 			return this.parsed;
 		},
 
