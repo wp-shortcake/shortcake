@@ -27,9 +27,9 @@ class Shortcode_UI {
 	}
 
 	private function setup_actions() {
-		add_action( 'after_setup_theme',    array( $this, 'action_after_setup_theme' ) );
-		add_action( 'wp_enqueue_editor',    array( $this, 'action_wp_enqueue_editor' ) );
-		add_action( 'wp_ajax_do_shortcode', array( $this, 'handle_ajax_do_shortcode' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
+		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
+		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
 	}
 
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
@@ -64,7 +64,11 @@ class Shortcode_UI {
 
 	}
 
-	public function action_after_setup_theme() {
+	/**
+	 * Action admin scripts.
+	 */
+	public function action_admin_enqueue_scripts() {
+		// Editor styles needs to be added before wp_enqueue_editor
 		add_editor_style( $this->plugin_url . '/css/shortcode-ui-editor-styles.css' );
 	}
 
