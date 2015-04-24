@@ -152,7 +152,9 @@ module.exports = function( grunt ) {
 				}
 			},
 		},
-
+		jshint: {
+			uses_defaults: ['js/src/**/*.js', 'js-tests/src/**/*.js']
+		},
 		makepot: {
 			target: {
 				options: {
@@ -177,10 +179,11 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 	grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
+	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
 	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine' ] );
 	grunt.registerTask( 'styles', [ 'sass' ] );
-	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
+	grunt.registerTask( 'default', [ 'jshint', 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
 

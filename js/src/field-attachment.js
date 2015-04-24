@@ -63,7 +63,7 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 				$container.removeClass( 'loading' );
 			} );
 
-		}
+		};
 
 		/**
 		 * Renders attachment preview in field.
@@ -93,7 +93,7 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 					width:  attachment.sizes.thumbnail.width,
 					height: attachment.sizes.thumbnail.height,
 					alt:    attachment.alt,
-				} ) .appendTo( $thumbnail )
+				} ) .appendTo( $thumbnail );
 
 			}
 
@@ -101,7 +101,7 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 			$container.append( $thumbnail );
 			$container.toggleClass( 'has-attachment', true );
 
-		}
+		};
 
 		/**
 		 * Remove the attachment.
@@ -114,7 +114,7 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 			$container.toggleClass( 'has-attachment', false );
 			$container.toggleClass( 'has-attachment', false );
 			$container.find( '.thumbnail' ).remove();
-		}
+		};
 
 		// Add initial Attachment if available.
 		updateAttachment( model.get( 'value' ) );
