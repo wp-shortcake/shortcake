@@ -335,8 +335,6 @@ var shortcodeViewConstructor = {
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
 
-				response = '';
-
 				if ( '' === response ) {
 					self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
 				} else {
