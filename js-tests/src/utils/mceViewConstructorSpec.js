@@ -55,24 +55,6 @@ describe( "MCE View Constructor", function() {
 
 	} );
 
-	it ( 'test getContent.', function() {
-
-		var constructor = jQuery.extend( true, {}, MceViewConstructor );
-
-		spyOn( constructor, 'fetch' );
-
-		// If content is set - just return and don't fetch data.
-		constructor.content = '<h1>test content</h1>';
-		expect( constructor.getContent() ).toEqual( '<h1>test content</h1>' );
-		expect( constructor.fetch ).not.toHaveBeenCalled();
-
-		// If content is empty - just null and fetch should be called.
-		constructor.content = null;
-		expect( constructor.getContent() ).toEqual( null );
-		expect( constructor.fetch ).toHaveBeenCalled();
-
-	} );
-
 	describe( "Fetch preview HTML", function() {
 
 		beforeEach(function() {

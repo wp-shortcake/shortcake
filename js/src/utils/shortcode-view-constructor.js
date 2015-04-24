@@ -10,6 +10,7 @@ var shortcodeViewConstructor = {
 
 	initialize: function( options ) {
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
+		this.fetch();
 	},
 
 	/**
@@ -51,19 +52,6 @@ var shortcodeViewConstructor = {
 	},
 
 	/**
-	 * Return the preview HTML.
-	 * If empty, fetches data.
-	 *
-	 * @return string
-	 */
-	getContent : function() {
-		if ( ! this.content ) {
-			this.fetch();
-		}
-		return this.content;
-	},
-
-	/**
 	 * Fetch preview.
 	 * Async. Sets this.content and calls this.render.
 	 *
@@ -82,7 +70,13 @@ var shortcodeViewConstructor = {
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
-				self.content = response;
+
+				if ( '' === response ) {
+					self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
+				} else {
+					self.content = response;
+				}
+
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
@@ -204,6 +198,7 @@ var shortcodeViewConstructor = {
 
 		initialize: function( options ) {
 			this.shortcode = this.getShortcode( options );
+			this.fetch();
 		},
 
 		getShortcode: function( options ) {
@@ -275,11 +270,6 @@ var shortcodeViewConstructor = {
 		 * @return string html
 		 */
 		getHtml : function() {
-
-			if ( ! this.parsed ) {
-				this.fetch();
-			}
-
 			return this.parsed;
 		},
 
