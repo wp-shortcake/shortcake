@@ -1,0 +1,95 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Shortcode UI vv0.3-beta1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2015-04-27 19:20:49+0000\n"
+"Last-Translator: youssou <youssouhaagsman@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: CSL v1.x\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-Country: NETHERLANDS\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: inc/class-shortcode-ui.php:40
+#@ shortcode-ui
+msgid "Inner Content"
+msgstr "Ingesloten inhoud"
+
+#: inc/class-shortcode-ui.php:105
+#: inc/class-shortcode-ui.php:106
+#@ shortcode-ui
+msgid "Insert Post Element"
+msgstr "Berichtelement invoegen"
+
+#: inc/class-shortcode-ui.php:107
+#, php-format
+#@ shortcode-ui
+msgid "%s Details"
+msgstr "%s details"
+
+#: inc/class-shortcode-ui.php:108
+#@ shortcode-ui
+msgid "Insert Element"
+msgstr "Element invoegen"
+
+#: inc/class-shortcode-ui.php:109
+#@ shortcode-ui
+msgid "Update"
+msgstr "Updaten"
+
+#: inc/class-shortcode-ui.php:110
+#@ shortcode-ui
+msgid "There are no attributes to configure for this Post Element."
+msgstr "Er zijn geen attributen die bewerkt kunnen worden voor dit berichtelement."
+
+#: inc/class-shortcode-ui.php:111
+#@ shortcode-ui
+msgid "Edit"
+msgstr "Bewerken"
+
+#: inc/class-shortcode-ui.php:112
+#@ shortcode-ui
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#: inc/class-shortcode-ui.php:113
+#@ shortcode-ui
+msgid "Failed to load preview"
+msgstr "Laden van voorbeeld mislukt"
+
+#: inc/class-shortcode-ui.php:114
+#@ shortcode-ui
+msgid "Search"
+msgstr "Zoeken"
+
+#: inc/class-shortcode-ui.php:115
+#@ shortcode-ui
+msgid "Insert Content"
+msgstr "Inhoud invoegen"
+
+#: inc/class-shortcode-ui.php:209
+#@ shortcode-ui
+msgid "Something's rotten in the state of Denmark"
+msgstr "Iets is er rot in Denemarkens staat"
+
+#: inc/fields/class-field-attachment.php:47
+#: inc/fields/class-field-attachment.php:48
+#@ shortcode-ui
+msgid "Select Attachment"
+msgstr "Selecteer bijlage"
+
+#: inc/templates/edit-form.tpl.php:3
+#@ shortcode-ui
+msgid "Back to list"
+msgstr "Terug naar lijst"
+
