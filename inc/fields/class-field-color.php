@@ -33,7 +33,7 @@ class Shortcake_Field_Color {
 
 	private function color_attribute_present() {
 
-		foreach ( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ){
+		foreach ( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
 
 			if ( empty( $shortcode['attrs'] ) ) {
 				continue;

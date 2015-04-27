@@ -84,7 +84,7 @@ class Shortcode_UI {
 		$shortcodes = array_values( $this->shortcodes );
 		$screen = get_current_screen();
 		if ( $screen && ! empty( $screen->post_type ) ) {
-			foreach ( $shortcodes as $key => $args ){
+			foreach ( $shortcodes as $key => $args ) {
 				if ( ! empty( $args['post_type'] ) && ! in_array( $screen->post_type, $args['post_type'] ) ) {
 					unset( $shortcodes[ $key ] );
 				}
