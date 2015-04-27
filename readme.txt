@@ -2,8 +2,8 @@
 Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver
 Tags: shortcodes
 Requires at least: 4.1
-Tested up to: 4.2
-Stable tag: 0.2.3
+Tested up to: 4.2.1
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,7 +38,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 == Changelog ==
 
-= 0.3 (???) =
+= 0.3 (April 27, 2015) =
 * **Breaking change**: We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 * New `post_select` field type for selecting from a list of posts. Supports an additional `query` parameter to modify the search query.
 * Using a new `post_type` argument, shortcode UI can be registered for specific post types. This is helpful if you want the UI for a given shortcode to only appear on specific post types.
