@@ -62,6 +62,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Bug fix: Attachment field properly registers dependencies.
 * Bug fix: "Insert Post Element" experience should work when visual editor is disabled. Shortcake is only loosely coupled with TinyMCE.
 * Bug fix: Editor styles are loaded on `after_setup_theme` to prevent fatals.
+* [Full release notes](http://fusion.net/story/126834/introducing-shortcake-v0-3-0-butter/).
 
 ### 0.2.3 (April 8, 2015) ###
 * Fix WP 4.1 backwards compatibility issue by restoring arguments passed to TinyMCE view compatibility shim.
