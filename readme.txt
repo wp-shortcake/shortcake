@@ -46,7 +46,8 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * When inserting a shortcode, UI shows a helpful message when the shortcode doesn't have attributes to configure. Previously, the user was presented with a relatively blank screen.
 * Our example plugin can be activated through the WordPress admin.
 * Clicking "Insert Post Element" in the left menu effectively acts as back button to selecting a shortcode.
-* Language around the editing experience reflects the shortcode you're editing. For instance, with a pullquote shortcode,  "Edit Post Element" becomes "Edit Pullquote"
+* Language around the editing experience reflects the shortcode you're editing. For instance, with a pullquote shortcode,  "Edit Post Element" becomes "Edit Pullquote".
+* Added Dutch translation.
 * Source JavaScript files moved to `js/src` for clarity between source and built JavaScript.
 * PHP files are scanned using PHP_CodeSniffer.
 * Bug fix: Unquoted shortcode attributes are properly supported.
