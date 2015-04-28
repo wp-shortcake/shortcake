@@ -31,6 +31,11 @@ var editAttributeField = Backbone.View.extend( {
 			delete data.placeholder;
 		}
 
+		// Apply default value if one exists and no value is set yet
+		if ( '' === data.value && data.default_value.length > 0 ) {
+			data.value = data.default_value;
+		}
+
 		// Convert meta JSON to attribute string.
 		var _meta = [];
 		for ( var key in data.meta ) {
