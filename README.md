@@ -46,6 +46,10 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ## Changelog ##
 
+### 0.4 (???) ###
+* Added Chinese translation.
+* Added Spanish translation.
+
 ### 0.3 (April 27, 2015) ###
 * **Breaking change**: We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 * New `post_select` field type for selecting from a list of posts. Supports an additional `query` parameter to modify the search query.
