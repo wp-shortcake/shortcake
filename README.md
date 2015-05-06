@@ -48,6 +48,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ### 0.4 (???) ###
 * Added Chinese translation.
+* Added French translation.
 * Added Spanish translation.
 
 ### 0.3 (April 27, 2015) ###
