@@ -5,6 +5,6 @@
 		"../shortcode-ui-editor-styles.scss"
 	],
 	"sourcesContent": [],
-	"mappings": "AAGA,AAAY,AAA0B;EACnC,AAAS;AAIZ,AAAa;EACX,AAAO;EACP,AAAa;AAGf,AAAa;EACX,AAAa;EACb,AAAO;EACP,AAAW",
+	"mappings": "AAGA,AAAY,AAA0B;EACnC,AAAS;AAIZ,AAAa;EACX,AAAO;EACP,AAAa;AAGf,AAAa;EACX,AAAa;EACb,AAAO;EACP,AAAW;;AAIb,AAAI;EACH,AAAS;EACT,AAAO;EACP,AAAU",
 	"names": []
 }
