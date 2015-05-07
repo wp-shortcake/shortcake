@@ -55,10 +55,37 @@
 
 	&.loading .loading-indicator {
 		display: block;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		margin: -10px 0 0 -10px;
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.loading-indicator {
+		.dashicons {
+			font-size: 80px;
+			height: 100px;
+			line-height: 100px;
+			width: 100%;
+			text-align: center;
+			vertical-align: middle;
+		}
+		.attachment-preview-loading {
+			width: 60px;
+			height: 5px;
+			overflow: hidden;
+			background-color: transparent;
+			margin: -30px auto 0;
+
+			ins {
+				background-color: #464646;
+				margin: 0 0 0 -60px;
+				width: 60px;
+				height: 5px;
+				display: block;
+				-webkit-animation: attachment-preview-loading 1.3s infinite 1s linear;
+				animation: attachment-preview-loading 1.3s infinite 1s linear;
+			}
+		}
 	}
 
 	.filename {
@@ -74,4 +101,22 @@
 		}
 	}
 
+}
+
+@-webkit-keyframes attachment-preview-loading {
+	0% {
+		margin-left: -60px;
+	}
+	100% {
+		margin-left: 60px;
+	}
+}
+
+@keyframes attachment-preview-loading {
+	0% {
+		margin-left: -60px;
+	}
+	100% {
+		margin-left: 60px;
+	}
 }
