@@ -16,7 +16,7 @@ class Shortcode_UI_Fields {
 		'text' => array(),
 		'textarea' => array(
 			'template' => 'shortcode-ui-field-textarea',
-			'escape'   => true
+			'escape'   => true,
 		),
 		'url' => array(
 			'template' => 'shortcode-ui-field-url',

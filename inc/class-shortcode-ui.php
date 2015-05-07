@@ -55,7 +55,7 @@ class Shortcode_UI {
 
 			$fields = Shortcode_UI_Fields::get_instance()->get_fields();
 
-			foreach( $args['attrs'] as $attr ) {
+			foreach ( $args['attrs'] as $attr ) {
 				if ( ! $fields[ $attr['type'] ]['escape'] ) {
 					continue;
 				}
