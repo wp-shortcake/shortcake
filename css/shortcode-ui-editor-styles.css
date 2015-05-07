@@ -8,4 +8,9 @@
   color: #666;
   font-size: 14px; }
 
+body#wpview-iframe-sandbox {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden; }
+
 /*# sourceMappingURL=shortcode-ui-editor-styles.css.map */
