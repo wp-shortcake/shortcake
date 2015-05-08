@@ -90,7 +90,7 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 
 				attachmentThumb = (typeof attachment.sizes.thumbnail !== 'undefined') ?
 					attachment.sizes.thumbnail :
-					_.min( attachment.sizes, function( size ) { return size.width } );
+					_.first( _.sortBy( attachment.sizes, 'width' ) );
 
 				$( '<img/>', {
 					src:    attachmentThumb.url,
