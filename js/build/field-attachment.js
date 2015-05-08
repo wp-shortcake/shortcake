@@ -124,10 +124,14 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 
 			} else {
 
+				attachmentThumb = (typeof attachment.sizes.thumbnail !== 'undefined') ?
+					attachment.sizes.thumbnail :
+					_.min( attachment.sizes, function( size ) { return size.width } );
+
 				$( '<img/>', {
-					src:    attachment.sizes.thumbnail.url,
-					width:  attachment.sizes.thumbnail.width,
-					height: attachment.sizes.thumbnail.height,
+					src:    attachmentThumb.url,
+					width:  attachmentThumb.width,
+					height: attachmentThumb.height,
 					alt:    attachment.alt,
 				} ) .appendTo( $thumbnail )
 
