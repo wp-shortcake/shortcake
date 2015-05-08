@@ -33,20 +33,39 @@ var ShortcodeAttribute = require('../../js/src/models/shortcode-attribute');
 describe( "Shortcode Attribute Model", function() {
 
 	var attrData = {
-		attr:        'attr',
-		label:       'Attribute',
-		type:        'text',
-		value:       'test value',
-		description: 'test description',
+		attr:           'attr',
+		label:          'Attribute',
+		type:           'text',
+		value:          'test value',
+		description:    'test description',
 		meta:  {
 			placeholder: 'test placeholder'
 		}
-	};
+	},
+	expectedAttrData = _.extend( attrData, { default_value: '' });
 
 	var attr = new ShortcodeAttribute( attrData );
 
 	it( 'should correctly set data.', function() {
-		expect( attr.toJSON() ).toEqual( attrData );
+		expect( attr.toJSON() ).toEqual( expectedAttrData );
+	});
+
+	var attrData = {
+		attr:           'attr',
+		label:          'Attribute',
+		type:           'text',
+		default_value:  'test value',
+		description:    'test description',
+		meta:  {
+			placeholder: 'test placeholder'
+		}
+	},
+	expectedAttrData = _.extend( attrData, { value: 'test_value' });
+
+	var attr = new ShortcodeAttribute( attrData );
+
+	it( 'should correctly apply default values to shortcode attributes.', function() {
+		expect( attr.toJSON() ).toEqual( expectedAttrData );
 	});
 
 
@@ -354,11 +373,12 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
 
 var ShortcodeAttribute = Backbone.Model.extend({
 	defaults: {
-		attr:        '',
-		label:       '',
-		type:        '',
-		value:       '',
-		description: '',
+		attr:          '',
+		label:         '',
+		type:          '',
+		value:         '',
+		default_value: '',
+		description:   '',
 		meta: {
 			placeholder: '',
 		}
@@ -509,6 +529,13 @@ var shortcodeViewConstructor = {
 					attr.set(
 						'value',
 						options.attrs.named[ attr.get('attr') ]
+					);
+				}
+
+				if ( '' === attr.get('value') && attr.get('default_value') ) {
+					attr.set(
+						'value',
+						attr.get('default_value')
 					);
 				}
 			}

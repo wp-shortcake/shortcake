@@ -37,6 +37,13 @@ var shortcodeViewConstructor = {
 						options.attrs.named[ attr.get('attr') ]
 					);
 				}
+
+				if ( '' === attr.get('value') && attr.get('default_value') ) {
+					attr.set(
+						'value',
+						attr.get('default_value')
+					);
+				}
 			}
 		);
 

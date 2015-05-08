@@ -209,11 +209,12 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
 
 var ShortcodeAttribute = Backbone.Model.extend({
 	defaults: {
-		attr:        '',
-		label:       '',
-		type:        '',
-		value:       '',
-		description: '',
+		attr:          '',
+		label:         '',
+		type:          '',
+		value:         '',
+		default_value: '',
+		description:   '',
 		meta: {
 			placeholder: '',
 		}
@@ -369,6 +370,11 @@ var editAttributeField = Backbone.View.extend( {
 		if ( data.placeholder ) {
 			data.meta.placeholder = data.placeholder;
 			delete data.placeholder;
+		}
+
+		// Apply default value if one exists and no value is set yet
+		if ( '' === data.value && data.default_value.length > 0 ) {
+			data.value = data.default_value;
 		}
 
 		// Convert meta JSON to attribute string.
