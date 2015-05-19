@@ -47,6 +47,13 @@ class Shortcode_UI {
 			$args['attrs'] = array();
 		}
 
+		foreach ( $args['attrs'] as &$attr ) {
+			if ( 'select' === $attr['type'] && ! isset( $attr['value'] ) ) {
+				$_shortcodes = array_keys( $attr['options'] );
+				$attr['value'] = array_shift( $_shortcodes );
+			}
+		}
+
 		$args['shortcode_tag'] = $shortcode_tag;
 		$this->shortcodes[ $shortcode_tag ] = $args;
 
@@ -88,6 +95,7 @@ class Shortcode_UI {
 				if ( ! empty( $args['post_type'] ) && ! in_array( $screen->post_type, $args['post_type'] ) ) {
 					unset( $shortcodes[ $key ] );
 				}
+
 			}
 		}
 
