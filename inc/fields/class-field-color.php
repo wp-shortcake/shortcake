@@ -87,7 +87,7 @@ class Shortcake_Field_Color {
 		<script type="text/html" id="tmpl-fusion-shortcake-field-color">
 			<div class="field-block">
 				<label for="{{ data.attr }}">{{ data.label }}</label>
-				<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}" data-default-color="{{ data.value }}"/>
+				<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" data-default-color="{{ data.value }}" {{{ data.meta }}}/>
 				<# if ( typeof data.description == 'string' ) { #>
 					<p class="description">{{ data.description }}</p>
 				<# } #>
