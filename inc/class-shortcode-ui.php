@@ -95,7 +95,6 @@ class Shortcode_UI {
 				if ( ! empty( $args['post_type'] ) && ! in_array( $screen->post_type, $args['post_type'] ) ) {
 					unset( $shortcodes[ $key ] );
 				}
-
 			}
 		}
 
