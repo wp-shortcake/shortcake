@@ -39,7 +39,6 @@ class Shortcode_UI {
 			$args['inner_content'] = array(
 				'label'       => esc_html__( 'Inner Content', 'shortcode-ui' ),
 				'description' => '',
-				'placeholder' => '',
 			);
 		}
 

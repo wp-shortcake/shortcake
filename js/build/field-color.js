@@ -235,13 +235,6 @@ var editAttributeField = Backbone.View.extend( {
 			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
 		}, this.model.toJSON() );
 
-		// Handle legacy custom meta.
-		// Can be removed in 0.4.
-		if ( data.placeholder ) {
-			data.meta.placeholder = data.placeholder;
-			delete data.placeholder;
-		}
-
 		// Convert meta JSON to attribute string.
 		var _meta = [];
 		for ( var key in data.meta ) {
