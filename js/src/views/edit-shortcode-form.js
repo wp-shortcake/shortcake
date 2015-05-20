@@ -41,7 +41,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 				attr_raw: {
 					name: attr.get('value')
 				}
-			}
+			};
 
 			var viewObjName = shortcodeUIFieldData[ type ].view;
 			var tmplName    = shortcodeUIFieldData[ type ].template;
@@ -54,7 +54,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 		} );
 
-		if ( 0 == this.model.get( 'attrs' ).length && ( ! innerContent || typeof innerContent == 'undefined' ) ) {
+		if ( 0 === this.model.get( 'attrs' ).length && ( ! innerContent || typeof innerContent === 'undefined' ) ) {
 			var messageView = new Backbone.View({
 				tagName:      'div',
 				className:    'notice updated',

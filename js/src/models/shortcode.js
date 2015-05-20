@@ -7,7 +7,7 @@ Shortcode = Backbone.Model.extend({
 	defaults: {
 		label: '',
 		shortcode_tag: '',
-		attrs: new ShortcodeAttributes,
+		attrs: new ShortcodeAttributes(),
 	},
 
 	/**
@@ -79,10 +79,10 @@ Shortcode = Backbone.Model.extend({
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
-		template = "[{{ shortcode }} {{ attributes }}]"
+		template = "[{{ shortcode }} {{ attributes }}]";
 
 		if ( content && content.length > 0 ) {
-			template += "{{ content }}[/{{ shortcode }}]"
+			template += "{{ content }}[/{{ shortcode }}]";
 		}
 
 		template = template.replace( /{{ shortcode }}/g, this.get('shortcode_tag') );

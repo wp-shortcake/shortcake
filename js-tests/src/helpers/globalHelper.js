@@ -23,4 +23,4 @@ window.shortcodeUIData = {
 
 };
 
-window.shortcodeUIFieldData = {}
+window.shortcodeUIFieldData = {};

@@ -14,10 +14,8 @@ var insertShortcodeListItem = wp.Backbone.View.extend({
 		var data = this.model.toJSON();
 		this.$el.attr('data-shortcode', data.shortcode_tag);
 
-		if (('listItemImage' in data)
-				&& 0 === data.listItemImage.indexOf('dashicons-')) {
-			data.listItemImage = '<div class="dashicons ' + data.listItemImage
-					+ '"></div>';
+		if (('listItemImage' in data) && 0 === data.listItemImage.indexOf('dashicons-')) {
+			data.listItemImage = '<div class="dashicons ' + data.listItemImage + '"></div>';
 		}
 
 		this.$el.html(this.template(data));
