@@ -220,7 +220,8 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		description: '',
 		meta: {
 			placeholder: '',
-		}
+		},
+		callback:    '',
 	},
 });
 
@@ -391,6 +392,7 @@ var editAttributeField = Backbone.View.extend( {
 		data.meta = _meta.join( ' ' );
 
 		this.$el.html( this.template( data ) );
+		this.updateValue();
 
 		return this
 	},
@@ -415,6 +417,14 @@ var editAttributeField = Backbone.View.extend( {
 			this.model.set( 'value', $el.is( ':checked' ) );
 		} else {
 			this.model.set( 'value', $el.val() );
+		}
+
+
+		var callbackFunc = this.model.get( 'callback' ),
+			viewModels = _.flatten( _.values( this.views.parent.views._views ) );
+
+		if ( callbackFunc && 'function' === typeof window[ callbackFunc ] ) {
+			window[ callbackFunc ].call( viewModels, this.model.changed, this.model.collection.models );
 		}
 	},
 

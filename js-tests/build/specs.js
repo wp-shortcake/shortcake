@@ -40,7 +40,8 @@ describe( "Shortcode Attribute Model", function() {
 		description: 'test description',
 		meta:  {
 			placeholder: 'test placeholder'
-		}
+		},
+		callback:    'callbackFunc'
 	};
 
 	var attr = new ShortcodeAttribute( attrData );
@@ -361,7 +362,8 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		description: '',
 		meta: {
 			placeholder: '',
-		}
+		},
+		callback:    '',
 	},
 });
 
