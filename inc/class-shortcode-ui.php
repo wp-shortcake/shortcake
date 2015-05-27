@@ -73,6 +73,10 @@ class Shortcode_UI {
 
 	public function enqueue() {
 
+		if ( ! is_admin() ) {
+			return;
+		}
+
 		if ( did_action( 'enqueue_shortcode_ui' ) ) {
 			return;
 		}
