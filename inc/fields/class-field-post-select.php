@@ -115,7 +115,6 @@ class Shortcode_UI_Field_Post_Select {
 		// Shortcode not found.
 		if ( ! isset( $shortcodes[ $requested_shortcode ] ) ) {
 			wp_send_json_error( $response );
-			die;
 		}
 
 		$shortcode = $shortcodes[ $requested_shortcode ];
@@ -129,7 +128,6 @@ class Shortcode_UI_Field_Post_Select {
 		// Query not found.
 		if ( empty( $query_args ) ) {
 			wp_send_json_error( $response );
-			die;
 		}
 
 		// Hardcoded query args.
