@@ -116,7 +116,7 @@ class Shortcode_UI {
 			'nonces'     => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
-			)
+			),
 		) );
 
 		// queue templates
