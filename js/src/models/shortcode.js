@@ -75,16 +75,14 @@ Shortcode = Backbone.Model.extend({
 
 		} );
 
-        console.log( attrs.length );
-
 		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
-		template = "[{{ shortcode }} {{ attributes }}]"
-
         if( attrs.length < 1 ) {
             template = "[{{ shortcode }}]"
+        } else {
+            template = "[{{ shortcode }} {{ attributes }}]"
         }
 
 		if ( content && content.length > 0 ) {
