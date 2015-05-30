@@ -210,7 +210,11 @@ Shortcode = Backbone.Model.extend({
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
-		template = "[{{ shortcode }} {{ attributes }}]"
+        if( attrs.length < 1 ) {
+            template = "[{{ shortcode }}]"
+        } else {
+            template = "[{{ shortcode }} {{ attributes }}]"
+        }
 
 		if ( content && content.length > 0 ) {
 			template += "{{ content }}[/{{ shortcode }}]"
@@ -611,6 +615,13 @@ var editAttributeField = Backbone.View.extend( {
 		var data = jQuery.extend( {
 			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
 		}, this.model.toJSON() );
+
+		// Handle legacy custom meta.
+		// Can be removed in 0.4.
+		if ( data.placeholder ) {
+			data.meta.placeholder = data.placeholder;
+			delete data.placeholder;
+		}
 
 		// Convert meta JSON to attribute string.
 		var _meta = [];
