@@ -1,6 +1,7 @@
-var Backbone = require('backbone'),
-sui = require('sui-utils/sui'),
-$ = require('jquery');
+var Backbone     = require('backbone'),
+	sui          = require('sui-utils/sui'),
+	$            = require('jquery'),
+	EventManager = require('../../../lib/wp-hooks');
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -56,7 +57,8 @@ var editAttributeField = Backbone.View.extend( {
 	 * Input Changed Update Callback.
 	 *
 	 * If the input field that has changed is for content or a valid attribute,
-	 * then it should update the model.
+	 * then it should update the model. If a callback function is registered
+	 * for this attribute, it should be called as well.
 	 */
 	updateValue: function( e ) {
 
@@ -74,14 +76,29 @@ var editAttributeField = Backbone.View.extend( {
 			this.model.set( 'value', $el.val() );
 		}
 
+		var shortcodeName = this.shortcode.attributes.shortcode_tag,
+			attributeName = this.model.get( 'attr' ),
+			hookName      = [ shortcodeName, attributeName ].join( '.' ),
+			changed       = this.model.changed,
+			collection    = _.flatten( _.values( this.views.parent.views._views ) ),
+			shortcode     = this.shortcode;
 
-		var callbackFunc = this.model.get( 'callback' ),
-			viewModels = _.flatten( _.values( this.views.parent.views._views ) );
+		/*
+		 * Action run when an attribute value changes on a shortcode
+		 *
+		 * Called as `{shortcodeName}.{attributeName}`.
+		 *
+		 * @param changed (object)
+		 *           The update, ie. { "changed": "newValue" }
+		 * @param viewModels (array)
+		 *           The collections of views (editAttributeFields)
+		 *                         which make up this shortcode UI form
+		 * @param shortcode (object)
+		 *           Reference to the shortcode model which this attribute belongs to.
+		 */
+		wp.shortcodeUi.hooks.doAction( hookName, changed, collection, shortcode );
 
-		if ( callbackFunc && 'function' === typeof window[ callbackFunc ] ) {
-			window[ callbackFunc ].call( viewModels, this.model.changed, this.model.collection.models );
-		}
-	},
+	}
 
 } );
 
