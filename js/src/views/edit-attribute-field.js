@@ -1,7 +1,6 @@
 var Backbone     = require('backbone'),
 	sui          = require('sui-utils/sui'),
-	$            = require('jquery'),
-	EventManager = require('../../../lib/wp-hooks');
+	$            = require('jquery');
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -96,7 +95,7 @@ var editAttributeField = Backbone.View.extend( {
 		 * @param shortcode (object)
 		 *           Reference to the shortcode model which this attribute belongs to.
 		 */
-		wp.shortcodeUi.hooks.doAction( hookName, changed, collection, shortcode );
+		wp.shortcake.hooks.doAction( hookName, changed, collection, shortcode );
 
 	}
 
