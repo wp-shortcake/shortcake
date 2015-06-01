@@ -68,7 +68,7 @@ class Shortcode_UI {
 	 */
 	public function action_admin_enqueue_scripts() {
 		// Editor styles needs to be added before wp_enqueue_editor
-		add_editor_style( $this->plugin_url . 'css/shortcode-ui-editor-styles.css' );
+		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
 	}
 
 	public function enqueue() {
