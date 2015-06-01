@@ -115,7 +115,6 @@ class Shortcode_UI_Field_Post_Select {
 		// Shortcode not found.
 		if ( ! isset( $shortcodes[ $requested_shortcode ] ) ) {
 			wp_send_json_error( $response );
-			die;
 		}
 
 		$shortcode = $shortcodes[ $requested_shortcode ];
@@ -129,7 +128,6 @@ class Shortcode_UI_Field_Post_Select {
 		// Query not found.
 		if ( empty( $query_args ) ) {
 			wp_send_json_error( $response );
-			die;
 		}
 
 		// Hardcoded query args.
@@ -148,6 +146,7 @@ class Shortcode_UI_Field_Post_Select {
 			$post__in = is_array( $_GET['post__in'] ) ? $_GET['post__in'] : explode( ',', $_GET['post__in'] );
 			$query_args['post__in'] = array_map( 'intval', $post__in );
 			$query_args['orderby']  = 'post__in';
+			$query_args['ignore_sticky_posts'] = true;
 		}
 
 		$query = new WP_Query( $query_args );
