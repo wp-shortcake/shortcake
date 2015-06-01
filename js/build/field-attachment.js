@@ -221,7 +221,6 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		meta: {
 			placeholder: '',
 		},
-		callback:    '',
 	},
 });
 

@@ -11,7 +11,6 @@ describe( "Shortcode Attribute Model", function() {
 		meta:  {
 			placeholder: 'test placeholder'
 		},
-		callback:    'callbackFunc'
 	};
 
 	var attr = new ShortcodeAttribute( attrData );
