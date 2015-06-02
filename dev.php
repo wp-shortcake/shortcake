@@ -103,7 +103,18 @@ add_action( 'init', function() {
 					'label' => 'Cite',
 					'attr'  => 'source',
 					'type'  => 'text',
-					'placeholder' => 'Test placeholder',
+					'meta' => array(
+						'placeholder' => 'Test placeholder',
+						'data-test'    => 1,
+					),
+				),
+
+				array(
+					'label'    => 'Select Page',
+					'attr'     => 'page',
+					'type'     => 'post_select',
+					'query'    => array( 'post_type' => 'page' ),
+					'multiple' => true,
 				),
 
 			),

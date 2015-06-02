@@ -2,7 +2,7 @@
 
 class Shortcake_Field_Attachment {
 
-	private static $instance = null;
+	private static $instance;
 
 	// All registered post fields.
 	private $post_fields  = array();
@@ -16,7 +16,7 @@ class Shortcake_Field_Attachment {
 	);
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
@@ -26,7 +26,7 @@ class Shortcake_Field_Attachment {
 	private function setup_actions() {
 
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
+		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 
 	}
@@ -35,9 +35,9 @@ class Shortcake_Field_Attachment {
 		return array_merge( $fields, $this->fields );
 	}
 
-	public function action_admin_enqueue_scripts() {
+	public function action_enqueue_shortcode_ui() {
 
-		$script = plugins_url( '/js/build/field-attachment.js', dirname( dirname( __FILE__ ) ) );
+		$script = plugins_url( 'js/build/field-attachment.js', dirname( dirname( __FILE__ ) ) );
 
 		wp_enqueue_script( 'shortcake-field-attachment', $script, array( 'shortcode-ui' ) );
 
@@ -63,7 +63,10 @@ class Shortcake_Field_Attachment {
 				<div class="shortcake-attachment-preview attachment-preview attachment">
 					<button id="{{ data.attr }}" class="button button-small add">{{ data.addButton }}</button>
 					<button class="button button-small remove">&times;</button>
-					<span class="loading-indicator spinner"></span>
+					<div class="loading-indicator">
+						<span class="dashicons dashicons-format-image"></span>
+						<div class="attachment-preview-loading"><ins></ins></div>
+					</div>
 				</div>
 			</div>
 		</script>

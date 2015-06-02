@@ -1,5 +1,6 @@
 var Backbone = require('backbone'),
-    wp = require('wp');
+    wp = require('wp'),
+    sui = require('sui-utils/sui'),
     Shortcodes = require('sui-collections/shortcodes');
 
 var MediaController = wp.media.controller.State.extend({

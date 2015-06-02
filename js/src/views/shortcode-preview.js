@@ -1,4 +1,5 @@
-var Backbone = require('backbone');
+var Backbone = require('backbone'),
+    $ = require('jquery');
 
 /**
  * Preview of rendered shortcode.
@@ -61,8 +62,10 @@ var ShortcodePreview = Backbone.View.extend({
 
 		_.defaults( params || {}, { 'head': '', 'body': '', 'body_classes': 'shortcake shortcake-preview' });
 
-		$iframe = jQuery( '<iframe/>', {
-			src: tinymce.Env.ie ? 'javascript:""' : '',
+		var isIE = typeof tinymce != 'undefined' ? tinymce.Env.ie : false;
+
+		$iframe = $( '<iframe/>', {
+			src: isIE ? 'javascript:""' : '',
 			frameBorder: '0',
 			allowTransparency: 'true',
 			scrolling: 'no',
@@ -76,10 +79,10 @@ var ShortcodePreview = Backbone.View.extend({
 		 */
 		$iframe.load( function() {
 
-			self.autoresizeIframe( jQuery(this) );
+			self.autoresizeIframe( $(this) );
 
-			var head = jQuery(this).contents().find('head'),
-			    body = jQuery(this).contents().find('body');
+			var head = $(this).contents().find('head'),
+			    body = $(this).contents().find('body');
 
 			head.html( params.head );
 			body.html( params.body );
@@ -95,7 +98,7 @@ var ShortcodePreview = Backbone.View.extend({
 	 * Watch for mutations in iFrame content.
 	 * resize iFrame height on change.
 	 *
-	 * @param  jQuery object $iframe
+	 * @param  $ object $iframe
 	 */
 	autoresizeIframe: function( $iframe ) {
 
@@ -142,7 +145,7 @@ var ShortcodePreview = Backbone.View.extend({
 	fetchShortcode: function( callback ) {
 
 		wp.ajax.post( 'do_shortcode', {
-			post_id: jQuery( '#post_ID' ).val(),
+			post_id: $( '#post_ID' ).val(),
 			shortcode: this.model.formatShortcode(),
 			nonce: shortcodeUIData.nonces.preview,
 		}).done( function( response ) {
@@ -162,7 +165,8 @@ var ShortcodePreview = Backbone.View.extend({
 	getEditorStyles: function() {
 		var styles = {};
 
-		_.each( tinymce.editors, function( editor ) {
+		var editors = typeof tinymce != 'undefined' ? tinymce.editors : [];
+		_.each( editors, function( editor ) {
 			_.each( editor.dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
 				var href;
 				( href = link.href ) && ( styles[href] = true );	// Poor man's de-duping.
@@ -170,7 +174,7 @@ var ShortcodePreview = Backbone.View.extend({
 		});
 
 		styles = _.map( _.keys( styles ), function( href ) {
-			return jQuery( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
+			return $( '<link rel="stylesheet" type="text/css">' ).attr( 'href', href )[0].outerHTML;
 		});
 
 		return styles;

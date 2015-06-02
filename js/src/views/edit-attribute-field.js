@@ -1,5 +1,6 @@
-var Backbone = require('backbone');
-sui = require('sui-utils/sui');
+var Backbone = require('backbone'),
+sui = require('sui-utils/sui'),
+$ = require('jquery');
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -18,7 +19,35 @@ var editAttributeField = Backbone.View.extend( {
 	},
 
 	render: function() {
-		this.$el.html( this.template( this.model.toJSON() ) );
+
+		var data = jQuery.extend( {
+			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
+		}, this.model.toJSON() );
+
+		// Convert meta JSON to attribute string.
+		var _meta = [];
+		for ( var key in data.meta ) {
+
+			// Boolean attributes can only require attribute key, not value.
+			if ( 'boolean' === typeof( data.meta[ key ] ) ) {
+
+				// Only set truthy boolean attributes.
+				if ( data.meta[ key ] ) {
+					_meta.push( _.escape( key ) );
+				}
+
+			} else {
+
+				_meta.push( _.escape( key ) + '="' + _.escape( data.meta[ key ] ) + '"' );
+
+			}
+
+		}
+
+		data.meta = _meta.join( ' ' );
+
+		this.$el.html( this.template( data ) );
+
 		return this
 	},
 
@@ -31,9 +60,9 @@ var editAttributeField = Backbone.View.extend( {
 	updateValue: function( e ) {
 
 		if ( this.model.get( 'attr' ) ) {
-			var $el = jQuery( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
+			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
 		} else {
-			var $el = jQuery( this.el ).find( '[name="inner_content"]' );
+			var $el = $( this.el ).find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {

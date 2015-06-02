@@ -2,7 +2,7 @@
 
 class Shortcake_Field_Color {
 
-	private static $instance = null;
+	private static $instance;
 
 	// All registered post fields.
 	private $post_fields  = array();
@@ -16,7 +16,7 @@ class Shortcake_Field_Color {
 	);
 
 	public static function get_instance() {
-		if ( null == self::$instance ) {
+		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
@@ -33,7 +33,8 @@ class Shortcake_Field_Color {
 
 	private function color_attribute_present() {
 
-		foreach( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
+		foreach ( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
+
 			if ( empty( $shortcode['attrs'] ) ) {
 				continue;
 			}
@@ -43,7 +44,7 @@ class Shortcake_Field_Color {
 					continue;
 				}
 
-				if ( $attribute['type'] == 'color' ) {
+				if ( 'color' === $attribute['type'] ) {
 					return true;
 				}
 			}
@@ -63,7 +64,7 @@ class Shortcake_Field_Color {
 			return;
 		}
 
-		$script = plugins_url( '/js/build/field-color.js', dirname( dirname( __FILE__ ) ) );
+		$script = plugins_url( 'js/build/field-color.js', dirname( dirname( __FILE__ ) ) );
 
 		wp_enqueue_script( 'shortcake-field-color', $script, array( 'shortcode-ui' ) );
 
@@ -86,7 +87,7 @@ class Shortcake_Field_Color {
 		<script type="text/html" id="tmpl-fusion-shortcake-field-color">
 			<div class="field-block">
 				<label for="{{ data.attr }}">{{ data.label }}</label>
-				<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" placeholder="{{ data.placeholder }}" data-default-color="{{ data.value }}"/>
+				<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" data-default-color="{{ data.value }}" {{{ data.meta }}}/>
 				<# if ( typeof data.description == 'string' ) { #>
 					<p class="description">{{ data.description }}</p>
 				<# } #>

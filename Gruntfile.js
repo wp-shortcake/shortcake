@@ -33,7 +33,7 @@ module.exports = function( grunt ) {
 			},
 
 			scripts: {
-				files: ['js/**/*.js', 'js-tests/src/**/*.js', '!js/build/**/*'],
+				files: ['js/src/**/*.js', 'js-tests/src/**/*.js', '!js/build/**/*'],
 				tasks: ['scripts'],
 				options: {
 					debounceDelay: 500,
@@ -44,6 +44,16 @@ module.exports = function( grunt ) {
 
 		},
 
+		phpcs: {
+			plugin: {
+				src: './'
+			},
+			options: {
+				bin: "vendor/bin/phpcs --extensions=php --ignore=\"*/vendor/*,*/node_modules/*,dev.php\"",
+				standard: "phpcs.ruleset.xml"
+			}
+		},
+
 		browserify : {
 
 			options: {
@@ -51,27 +61,27 @@ module.exports = function( grunt ) {
 
 					b.plugin(remapify, [
 						{
-							cwd: 'js/models',
+							cwd: 'js/src/models',
 							src: '**/*.js',
 							expose: 'sui-models'
 						},
 						{
-							cwd: 'js/controllers',
+							cwd: 'js/src/controllers',
 							src: '**/*.js',
 							expose: 'sui-controllers'
 						},
 						{
-							cwd: 'js/collections',
+							cwd: 'js/src/collections',
 							src: '**/*.js',
 							expose: 'sui-collections'
 						},
 						{
-							cwd: 'js/views',
+							cwd: 'js/src/views',
 							src: '**/*.js',
 							expose: 'sui-views'
 						},
 						{
-							cwd: 'js/utils',
+							cwd: 'js/src/utils',
 							src: '**/*.js',
 							expose: 'sui-utils'
 						}
@@ -82,9 +92,10 @@ module.exports = function( grunt ) {
 
 			dist: {
 				files : {
-					'js/build/shortcode-ui.js' : ['js/shortcode-ui.js'],
-					'js/build/field-attachment.js' : ['js/field-attachment.js'],
-					'js/build/field-color.js' : ['js/field-color.js'],
+					'js/build/shortcode-ui.js' : ['js/src/shortcode-ui.js'],
+					'js/build/field-attachment.js' : ['js/src/field-attachment.js'],
+					'js/build/field-color.js' : ['js/src/field-color.js'],
+					'js/build/field-post-select.js' : ['js/src/field-post-select.js'],
 				},
 				options: {
 					transform: ['browserify-shim']
@@ -163,6 +174,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-browserify' );
+	grunt.loadNpmTasks( 'grunt-phpcs' );
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 	grunt.loadNpmTasks( 'grunt-contrib-jasmine' );

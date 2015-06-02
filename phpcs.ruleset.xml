@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="Shortcake">
+	<description>Sniffs for the coding standards of the Shortcake plugin</description>
+
+	<exclude-pattern>/inc/templates/*</exclude-pattern>
+
+	<rule ref="WordPress-VIP">
+		<exclude name="WordPress.CSRF.NonceVerification" />
+		<exclude name="WordPress.VIP.SuperGlobalInputUsage" />
+		<exclude name="WordPress.VIP.ValidatedSanitizedInput" />
+	</rule>
+</ruleset>

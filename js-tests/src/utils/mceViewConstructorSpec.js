@@ -55,24 +55,6 @@ describe( "MCE View Constructor", function() {
 
 	} );
 
-	it ( 'test getContent.', function() {
-
-		var constructor = jQuery.extend( true, {}, MceViewConstructor );
-
-		spyOn( constructor, 'fetch' );
-
-		// If content is set - just return and don't fetch data.
-		constructor.content = '<h1>test content</h1>';
-		expect( constructor.getContent() ).toEqual( '<h1>test content</h1>' );
-		expect( constructor.fetch ).not.toHaveBeenCalled();
-
-		// If content is empty - just null and fetch should be called.
-		constructor.content = null;
-		expect( constructor.getContent() ).toEqual( null );
-		expect( constructor.fetch ).toHaveBeenCalled();
-
-	} );
-
 	describe( "Fetch preview HTML", function() {
 
 		beforeEach(function() {
@@ -148,7 +130,7 @@ describe( "MCE View Constructor", function() {
 	it( 'parses shortcode with dashes in name and attribute', function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]')
 		expect( shortcode instanceof Shortcode ).toEqual( true );
-		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test value 2' );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).not.toEqual( 'test value 2' );
 	});
 
 	// https://github.com/fusioneng/Shortcake/issues/171
@@ -163,5 +145,11 @@ describe( "MCE View Constructor", function() {
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test\n\ntest\ntest" );
 	} );
+
+	it( 'parses shortcode with unquoted attributes', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test]')
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
+	});
 
 } );

@@ -1,6 +1,6 @@
-sui = require('sui-utils/sui');
-wp = require('wp');
-jQuery = require('jquery');
+var sui = require('sui-utils/sui'),
+    wp = require('wp'),
+    $ = require('jquery');
 
 /**
  * Generic shortcode mce view constructor.
@@ -10,6 +10,7 @@ var shortcodeViewConstructor = {
 
 	initialize: function( options ) {
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
+		this.fetch();
 	},
 
 	/**
@@ -51,19 +52,6 @@ var shortcodeViewConstructor = {
 	},
 
 	/**
-	 * Return the preview HTML.
-	 * If empty, fetches data.
-	 *
-	 * @return string
-	 */
-	getContent : function() {
-		if ( ! this.content ) {
-			this.fetch();
-		}
-		return this.content;
-	},
-
-	/**
 	 * Fetch preview.
 	 * Async. Sets this.content and calls this.render.
 	 *
@@ -78,16 +66,22 @@ var shortcodeViewConstructor = {
 			this.fetching = true;
 
 			wp.ajax.post( 'do_shortcode', {
-				post_id: jQuery( '#post_ID' ).val(),
+				post_id: $( '#post_ID' ).val(),
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
-				self.content = response;
+
+				if ( '' === response ) {
+					self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
+				} else {
+					self.content = response;
+				}
+
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
 				delete self.fetching;
-				self.render();
+				self.render( null, true );
 			} );
 
 		}
@@ -105,7 +99,7 @@ var shortcodeViewConstructor = {
 
 		// Backwards compatability for WP pre-4.2
 		if ( 'object' === typeof( shortcodeString ) ) {
-			shortcodeString = decodeURIComponent( jQuery(shortcodeString).attr('data-wpview-text') );
+			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
 		}
 
 		currentShortcode = this.parseShortcodeString( shortcodeString );
@@ -157,22 +151,33 @@ var shortcodeViewConstructor = {
 
 		if ( matches[2] ) {
 
-			attributeMatches = matches[2].match( /(\S+?=".*?")/g ) || [];
+			var attributeRegex = /(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/gmi;
+			attributeMatches   = matches[2].match( attributeRegex ) || [];
+
+			// Trim whitespace from matches.
+			attributeMatches = attributeMatches.map( function( match ) {
+				return match.replace( /^\s+|\s+$/g, '' );
+			} );
 
 			// convert attribute strings to object.
 			for ( var i = 0; i < attributeMatches.length; i++ ) {
 
-				var bitsRegEx = /(\S+?)="(.*?)"/g;
+				var bitsRegEx = /(\S+?)=(.*)/g;
 				var bits = bitsRegEx.exec( attributeMatches[i] );
 
-				attr = currentShortcode.get( 'attrs' ).findWhere({
-					attr : bits[1]
-				});
+				if ( bits && bits[1] ) {
 
-				if ( attr ) {
-					attr.set('value', bits[2]);
+					attr = currentShortcode.get( 'attrs' ).findWhere({
+						attr : bits[1]
+					});
+
+					// If attribute found - set value.
+					// Trim quotes from beginning and end.
+					if ( attr ) {
+						attr.set( 'value', bits[2].replace( /^"|^'|"$|'$/gmi, "" ) );
+					}
+
 				}
-
 			}
 
 		}
@@ -206,6 +211,7 @@ var shortcodeViewConstructor = {
 
 		initialize: function( options ) {
 			this.shortcode = this.getShortcode( options );
+			this.fetch();
 		},
 
 		getShortcode: function( options ) {
@@ -249,7 +255,7 @@ var shortcodeViewConstructor = {
 			if ( ! this.parsed ) {
 
 				wp.ajax.post( 'do_shortcode', {
-					post_id: jQuery( '#post_ID' ).val(),
+					post_id: $( '#post_ID' ).val(),
 					shortcode: this.shortcode.formatShortcode(),
 					nonce: shortcodeUIData.nonces.preview,
 				}).done( function( response ) {
@@ -277,11 +283,6 @@ var shortcodeViewConstructor = {
 		 * @return string html
 		 */
 		getHtml : function() {
-
-			if ( ! this.parsed ) {
-				this.fetch();
-			}
-
 			return this.parsed;
 		},
 

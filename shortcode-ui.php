@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Shortcode UI
- * Version: v0.3-alpha
+ * Version: 0.4.0-alpha
  * Description: User Interface for adding shortcodes.
  * Author: Fusion Engineering and community
  * Author URI: http://next.fusion.net/tag/shortcode-ui/
@@ -19,12 +19,13 @@
  * GNU General Public License for more details.
  */
 
-define( 'SHORTCODE_UI_VERSION', '0.3-alpha' );
+define( 'SHORTCODE_UI_VERSION', '0.4.0-alpha' );
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-field-attachment.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-field-color.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-field-post-select.php';
 
 add_action( 'init', 'shortcode_ui_load_textdomain' );
 
@@ -34,6 +35,7 @@ add_action( 'init', function() {
 	$fields           = Shortcode_UI_Fields::get_instance();
 	$attachment_field = Shortcake_Field_Attachment::get_instance();
 	$color_field      = Shortcake_Field_Color::get_instance();
+	$post_field       = Shortcode_UI_Field_Post_Select::get_instance();
 
 }, 5 );
 

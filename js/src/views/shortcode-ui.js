@@ -5,8 +5,8 @@ var Backbone = require('backbone'),
 	EditShortcodeForm = require('sui-views/edit-shortcode-form'),
 	Toolbar = require('sui-views/media-toolbar'),
 	SearchShortcode = require('sui-views/search-shortcode'),
-	sui = require('sui-utils/sui');
-	jQuery = require('jquery');
+	sui = require('sui-utils/sui'),
+	$ = require('jquery');
 
 var Shortcode_UI = Backbone.View.extend({
 
@@ -106,7 +106,7 @@ var Shortcode_UI = Backbone.View.extend({
 
 	select: function(e) {
 		this.controller.props.set( 'action', 'insert' );
-		var target    = jQuery(e.currentTarget).closest( '.shortcode-list-item' );
+		var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 		var shortcode = sui.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
 
 		if ( ! shortcode ) {

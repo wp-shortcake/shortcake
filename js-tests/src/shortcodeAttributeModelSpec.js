@@ -1,4 +1,4 @@
-var ShortcodeAttribute = require('../../js/models/shortcode-attribute');
+var ShortcodeAttribute = require('../../js/src/models/shortcode-attribute');
 
 describe( "Shortcode Attribute Model", function() {
 
@@ -7,7 +7,10 @@ describe( "Shortcode Attribute Model", function() {
 		label:       'Attribute',
 		type:        'text',
 		value:       'test value',
-		placeholder: 'test placeholder',
+		description: 'test description',
+		meta:  {
+			placeholder: 'test placeholder'
+		}
 	};
 
 	var attr = new ShortcodeAttribute( attrData );
