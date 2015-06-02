@@ -184,10 +184,23 @@ var shortcodeViewConstructor = {
 
 		if ( matches[3] ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
-			inner_content.set( 'value', matches[3] );
+			inner_content.set( 'value', this.unAutoP( matches[3] ) );
 		}
 
 		return currentShortcode;
+
+	},
+
+ 	/**
+	 * Strip 'p' and 'br' tags, replace with line breaks.
+	 * Reverse the effect of the WP editor autop functionality.
+	 */
+	unAutoP: function( content ) {
+		if ( switchEditors && switchEditors.pre_wpautop ) {
+			content = switchEditors.pre_wpautop( content );
+		}
+
+		return content;
 
 	},
 
