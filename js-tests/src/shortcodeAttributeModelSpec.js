@@ -10,7 +10,7 @@ describe( "Shortcode Attribute Model", function() {
 		description: 'test description',
 		meta:  {
 			placeholder: 'test placeholder'
-		}
+		},
 	};
 
 	var attr = new ShortcodeAttribute( attrData );

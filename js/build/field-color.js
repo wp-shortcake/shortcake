@@ -87,7 +87,7 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		description: '',
 		meta: {
 			placeholder: '',
-		}
+		},
 	},
 });
 
@@ -209,9 +209,9 @@ module.exports = window.Shortcode_UI;
 
 },{"./../collections/shortcodes.js":2}],8:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
-sui = require('./../utils/sui.js'),
-$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var Backbone     = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+	sui          = require('./../utils/sui.js'),
+	$            = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -258,6 +258,7 @@ var editAttributeField = Backbone.View.extend( {
 		data.meta = _meta.join( ' ' );
 
 		this.$el.html( this.template( data ) );
+		this.updateValue();
 
 		return this
 	},
@@ -266,7 +267,8 @@ var editAttributeField = Backbone.View.extend( {
 	 * Input Changed Update Callback.
 	 *
 	 * If the input field that has changed is for content or a valid attribute,
-	 * then it should update the model.
+	 * then it should update the model. If a callback function is registered
+	 * for this attribute, it should be called as well.
 	 */
 	updateValue: function( e ) {
 
@@ -283,7 +285,30 @@ var editAttributeField = Backbone.View.extend( {
 		} else {
 			this.model.set( 'value', $el.val() );
 		}
-	},
+
+		var shortcodeName = this.shortcode.attributes.shortcode_tag,
+			attributeName = this.model.get( 'attr' ),
+			hookName      = [ shortcodeName, attributeName ].join( '.' ),
+			changed       = this.model.changed,
+			collection    = _.flatten( _.values( this.views.parent.views._views ) ),
+			shortcode     = this.shortcode;
+
+		/*
+		 * Action run when an attribute value changes on a shortcode
+		 *
+		 * Called as `{shortcodeName}.{attributeName}`.
+		 *
+		 * @param changed (object)
+		 *           The update, ie. { "changed": "newValue" }
+		 * @param viewModels (array)
+		 *           The collections of views (editAttributeFields)
+		 *                         which make up this shortcode UI form
+		 * @param shortcode (object)
+		 *           Reference to the shortcode model which this attribute belongs to.
+		 */
+		wp.shortcake.hooks.doAction( hookName, changed, collection, shortcode );
+
+	}
 
 } );
 
