@@ -47,6 +47,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 ## Changelog ##
 
 ### 0.4 (???) ###
+* Using [carldanley/wp-js-hooks](https://github.com/carldanley/WP-JS-Hooks) for a basic API to register JS callbacks on shortcode attributes.
 * Added Chinese translation.
 * Added French translation.
 * Added Spanish translation.
