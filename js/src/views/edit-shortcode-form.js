@@ -17,12 +17,11 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 		if ( innerContent && typeof innerContent.attributes.type !== 'undefined' ) {
 
 			// add UI for inner_content
-			var view = new editAttributeField( {
-				model:     innerContent,
-				shortcode: t.model,
-			} );
+			var view = new editAttributeField( { model: innerContent } );
 
-			view.template = wp.media.template( 'shortcode-ui-content' );
+			view.shortcode = t.model;
+			view.template  = wp.media.template( 'shortcode-ui-content' );
+
 			t.views.add( '.edit-shortcode-form-fields', view );
 
 		}
