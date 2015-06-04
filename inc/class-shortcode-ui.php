@@ -52,13 +52,14 @@ class Shortcode_UI {
 	}
 
 	public function get_shortcodes() {
-		return $this->shortcodes;
+		return apply_filters( 'shortcode_ui_shortcodes', $this->shortcodes );
 	}
 
 	public function get_shortcode( $shortcode_tag ) {
 
-		if ( isset( $this->shortcodes[ $shortcode_tag ] ) ) {
-			return $this->shortcodes[ $shortcode_tag ];
+		$shortcodes = $this->get_shortcodes();
+		if ( isset( $shortcodes[ $shortcode_tag ] ) ) {
+			return $shortcodes[ $shortcode_tag ];
 		}
 
 	}
@@ -80,7 +81,7 @@ class Shortcode_UI {
 		// make sure media library is queued
 		wp_enqueue_media();
 
-		$shortcodes = array_values( $this->shortcodes );
+		$shortcodes = array_values( $this->get_shortcodes() );
 		$screen = get_current_screen();
 		if ( $screen && ! empty( $screen->post_type ) ) {
 			foreach ( $shortcodes as $key => $args ) {
