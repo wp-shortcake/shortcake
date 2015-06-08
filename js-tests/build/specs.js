@@ -120,6 +120,10 @@ describe( "Shortcode Model", function() {
 		_shortcode.get('inner_content').unset( 'value' );
 		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]' );
 
+		// Test without attributes
+		_shortcode.get( 'attrs' ).first().unset( 'value' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode]' );
+
 	});
 
 });
@@ -457,7 +461,11 @@ Shortcode = Backbone.Model.extend({
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
-		template = "[{{ shortcode }} {{ attributes }}]"
+		if ( attrs.length > 0 ) {
+			template = "[{{ shortcode }} {{ attributes }}]"
+		} else {
+			template = "[{{ shortcode }}]"
+		}
 
 		if ( content && content.length > 0 ) {
 			template += "{{ content }}[/{{ shortcode }}]"

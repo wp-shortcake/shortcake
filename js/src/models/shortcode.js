@@ -79,7 +79,11 @@ Shortcode = Backbone.Model.extend({
 			content = this.get( 'inner_content' ).get( 'value' );
 		}
 
-		template = "[{{ shortcode }} {{ attributes }}]"
+		if ( attrs.length > 0 ) {
+			template = "[{{ shortcode }} {{ attributes }}]"
+		} else {
+			template = "[{{ shortcode }}]"
+		}
 
 		if ( content && content.length > 0 ) {
 			template += "{{ content }}[/{{ shortcode }}]"

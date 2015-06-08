@@ -55,6 +55,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Added Spanish translation.
 * Bug fix: Prevent fataling when editor is loaded in the frontend context.
 * Bug fix: Color field should also support `meta` argument.
+* Bug fix: Remove trailing whitespace from shortcodes without attributes.
 
 ### 0.3 (April 27, 2015) ###
 * **Breaking change**: We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
