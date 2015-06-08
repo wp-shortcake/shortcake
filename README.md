@@ -53,6 +53,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Added Chinese translation.
 * Added French translation.
 * Added Spanish translation.
+* Bug fix: Prevent fataling when editor is loaded in the frontend context.
 * Bug fix: Color field should also support `meta` argument.
 * Bug fix: Remove trailing whitespace from shortcodes without attributes.
 
