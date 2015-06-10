@@ -1,11 +1,6 @@
-var sui = require('sui-utils/sui'),
-    $ = require('jquery'),
-    editAttributeField = require( 'sui-views/edit-attribute-field' );
-
-// Cache attachment IDs for quicker loading.
 var iDCache = {};
 
-sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
+sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	events: {
 		'click .add'       : '_openMediaFrame',
@@ -30,7 +25,7 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 
 		var self = this;
 
-		if ( iDCache[ id ] ) {
+		if ( this._getFromCache( id ) ) {
 			self._renderPreview( iDCache[ id ] );
 			return;
 		}
@@ -41,7 +36,7 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 			'id': id
 		} ).done( function( attachment ) {
 			// Cache for later.
-			iDCache[ id ] = attachment;
+			self._setInCache( id, attachment );
 			self._renderPreview( attachment );
 			self.$container.removeClass( 'loading' );
 		} );
@@ -54,7 +49,7 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 	render: function() {
 
 		// Set model default values.
-for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
+		for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 			if ( ! this.model.get( arg ) ) {
 				this.model.set( arg, ShortcakeImageFieldData.defaultArgs[ arg ] );
 			}
@@ -85,16 +80,16 @@ for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 	 */
 	_renderPreview: function( attachment ) {
 
-		var $thumbnail = $('<div class="thumbnail"></div>');
+		var $thumbnail = jQuery('<div class="thumbnail"></div>');
 
 		if ( 'image' !== attachment.type ) {
 
-			$( '<img/>', {
+			jQuery( '<img/>', {
 				src: attachment.icon,
 				alt: attachment.title,
 			} ).appendTo( $thumbnail );
 
-			$( '<div/>', {
+			jQuery( '<div/>', {
 				class: 'filename',
 				html:  '<div>' + attachment.title + '</div>',
 			} ).appendTo( $thumbnail );
@@ -105,7 +100,7 @@ for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 				attachment.sizes.thumbnail :
 				_.first( _.sortBy( attachment.sizes, 'width' ) );
 
-			$( '<img/>', {
+			jQuery( '<img/>', {
 				src:    attachmentThumb.url,
 				width:  attachmentThumb.width,
 				height: attachmentThumb.height,
@@ -158,6 +153,21 @@ for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 
 		this.$container.toggleClass( 'has-attachment', false );
 		this.$container.find( '.thumbnail' ).remove();
-	}
-} );
+	},
 
+
+	/**
+	 * Store attachments in a cache for quicker loading.
+	 */
+	_getFromCache: function( id ){
+		if ( 'undefined' === typeof iDCache[ id ] ) {
+			return false;
+		}
+		return iDCache[ id ];
+	},
+
+	_setInCache: function( id, attachment ) {
+		iDCache[ id ] = attachment;
+	}
+
+} );
