@@ -680,6 +680,11 @@ var editAttributeField = Backbone.View.extend( {
 			this.model.set( 'value', $el.val() );
 		}
 
+		this.triggerCallbacks();
+	},
+
+	triggerCallbacks: function() {
+
 		var shortcodeName = this.shortcode.attributes.shortcode_tag,
 			attributeName = this.model.get( 'attr' ),
 			hookName      = [ shortcodeName, attributeName ].join( '.' ),

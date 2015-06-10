@@ -46,12 +46,15 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 			self.$container.removeClass( 'loading' );
 		} );
 
+		// Call the updateValue() function, to trigger any listeners
+		// hooked on it.
+		this.triggerCallbacks();
 	},
 
 	render: function() {
 
 		// Set model default values.
-		for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
+for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 			if ( ! this.model.get( arg ) ) {
 				this.model.set( arg, ShortcakeImageFieldData.defaultArgs[ arg ] );
 			}

@@ -82,12 +82,15 @@ sui.views.editAttributeFieldAttachment = editAttributeField.extend( {
 			self.$container.removeClass( 'loading' );
 		} );
 
+		// Call the updateValue() function, to trigger any listeners
+		// hooked on it.
+		this.triggerCallbacks();
 	},
 
 	render: function() {
 
 		// Set model default values.
-		for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
+for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 			if ( ! this.model.get( arg ) ) {
 				this.model.set( arg, ShortcakeImageFieldData.defaultArgs[ arg ] );
 			}
@@ -431,6 +434,11 @@ var editAttributeField = Backbone.View.extend( {
 		} else {
 			this.model.set( 'value', $el.val() );
 		}
+
+		this.triggerCallbacks();
+	},
+
+	triggerCallbacks: function() {
 
 		var shortcodeName = this.shortcode.attributes.shortcode_tag,
 			attributeName = this.model.get( 'attr' ),
