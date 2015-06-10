@@ -157,7 +157,6 @@ for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
 		this.model.set( 'value', null );
 
 		this.$container.toggleClass( 'has-attachment', false );
-		this.$container.toggleClass( 'has-attachment', false );
 		this.$container.find( '.thumbnail' ).remove();
 	}
 } );
