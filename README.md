@@ -62,6 +62,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Bug fix: Color field also supports `meta` argument.
 * Bug fix: Removes trailing whitespace from shortcodes without attributes.
 * Bug fix: Removes double slash in editor css path.
+* [Full release notes](http://fusion.net/story/154890/introducing-shortcake-v0-4-0-strawberry/)
 
 ### 0.3.0 (April 27, 2015) ###
 * **Breaking change**: We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
