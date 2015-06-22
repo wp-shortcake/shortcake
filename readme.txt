@@ -34,6 +34,10 @@ New in 0.4 is the ability to [attach javascript functions to event attribute upd
 
 == Upgrade Notice ==
 
+=
+
+We've removed the compatibility shim for the `placeholder` attribute argument. You should register a placeholder for your field using the `meta` argument.
+
 = 0.3 =
 
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
@@ -42,12 +46,14 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 = 0.4 (???) =
 * Using [carldanley/wp-js-hooks](https://github.com/carldanley/WP-JS-Hooks) for a basic API to register JS callbacks on shortcode attributes.
+* Attachment field uses a loading indicator when the preview for an attachment is loading.
 * Added Chinese translation.
 * Added French translation.
 * Added Spanish translation.
-* Bug fix: Prevent fataling when editor is loaded in the frontend context.
-* Bug fix: Color field should also support `meta` argument.
-* Bug fix: Remove trailing whitespace from shortcodes without attributes.
+* Bug fix: Prevents fataling when editor is loaded in the frontend context.
+* Bug fix: Color field also supports `meta` argument.
+* Bug fix: Removes trailing whitespace from shortcodes without attributes.
+* Bug fix: Removes double slash in editor css path.
 
 = 0.3 (April 27, 2015) =
 * **Breaking change**: We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
