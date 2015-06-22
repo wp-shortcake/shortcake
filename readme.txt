@@ -1,9 +1,9 @@
 === Shortcake (Shortcode UI) ===
-Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver
+Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver
 Tags: shortcodes
 Requires at least: 4.1
 Tested up to: 4.2.1
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,7 +23,7 @@ Shortcake can be installed like any other WordPress plugin.
 
 Once you've done so, you'll need to [register the UI for your code](https://github.com/fusioneng/Shortcake/wiki/Registering-Shortcode-UI).
 
-New in 0.4 is the ability to [attach javascript functions to event attribute updates](https://github.com/fusioneng/Shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
+New in 0.4.0 is the ability to [attach javascript functions to event attribute updates](https://github.com/fusioneng/Shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
 
 == Screenshots ==
 
