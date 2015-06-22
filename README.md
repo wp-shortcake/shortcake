@@ -1,9 +1,9 @@
 # Shortcake (Shortcode UI) #
-**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, jitendraharpalani, sanchothefat, bfintal, davisshaver  
+**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver  
 **Tags:** shortcodes  
 **Requires at least:** 4.1  
 **Tested up to:** 4.2.1  
-**Stable tag:** 0.3.0  
+**Stable tag:** 0.4.0  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -23,7 +23,7 @@ Shortcake can be installed like any other WordPress plugin.
 
 Once you've done so, you'll need to [register the UI for your code](https://github.com/fusioneng/Shortcake/wiki/Registering-Shortcode-UI).
 
-New in 0.4 is the ability to [attach javascript functions to event attribute updates](https://github.com/fusioneng/Shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
+New in 0.4.0 is the ability to [attach javascript functions to event attribute updates](https://github.com/fusioneng/Shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
 
 ## Screenshots ##
 
@@ -42,22 +42,29 @@ New in 0.4 is the ability to [attach javascript functions to event attribute upd
 
 ## Upgrade Notice ##
 
-### 0.3 ###
+### 0.4.0 ###
+
+We've removed the compatibility shim for the `placeholder` attribute argument. You should register a placeholder for your field using the `meta` argument.
+
+### 0.3.0 ###
 
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 
 ## Changelog ##
 
-### 0.4 (???) ###
+### 0.4.0 (June 22, 2015) ###
 * Using [carldanley/wp-js-hooks](https://github.com/carldanley/WP-JS-Hooks) for a basic API to register JS callbacks on shortcode attributes.
+* Attachment field uses a loading indicator when the preview for an attachment is loading.
 * Added Chinese translation.
 * Added French translation.
 * Added Spanish translation.
-* Bug fix: Prevent fataling when editor is loaded in the frontend context.
-* Bug fix: Color field should also support `meta` argument.
-* Bug fix: Remove trailing whitespace from shortcodes without attributes.
+* Bug fix: Prevents fataling when editor is loaded in the frontend context.
+* Bug fix: Color field also supports `meta` argument.
+* Bug fix: Removes trailing whitespace from shortcodes without attributes.
+* Bug fix: Removes double slash in editor css path.
+* [Full release notes](http://fusion.net/story/154890/introducing-shortcake-v0-4-0-strawberry/)
 
-### 0.3 (April 27, 2015) ###
+### 0.3.0 (April 27, 2015) ###
 * **Breaking change**: We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 * New `post_select` field type for selecting from a list of posts. Supports an additional `query` parameter to modify the search query.
 * Using a new `post_type` argument, shortcode UI can be registered for specific post types. This is helpful if you want the UI for a given shortcode to only appear on specific post types.
