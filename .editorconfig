@@ -13,9 +13,20 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = tab
 
+[readme.txt,*.md,*.markdown]
+trim_trailing_whitespace = false
+
+[js-tests/**/*.js]
+indent_style = space
+indent_size = 2
+
 [*.json]
 indent_style = space
 indent_size = 2
 
 [*.txt,wp-config-sample.php]
 end_of_line = crlf
+
+[.scss-lint.yml]
+indent_style = space
+indent_size = 2
