@@ -632,6 +632,10 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		if ( this._getFromCache( id ) ) {
 			self._renderPreview( this._getFromCache( id ) );
 			return;
+
+			// Call the updateValue() function, to trigger any listeners
+			// hooked on it.
+			this.triggerCallbacks();
 		}
 
 		this.$container.addClass( 'loading' );
@@ -643,11 +647,11 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			self._setInCache( id, attachment );
 			self._renderPreview( attachment );
 			self.$container.removeClass( 'loading' );
-		} );
 
-		// Call the updateValue() function, to trigger any listeners
-		// hooked on it.
-		this.triggerCallbacks();
+			// Call the updateValue() function, to trigger any listeners
+			// hooked on it.
+			this.triggerCallbacks();
+		} );
 	},
 
 	render: function() {
