@@ -635,7 +635,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 			// Call the updateValue() function, to trigger any listeners
 			// hooked on it.
-			this.triggerCallbacks();
+			self.triggerCallbacks();
 		}
 
 		this.$container.addClass( 'loading' );
@@ -650,7 +650,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 			// Call the updateValue() function, to trigger any listeners
 			// hooked on it.
-			this.triggerCallbacks();
+			self.triggerCallbacks();
 		} );
 	},
 
