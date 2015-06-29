@@ -629,7 +629,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		var self = this;
 
-		if ( this._getFromCache( id ) ) {
+		if ( editAttributeFieldAttachment.getFromCache( id ) ) {
 			self._renderPreview( this._getFromCache( id ) );
 			return;
 
@@ -644,7 +644,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			'id': id
 		} ).done( function( attachment ) {
 			// Cache for later.
-			self._setInCache( id, attachment );
+			editAttributeFieldAttachment.setInCache( id, attachment );
 			self._renderPreview( attachment );
 			self.$container.removeClass( 'loading' );
 
@@ -763,37 +763,28 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$container.find( '.thumbnail' ).remove();
 	},
 
+}, {
+
+	_idCache: {},
 
 	/**
 	 * Store attachments in a cache for quicker loading.
 	 */
-	_getFromCache: function( id ){
-		this._prepCache();
-		if ( 'undefined' === typeof window.sui.data.idCache[ id ] ) {
-			return false;
-		}
-		return window.sui.data.idCache[ id ];
+	setInCache: function( id, attachment ) {
+		this._idCache[ id ] = attachment;
 	},
-
-	_setInCache: function( id, attachment ) {
-		this._prepCache();
-		window.sui.data.idCache[ id ] = attachment;
-	},
-
 
 	/**
-	 * Expose a global for the attachement cache.
-	 *
-	 * This is useful in that plugins which hook into this field's events can
-	 * grab data from it.
+	 * Retrieve an attachment from the cache.
 	 */
-	_prepCache: function() {
-		window.sui = window.sui || {};
-		window.sui.data = window.sui.data || {};
-		window.sui.data.idCache = window.sui.data.idCache || {};
-	}
+	getFromCache: function( id ){
+		if ( 'undefined' === typeof this._idCache[ id ] ) {
+			return false;
+		}
+		return this._idCache[ id ];
+	},
 
-} );
+});
 
 module.exports = sui.views.editAttributeFieldAttachment = editAttributeFieldAttachment;
 
