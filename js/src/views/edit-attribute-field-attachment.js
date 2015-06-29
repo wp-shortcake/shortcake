@@ -1,7 +1,6 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var iDCache = {};
+var sui = require('sui-utils/sui');
 
-sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
+var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	events: {
 		'click .add'       : '_openMediaFrame',
@@ -27,7 +26,7 @@ sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		var self = this;
 
 		if ( this._getFromCache( id ) ) {
-			self._renderPreview( iDCache[ id ] );
+			self._renderPreview( this._getFromCache( id ) );
 			return;
 		}
 
@@ -161,16 +160,32 @@ sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	 * Store attachments in a cache for quicker loading.
 	 */
 	_getFromCache: function( id ){
-		if ( 'undefined' === typeof iDCache[ id ] ) {
+		this._prepCache();
+		if ( 'undefined' === typeof window.sui.data.idCache[ id ] ) {
 			return false;
 		}
-		return iDCache[ id ];
+		return window.sui.data.idCache[ id ];
 	},
 
 	_setInCache: function( id, attachment ) {
-		iDCache[ id ] = attachment;
+		this._prepCache();
+		window.sui.data.idCache[ id ] = attachment;
+	},
+
+
+	/**
+	 * Expose a global for the attachement cache.
+	 *
+	 * This is useful in that plugins which hook into this field's events can
+	 * grab data from it.
+	 */
+	_prepCache: function() {
+		window.sui = window.sui || {};
+		window.sui.data = window.sui.data || {};
+		window.sui.data.idCache = window.sui.data.idCache || {};
 	}
 
 } );
 
-},{}]},{},[1]);
+module.exports = sui.views.editAttributeFieldAttachment = editAttributeFieldAttachment;
+
