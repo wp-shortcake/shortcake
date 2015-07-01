@@ -95,8 +95,7 @@ Shortcode = Backbone.Model.extend({
 
 		return template;
 
-	}
-
+	},
 });
 
 module.exports = Shortcode;

@@ -21,7 +21,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			return;
 		}
 
-		this.model.set( 'value', id );
+		this.setValue( id );
 
 		var self = this;
 
