@@ -855,9 +855,9 @@ var editAttributeField = Backbone.View.extend( {
 	inputChanged: function( e ) {
 
 		if ( this.getValue( 'attr' ) ) {
-			var $el = $( this.el ).find( '[name=' + this.getValue( 'attr' ) + ']' );
+			var $el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
 		} else {
-			var $el = $( this.el ).find( '[name="inner_content"]' );
+			var $el = this.$el.find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
