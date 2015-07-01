@@ -283,11 +283,11 @@ var editAttributeField = Backbone.View.extend( {
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
-			this.setValue( 'value', $el.filter(':checked').first().val() );
+			this.setValue( $el.filter(':checked').first().val() );
 		} else if ( 'checkbox' === this.model.attributes.type ) {
-			this.setValue( 'value', $el.is( ':checked' ) );
+			this.setValue( $el.is( ':checked' ) );
 		} else {
-			this.setValue( 'value', $el.val() );
+			this.setValue( $el.val() );
 		}
 
 		this.triggerCallbacks();
@@ -339,10 +339,10 @@ var editAttributeField = Backbone.View.extend( {
 	 * @return editAttributeField The view corresponding to the matching field
 	 */
 	getField: function( collection, attr ) {
-		return _.find( collection, 
-			function( viewModel ) { 
-				return attr === viewModel.model.get('attr'); 
-			} 
+		return _.find( collection,
+			function( viewModel ) {
+				return attr === viewModel.model.get('attr');
+			}
 		);
 	}
 });
