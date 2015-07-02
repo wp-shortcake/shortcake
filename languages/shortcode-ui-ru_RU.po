@@ -1,0 +1,94 @@
+# Copyright (C) 2015 Fusion Engineering and community
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Shortcode UI 0.4.0-alpha\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/shortcode-ui\n"
+"POT-Creation-Date: 2015-07-02 14:13+0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-07-02 14:19+0300\n"
+"Last-Translator: Sergey Sedykh <sergey@ukstudio.ru>\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.1\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"Language: ru_RU\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: inc/class-shortcode-ui.php:40
+msgid "Inner Content"
+msgstr "Внутреннее содержание"
+
+#: inc/class-shortcode-ui.php:109 inc/class-shortcode-ui.php:110
+msgid "Insert Post Element"
+msgstr "Добавить блок"
+
+#: inc/class-shortcode-ui.php:111
+msgid "%s Details"
+msgstr "%s"
+
+#: inc/class-shortcode-ui.php:112
+msgid "Insert Element"
+msgstr "Вставить блок в запись"
+
+#: inc/class-shortcode-ui.php:113
+msgid "Update"
+msgstr "Обновить"
+
+#: inc/class-shortcode-ui.php:114
+msgid "There are no attributes to configure for this Post Element."
+msgstr "У данного элемента настроек нет."
+
+#: inc/class-shortcode-ui.php:115
+msgid "Edit"
+msgstr "Редактировать"
+
+#: inc/class-shortcode-ui.php:116
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#: inc/class-shortcode-ui.php:117
+msgid "Failed to load preview"
+msgstr "Невозможно загрузить предпросмотр"
+
+#: inc/class-shortcode-ui.php:118
+msgid "Search"
+msgstr "Искать"
+
+#: inc/class-shortcode-ui.php:119
+msgid "Insert Content"
+msgstr "Добавить содержимое"
+
+#: inc/class-shortcode-ui.php:213
+msgid "Something's rotten in the state of Denmark"
+msgstr "Подгнило что-то в Датском государстве"
+
+#: inc/fields/class-field-attachment.php:47
+#: inc/fields/class-field-attachment.php:48
+msgid "Select Attachment"
+msgstr "Выберите изображение"
+
+#: inc/templates/edit-form.tpl.php:3
+msgid "Back to list"
+msgstr "Назад к списку"
+
+#. Plugin Name of the plugin/theme
+msgid "Shortcode UI"
+msgstr "Shortcode UI"
+
+#. Description of the plugin/theme
+msgid "User Interface for adding shortcodes."
+msgstr "Интерфейс для добавления шорткодов."
+
+#. Author of the plugin/theme
+msgid "Fusion Engineering and community"
+msgstr "Fusion Engineering и сообщество"
+
+#. Author URI of the plugin/theme
+msgid "http://next.fusion.net/tag/shortcode-ui/"
+msgstr "http://next.fusion.net/tag/shortcode-ui/"
