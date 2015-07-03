@@ -17,7 +17,7 @@ describe( "Shortcode Model", function() {
 				label:       'Attribute',
 				type:        'text',
 				value:       'test value',
-				placeholder: 'test placeholder',
+				placeholder: 'test placeholder'
 			}
 		],
 		inner_content: {

@@ -71,6 +71,13 @@ Shortcode = Backbone.Model.extend({
 				return;
 			}
 
+			var type = attr.get( 'type' );
+
+			// Encode textareas incase HTML
+			if ( shortcodeUIFieldData[ type ] && shortcodeUIFieldData[ type ].escape  ) {
+				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ) );
+			}
+
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 
 		} );

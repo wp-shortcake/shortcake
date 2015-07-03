@@ -49,6 +49,21 @@ class Shortcode_UI {
 		$args['shortcode_tag'] = $shortcode_tag;
 		$this->shortcodes[ $shortcode_tag ] = $args;
 
+		// filter the attrs to decode fields with escape=true
+		add_filter( "shortcode_atts_{$shortcode_tag}", function( $out, $pairs, $atts ) use ( $args ) {
+
+			$fields = Shortcode_UI_Fields::get_instance()->get_fields();
+
+			foreach ( $args['attrs'] as $attr ) {
+				if ( ! $fields[ $attr['type'] ]['escape'] ) {
+					continue;
+				}
+				$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
+			}
+
+			return $out;
+		}, 1, 3 );
+
 	}
 
 	public function get_shortcodes() {

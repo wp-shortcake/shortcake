@@ -218,6 +218,7 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		type:        '',
 		value:       '',
 		description: '',
+		escape:      false,
 		meta: {
 			placeholder: '',
 		},
@@ -300,6 +301,13 @@ Shortcode = Backbone.Model.extend({
 			// Skip empty attributes.
 			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
 				return;
+			}
+
+			var type = attr.get( 'type' );
+
+			// Encode textareas incase HTML
+			if ( shortcodeUIFieldData[ type ] && shortcodeUIFieldData[ type ].escape  ) {
+				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ) );
 			}
 
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
