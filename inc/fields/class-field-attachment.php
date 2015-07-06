@@ -37,11 +37,7 @@ class Shortcake_Field_Attachment {
 
 	public function action_enqueue_shortcode_ui() {
 
-		$script = plugins_url( 'js/build/field-attachment.js', dirname( dirname( __FILE__ ) ) );
-
-		wp_enqueue_script( 'shortcake-field-attachment', $script, array( 'shortcode-ui' ) );
-
-		wp_localize_script( 'shortcake-field-attachment', 'ShortcakeImageFieldData', array(
+		wp_localize_script( 'shortcode-ui', 'ShortcakeImageFieldData', array(
 			'defaultArgs' => array(
 				'libraryType' => null, // array of mime types. eg image, image/jpg, application, application/pdf.
 				'addButton'   => __( 'Select Attachment', 'shortcode-ui' ),

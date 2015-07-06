@@ -13,7 +13,8 @@ var ShortcodeAttributes = Backbone.Collection.extend({
 		return new this.constructor(_.map(this.models, function(m) {
 			return m.clone();
 		}));
-	}
+	},
+
 });
 
 module.exports = ShortcodeAttributes;
@@ -193,8 +194,7 @@ Shortcode = Backbone.Model.extend({
 
 		return template;
 
-	}
-
+	},
 });
 
 module.exports = Shortcode;
@@ -222,15 +222,15 @@ var editAttributeField = Backbone.View.extend( {
 	tagName: "div",
 
 	events: {
-		'keyup  input[type="text"]':   'updateValue',
-		'keyup  textarea':             'updateValue',
-		'change select':               'updateValue',
-		'change input[type=checkbox]': 'updateValue',
-		'change input[type=radio]':    'updateValue',
-		'change input[type=email]':    'updateValue',
-		'change input[type=number]':   'updateValue',
-		'change input[type=date]':     'updateValue',
-		'change input[type=url]':      'updateValue',
+		'keyup  input[type="text"]':   'inputChanged',
+		'keyup  textarea':             'inputChanged',
+		'change select':               'inputChanged',
+		'change input[type=checkbox]': 'inputChanged',
+		'change input[type=radio]':    'inputChanged',
+		'change input[type=email]':    'inputChanged',
+		'change input[type=number]':   'inputChanged',
+		'change input[type=date]':     'inputChanged',
+		'change input[type=url]':      'inputChanged',
 	},
 
 	render: function() {
@@ -262,7 +262,7 @@ var editAttributeField = Backbone.View.extend( {
 		data.meta = _meta.join( ' ' );
 
 		this.$el.html( this.template( data ) );
-		this.updateValue();
+		this.triggerCallbacks();
 
 		return this
 	},
@@ -274,21 +274,34 @@ var editAttributeField = Backbone.View.extend( {
 	 * then it should update the model. If a callback function is registered
 	 * for this attribute, it should be called as well.
 	 */
-	updateValue: function( e ) {
+	inputChanged: function( e ) {
 
-		if ( this.model.get( 'attr' ) ) {
-			var $el = $( this.el ).find( '[name=' + this.model.get( 'attr' ) + ']' );
+		if ( this.getValue( 'attr' ) ) {
+			var $el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
 		} else {
-			var $el = $( this.el ).find( '[name="inner_content"]' );
+			var $el = this.$el.find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
-			this.model.set( 'value', $el.filter(':checked').first().val() );
+			this.setValue( $el.filter(':checked').first().val() );
 		} else if ( 'checkbox' === this.model.attributes.type ) {
-			this.model.set( 'value', $el.is( ':checked' ) );
+			this.setValue( $el.is( ':checked' ) );
 		} else {
-			this.model.set( 'value', $el.val() );
+			this.setValue( $el.val() );
 		}
+
+		this.triggerCallbacks();
+	},
+
+	getValue: function() {
+		return this.model.get( 'value' );
+	},
+
+	setValue: function( val ) {
+		this.model.set( 'value', val );
+	},
+
+	triggerCallbacks: function() {
 
 		var shortcodeName = this.shortcode.attributes.shortcode_tag,
 			attributeName = this.model.get( 'attr' ),
@@ -314,7 +327,25 @@ var editAttributeField = Backbone.View.extend( {
 
 	}
 
-} );
+}, {
+
+	/**
+	 * Get an attribute field from a shortcode by name.
+	 *
+	 * Usage: `sui.views.editAttributeField.getField( collection, 'title')`
+	 *
+	 * @param array collection of editAttributeFields
+	 * @param string attribute name
+	 * @return editAttributeField The view corresponding to the matching field
+	 */
+	getField: function( collection, attr ) {
+		return _.find( collection,
+			function( viewModel ) {
+				return attr === viewModel.model.get('attr');
+			}
+		);
+	}
+});
 
 sui.views.editAttributeField = editAttributeField;
 module.exports = editAttributeField;

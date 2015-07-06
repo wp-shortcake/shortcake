@@ -320,7 +320,8 @@ var ShortcodeAttributes = Backbone.Collection.extend({
 		return new this.constructor(_.map(this.models, function(m) {
 			return m.clone();
 		}));
-	}
+	},
+
 });
 
 module.exports = ShortcodeAttributes;
@@ -477,8 +478,7 @@ Shortcode = Backbone.Model.extend({
 
 		return template;
 
-	}
-
+	},
 });
 
 module.exports = Shortcode;
