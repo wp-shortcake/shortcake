@@ -8,7 +8,12 @@
 	sui.views.editAttributeFieldPostSelect = sui.views.editAttributeField.extend( {
 
 		events: {
-			'change .shortcode-ui-post-select': 'updateValue',
+			'change .shortcode-ui-post-select': 'inputChanged',
+		},
+
+		inputChanged: function(e) {
+			this.setValue( e.val );
+			this.triggerCallbacks();
 		},
 
 		render: function() {
