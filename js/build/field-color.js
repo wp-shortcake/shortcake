@@ -39,21 +39,52 @@ var sui = require('./utils/sui.js'),
     editAttributeField = require('./views/edit-attribute-field.js'),
     $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
-sui.views.editAttributeFieldColor = editAttributeField.extend( {
+sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 	render: function() {
-		this.$el.html( this.template( this.model.toJSON() ) );
+		var self = this;
+
+		var data = jQuery.extend( {
+			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
+		}, this.model.toJSON() );
+
+		// Convert meta JSON to attribute string.
+		var _meta = [];
+		for ( var key in data.meta ) {
+
+			// Boolean attributes can only require attribute key, not value.
+			if ( 'boolean' === typeof( data.meta[ key ] ) ) {
+
+				// Only set truthy boolean attributes.
+				if ( data.meta[ key ] ) {
+					_meta.push( _.escape( key ) );
+				}
+
+			} else {
+
+				_meta.push( _.escape( key ) + '="' + _.escape( data.meta[ key ] ) + '"' );
+
+			}
+
+		}
+
+		data.meta = _meta.join( ' ' );
+
+		this.$el.html( this.template( data ) );
+		this.triggerCallbacks();
 
 		this.$el.find('input[type="text"]:not(.wp-color-picker)').wpColorPicker({
-			change: function() {
-				$(this).trigger('keyup');
+			change: function(e, ui) {
+				self.setValue( $(this).wpColorPicker('color') );
+				self.triggerCallbacks();
 			}
 		});
 
 		return this;
 	}
 
-} );
+});
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./utils/sui.js":7,"./views/edit-attribute-field.js":8}],4:[function(require,module,exports){
