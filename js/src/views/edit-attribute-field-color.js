@@ -4,6 +4,10 @@ var sui = require('sui-utils/sui'),
 
 sui.views.editAttributeFieldColor = editAttributeField.extend({
 
+	// All events are being listened by iris, and they don't bubble very well,
+	// so remove Backbone's listeners.
+	events: {},
+
 	render: function() {
 		var self = this;
 
