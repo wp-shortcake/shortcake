@@ -40,16 +40,10 @@ class Shortcode_UI_Field_Post_Select {
 
 		$plugin_dir = dirname( dirname( __FILE__ ) );
 
-		wp_enqueue_script(
-			'shortcode-ui-field-post-select',
-			plugins_url( 'js/build/field-post-select.js', $plugin_dir ),
-			array( 'shortcode-ui', 'select2' )
-		);
-
 		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ) , array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
 		wp_enqueue_style( 'select2', plugins_url( 'lib/select2/select2.css', $plugin_dir ), null, '3.5.2' );
 
-		wp_localize_script( 'shortcode-ui-field-post-select', 'shortcodeUiPostFieldData', array(
+		wp_localize_script( 'shortcode-ui', 'shortcodeUiPostFieldData', array(
 			'nonce' => wp_create_nonce( 'shortcode_ui_field_post_select' ),
 		) );
 

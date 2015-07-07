@@ -5,7 +5,8 @@ var wp = require('wp'),
 
 	// Additional attribute field types: these fields are all standalone in functionality,
 	// but bundled here for simplicity to save an HTTP request.
-	editAttributeFieldAttachment = require( 'sui-views/edit-attribute-field-attachment' );
+	editAttributeFieldAttachment = require( 'sui-views/edit-attribute-field-attachment' ),
+	editAttributeFieldPostSelect = require( 'sui-views/edit-attribute-field-post-select' );
 
 
 /**
