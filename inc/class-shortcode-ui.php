@@ -82,10 +82,10 @@ class Shortcode_UI {
 		wp_enqueue_media();
 
 		$shortcodes = array_values( $this->get_shortcodes() );
-		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : false;
-		if ( $screen && ! empty( $screen->post_type ) ) {
+		$current_post_type = get_post_type();
+		if ( $current_post_type ) {
 			foreach ( $shortcodes as $key => $args ) {
-				if ( ! empty( $args['post_type'] ) && ! in_array( $screen->post_type, $args['post_type'] ) ) {
+				if ( ! empty( $args['post_type'] ) && ! in_array( $current_post_type, $args['post_type'] ) ) {
 					unset( $shortcodes[ $key ] );
 				}
 			}
