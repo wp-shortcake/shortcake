@@ -630,7 +630,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		var self = this;
 
 		if ( editAttributeFieldAttachment.getFromCache( id ) ) {
-			self._renderPreview( this._getFromCache( id ) );
+			self._renderPreview( editAttributeFieldAttachment.getFromCache( id ) );
 			return;
 
 			// Call the updateValue() function, to trigger any listeners
