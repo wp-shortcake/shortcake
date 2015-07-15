@@ -65,6 +65,7 @@ class Shortcode_UI {
 	 * Setup plugin actions.
 	 */
 	private function setup_actions() {
+		add_action( 'init',                  array( $this, 'action_init' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
