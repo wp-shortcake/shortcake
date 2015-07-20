@@ -138,9 +138,9 @@
 
 
 <script type="text/html" id="tmpl-shortcode-ui-test-inline-edit">
-<div style="padding: 20px; border: 1px solid #E1e1e1; background: #f5f5f5;">
-	<blockquote contenteditable=true name="content" style="font-size: 24px; line-height: 1.5;">{{ data.inner_content['value'] }}</blockquote>
-	<p style="font-size: 16px; line-height: 1.5; font-style: italic;">&mdash; <span contenteditable=true name="source">{{ data.attrs[1]['value'] }}</span></p>
+<div class="test-editable-blockquote">
+	<blockquote contenteditable=true name="content">{{ data.inner_content['value'] }}</blockquote>
+	<p>&mdash; <span contenteditable=true name="source">{{ data.attrs[1]['value'] }}</span></p>
 </div>
 </script>
 

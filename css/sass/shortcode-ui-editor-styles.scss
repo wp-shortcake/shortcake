@@ -24,6 +24,24 @@ body#wpview-iframe-sandbox {
 	overflow: hidden;
 }
 
-[contentEditable]:focus {
-	outline: none;
+.test-editable-blockquote {
+
+	padding: 20px;
+	border: 1px solid #E1e1e1;
+	background: #f5f5f5;
+
+	[contentEditable]:focus {
+		outline: none;
+	}
+
+	blockquote {
+		font-size: 24px;
+		line-height: 1.5;
+	}
+
+	p {
+		font-size: 16px;
+		line-height: 1.5;
+		font-style: italic;
+	}
 }
