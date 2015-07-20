@@ -13,4 +13,7 @@ body#wpview-iframe-sandbox {
   width: 100%;
   overflow: hidden; }
 
+[contentEditable]:focus {
+  outline: none; }
+
 /*# sourceMappingURL=shortcode-ui-editor-styles.css.map */
