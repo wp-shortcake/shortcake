@@ -193,6 +193,7 @@ class Shortcode_UI {
 
 		/**
 		 * Fires after shortcode UI assets have been enqueued.
+		 *
 		 * Will only fire once per page load.
 		 */
 		do_action( 'enqueue_shortcode_ui' );
