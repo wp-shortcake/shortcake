@@ -101,6 +101,13 @@ class Shortcode_UI {
 	 * @return array
 	 */
 	public function get_shortcodes() {
+		/**
+		 * Filter the returned shortcode UI configuration parameters
+		 *
+		 * Used to remove shortcode UI that's already been registered
+		 *
+		 * @param array $shortcodes
+		 */
 		return apply_filters( 'shortcode_ui_shortcodes', $this->shortcodes );
 	}
 
@@ -184,6 +191,10 @@ class Shortcode_UI {
 		// add templates to the footer, instead of where we're at now
 		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
 
+		/**
+		 * Fires after shortcode UI assets have been enqueued
+		 * Will only fire once per page load
+		 */
 		do_action( 'enqueue_shortcode_ui' );
 	}
 
@@ -194,6 +205,10 @@ class Shortcode_UI {
 		// queue scripts & templates
 		$this->enqueue();
 
+		/**
+		 * Fires after shortcode UI assets have been loaded for the editor
+		 * Will fire every time the editor is loaded
+		 */
 		do_action( 'shortcode_ui_loaded_editor' );
 	}
 
@@ -205,6 +220,10 @@ class Shortcode_UI {
 		echo $this->get_view( 'list-item' ); // WPCS: xss ok
 		echo $this->get_view( 'edit-form' ); // WPCS: xss ok
 
+		/**
+		 * Fires after base shortcode UI templates have been loaded
+		 * Allows custom shortcode UI field types to load their own templates
+		 */
 		do_action( 'print_shortcode_ui_templates' );
 	}
 
@@ -275,8 +294,18 @@ class Shortcode_UI {
 		}
 
 		ob_start();
+		/**
+		 * Fires before shortcode is rendered in preview
+		 *
+		 * @param string $shortcode Full shortcode including attributes
+		 */
 		do_action( 'shortcode_ui_before_do_shortcode', $shortcode );
 		echo do_shortcode( $shortcode ); // WPCS: xss ok
+		/**
+		 * Fires after shortcode is rendered in preview
+		 *
+		 * @param string $shortcode Full shortcode including attributes
+		 */
 		do_action( 'shortcode_ui_after_do_shortcode', $shortcode );
 
 		wp_send_json_success( ob_get_clean() );
