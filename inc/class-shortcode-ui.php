@@ -39,6 +39,7 @@ class Shortcode_UI {
 
 	/**
 	 * Get instance of Shortcake controller.
+	 *
 	 * Instantiates object on the fly when not already loaded.
 	 *
 	 * @return object
@@ -204,6 +205,7 @@ class Shortcode_UI {
 		$this->enqueue();
 		/**
 		 * Fires after shortcode UI assets have been loaded for the editor.
+		 *
 		 * Will fire every time the editor is loaded.
 		 */
 		do_action( 'shortcode_ui_loaded_editor' );
@@ -219,6 +221,7 @@ class Shortcode_UI {
 
 		/**
 		 * Fires after base shortcode UI templates have been loaded.
+		 *
 		 * Allows custom shortcode UI field types to load their own templates.
 		 */
 		do_action( 'print_shortcode_ui_templates' );
@@ -226,6 +229,7 @@ class Shortcode_UI {
 
 	/**
 	 * Helper function for displaying a PHP template file.
+	 *
 	 * Template args array is extracted and passed to the template file.
 	 *
 	 * @param  string $template full template file path. Or name of template file in inc/templates.
