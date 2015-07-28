@@ -1,37 +1,81 @@
 <?php
 
+/**
+ * Primary controller class for Shortcake
+ */
 class Shortcode_UI {
 
+	/**
+	 * Path to the plugin directory.
+	 *
+	 * @access private
+	 * @var string
+	 */
 	private $plugin_dir;
+
+	/**
+	 * Plugin URL.
+	 *
+	 * @access private
+	 * @var string
+	 */
 	private $plugin_url;
 
+	/**
+	 * Shortcodes with registered shortcode UI.
+	 *
+	 * @access private
+	 * @var array
+	 */
 	private $shortcodes = array();
 
+	/**
+	 * Shortcake controller instance.
+	 *
+	 * @access private
+	 * @var object
+	 */
 	private static $instance;
 
+	/**
+	 * Get instance of Shortcake controller.
+	 *
+	 * Instantiates object on the fly when not already loaded.
+	 *
+	 * @return object
+	 */
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
 			self::$instance->setup_actions();
 		}
-
 		return self::$instance;
 	}
 
-	function __construct() {
-
+	/**
+	 * Set up instance attributes when initially loaded.
+	 */
+	private function __construct() {
 		$this->plugin_version = SHORTCODE_UI_VERSION;
 		$this->plugin_dir     = plugin_dir_path( dirname( __FILE__ ) );
 		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
-
 	}
 
+	/**
+	 * Setup plugin actions.
+	 */
 	private function setup_actions() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
 	}
 
+	/**
+	 * Register UI for a shortcode.
+	 *
+	 * @param string $shortcode_tag Tag used for the shortcode.
+	 * @param array $args Configuration parameters for shortcode UI.
+	 */
 	public function register_shortcode_ui( $shortcode_tag, $args = array() ) {
 
 		// inner_content=true is a valid argument, but we want more detail
@@ -51,34 +95,54 @@ class Shortcode_UI {
 
 	}
 
+	/**
+	 * Get configuration parameters for all shortcodes with UI.
+	 *
+	 * @return array
+	 */
 	public function get_shortcodes() {
+		/**
+		 * Filter the returned shortcode UI configuration parameters.
+		 *
+		 * Used to remove shortcode UI that's already been registered.
+		 *
+		 * @param array $shortcodes
+		 */
 		return apply_filters( 'shortcode_ui_shortcodes', $this->shortcodes );
 	}
 
+	/**
+	 * Get UI configuration parameters for a given shortcode.
+	 *
+	 * @return array|false
+	 */
 	public function get_shortcode( $shortcode_tag ) {
 
 		$shortcodes = $this->get_shortcodes();
 		if ( isset( $shortcodes[ $shortcode_tag ] ) ) {
 			return $shortcodes[ $shortcode_tag ];
 		}
-
+		return false;
 	}
 
 	/**
-	 * Action admin scripts.
+	 * Enqueue scripts and styles used in the admin.
+	 *
+	 * Editor styles needs to be added before wp_enqueue_editor.
 	 */
 	public function action_admin_enqueue_scripts() {
-		// Editor styles needs to be added before wp_enqueue_editor
 		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
 	}
 
+	/**
+	 * Enqueue scripts and styles needed for shortcode UI.
+	 */
 	public function enqueue() {
 
 		if ( did_action( 'enqueue_shortcode_ui' ) ) {
 			return;
 		}
 
-		// make sure media library is queued
 		wp_enqueue_media();
 
 		$shortcodes = array_values( $this->get_shortcodes() );
@@ -124,37 +188,49 @@ class Shortcode_UI {
 			),
 		) );
 
-		// queue templates
+		// add templates to the footer, instead of where we're at now
 		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
 
+		/**
+		 * Fires after shortcode UI assets have been enqueued.
+		 *
+		 * Will only fire once per page load.
+		 */
 		do_action( 'enqueue_shortcode_ui' );
 	}
 
 	/**
-	 * Default hook to queue shortcake from
+	 * Enqueue shortcode UI assets when the editor is enqueued.
 	 */
 	public function action_wp_enqueue_editor() {
-		// queue scripts & templates
 		$this->enqueue();
-
+		/**
+		 * Fires after shortcode UI assets have been loaded for the editor.
+		 *
+		 * Will fire every time the editor is loaded.
+		 */
 		do_action( 'shortcode_ui_loaded_editor' );
 	}
 
 	/**
-	 * Output required underscore.js templates
-	 *
-	 * @return null
+	 * Output required underscore.js templates in the footer
 	 */
 	public function action_admin_print_footer_scripts() {
 		echo $this->get_view( 'media-frame' ); // WPCS: xss ok
 		echo $this->get_view( 'list-item' ); // WPCS: xss ok
 		echo $this->get_view( 'edit-form' ); // WPCS: xss ok
 
+		/**
+		 * Fires after base shortcode UI templates have been loaded.
+		 *
+		 * Allows custom shortcode UI field types to load their own templates.
+		 */
 		do_action( 'print_shortcode_ui_templates' );
 	}
 
 	/**
 	 * Helper function for displaying a PHP template file.
+	 *
 	 * Template args array is extracted and passed to the template file.
 	 *
 	 * @param  string $template full template file path. Or name of template file in inc/templates.
@@ -179,7 +255,7 @@ class Shortcode_UI {
 	}
 
 	/**
-	 * Compare shortcodes by label
+	 * Sort labels alphabetically.
 	 *
 	 * @param array $a
 	 * @param array $b
@@ -190,10 +266,7 @@ class Shortcode_UI {
 	}
 
 	/**
-	 * Output a shortcode.
-	 * ajax callback for displaying the shortcode in the TinyMCE editor.
-	 *
-	 * @return null
+	 * Render a shortcode for preview in the TinyMCE editor.
 	 */
 	public function handle_ajax_do_shortcode() {
 
@@ -223,8 +296,18 @@ class Shortcode_UI {
 		}
 
 		ob_start();
+		/**
+		 * Fires before shortcode is rendered in preview.
+		 *
+		 * @param string $shortcode Full shortcode including attributes
+		 */
 		do_action( 'shortcode_ui_before_do_shortcode', $shortcode );
 		echo do_shortcode( $shortcode ); // WPCS: xss ok
+		/**
+		 * Fires after shortcode is rendered in preview.
+		 *
+		 * @param string $shortcode Full shortcode including attributes
+		 */
 		do_action( 'shortcode_ui_after_do_shortcode', $shortcode );
 
 		wp_send_json_success( ob_get_clean() );
