@@ -37,7 +37,7 @@ class Shortcode_UI_Fields {
 		'date' => array(
 			'template' => 'shortcode-ui-field-date',
 		),
-		'range' = array(
+		'range' => array(
 			'template' => 'shortcode-ui-field-range',
 		),
 	);
