@@ -135,3 +135,13 @@
 		<# } #>
 	</div>
 </script>
+
+<script type="text/html" id="tmpl-shortcode-ui-field-range">
+	<div class="field-block">
+		<label for="{{ data.id }}">{{ data.label }}</label>
+		<input type="range" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" {{{ data.meta }}}/>
+		<# if ( typeof data.description == 'string' ) { #>
+			<p class="description">{{ data.description }}</p>
+		<# } #>
+	</div>
+</script>
