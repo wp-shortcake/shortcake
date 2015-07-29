@@ -2,7 +2,7 @@ var Backbone = require('backbone'),
 	insertShortcodeList = require('sui-views/insert-shortcode-list'),
 	TabbedView = require('sui-views/tabbed-view'),
 	ShortcodePreview = require('sui-views/shortcode-preview'),
-	EditShortcodeForm = require('sui-views/edit-shortcode-form'),
+	getEditView = require( 'sui-utils/get-edit-view'),
 	Toolbar = require('sui-views/media-toolbar'),
 	SearchShortcode = require('sui-views/search-shortcode'),
 	sui = require('sui-utils/sui'),
@@ -64,11 +64,13 @@ var Shortcode_UI = Backbone.View.extend({
 
 	renderEditShortcodeView: function() {
 		var shortcode = this.controller.props.get( 'currentShortcode' );
+		var editView  = getEditView( shortcode.get( 'shortcode_tag' ) );
 		var view = new TabbedView({
 			tabs: {
+
 				edit: {
 					label: shortcodeUIData.strings.edit_tab_label,
-					content: new EditShortcodeForm({ model: shortcode })
+					content: new editView({ model: shortcode })
 				},
 
 				preview: {
@@ -78,6 +80,7 @@ var Shortcode_UI = Backbone.View.extend({
 						this.render();
 					}
 				}
+
 			},
 
 			styles: {

@@ -13,4 +13,18 @@ body#wpview-iframe-sandbox {
   width: 100%;
   overflow: hidden; }
 
+.test-editable-blockquote {
+  padding: 20px;
+  border: 1px solid #E1e1e1;
+  background: #f5f5f5; }
+  .test-editable-blockquote [contentEditable]:focus {
+    outline: none; }
+  .test-editable-blockquote blockquote {
+    font-size: 24px;
+    line-height: 1.5; }
+  .test-editable-blockquote p {
+    font-size: 16px;
+    line-height: 1.5;
+    font-style: italic; }
+
 /*# sourceMappingURL=shortcode-ui-editor-styles.css.map */

@@ -135,3 +135,13 @@
 		<# } #>
 	</div>
 </script>
+
+
+<script type="text/html" id="tmpl-shortcode-ui-test-inline-edit">
+<div class="test-editable-blockquote">
+	<blockquote contenteditable=true name="content">{{ data.inner_content['value'] }}</blockquote>
+	<p>&mdash; <span contenteditable=true name="source">{{ data.attrs[1]['value'] }}</span></p>
+</div>
+</script>
+
+

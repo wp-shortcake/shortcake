@@ -288,7 +288,7 @@ describe( "MCE View Constructor", function() {
 } );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../../../js/src/models/shortcode.js":10,"./../../../js/src/utils/shortcode-view-constructor.js":11,"./../../../js/src/utils/sui.js":12}],5:[function(require,module,exports){
+},{"./../../../js/src/models/shortcode.js":10,"./../../../js/src/utils/shortcode-view-constructor.js":12,"./../../../js/src/utils/sui.js":13}],5:[function(require,module,exports){
 var Shortcodes = require('./../../../js/src/collections/shortcodes.js');
 var sui = require('./../../../js/src/utils/sui.js');
 
@@ -305,7 +305,7 @@ describe( "SUI Util", function() {
 
 } );
 
-},{"./../../../js/src/collections/shortcodes.js":7,"./../../../js/src/utils/sui.js":12}],6:[function(require,module,exports){
+},{"./../../../js/src/collections/shortcodes.js":7,"./../../../js/src/utils/sui.js":13}],6:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 var ShortcodeAttribute = require('./../models/shortcode-attribute.js');
@@ -485,10 +485,26 @@ module.exports = Shortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcode-attributes.js":6,"./inner-content.js":8}],11:[function(require,module,exports){
+var getEditView = function ( id ) {
+
+	var views = {
+		'default':       require('./../views/edit-shortcode-form.js'),
+		'shortcake_dev': require('./../views/edit-shortcode-form-test.js'),
+	}
+
+	return ( id in views ) ? views[ id ] : views['default'];
+
+}
+
+module.exports = getEditView;
+
+},{"./../views/edit-shortcode-form-test.js":17,"./../views/edit-shortcode-form.js":18}],12:[function(require,module,exports){
 (function (global){
 var sui = require('./sui.js'),
     wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
-    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+    getEditView = require('./get-edit-view.js');
+    // send_to_editor = require( 'sui-utils/sendtoeditor');
 
 /**
  * Generic shortcode mce view constructor.
@@ -498,7 +514,7 @@ var shortcodeViewConstructor = {
 
 	initialize: function( options ) {
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
-		this.fetch();
+		this.renderPreview();
 	},
 
 	/**
@@ -545,34 +561,20 @@ var shortcodeViewConstructor = {
 	 *
 	 * @return undefined
 	 */
-	fetch : function() {
+	renderPreview : function() {
 
-		var self = this;
+		var view;
 
-		if ( ! this.fetching ) {
+		var shortcode = this.shortcodeModel;
+		view = getEditView( shortcode.get('shortcode_tag') );
+		view = new view( { model: shortcode } );
 
-			this.fetching = true;
+		this.content = view.render().$el;
+		this.render( null, true );
 
-			wp.ajax.post( 'do_shortcode', {
-				post_id: $( '#post_ID' ).val(),
-				shortcode: this.shortcodeModel.formatShortcode(),
-				nonce: shortcodeUIData.nonces.preview,
-			}).done( function( response ) {
-
-				if ( '' === response ) {
-					self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
-				} else {
-					self.content = response;
-				}
-
-			}).fail( function() {
-				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-			} ).always( function() {
-				delete self.fetching;
-				self.render( null, true );
-			} );
-
-		}
+		shortcode.on('change', function() {
+			console.log( shortcode.formatShortcode() );
+		} );
 
 	},
 
@@ -687,122 +689,7 @@ var shortcodeViewConstructor = {
 		if ( switchEditors && switchEditors.pre_wpautop ) {
 			content = switchEditors.pre_wpautop( content );
 		}
-
 		return content;
-
-	},
-
-	// Backwards compatability for Pre WP 4.2.
-	View: {
-
-		overlay: true,
-
-		initialize: function( options ) {
-			this.shortcode = this.getShortcode( options );
-			this.fetch();
-		},
-
-		getShortcode: function( options ) {
-
-			var shortcodeModel, shortcode;
-
-			shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
-
-			if (!shortcodeModel) {
-				return;
-			}
-
-			shortcode = shortcodeModel.clone();
-
-			shortcode.get('attrs').each(
-					function(attr) {
-
-						if (attr.get('attr') in options.shortcode.attrs.named) {
-							attr.set('value',
-									options.shortcode.attrs.named[attr
-											.get('attr')]);
-						}
-
-					});
-
-			if ('content' in options.shortcode) {
-				var inner_content = shortcode.get('inner_content');
-				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content)
-				}
-			}
-
-			return shortcode;
-
-		},
-
-		fetch : function() {
-
-			var self = this;
-
-			if ( ! this.parsed ) {
-
-				wp.ajax.post( 'do_shortcode', {
-					post_id: $( '#post_ID' ).val(),
-					shortcode: this.shortcode.formatShortcode(),
-					nonce: shortcodeUIData.nonces.preview,
-				}).done( function( response ) {
-					if ( response.indexOf( '<script' ) !== -1 ) {
-						self.setIframes( self.getEditorStyles(), response );
-					} else {
-						self.parsed = response;
-						self.render( true );
-					}
-				}).fail( function() {
-					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-					self.render( true );
-				} );
-
-			}
-
-		},
-
-		/**
-		 * Render the shortcode
-		 *
-		 * To ensure consistent rendering - this makes an ajax request to the
-		 * admin and displays.
-		 *
-		 * @return string html
-		 */
-		getHtml : function() {
-			return this.parsed;
-		},
-
-		/**
-		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
-		 *
-		 * @method getEditorStyles
-		 * @returns {Array}
-		 */
-		getEditorStyles: function() {
-
-			var styles = '';
-
-			this.getNodes( function ( editor, node, content ) {
-				var dom = editor.dom,
-					bodyClasses = editor.getBody().className || '',
-					iframe, iframeDoc, i, resize;
-
-				tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
-					if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
-						link.href.indexOf( 'skins/wordpress/wp-content.css' ) === -1 ) {
-
-						styles += dom.getOuterHTML( link ) + '\n';
-					}
-
-				});
-
-			} );
-
-			return styles;
-		},
-
 	},
 
 };
@@ -810,7 +697,7 @@ var shortcodeViewConstructor = {
 module.exports = shortcodeViewConstructor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./sui.js":12}],12:[function(require,module,exports){
+},{"./get-edit-view.js":11,"./sui.js":13}],13:[function(require,module,exports){
 var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {
@@ -821,4 +708,691 @@ window.Shortcode_UI = window.Shortcode_UI || {
 
 module.exports = window.Shortcode_UI;
 
-},{"./../collections/shortcodes.js":7}]},{},[1,2,3,4,5]);
+},{"./../collections/shortcodes.js":7}],14:[function(require,module,exports){
+var sui = require('./../utils/sui.js');
+
+var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
+
+	events: {
+		'click .add'       : '_openMediaFrame',
+		'click .remove'    : '_removeAttachment',
+		'selectAttachment' : '_selectAttachment',
+	},
+
+	/**
+	 * Update the field attachment.
+	 * Re-renders UI.
+	 * If ID is empty - does nothing.
+	 *
+	 * @param {int} id Attachment ID
+	 */
+	updateValue: function( id ) {
+
+		if ( ! id ) {
+			return;
+		}
+
+		this.setValue( id );
+
+		var self = this;
+
+		if ( editAttributeFieldAttachment.getFromCache( id ) ) {
+			self._renderPreview( editAttributeFieldAttachment.getFromCache( id ) );
+			return;
+
+			// Call the updateValue() function, to trigger any listeners
+			// hooked on it.
+			self.triggerCallbacks();
+		}
+
+		this.$container.addClass( 'loading' );
+
+		wp.ajax.post( 'get-attachment', {
+			'id': id
+		} ).done( function( attachment ) {
+			// Cache for later.
+			editAttributeFieldAttachment.setInCache( id, attachment );
+			self._renderPreview( attachment );
+			self.$container.removeClass( 'loading' );
+
+			// Call the updateValue() function, to trigger any listeners
+			// hooked on it.
+			self.triggerCallbacks();
+		} );
+	},
+
+	render: function() {
+
+		// Set model default values.
+		for ( var arg in ShortcakeImageFieldData.defaultArgs ) {
+			if ( ! this.model.get( arg ) ) {
+				this.model.set( arg, ShortcakeImageFieldData.defaultArgs[ arg ] );
+			}
+		}
+
+		this.$el.html( this.template( this.model.toJSON() ) );
+
+		this.$container   = this.$el.find( '.shortcake-attachment-preview' );
+		var $addButton    = this.$container.find( 'button.add' );
+
+		this.frame = wp.media( {
+			multiple: false,
+			title: this.model.get( 'frameTitle' ),
+			library: {
+				type: this.model.get( 'libraryType' ),
+			},
+		} );
+
+		// Add initial Attachment if available.
+		this.updateValue( this.model.get( 'value' ) );
+
+	},
+
+	/**
+	 * Renders attachment preview in field.
+	 * @param {object} attachment model
+	 * @return null
+	 */
+	_renderPreview: function( attachment ) {
+
+		var $thumbnail = jQuery('<div class="thumbnail"></div>');
+
+		if ( 'image' !== attachment.type ) {
+
+			jQuery( '<img/>', {
+				src: attachment.icon,
+				alt: attachment.title,
+			} ).appendTo( $thumbnail );
+
+			jQuery( '<div/>', {
+				class: 'filename',
+				html:  '<div>' + attachment.title + '</div>',
+			} ).appendTo( $thumbnail );
+
+		} else {
+
+			attachmentThumb = (typeof attachment.sizes.thumbnail !== 'undefined') ?
+				attachment.sizes.thumbnail :
+				_.first( _.sortBy( attachment.sizes, 'width' ) );
+
+			jQuery( '<img/>', {
+				src:    attachmentThumb.url,
+				width:  attachmentThumb.width,
+				height: attachmentThumb.height,
+				alt:    attachment.alt,
+			} ) .appendTo( $thumbnail )
+
+		}
+
+		$thumbnail.find( 'img' ).wrap( '<div class="centered"></div>' );
+		this.$container.append( $thumbnail );
+		this.$container.toggleClass( 'has-attachment', true );
+
+	},
+
+	/**
+	 * Open media frame when add button is clicked.
+	 *
+	 */
+	_openMediaFrame: function(e) {
+		e.preventDefault();
+		this.frame.open();
+
+		var self = this;
+		this.frame.on( 'select', function() {
+			self.$el.trigger( 'selectAttachment'  );
+		} );
+
+	},
+
+	/**
+	 * When an attachment is selected from the media frame, update the model value.
+	 *
+	 */
+	_selectAttachment: function(e) {
+		var selection  = this.frame.state().get('selection');
+			attachment = selection.first();
+
+		this.updateValue( attachment.id );
+		this.frame.close();
+	},
+
+	/**
+	 * Remove the attachment.
+	 * Render preview & Update the model.
+	 */
+	_removeAttachment: function(e) {
+		e.preventDefault();
+
+		this.model.set( 'value', null );
+
+		this.$container.toggleClass( 'has-attachment', false );
+		this.$container.find( '.thumbnail' ).remove();
+	},
+
+}, {
+
+	_idCache: {},
+
+	/**
+	 * Store attachments in a cache for quicker loading.
+	 */
+	setInCache: function( id, attachment ) {
+		this._idCache[ id ] = attachment;
+	},
+
+	/**
+	 * Retrieve an attachment from the cache.
+	 */
+	getFromCache: function( id ){
+		if ( 'undefined' === typeof this._idCache[ id ] ) {
+			return false;
+		}
+		return this._idCache[ id ];
+	},
+
+});
+
+module.exports = sui.views.editAttributeFieldAttachment = editAttributeFieldAttachment;
+
+
+},{"./../utils/sui.js":13}],15:[function(require,module,exports){
+( function( $ ) {
+
+	var sui = window.Shortcode_UI;
+
+	// Cached Data.
+	var postSelectCache = {};
+
+	sui.views.editAttributeFieldPostSelect = sui.views.editAttributeField.extend( {
+
+		events: {
+			'change .shortcode-ui-post-select': 'inputChanged',
+		},
+
+		inputChanged: function(e) {
+			this.setValue( e.val );
+			this.triggerCallbacks();
+		},
+
+		render: function() {
+
+			var self = this,
+			    defaults = { multiple: false };
+
+			for ( var arg in defaults ) {
+				if ( ! this.model.get( arg ) ) {
+					this.model.set( arg, defaults[ arg ] );
+				}
+			}
+
+			var data = this.model.toJSON();
+			data.id = 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid;
+
+			this.$el.html( this.template( data ) );
+
+			var ajaxData = {
+				action    : 'shortcode_ui_post_field',
+				nonce     : shortcodeUiPostFieldData.nonce,
+				shortcode : this.shortcode.get( 'shortcode_tag'),
+				attr      : this.model.get( 'attr' )
+			};
+
+			var $field = this.$el.find( '.shortcode-ui-post-select' );
+
+			$field.select2({
+
+				placeholder: "Search",
+				multiple: this.model.get( 'multiple' ),
+				ajax: {
+					url: ajaxurl,
+					dataType: 'json',
+					quietMillis: 250,
+					data: function (term, page) {
+						ajaxData.s    = term;
+						ajaxData.page = page;
+						return ajaxData;
+					},
+					results: function ( response, page ) {
+
+						if ( ! response.success ) {
+							return { results: {}, more: false };
+						}
+
+						// Cache data for quicker rendering later.
+						postSelectCache = $.extend( postSelectCache, response.data.posts );
+
+						var more = ( page * response.data.posts_per_page ) < response.data.found_posts; // whether or not there are more results available
+						return { results: response.data.posts, more: more };
+
+					},
+				},
+
+				/**
+				 * Initialize Callback
+				 * Used to set render the initial value.
+				 * Has to make a request to get the title for the current ID.
+				 */
+				initSelection: function(element, callback) {
+
+					var ids, parsedData = [], cached;
+
+					// Convert stored value to array of IDs (int).
+					ids = $(element)
+						.val()
+						.split(',')
+						.map( function (str) { return str.trim(); } )
+						.map( function (str) { return parseInt( str ); } )
+
+					if ( ids.length < 1 ) {
+						return;
+					}
+
+					// Check if there is already cached data.
+					for ( var i = 0; i < ids.length; i++ ) {
+						if ( cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) ) ) {
+							parsedData.push( cached );
+						}
+					};
+
+					// If not multiple - return single value if we have one.
+					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
+						callback( parsedData[0] );
+						return;
+					}
+
+					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
+
+					if ( ! uncachedIds.length ) {
+
+						callback( parsedData );
+
+					} else {
+
+						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
+						initAjaxData.action   = 'shortcode_ui_post_field';
+						initAjaxData.post__in = uncachedIds;
+
+						$.get( ajaxurl, initAjaxData ).done( function( response ) {
+
+							if ( ! response.success ) {
+								return { results: {}, more: false };
+							}
+
+							postSelectCache = $.extend( postSelectCache, response.data.posts );
+
+							// If not multi-select, expects single object, not array of objects.
+							if ( ! self.model.get( 'multiple' ) ) {
+								callback( response.data.posts[0] );
+								return;
+							}
+
+							// Append new data to cached data.
+							// Sort by original order.
+							parsedData = parsedData
+								.concat( response.data.posts )
+								.sort(function (a, b) {
+									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
+									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
+									return 0;
+								});
+
+							callback( parsedData );
+							return;
+
+						} );
+
+					}
+
+				},
+
+			} );
+
+			// Make multiple values sortable.
+			if ( this.model.get( 'multiple' ) ) {
+				$field.select2('container').find('ul.select2-choices').sortable({
+	    			containment: 'parent',
+	    			start: function() { $('.shortcode-ui-post-select').select2('onSortStart'); },
+	    			update: function() { $('.shortcode-ui-post-select').select2('onSortEnd'); }
+				});
+			}
+
+			return this;
+
+		}
+
+	} );
+
+	/**
+	 * Extending SUI Media Controller to hide Select2 UI Drop-Down when menu
+	 * changes in Meida modal
+	 * 1. going back/forth between different shortcakes (refresh)
+	 * 2. changing the menu in left column (deactivate)
+	 * 3. @TODO closing the modal.
+	 */
+	var mediaController = sui.controllers.MediaController;
+	sui.controllers.MediaController = mediaController.extend({
+
+		refresh: function(){
+			mediaController.prototype.refresh.apply( this, arguments );
+			this.destroySelect2UI();
+		},
+
+		//doesn't need to call parent as it already an "abstract" method in parent to provide callback
+		deactivate: function() {
+			this.destroySelect2UI();
+		},
+
+		destroySelect2UI: function() {
+			$('.shortcode-ui-post-select.select2-container').select2( "close" );
+		}
+
+	});
+
+	/**
+	 * Extending the SUI Tabbed View to hide Select2 UI dropdown when previewing the shortcake
+	 */
+	var tabbedView = sui.views.TabbedView;
+	sui.views.TabbedView = tabbedView.extend({
+		tabSwitcher: function() {
+			tabbedView.prototype.tabSwitcher.apply( this, arguments );
+			$('.shortcode-ui-post-select.select2-container').select2( "close" );
+		}
+	});
+
+} )( jQuery );
+
+},{}],16:[function(require,module,exports){
+(function (global){
+var Backbone     = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+	sui          = require('./../utils/sui.js'),
+	$            = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+
+var editAttributeField = Backbone.View.extend( {
+
+	tagName: "div",
+
+	events: {
+		'keyup  input[type="text"]':   'inputChanged',
+		'keyup  textarea':             'inputChanged',
+		'change select':               'inputChanged',
+		'change input[type=checkbox]': 'inputChanged',
+		'change input[type=radio]':    'inputChanged',
+		'change input[type=email]':    'inputChanged',
+		'change input[type=number]':   'inputChanged',
+		'change input[type=date]':     'inputChanged',
+		'change input[type=url]':      'inputChanged',
+	},
+
+	render: function() {
+
+		var data = jQuery.extend( {
+			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
+		}, this.model.toJSON() );
+
+		// Convert meta JSON to attribute string.
+		var _meta = [];
+		for ( var key in data.meta ) {
+
+			// Boolean attributes can only require attribute key, not value.
+			if ( 'boolean' === typeof( data.meta[ key ] ) ) {
+
+				// Only set truthy boolean attributes.
+				if ( data.meta[ key ] ) {
+					_meta.push( _.escape( key ) );
+				}
+
+			} else {
+
+				_meta.push( _.escape( key ) + '="' + _.escape( data.meta[ key ] ) + '"' );
+
+			}
+
+		}
+
+		data.meta = _meta.join( ' ' );
+
+		this.$el.html( this.template( data ) );
+		this.triggerCallbacks();
+
+		return this
+	},
+
+	/**
+	 * Input Changed Update Callback.
+	 *
+	 * If the input field that has changed is for content or a valid attribute,
+	 * then it should update the model. If a callback function is registered
+	 * for this attribute, it should be called as well.
+	 */
+	inputChanged: function( e ) {
+
+		if ( this.model.get( 'attr' ) ) {
+			var $el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
+		} else {
+			var $el = this.$el.find( '[name="inner_content"]' );
+		}
+
+		if ( 'radio' === this.model.attributes.type ) {
+			this.setValue( $el.filter(':checked').first().val() );
+		} else if ( 'checkbox' === this.model.attributes.type ) {
+			this.setValue( $el.is( ':checked' ) );
+		} else {
+			this.setValue( $el.val() );
+		}
+
+		this.triggerCallbacks();
+	},
+
+	getValue: function() {
+		return this.model.get( 'value' );
+	},
+
+	setValue: function( val ) {
+		this.model.set( 'value', val );
+	},
+
+	triggerCallbacks: function() {
+
+		var shortcodeName = this.shortcode.attributes.shortcode_tag,
+			attributeName = this.model.get( 'attr' ),
+			hookName      = [ shortcodeName, attributeName ].join( '.' ),
+			changed       = this.model.changed,
+			collection    = _.flatten( _.values( this.views.parent.views._views ) ),
+			shortcode     = this.shortcode;
+
+		/*
+		 * Action run when an attribute value changes on a shortcode
+		 *
+		 * Called as `{shortcodeName}.{attributeName}`.
+		 *
+		 * @param changed (object)
+		 *           The update, ie. { "changed": "newValue" }
+		 * @param viewModels (array)
+		 *           The collections of views (editAttributeFields)
+		 *                         which make up this shortcode UI form
+		 * @param shortcode (object)
+		 *           Reference to the shortcode model which this attribute belongs to.
+		 */
+		wp.shortcake.hooks.doAction( hookName, changed, collection, shortcode );
+
+	}
+
+}, {
+
+	/**
+	 * Get an attribute field from a shortcode by name.
+	 *
+	 * Usage: `sui.views.editAttributeField.getField( collection, 'title')`
+	 *
+	 * @param array collection of editAttributeFields
+	 * @param string attribute name
+	 * @return editAttributeField The view corresponding to the matching field
+	 */
+	getField: function( collection, attr ) {
+		return _.find( collection,
+			function( viewModel ) {
+				return attr === viewModel.model.get('attr');
+			}
+		);
+	}
+});
+
+sui.views.editAttributeField = editAttributeField;
+module.exports = editAttributeField;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./../utils/sui.js":13}],17:[function(require,module,exports){
+(function (global){
+var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+	sui = require('./../utils/sui.js'),
+	backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+	EditAttributeField = require('./edit-attribute-field.js'),
+	EditShortcodeForm = require('./edit-shortcode-form.js'),
+	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+
+/**
+ * Single edit shortcode content view.
+ */
+var EditShortcodeFormTest = EditShortcodeForm.extend({
+
+	template: wp.template( 'shortcode-ui-test-inline-edit' ),
+
+	events: {
+		'keyup  input[type="text"]':   'inputChanged',
+		'keyup  textarea':             'inputChanged',
+		'keyup  [contenteditable]':    'inputChanged',
+		'change select':               'inputChanged',
+		'change input[type=checkbox]': 'inputChanged',
+		'change input[type=radio]':    'inputChanged',
+		'change input[type=email]':    'inputChanged',
+		'change input[type=number]':   'inputChanged',
+		'change input[type=date]':     'inputChanged',
+		'change input[type=url]':      'inputChanged',
+	},
+
+	initialize: function() {},
+
+	render: function() {
+		console.log( this.model.toJSON() );
+
+		this.$el.html( this.template( this.model.toJSON() ) );
+		return this;
+	},
+
+	inputChanged: _.debounce( function(e) {
+
+		var val, attr, targetAttr;
+
+		attr = e.target.getAttribute( 'name' );
+
+        if ( e.target.hasAttribute( 'contenteditable' ) ) {
+        	val = $(e.target).html();
+        } else {
+        	val = e.target.value;
+        }
+
+        if ( 'content' === attr ) {
+        	targetAttr = this.model.get( 'inner_content' );
+        } else {
+        	targetAttr = this.model.get( 'attrs' ).findWhere( { attr: attr } );
+	    }
+
+	    if ( targetAttr ) {
+	      	targetAttr.set( 'value', val );
+	      	this.model.trigger('change');
+	      	this.model.trigger('changed');
+        }
+
+
+	}, 250 ),
+
+});
+
+module.exports = EditShortcodeFormTest;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./../utils/sui.js":13,"./edit-attribute-field.js":16,"./edit-shortcode-form.js":18}],18:[function(require,module,exports){
+(function (global){
+var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+	sui = require('./../utils/sui.js'),
+	backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+	editAttributeField = require('./edit-attribute-field.js'),
+
+	// Additional attribute field types: these fields are all standalone in functionality,
+	// but bundled here for simplicity to save an HTTP request.
+	editAttributeFieldAttachment = require('./edit-attribute-field-attachment.js'),
+	editAttributeFieldPostSelect = require('./edit-attribute-field-post-select.js');
+
+
+/**
+ * Single edit shortcode content view.
+ */
+var EditShortcodeForm = wp.Backbone.View.extend({
+	template: wp.template('shortcode-default-edit-form'),
+
+	initialize: function() {
+
+		var t = this;
+
+		var innerContent = this.model.get( 'inner_content' );
+		if ( innerContent && typeof innerContent.attributes.type !== 'undefined' ) {
+
+			// add UI for inner_content
+			var view = new editAttributeField( { model: innerContent } );
+
+			view.shortcode = t.model;
+			view.template  = wp.media.template( 'shortcode-ui-content' );
+
+			t.views.add( '.edit-shortcode-form-fields', view );
+
+		}
+
+		this.model.get( 'attrs' ).each( function( attr ) {
+
+			// Get the field settings from localization data.
+			var type = attr.get('type');
+
+			if ( ! shortcodeUIFieldData[ type ] ) {
+				return;
+			}
+
+			var templateData = {
+				value: attr.get('value'),
+				attr_raw: {
+					name: attr.get('value')
+				}
+			}
+
+			var viewObjName = shortcodeUIFieldData[ type ].view;
+			var tmplName    = shortcodeUIFieldData[ type ].template;
+
+			var view       = new sui.views[viewObjName]( { model: attr } );
+			view.template  = wp.media.template( tmplName );
+			view.shortcode = t.model;
+
+			t.views.add( '.edit-shortcode-form-fields', view );
+
+		} );
+
+		if ( 0 == this.model.get( 'attrs' ).length && ( ! innerContent || typeof innerContent == 'undefined' ) ) {
+			var messageView = new Backbone.View({
+				tagName:      'div',
+				className:    'notice updated',
+			});
+			messageView.render = function() {
+				this.$el.append( '<p>' );
+				this.$el.find('p').text( shortcodeUIData.strings.media_frame_no_attributes_message );
+				return this;
+			};
+			t.views.add( '.edit-shortcode-form-fields', messageView );
+		}
+
+	},
+
+});
+
+module.exports = EditShortcodeForm;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./../utils/sui.js":13,"./edit-attribute-field-attachment.js":14,"./edit-attribute-field-post-select.js":15,"./edit-attribute-field.js":16}]},{},[1,2,3,4,5]);
