@@ -263,9 +263,6 @@ $(document).ready(function(){
 
 });
 
-function updateRangeIndicator( event ) {
-	console.log( event );
-}
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":8,"./utils/sui.js":9,"./views/media-frame.js":16}],8:[function(require,module,exports){
 (function (global){
@@ -1018,6 +1015,7 @@ var editAttributeField = Backbone.View.extend( {
 		'change input[type=number]':   'inputChanged',
 		'change input[type=date]':     'inputChanged',
 		'change input[type=url]':      'inputChanged',
+		'change input[type=range]':    'inputChanged',
 	},
 
 	render: function() {
