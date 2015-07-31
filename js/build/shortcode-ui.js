@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var ShortcodeAttribute = require('./../models/shortcode-attribute.js');
 
 /**
@@ -22,7 +22,7 @@ module.exports = ShortcodeAttributes;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../models/shortcode-attribute.js":5}],2:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var Shortcode = require('./../models/shortcode.js');
 
 // Shortcode Collection
@@ -35,8 +35,8 @@ module.exports = Shortcodes;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../models/shortcode.js":6}],3:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
-    wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
+    wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
     sui = require('./../utils/sui.js'),
     Shortcodes = require('./../collections/shortcodes.js');
 
@@ -91,7 +91,7 @@ module.exports = MediaController;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcodes.js":2,"./../utils/sui.js":9}],4:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
 /**
  * Shortcode Attribute Model.
@@ -110,7 +110,7 @@ module.exports = InnerContent;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],5:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
 var ShortcodeAttribute = Backbone.Model.extend({
 	defaults: {
@@ -130,7 +130,7 @@ module.exports = ShortcodeAttribute;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],6:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var ShortcodeAttributes = require('./../collections/shortcode-attributes.js');
 var InnerContent = require('./inner-content.js');
 
@@ -239,8 +239,8 @@ var sui = require('./utils/sui.js'),
 	Shortcodes = require('./collections/shortcodes.js'),
 	shortcodeViewConstructor = require('./utils/shortcode-view-constructor.js'),
 	mediaFrame = require('./views/media-frame.js'),
-	wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
-	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 $(document).ready(function(){
 
@@ -267,8 +267,8 @@ $(document).ready(function(){
 },{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":8,"./utils/sui.js":9,"./views/media-frame.js":16}],8:[function(require,module,exports){
 (function (global){
 var sui = require('./sui.js'),
-    wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
-    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+    wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+    $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 /**
  * Generic shortcode mce view constructor.
@@ -400,7 +400,7 @@ var shortcodeViewConstructor = {
 
 		var model, attr;
 
-		var megaRegex = /\[([^\s\]]+)([^\]]+)?\]([^\[]*)?(\[\/(\S+?)\])?/;
+		var megaRegex = this.getRegex();
 		var matches = shortcodeString.match( megaRegex );
 
 		if ( ! matches ) {
@@ -408,7 +408,7 @@ var shortcodeViewConstructor = {
 		}
 
 		defaultShortcode = sui.shortcodes.findWhere({
-			shortcode_tag : matches[1]
+			shortcode_tag : matches[2]
 		});
 
 		if ( ! defaultShortcode ) {
@@ -417,10 +417,10 @@ var shortcodeViewConstructor = {
 
 		currentShortcode = defaultShortcode.clone();
 
-		if ( matches[2] ) {
+		if ( matches[3] ) {
 
 			var attributeRegex = /(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/gmi;
-			attributeMatches   = matches[2].match( attributeRegex ) || [];
+			attributeMatches   = matches[3].match( attributeRegex ) || [];
 
 			// Trim whitespace from matches.
 			attributeMatches = attributeMatches.map( function( match ) {
@@ -450,9 +450,9 @@ var shortcodeViewConstructor = {
 
 		}
 
-		if ( matches[3] ) {
+		if ( matches[5] ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
-			inner_content.set( 'value', this.unAutoP( matches[3] ) );
+			inner_content.set( 'value', this.unAutoP( matches[5] ) );
 		}
 
 		return currentShortcode;
@@ -583,6 +583,72 @@ var shortcodeViewConstructor = {
 			return styles;
 		},
 
+	},
+
+	/**
+	 * JS implementation of WordPress' get_shortcode_regex() function
+	 *
+	 * The regex is almost identical, with the exception of
+	 * the *+ parts, since they were erroring out with "nothing to repeat"
+	 * This should probably be kept in sync with get_shortcode_regex() to
+	 * preserve compatibility.
+	 */
+	getRegex: function() {
+		var shortcode_tags = _.map( sui.shortcodes.pluck( 'shortcode_tag' ), this.pregQuote ).join( '|' );
+
+		var megaRegex = '';
+
+		megaRegex += '\\[';                              // Opening bracket
+		megaRegex += '(\\[?)';                           // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
+		megaRegex += '(' + shortcode_tags + ')';         // 2: Shortcode name
+		megaRegex += '(?![\\w-])';                       // Not followed by word character or hyphen
+		megaRegex += '(';                                // 3: Unroll the loop: Inside the opening shortcode tag
+		megaRegex +=     '[^\\]\\/]*';                   // Not a closing bracket or forward slash
+		megaRegex +=     '(?:';
+		megaRegex +=         '\\/(?!\\])';               // A forward slash not followed by a closing bracket
+		megaRegex +=         '[^\\]\\/]*';               // Not a closing bracket or forward slash
+		megaRegex +=     ')*?';
+		megaRegex += ')';
+		megaRegex += '(?:';
+		megaRegex +=     '(\\/)';                        // 4: Self closing tag ...
+		megaRegex +=     '\\]';                          // ... and closing bracket
+		megaRegex += '|';
+		megaRegex +=     '\\]';                          // Closing bracket
+		megaRegex +=     '(?:';
+		megaRegex +=         '(';                        // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
+		megaRegex +=             '[^\\[]*';              // Not an opening bracket
+		megaRegex +=             '(?:';
+		megaRegex +=                 '\\[(?!\\/\\2\\])'; // An opening bracket not followed by the closing shortcode tag
+		megaRegex +=                 '[^\\[]*';          // Not an opening bracket
+		megaRegex +=             ')*';
+		megaRegex +=         ')';
+		megaRegex +=         '\\[\\/\\2\\]';             // Closing shortcode tag
+		megaRegex +=     ')?';
+		megaRegex += ')';
+		megaRegex += '(\\]?)';                           // 6: Optional second closing brocket for escaping shortcodes: [[tag]]
+
+		return new RegExp( megaRegex );
+	},
+
+	/**
+	 * JS version of PHP's preg_quote()
+	 */
+	pregQuote: function( str, delimiter ) {
+		//  discuss at: http://phpjs.org/functions/preg_quote/
+		// original by: booeyOH
+		// improved by: Ates Goral (http://magnetiq.com)
+		// improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+		// improved by: Brett Zamir (http://brett-zamir.me)
+		// bugfixed by: Onno Marsman
+		//   example 1: preg_quote("$40");
+		//   returns 1: '\\$40'
+		//   example 2: preg_quote("*RRRING* Hello?");
+		//   returns 2: '\\*RRRING\\* Hello\\?'
+		//   example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
+		//   returns 3: '\\\\\\.\\+\\*\\?\\[\\^\\]\\$\\(\\)\\{\\}\\=\\!\\<\\>\\|\\:'
+
+		return String(str)
+		.replace( new RegExp( '[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + ( delimiter || '' ) + '-]', 'g' ), '\\$&' );
 	},
 
 };
@@ -997,9 +1063,9 @@ module.exports = sui.views.editAttributeFieldAttachment = editAttributeFieldAtta
 
 },{}],12:[function(require,module,exports){
 (function (global){
-var Backbone     = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+var Backbone     = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	sui          = require('./../utils/sui.js'),
-	$            = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+	$            = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 var editAttributeField = Backbone.View.extend( {
 
@@ -1137,9 +1203,9 @@ module.exports = editAttributeField;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":9}],13:[function(require,module,exports){
 (function (global){
-var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	sui = require('./../utils/sui.js'),
-	backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+	backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	editAttributeField = require('./edit-attribute-field.js'),
 
 	// Additional attribute field types: these fields are all standalone in functionality,
@@ -1220,7 +1286,7 @@ module.exports = EditShortcodeForm;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":9,"./edit-attribute-field-attachment.js":10,"./edit-attribute-field-post-select.js":11,"./edit-attribute-field.js":12}],14:[function(require,module,exports){
 (function (global){
-var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 
 /**
  * Single shortcode list item view.
@@ -1254,8 +1320,8 @@ module.exports = insertShortcodeListItem;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],15:[function(require,module,exports){
 (function (global){
-var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var Shortcodes = require('./../collections/shortcodes.js');
 var insertShortcodeListItem = require('./insert-shortcode-list-item.js');
 
@@ -1300,8 +1366,8 @@ module.exports = insertShortcodeList;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcodes.js":2,"./insert-shortcode-list-item.js":14}],16:[function(require,module,exports){
 (function (global){
-var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
-	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 	MediaController = require('./../controllers/media-controller.js'),
 	Shortcode_UI = require('./shortcode-ui'),
 	Toolbar = require('./media-toolbar');
@@ -1427,7 +1493,7 @@ module.exports = mediaFrame;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../controllers/media-controller.js":3,"./media-toolbar":17,"./shortcode-ui":20}],17:[function(require,module,exports){
 (function (global){
-var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 
 /**
  * Toolbar view that extends wp.media.view.Toolbar
@@ -1459,7 +1525,7 @@ module.exports = Toolbar;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],18:[function(require,module,exports){
 (function (global){
-var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 sui = require('./../utils/sui.js');
 
 var SearchShortcode = wp.media.view.Search.extend({
@@ -1506,8 +1572,8 @@ module.exports = SearchShortcode;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":9}],19:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
-    $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
+    $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 /**
  * Preview of rendered shortcode.
@@ -1694,7 +1760,7 @@ module.exports = ShortcodePreview;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],20:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	insertShortcodeList = require('./insert-shortcode-list.js'),
 	TabbedView = require('./tabbed-view.js'),
 	ShortcodePreview = require('./shortcode-preview.js'),
@@ -1702,7 +1768,7 @@ var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global 
 	Toolbar = require('./media-toolbar.js'),
 	SearchShortcode = require('./search-shortcode.js'),
 	sui = require('./../utils/sui.js'),
-	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 var Shortcode_UI = Backbone.View.extend({
 
@@ -1822,9 +1888,9 @@ module.exports = Shortcode_UI;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":9,"./edit-shortcode-form.js":13,"./insert-shortcode-list.js":15,"./media-toolbar.js":17,"./search-shortcode.js":18,"./shortcode-preview.js":19,"./tabbed-view.js":21}],21:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var sui = require('./../utils/sui.js');
-var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 /**
  * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with
