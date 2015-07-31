@@ -140,8 +140,8 @@
 	<div class="field-block">
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<div class="field-range-container">
-			<input type="range" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" {{{ data.meta }}}  oninput="updateRangeIndicator(event)" />
-			<output class="range" for="{{ data.id }}" id="{{ data.id }}_indicator">{{ data.value}}</output>
+			<input type="range" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" {{{ data.meta }}} />
+			<output class="range" for="{{ data.id }}" id="{{ data.id }}_indicator">{{ data.value }}</output>
 		</div>
 		<# if ( typeof data.description == 'string' ) { #>
 			<p class="description">{{ data.description }}</p>
