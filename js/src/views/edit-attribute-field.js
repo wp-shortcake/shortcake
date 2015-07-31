@@ -16,7 +16,7 @@ var editAttributeField = Backbone.View.extend( {
 		'change input[type=number]':   'inputChanged',
 		'change input[type=date]':     'inputChanged',
 		'change input[type=url]':      'inputChanged',
-		'change input[type=range]':    'inputChanged',
+		'input input[type=range]':     'inputChanged',
 	},
 
 	render: function() {
