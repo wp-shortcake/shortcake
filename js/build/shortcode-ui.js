@@ -609,7 +609,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	events: {
 		'click .add'                 : '_openMediaFrame',
 		'click .remove'              : '_removeAttachment',
-		'change input[type="range"]' : '_updateRangeIndicator',
 		'selectAttachment'           : '_selectAttachment',
 	},
 
@@ -737,16 +736,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			self.$el.trigger( 'selectAttachment'  );
 		} );
 
-	},
-	
-	/**
-	 * Update the range indicator
-	 */
-	_updateRangeIndicator: function( event ) {
-		event.preventDefault();
-		var rangeId =  '#' + event.target.id + '_indicator';
-		var rangeValue = event.target.value;
-		document.querySelector( rangeId ).value = rangeValue;
 	},
 
 	/**
@@ -1082,6 +1071,10 @@ var editAttributeField = Backbone.View.extend( {
 			this.setValue( $el.filter(':checked').first().val() );
 		} else if ( 'checkbox' === this.model.attributes.type ) {
 			this.setValue( $el.is( ':checked' ) );
+		}  else if ( 'range' === this.model.attributes.type ) {
+			var rangeId =  '#' + e.target.id + '_indicator';
+			var rangeValue = e.target.value;
+			document.querySelector( rangeId ).value = rangeValue;
 		} else {
 			this.setValue( $el.val() );
 		}

@@ -5,7 +5,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	events: {
 		'click .add'                 : '_openMediaFrame',
 		'click .remove'              : '_removeAttachment',
-		'change input[type="range"]' : '_updateRangeIndicator',
 		'selectAttachment'           : '_selectAttachment',
 	},
 
@@ -133,16 +132,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			self.$el.trigger( 'selectAttachment'  );
 		} );
 
-	},
-	
-	/**
-	 * Update the range indicator
-	 */
-	_updateRangeIndicator: function( event ) {
-		event.preventDefault();
-		var rangeId =  '#' + event.target.id + '_indicator';
-		var rangeValue = event.target.value;
-		document.querySelector( rangeId ).value = rangeValue;
 	},
 
 	/**
