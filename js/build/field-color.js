@@ -291,6 +291,7 @@ var editAttributeField = Backbone.View.extend( {
 			var rangeId =  '#' + e.target.id + '_indicator';
 			var rangeValue = e.target.value;
 			document.querySelector( rangeId ).value = rangeValue;
+			this.setValue( $el.val() );
 		} else {
 			this.setValue( $el.val() );
 		}
