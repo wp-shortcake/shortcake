@@ -607,9 +607,10 @@ var sui = require('./../utils/sui.js');
 var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	events: {
-		'click .add'       : '_openMediaFrame',
-		'click .remove'    : '_removeAttachment',
-		'selectAttachment' : '_selectAttachment',
+		'click .add'                 : '_openMediaFrame',
+		'click .remove'              : '_removeAttachment',
+		'update input[type="range"]' : '_updateRangeIndicator',
+		'selectAttachment'           : '_selectAttachment',
 	},
 
 	/**
@@ -736,6 +737,15 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			self.$el.trigger( 'selectAttachment'  );
 		} );
 
+	},
+	
+	/**
+	 * Update the range indicator
+	 */
+	_updateRangeIndicator: function( event ) {
+		var rangeId =  '#' + event.target.id + '_indicator';
+		var rangeValue = event.target.value;
+		document.querySelector( rangeId ).value = rangeValue;
 	},
 
 	/**

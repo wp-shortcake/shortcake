@@ -148,11 +148,3 @@
 		<# } #>
 	</div>
 </script>
-
-<script>
-	function updateRangeIndicator( event ) {
-		var rangeId =  '#' + event.target.id + '_indicator';
-		var rangeValue = event.target.value;
-		document.querySelector( rangeId ).value = rangeValue;
-	}
-</script>
