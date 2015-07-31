@@ -3,9 +3,9 @@ var sui = require('sui-utils/sui');
 var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	events: {
-		'click .add'                 : '_openMediaFrame',
-		'click .remove'              : '_removeAttachment',
-		'selectAttachment'           : '_selectAttachment',
+		'click .add'       : '_openMediaFrame',
+		'click .remove'    : '_removeAttachment',
+		'selectAttachment' : '_selectAttachment',
 	},
 
 	/**
