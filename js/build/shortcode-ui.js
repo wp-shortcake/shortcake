@@ -745,12 +745,12 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		jQuery( '<div/>', {
 			class: 'dimensions',
-			html: attachment.height + ' x ' + attachment.width ,
+			html: attachment.height + ' &times; ' + attachment.width ,
 		}).appendTo( $thumbnailDetails );
 
 		jQuery( '<div/>', {
 			class: 'edit-link',
-			html: '<a href="' + attachment.editLink + '">Edit This Image</a>',
+			html: '<a href="' + attachment.editLink + '">Edit Image</a>',
 		}).appendTo( $thumbnailDetails );
 
 	},
