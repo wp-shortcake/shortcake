@@ -64,7 +64,7 @@ class Shortcake_Field_Attachment {
 						<div class="attachment-preview-loading"><ins></ins></div>
 					</div>
 				</div>
-			</div>
+				<div class="thumbnail-details"></div>
 		</script>
 
 		<?php

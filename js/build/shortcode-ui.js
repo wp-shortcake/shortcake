@@ -720,6 +720,38 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		$thumbnail.find( 'img' ).wrap( '<div class="centered"></div>' );
 		this.$container.append( $thumbnail );
 		this.$container.toggleClass( 'has-attachment', true );
+		
+		var $thumbnailDetails = jQuery('.thumbnail-details');
+
+		jQuery( '<strong/>', {
+			class: 'thumbnail-details-title',
+			html: 'ATTACHMENT DETAILS',
+		}).appendTo( $thumbnailDetails );
+
+		jQuery( '<div/>', {
+			class: 'filename',
+			html: attachment.filename,
+		}).appendTo( $thumbnailDetails );
+
+		jQuery( '<div/>', {
+			class: 'date-formatted',
+			html: attachment.dateFormatted,
+		}).appendTo( $thumbnailDetails );
+
+		jQuery( '<div/>', {
+			class: 'size',
+			html: attachment.filesizeHumanReadable ,
+		}).appendTo( $thumbnailDetails );
+
+		jQuery( '<div/>', {
+			class: 'dimensions',
+			html: attachment.height + ' x ' + attachment.width ,
+		}).appendTo( $thumbnailDetails );
+
+		jQuery( '<div/>', {
+			class: 'edit-link',
+			html: '<a href="' + attachment.editLink + '">Edit This Image</a>',
+		}).appendTo( $thumbnailDetails );
 
 	},
 
