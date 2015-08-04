@@ -177,7 +177,6 @@ class Shortcode_UI {
 				'media_frame_toolbar_update_label'  => esc_html__( 'Update', 'shortcode-ui' ),
 				'media_frame_no_attributes_message' => esc_html__( 'There are no attributes to configure for this Post Element.', 'shortcode-ui' ),
 				'edit_tab_label'                    => esc_html__( 'Edit', 'shortcode-ui' ),
-				'preview_tab_label'                 => esc_html__( 'Preview', 'shortcode-ui' ),
 				'mce_view_error'                    => esc_html__( 'Failed to load preview', 'shortcode-ui' ),
 				'search_placeholder'                => esc_html__( 'Search', 'shortcode-ui' ),
 				'insert_content_label'              => esc_html__( 'Insert Content', 'shortcode-ui' ),
