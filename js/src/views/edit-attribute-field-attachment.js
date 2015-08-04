@@ -146,8 +146,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			this.model.set( 'value', null );
 			this.$container.toggleClass( 'has-attachment', false );
 			this.$container.find( '.thumbnail' ).remove();
+			this.updateValue( attachment.id );
 		}
-		this.updateValue( attachment.id );
 		this.frame.close();
 	},
 
