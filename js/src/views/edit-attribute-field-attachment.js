@@ -61,7 +61,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		this.$el.html( this.template( this.model.toJSON() ) );
 
-		this.$container   = this.$el.find( '.shortcake-attachment-preview' );
+		this.$container     = this.$el.find( '.shortcake-attachment-preview' );
+		this.$metaContainer = this.$el.find( '.thumbnail-details-container' );
+
 		var $addButton    = this.$container.find( 'button.add' );
 
 		this.frame = wp.media( {
@@ -116,17 +118,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		$thumbnail.find( 'img' ).wrap( '<div class="centered"></div>' );
 		this.$container.append( $thumbnail );
 		this.$container.toggleClass( 'has-attachment', true );
-		
-		var $thumbnailDetailsContainer = jQuery('.thumbnail-details-container');
 
-		jQuery('<div/>', {
-			class: 'thumbnail-details'
-		}).appendTo( $thumbnailDetailsContainer );
-
-		var $thumbnailDetails = jQuery('.thumbnail-details');
-
-		console.log(  $thumbnailDetailsContainer );
-		console.log(  $thumbnailDetails );
+		this.$metaContainer.empty();
+		var $thumbnailDetails = jQuery('<div class="thumbnail-details"></div>');
 
 		jQuery( '<strong/>', {
 			class: 'thumbnail-details-title',
@@ -157,7 +151,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			class: 'edit-link',
 			html: '<a href="' + attachment.editLink + '">Edit Image</a>',
 		}).appendTo( $thumbnailDetails );
-		
+
+		this.$metaContainer.append( $thumbnailDetails );
 	},
 
 	/**

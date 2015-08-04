@@ -65,7 +65,6 @@ class Shortcake_Field_Attachment {
 					</div>
 				</div>
 				<div class="thumbnail-details-container"></div>
-				
 		</script>
 
 		<?php
