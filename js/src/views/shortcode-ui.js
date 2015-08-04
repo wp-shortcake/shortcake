@@ -69,20 +69,11 @@ var Shortcode_UI = Backbone.View.extend({
 				edit: {
 					label: shortcodeUIData.strings.edit_tab_label,
 					content: new EditShortcodeForm({ model: shortcode })
-				},
-
-				preview: {
-					label: shortcodeUIData.strings.preview_tab_label,
-					content: new ShortcodePreview({ model: shortcode }),
-					open: function() {
-						this.render();
-					}
 				}
 			},
 
 			styles: {
 				group:	'media-router edit-shortcode-tabs',
-				tab:	'media-menu-item edit-shortcode-tab'
 			}
 		});
 
