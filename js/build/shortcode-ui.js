@@ -1153,6 +1153,8 @@ var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefin
 	editAttributeFieldAttachment = require('./edit-attribute-field-attachment.js'),
 	editAttributeFieldPostSelect = require('./edit-attribute-field-post-select.js');
 
+var postMediaFrame = wp.media.view.MediaFrame.Post;
+
 
 /**
  * Single edit shortcode content view.
@@ -1219,6 +1221,19 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 	},
 
+	events: function() {
+		return _.extend( {}, postMediaFrame.prototype.events, {
+			'keyup'                     : 'possiblySelect',
+		} );
+	},
+
+	possiblySelect: function(e) {
+		console.log( e );
+		if ( e.keyCode != 13 ) {
+			return;
+		}
+		console.log( 'return' );
+	},
 });
 
 module.exports = EditShortcodeForm;

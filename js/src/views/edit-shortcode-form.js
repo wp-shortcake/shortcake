@@ -8,6 +8,8 @@ var wp = require('wp'),
 	editAttributeFieldAttachment = require( 'sui-views/edit-attribute-field-attachment' ),
 	editAttributeFieldPostSelect = require( 'sui-views/edit-attribute-field-post-select' );
 
+var postMediaFrame = wp.media.view.MediaFrame.Post;
+
 
 /**
  * Single edit shortcode content view.
@@ -74,6 +76,19 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 	},
 
+	events: function() {
+		return _.extend( {}, postMediaFrame.prototype.events, {
+			'keyup'                     : 'possiblySelect',
+		} );
+	},
+
+	possiblySelect: function(e) {
+		console.log( e );
+		if ( e.keyCode != 13 ) {
+			return;
+		}
+		console.log( 'return' );
+	},
 });
 
 module.exports = EditShortcodeForm;
