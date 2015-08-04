@@ -721,6 +721,12 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$container.append( $thumbnail );
 		this.$container.toggleClass( 'has-attachment', true );
 		
+		var $thumbnailDetailsContainer = jQuery('.thumbnail-details-container');
+
+		jQuery('<div/>', {
+			class: 'thumbnail-details'
+		}).appendTo( $thumbnailDetailsContainer );
+
 		var $thumbnailDetails = jQuery('.thumbnail-details');
 
 		jQuery( '<strong/>', {
@@ -752,7 +758,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			class: 'edit-link',
 			html: '<a href="' + attachment.editLink + '">Edit Image</a>',
 		}).appendTo( $thumbnailDetails );
-
+		
 	},
 
 	/**
@@ -793,6 +799,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		this.$container.toggleClass( 'has-attachment', false );
 		this.$container.find( '.thumbnail' ).remove();
+		this.$el.find( '.thumbnail-details' ).remove();
 	},
 
 }, {
