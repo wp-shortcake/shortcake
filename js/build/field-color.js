@@ -165,8 +165,8 @@ Shortcode = Backbone.Model.extend({
 
 		this.get( 'attrs' ).each( function( attr ) {
 
-			// Skip empty attributes.
-			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
+			// Skip empty attributes
+			if ( ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 )  && ( attr.attributes.type != 'checkbox' ) ) {
 				return;
 			}
 
