@@ -10,7 +10,6 @@ window.shortcodeUIData = {
         "media_frame_toolbar_insert_label":"Insert Element",
         "media_frame_toolbar_update_label":"Update",
         "edit_tab_label":"Edit",
-        "preview_tab_label":"Preview",
         "mce_view_error":"Failed to load preview",
         "search_placeholder":"Search",
         "insert_content_label":"Inner Content"
