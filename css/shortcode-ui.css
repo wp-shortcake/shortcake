@@ -108,6 +108,9 @@
   padding: 0; }
   .edit-shortcode-form .shortcake-attachment-preview:before {
     display: none; }
+  .edit-shortcode-form .shortcake-attachment-preview .thumbnail:hover:after {
+    background: rgba(0, 0, 0, 0.1);
+    transition: all .3s linear; }
   .edit-shortcode-form .shortcake-attachment-preview:not(.has-attachment) {
     border: 2px dashed #DDD;
     border-radius: 2px;

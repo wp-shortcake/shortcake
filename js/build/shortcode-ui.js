@@ -609,6 +609,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	events: {
 		'click .add'       : '_openMediaFrame',
 		'click .remove'    : '_removeAttachment',
+		'click .thumbnail' : '_openMediaFrame',
 		'selectAttachment' : '_selectAttachment',
 	},
 
@@ -745,8 +746,12 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	_selectAttachment: function(e) {
 		var selection  = this.frame.state().get('selection');
 			attachment = selection.first();
-
-		this.updateValue( attachment.id );
+		if ( attachment.id != this.model.get( 'value' ) ){
+			this.model.set( 'value', null );
+			this.$container.toggleClass( 'has-attachment', false );
+			this.$container.find( '.thumbnail' ).remove();
+			this.updateValue( attachment.id );
+		}
 		this.frame.close();
 	},
 
