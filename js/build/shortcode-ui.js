@@ -609,6 +609,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	events: {
 		'click .add'       : '_openMediaFrame',
 		'click .remove'    : '_removeAttachment',
+		'click .thumbnail' : '_openMediaFrame',
 		'selectAttachment' : '_selectAttachment',
 	},
 
@@ -665,9 +666,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		this.$el.html( this.template( this.model.toJSON() ) );
 
-		this.$container     = this.$el.find( '.shortcake-attachment-preview' );
-		this.$metaContainer = this.$el.find( '.thumbnail-details-container' );
-
+		this.$container   = this.$el.find( '.shortcake-attachment-preview' );
+		this.$thumbnailDetailsContainer   = this.$el.find( '.thumbnail-details-container' );
 		var $addButton    = this.$container.find( 'button.add' );
 
 		this.frame = wp.media( {
@@ -723,40 +723,13 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$container.append( $thumbnail );
 		this.$container.toggleClass( 'has-attachment', true );
 
-		this.$metaContainer.empty();
-		var $thumbnailDetails = jQuery('<div class="thumbnail-details"></div>');
+		this.$thumbnailDetailsContainer.find( '.filename' ).text( attachment.filename );
+		this.$thumbnailDetailsContainer.find( '.date-formatted' ).text( attachment.dateFormatted );
+		this.$thumbnailDetailsContainer.find( '.size' ).text( attachment.filesizeHumanReadable );
+		this.$thumbnailDetailsContainer.find( '.dimensions' ).text( attachment.height + ' × ' + attachment.width );
+		this.$thumbnailDetailsContainer.find( '.edit-link a' ).attr( "href", attachment.editLink );
+		this.$thumbnailDetailsContainer.toggleClass( 'has-attachment', true );
 
-		jQuery( '<strong/>', {
-			class: 'thumbnail-details-title',
-			html: 'ATTACHMENT DETAILS',
-		}).appendTo( $thumbnailDetails );
-
-		jQuery( '<div/>', {
-			class: 'filename',
-			html: attachment.filename,
-		}).appendTo( $thumbnailDetails );
-
-		jQuery( '<div/>', {
-			class: 'date-formatted',
-			html: attachment.dateFormatted,
-		}).appendTo( $thumbnailDetails );
-
-		jQuery( '<div/>', {
-			class: 'size',
-			html: attachment.filesizeHumanReadable ,
-		}).appendTo( $thumbnailDetails );
-
-		jQuery( '<div/>', {
-			class: 'dimensions',
-			html: attachment.height + ' &times; ' + attachment.width ,
-		}).appendTo( $thumbnailDetails );
-
-		jQuery( '<div/>', {
-			class: 'edit-link',
-			html: '<a href="' + attachment.editLink + '">Edit Image</a>',
-		}).appendTo( $thumbnailDetails );
-
-		this.$metaContainer.append( $thumbnailDetails );
 	},
 
 	/**
@@ -781,8 +754,12 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	_selectAttachment: function(e) {
 		var selection  = this.frame.state().get('selection');
 			attachment = selection.first();
-
-		this.updateValue( attachment.id );
+		if ( attachment.id != this.model.get( 'value' ) ){
+			this.model.set( 'value', null );
+			this.$container.toggleClass( 'has-attachment', false );
+			this.$container.find( '.thumbnail' ).remove();
+			this.updateValue( attachment.id );
+		}
 		this.frame.close();
 	},
 
@@ -797,7 +774,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		this.$container.toggleClass( 'has-attachment', false );
 		this.$container.find( '.thumbnail' ).remove();
-		this.$el.find( '.thumbnail-details' ).remove();
+		this.$thumbnailDetailsContainer.toggleClass( 'has-attachment', false );
 	},
 
 }, {

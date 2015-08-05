@@ -108,6 +108,9 @@
   padding: 0; }
   .edit-shortcode-form .shortcake-attachment-preview:before {
     display: none; }
+  .edit-shortcode-form .shortcake-attachment-preview .thumbnail:hover:after {
+    background: rgba(0, 0, 0, 0.1);
+    transition: all .3s linear; }
   .edit-shortcode-form .shortcake-attachment-preview:not(.has-attachment) {
     border: 2px dashed #DDD;
     border-radius: 2px;
@@ -170,6 +173,11 @@
   .edit-shortcode-form .shortcake-attachment-preview.has-attachment .button.add {
     display: none; }
   .edit-shortcode-form .shortcake-attachment-preview.has-attachment .button.remove {
+    display: block; }
+
+.edit-shortcode-form .thumbnail-details-container {
+  display: none; }
+  .edit-shortcode-form .thumbnail-details-container.has-attachment {
     display: block; }
 
 @-webkit-keyframes attachment-preview-loading {

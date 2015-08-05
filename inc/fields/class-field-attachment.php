@@ -64,7 +64,15 @@ class Shortcake_Field_Attachment {
 						<div class="attachment-preview-loading"><ins></ins></div>
 					</div>
 				</div>
-				<div class="thumbnail-details-container"></div>
+				<div class="thumbnail-details-container">
+					<strong>Thumbnail Details</strong>
+					<div class="filename"></div>
+					<div class="date-formatted"></div>
+					<div class="size"></div>
+					<div class="dimensions"></div>
+					<div class="edit-link"><a href="#"><?php esc_html_e( 'Edit Attachment', 'shortcode-ui' ); ?></a></div>
+				</div>
+			</div>
 		</script>
 
 		<?php
