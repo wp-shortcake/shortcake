@@ -65,7 +65,7 @@ class Shortcake_Field_Attachment {
 					</div>
 				</div>
 				<div class="thumbnail-details-container">
-					<strong>Thumbnail Details</strong>
+					<strong><?php esc_html_e( 'Thumbnail Details', 'shortcode-ui' ); ?></strong>
 					<div class="filename"></div>
 					<div class="date-formatted"></div>
 					<div class="size"></div>
