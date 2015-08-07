@@ -1222,12 +1222,11 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			t.views.add( '.edit-shortcode-form-fields', messageView );
 		}
 
+		t.$el.focus();
 	},
 
-	events: function() {
-		return _.extend( {}, postMediaFrame.prototype.events, {
-			'keyup'                     : 'possiblySelect',
-		} );
+	events: {
+		'keyup' : 'possiblySelect',
 	},
 
 	possiblySelect: function(e) {
@@ -1237,6 +1236,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 		}
 		console.log( 'return' );
 	},
+
 });
 
 module.exports = EditShortcodeForm;
@@ -1789,7 +1789,6 @@ var Shortcode_UI = Backbone.View.extend({
 		if ( this.controller.props.get('action') === 'update' ) {
 			this.$el.find( '.edit-shortcode-form-cancel' ).remove();
 		}
-
 		return this;
 
 	},
