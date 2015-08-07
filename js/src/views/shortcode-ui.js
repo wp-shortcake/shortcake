@@ -69,6 +69,7 @@ var Shortcode_UI = Backbone.View.extend({
 		if ( this.controller.props.get('action') === 'update' ) {
 			this.$el.find( '.edit-shortcode-form-cancel' ).remove();
 		}
+
 		return this;
 
 	},

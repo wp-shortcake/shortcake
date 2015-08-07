@@ -1156,9 +1156,6 @@ var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefin
 	editAttributeFieldAttachment = require('./edit-attribute-field-attachment.js'),
 	editAttributeFieldPostSelect = require('./edit-attribute-field-post-select.js');
 
-var postMediaFrame = wp.media.view.MediaFrame.Post;
-
-
 /**
  * Single edit shortcode content view.
  */
@@ -1789,6 +1786,7 @@ var Shortcode_UI = Backbone.View.extend({
 		if ( this.controller.props.get('action') === 'update' ) {
 			this.$el.find( '.edit-shortcode-form-cancel' ).remove();
 		}
+
 		return this;
 
 	},
