@@ -109,6 +109,14 @@
 
 }
 
+.edit-shortcode-form .thumbnail-details-container {
+	display: none;
+
+	&.has-attachment {
+		display: block;
+	}
+}
+
 @-webkit-keyframes attachment-preview-loading {
 	0% {
 		margin-left: -60px;
