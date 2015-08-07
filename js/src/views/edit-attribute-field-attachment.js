@@ -5,6 +5,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	events: {
 		'click .add'       : '_openMediaFrame',
 		'click .remove'    : '_removeAttachment',
+		'click .thumbnail' : '_openMediaFrame',
 		'selectAttachment' : '_selectAttachment',
 	},
 
@@ -62,6 +63,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$el.html( this.template( this.model.toJSON() ) );
 
 		this.$container   = this.$el.find( '.shortcake-attachment-preview' );
+		this.$thumbnailDetailsContainer   = this.$el.find( '.thumbnail-details-container' );
 		var $addButton    = this.$container.find( 'button.add' );
 
 		this.frame = wp.media( {
@@ -117,6 +119,13 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$container.append( $thumbnail );
 		this.$container.toggleClass( 'has-attachment', true );
 
+		this.$thumbnailDetailsContainer.find( '.filename' ).text( attachment.filename );
+		this.$thumbnailDetailsContainer.find( '.date-formatted' ).text( attachment.dateFormatted );
+		this.$thumbnailDetailsContainer.find( '.size' ).text( attachment.filesizeHumanReadable );
+		this.$thumbnailDetailsContainer.find( '.dimensions' ).text( attachment.height + ' × ' + attachment.width );
+		this.$thumbnailDetailsContainer.find( '.edit-link a' ).attr( "href", attachment.editLink );
+		this.$thumbnailDetailsContainer.toggleClass( 'has-attachment', true );
+
 	},
 
 	/**
@@ -141,8 +150,12 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	_selectAttachment: function(e) {
 		var selection  = this.frame.state().get('selection');
 			attachment = selection.first();
-
-		this.updateValue( attachment.id );
+		if ( attachment.id != this.model.get( 'value' ) ){
+			this.model.set( 'value', null );
+			this.$container.toggleClass( 'has-attachment', false );
+			this.$container.find( '.thumbnail' ).remove();
+			this.updateValue( attachment.id );
+		}
 		this.frame.close();
 	},
 
@@ -157,6 +170,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		this.$container.toggleClass( 'has-attachment', false );
 		this.$container.find( '.thumbnail' ).remove();
+		this.$thumbnailDetailsContainer.toggleClass( 'has-attachment', false );
 	},
 
 }, {

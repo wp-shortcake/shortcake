@@ -609,6 +609,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	events: {
 		'click .add'       : '_openMediaFrame',
 		'click .remove'    : '_removeAttachment',
+		'click .thumbnail' : '_openMediaFrame',
 		'selectAttachment' : '_selectAttachment',
 	},
 
@@ -666,6 +667,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$el.html( this.template( this.model.toJSON() ) );
 
 		this.$container   = this.$el.find( '.shortcake-attachment-preview' );
+		this.$thumbnailDetailsContainer   = this.$el.find( '.thumbnail-details-container' );
 		var $addButton    = this.$container.find( 'button.add' );
 
 		this.frame = wp.media( {
@@ -721,6 +723,13 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$container.append( $thumbnail );
 		this.$container.toggleClass( 'has-attachment', true );
 
+		this.$thumbnailDetailsContainer.find( '.filename' ).text( attachment.filename );
+		this.$thumbnailDetailsContainer.find( '.date-formatted' ).text( attachment.dateFormatted );
+		this.$thumbnailDetailsContainer.find( '.size' ).text( attachment.filesizeHumanReadable );
+		this.$thumbnailDetailsContainer.find( '.dimensions' ).text( attachment.height + ' × ' + attachment.width );
+		this.$thumbnailDetailsContainer.find( '.edit-link a' ).attr( "href", attachment.editLink );
+		this.$thumbnailDetailsContainer.toggleClass( 'has-attachment', true );
+
 	},
 
 	/**
@@ -745,8 +754,12 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	_selectAttachment: function(e) {
 		var selection  = this.frame.state().get('selection');
 			attachment = selection.first();
-
-		this.updateValue( attachment.id );
+		if ( attachment.id != this.model.get( 'value' ) ){
+			this.model.set( 'value', null );
+			this.$container.toggleClass( 'has-attachment', false );
+			this.$container.find( '.thumbnail' ).remove();
+			this.updateValue( attachment.id );
+		}
 		this.frame.close();
 	},
 
@@ -761,6 +774,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		this.$container.toggleClass( 'has-attachment', false );
 		this.$container.find( '.thumbnail' ).remove();
+		this.$thumbnailDetailsContainer.toggleClass( 'has-attachment', false );
 	},
 
 }, {
@@ -980,17 +994,6 @@ module.exports = sui.views.editAttributeFieldAttachment = editAttributeFieldAtta
 			$('.shortcode-ui-post-select.select2-container').select2( "close" );
 		}
 
-	});
-
-	/**
-	 * Extending the SUI Tabbed View to hide Select2 UI dropdown when previewing the shortcake
-	 */
-	var tabbedView = sui.views.TabbedView;
-	sui.views.TabbedView = tabbedView.extend({
-		tabSwitcher: function() {
-			tabbedView.prototype.tabSwitcher.apply( this, arguments );
-			$('.shortcode-ui-post-select.select2-container').select2( "close" );
-		}
 	});
 
 } )( jQuery );
@@ -1717,7 +1720,6 @@ module.exports = ShortcodePreview;
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null),
 	insertShortcodeList = require('./insert-shortcode-list.js'),
-	TabbedView = require('./tabbed-view.js'),
 	ShortcodePreview = require('./shortcode-preview.js'),
 	EditShortcodeForm = require('./edit-shortcode-form.js'),
 	Toolbar = require('./media-toolbar.js'),
@@ -1781,28 +1783,7 @@ var Shortcode_UI = Backbone.View.extend({
 
 	renderEditShortcodeView: function() {
 		var shortcode = this.controller.props.get( 'currentShortcode' );
-		var view = new TabbedView({
-			tabs: {
-				edit: {
-					label: shortcodeUIData.strings.edit_tab_label,
-					content: new EditShortcodeForm({ model: shortcode })
-				},
-
-				preview: {
-					label: shortcodeUIData.strings.preview_tab_label,
-					content: new ShortcodePreview({ model: shortcode }),
-					open: function() {
-						this.render();
-					}
-				}
-			},
-
-			styles: {
-				group:	'media-router edit-shortcode-tabs',
-				tab:	'media-menu-item edit-shortcode-tab'
-			}
-		});
-
+		var view = new EditShortcodeForm({ model: shortcode });
 		this.$el.append( view.render().el );
 
 		if ( this.controller.props.get('action') === 'update' ) {
@@ -1841,130 +1822,4 @@ var Shortcode_UI = Backbone.View.extend({
 module.exports = Shortcode_UI;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":9,"./edit-shortcode-form.js":13,"./insert-shortcode-list.js":15,"./media-toolbar.js":17,"./search-shortcode.js":18,"./shortcode-preview.js":19,"./tabbed-view.js":21}],21:[function(require,module,exports){
-(function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
-var sui = require('./../utils/sui.js');
-var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
-
-/**
- * Abstraction to manage tabbed content. Tab parameters (e.g., label) along with
- * views for associated content are passed to initialize the tabbed view.
- *
- * @class TabbedView
- * @constructor
- * @extends Backbone.View
- * @params [options]
- * @params [options.tabs] {Object} A hash of key:value pairs, where each value
- *         is itself an object with the following properties:
- *
- * label: The label to display on the tab. content: The `Backbone.View`
- * associated with the tab content.
- */
-var TabbedView = Backbone.View.extend({
-	template : wp.template('tabbed-view-base'),
-	tabs : {},
-
-	events : {
-		'click [data-role="tab"]' : function(event) {
-			this.tabSwitcher(event);
-		}
-	},
-
-	initialize : function(options) {
-		Backbone.View.prototype.initialize.apply(this, arguments);
-
-		_.defaults(this.options = (options || {}), {
-			styles : {
-				group : '',
-				tab : ''
-			}
-		});
-
-		this.tabs = _.extend(this.tabs, options.tabs);
-	},
-
-	/**
-	 * @method render
-	 * @chainable
-	 * @returns {TabbedView}
-	 */
-	render : function() {
-		var $content;
-
-		this.$el.html(this.template({
-			tabs : this.tabs,
-			styles : this.options.styles
-		}));
-
-		$content = this.$('[data-role="tab-content"]');
-		$content.empty();
-
-		_.each(this.tabs, function(tab) {
-			var $el = tab.content.render().$el;
-			$el.hide();
-			$content.append($el);
-		});
-
-		this.select(0);
-
-		return this;
-	},
-
-	/**
-	 * Switches tab when previewing or editing
-	 */
-	tabSwitcher : function(event) {
-		event.stopPropagation();
-		event.preventDefault();
-
-		var target = $(event.currentTarget).attr('data-target');
-
-		this.select(target);
-	},
-
-	/**
-	 * Programmatically select (activate) a specific tab. Used internally to
-	 * process tab click events.
-	 *
-	 * @method select
-	 * @param selector
-	 *            {number|string} The index (zero based) or key of the target
-	 *            tab.
-	 */
-	select : function(selector) {
-		var index = 0;
-		var target = null;
-		var tab;
-
-		selector = selector || 0;
-
-		_.each(this.tabs, function(tab, key) {
-			tab.content.$el.hide();
-
-			if (selector === key || selector === index) {
-				target = key;
-			}
-
-			index = index + 1;
-		});
-
-		this.$('[data-role="tab"]').removeClass('active');
-
-		if (target) {
-			tab = this.tabs[target];
-
-			this.$('[data-role="tab"][data-target="' + target + '"]').addClass(
-					'active');
-
-			tab.content.$el.show();
-			(typeof tab.open == 'function') && tab.open.call(tab.content);
-		}
-	}
-});
-
-sui.views.TabbedView = TabbedView;
-module.exports = TabbedView;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":9}]},{},[7]);
+},{"./../utils/sui.js":9,"./edit-shortcode-form.js":13,"./insert-shortcode-list.js":15,"./media-toolbar.js":17,"./search-shortcode.js":18,"./shortcode-preview.js":19}]},{},[7]);

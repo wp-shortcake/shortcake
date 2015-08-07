@@ -190,15 +190,4 @@
 
 	});
 
-	/**
-	 * Extending the SUI Tabbed View to hide Select2 UI dropdown when previewing the shortcake
-	 */
-	var tabbedView = sui.views.TabbedView;
-	sui.views.TabbedView = tabbedView.extend({
-		tabSwitcher: function() {
-			tabbedView.prototype.tabSwitcher.apply( this, arguments );
-			$('.shortcode-ui-post-select.select2-container').select2( "close" );
-		}
-	});
-
 } )( jQuery );

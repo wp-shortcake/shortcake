@@ -11,6 +11,11 @@
 		display: none;
 	}
 
+	.thumbnail:hover:after { 
+		background: rgba(0,0,0,0.1);
+		transition: all .3s linear;
+	 }
+
 	&:not( .has-attachment ) {
 		border: 2px dashed #DDD;
 		border-radius: 2px;
@@ -102,6 +107,14 @@
 		}
 	}
 
+}
+
+.edit-shortcode-form .thumbnail-details-container {
+	display: none;
+
+	&.has-attachment {
+		display: block;
+	}
 }
 
 @-webkit-keyframes attachment-preview-loading {
