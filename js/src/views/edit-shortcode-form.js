@@ -8,6 +8,7 @@ var wp = require('wp'),
 	editAttributeFieldAttachment = require( 'sui-views/edit-attribute-field-attachment' ),
 	editAttributeFieldPostSelect = require( 'sui-views/edit-attribute-field-post-select' );
 
+
 /**
  * Single edit shortcode content view.
  */

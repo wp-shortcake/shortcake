@@ -1156,6 +1156,7 @@ var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefin
 	editAttributeFieldAttachment = require('./edit-attribute-field-attachment.js'),
 	editAttributeFieldPostSelect = require('./edit-attribute-field-post-select.js');
 
+
 /**
  * Single edit shortcode content view.
  */
