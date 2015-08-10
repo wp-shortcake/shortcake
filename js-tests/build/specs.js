@@ -74,6 +74,11 @@ describe( "Shortcode Model", function() {
 				type:        'text',
 				value:       'test value',
 				placeholder: 'test placeholder',
+			}, {
+				attr:        'checkbox',
+				label:       'Attribute',
+				type:        'checkbox',
+				value:       'true',
 			}
 		],
 		inner_content: {
@@ -94,8 +99,9 @@ describe( "Shortcode Model", function() {
 
 	it( 'Attribute data set correctly..', function() {
 		expect( shortcode.get( 'attrs' ) instanceof ShortcodeAttributes ).toEqual( true );
-		expect( shortcode.get( 'attrs' ).length ).toEqual( 1 );
+		expect( shortcode.get( 'attrs' ).length ).toEqual( 2 );
 		expect( shortcode.get( 'attrs' ).first().get('type') ).toEqual( data.attrs[0].type );
+		expect( shortcode.get( 'attrs' ).last().get('type') ).toEqual( data.attrs[1].type );
 	});
 
 	it( 'Inner content set correctly..', function() {
@@ -114,16 +120,19 @@ describe( "Shortcode Model", function() {
 		var _shortcode = jQuery.extend( true, {}, shortcode );
 
 		// Test with attribute and with content.
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]test content[/test_shortcode]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value" checkbox="true"]test content[/test_shortcode]' );
 
 		// Test without content.
 		_shortcode.get('inner_content').unset( 'value' );
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value" checkbox="true"]' );
 
 		// Test without attributes
 		_shortcode.get( 'attrs' ).first().unset( 'value' );
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode checkbox="true"]' );
 
+		// Test with falsey checkbox
+		_shortcode.get( 'attrs' ).last().set( 'value', 'false' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode checkbox="false"]' );
 	});
 
 });
@@ -449,9 +458,11 @@ Shortcode = Backbone.Model.extend({
 
 		this.get( 'attrs' ).each( function( attr ) {
 
-			// Skip empty attributes.
-			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
+			// Skip empty attributes
+			if ( ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 )  && ( attr.attributes.type != 'checkbox' ) ) {
 				return;
+			} else if ( ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 )  && ( attr.attributes.type == 'checkbox' ) ) {
+				attr.set( 'value', 'false' );
 			}
 
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
