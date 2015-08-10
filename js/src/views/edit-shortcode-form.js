@@ -75,7 +75,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 	},
 
 	possiblySelect: function(e) {
-		console.log( e );
+		console.log( jQuery(document.activeElement) );
 		if ( ! this.$el.is(':visible') ) {
 			jQuery('body').unbind('keyup.editShortcodeForm');
 		} else if ( e.keyCode == 13 ) {
