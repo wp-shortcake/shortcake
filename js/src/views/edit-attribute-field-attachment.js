@@ -43,12 +43,13 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			// Cache for later.
 			editAttributeFieldAttachment.setInCache( id, attachment );
 			self._renderPreview( attachment );
-			self.$container.removeClass( 'loading' );
 
 			// Call the updateValue() function, to trigger any listeners
 			// hooked on it.
 			self.triggerCallbacks();
-		} );
+		} ).always( function( attachment ) {
+			self.$container.removeClass( 'loading' );
+		});
 	},
 
 	render: function() {
