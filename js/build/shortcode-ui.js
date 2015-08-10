@@ -1219,19 +1219,16 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			t.views.add( '.edit-shortcode-form-fields', messageView );
 		}
 
-		t.$el.focus();
-	},
-
-	events: {
-		'keyup' : 'possiblySelect',
+		jQuery('body').on('keyup.editShortcodeForm', function(e) { t.possiblySelect(e); });
 	},
 
 	possiblySelect: function(e) {
 		console.log( e );
-		if ( e.keyCode != 13 ) {
-			return;
+		if ( ! this.$el.is(':visible') ) {
+			jQuery('body').unbind('keyup.editShortcodeForm');
+		} else if ( e.keyCode == 13 ) {
+			console.log( 'shortcode inserted here' );
 		}
-		console.log( 'return' );
 	},
 
 });
