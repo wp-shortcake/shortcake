@@ -48,7 +48,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			// Call the updateValue() function, to trigger any listeners
 			// hooked on it.
 			self.triggerCallbacks();
-		} );
+		} ).always( function( attachment ) {
+			self.$container.removeClass( 'loading' );
+		});
 	},
 
 	render: function() {
