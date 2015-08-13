@@ -184,7 +184,11 @@ var shortcodeViewConstructor = {
 
 		if ( matches[3] ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
-			inner_content.set( 'value', this.unAutoP( matches[3] ) );
+			if ( inner_content ) {
+				inner_content.set( 'value', this.unAutoP( matches[3] ) );
+			} else {
+				currentShortcode.set( 'inner_content_backup', this.unAutoP( matches[3] ) );
+			}
 		}
 
 		return currentShortcode;
