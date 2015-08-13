@@ -209,6 +209,8 @@ Shortcode = Backbone.Model.extend({
 
 		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );
+		} else if ( this.get( 'inner_content_backup' ) ) {
+			content = this.get( 'inner_content_backup' );
 		}
 
 		if ( attrs.length > 0 ) {
@@ -452,7 +454,11 @@ var shortcodeViewConstructor = {
 
 		if ( matches[3] ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
-			inner_content.set( 'value', this.unAutoP( matches[3] ) );
+			if ( inner_content ) {
+				inner_content.set( 'value', this.unAutoP( matches[3] ) );
+			} else {
+				currentShortcode.set( 'inner_content_backup', this.unAutoP( matches[3] ) );
+			}
 		}
 
 		return currentShortcode;
