@@ -145,7 +145,7 @@ describe( 'Shortcode View Constructor', function(){
 			shortcode_tag: 'no_inner_content',
 			attrs: [
 				{
-					attr:        'attr',
+					attr:        'foo',
 					label:       'Attribute',
 					type:        'text',
 					value:       'test value',
@@ -424,6 +424,7 @@ Shortcode = Backbone.Model.extend({
 		label: '',
 		shortcode_tag: '',
 		attrs: new ShortcodeAttributes,
+		inner_content: new InnerContent( { type: '' } ),
 	},
 
 	/**
