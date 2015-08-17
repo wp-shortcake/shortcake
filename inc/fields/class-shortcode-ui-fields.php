@@ -1,16 +1,35 @@
 <?php
 
+/**
+ * Primary controller class for default Shortcake fields
+ */
 class Shortcode_UI_Fields {
 
+	/**
+	 * Shortcake Fields controller instance.
+	 *
+	 * @access private
+	 * @var object
+	 */
 	private static $instance;
 
-	// Default Field Settings.
+	/**
+	 * Default settings for each field
+	 *
+	 * @access private
+	 * @var array
+	 */
 	private $field_defaults = array(
 		'template' => 'shortcode-ui-field-text',
 		'view'     => 'editAttributeField',
 	);
 
-	// Field Settings.
+	/**
+	 * Settings for default Fields.
+	 *
+	 * @access private
+	 * @var array
+	 */
 	private $fields = array(
 		'text' => array(),
 		'textarea' => array(
@@ -37,8 +56,18 @@ class Shortcode_UI_Fields {
 		'date' => array(
 			'template' => 'shortcode-ui-field-date',
 		),
+		'range' => array(
+			'template' => 'shortcode-ui-field-range',
+		),
 	);
 
+	/**
+	 * Get instance of Shortcake Field controller.
+	 *
+	 * Instantiates object on the fly when not already loaded.
+	 *
+	 * @return object
+	 */
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
@@ -47,14 +76,16 @@ class Shortcode_UI_Fields {
 		return self::$instance;
 	}
 
+	/**
+	 * Set up actions needed for default fields
+	 */
 	private function setup_actions() {
 		add_action( 'init', array( $this, 'action_init' ) );
 		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ), 100 );
 	}
 
 	/**
-	 * Init.
-	 * @return null
+	 * Perform setup actions.
 	 */
 	public function action_init() {
 
@@ -81,10 +112,11 @@ class Shortcode_UI_Fields {
 		return $this->fields;
 	}
 
+	/**
+	 * Add localization data needed for default fields
+	 */
 	public function action_enqueue_shortcode_ui() {
-
 		wp_localize_script( 'shortcode-ui', 'shortcodeUIFieldData', $this->fields );
-
 	}
 
 }

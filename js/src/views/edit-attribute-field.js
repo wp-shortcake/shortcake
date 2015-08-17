@@ -16,6 +16,7 @@ var editAttributeField = Backbone.View.extend( {
 		'change input[type=number]':   'inputChanged',
 		'change input[type=date]':     'inputChanged',
 		'change input[type=url]':      'inputChanged',
+		'input input[type=range]':     'inputChanged',
 	},
 
 	render: function() {
@@ -61,7 +62,7 @@ var editAttributeField = Backbone.View.extend( {
 	 */
 	inputChanged: function( e ) {
 
-		if ( this.getValue( 'attr' ) ) {
+		if ( this.model.get( 'attr' ) ) {
 			var $el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
 		} else {
 			var $el = this.$el.find( '[name="inner_content"]' );
@@ -71,6 +72,11 @@ var editAttributeField = Backbone.View.extend( {
 			this.setValue( $el.filter(':checked').first().val() );
 		} else if ( 'checkbox' === this.model.attributes.type ) {
 			this.setValue( $el.is( ':checked' ) );
+		}  else if ( 'range' === this.model.attributes.type ) {
+			var rangeId =  '#' + e.target.id + '_indicator';
+			var rangeValue = e.target.value;
+			document.querySelector( rangeId ).value = rangeValue;
+			this.setValue( $el.val() );
 		} else {
 			this.setValue( $el.val() );
 		}
