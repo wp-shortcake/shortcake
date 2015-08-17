@@ -99,6 +99,9 @@
     .edit-shortcode-form .field-inline label {
       display: inline-block; }
 
+.edit-shortcode-form .shortcake-attachments .attachment {
+  width: 11.11%; }
+
 .edit-shortcode-form .shortcake-attachment-preview {
   width: 150px;
   height: 150px;

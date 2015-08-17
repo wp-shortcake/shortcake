@@ -82,6 +82,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$el.html( this.template( this.model.toJSON() ) );
 
 		this.$container = this.$el.find( '.shortcake-attachments' );
+		this.$uploader = this.$container.find( 'li.attachment:not(.has-attachment)' );
 		var $addButton = this.$container.find( 'button.add' );
 
 		this.frame = wp.media( {
@@ -106,7 +107,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	 */
 	_renderPreview: function( attachment ) {
 
-		var $node = this.$container.find( 'li.attachment:not(.has-attachment)' ).clone(),
+		var $node = this.$uploader.clone(),
 			$thumbnailPreviewContainer = $node.find('.shortcake-attachment-preview'),
 			$thumbnail = jQuery('<div class="thumbnail"></div>');
 
@@ -173,6 +174,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		if ( ! this.model.get( 'multiple' ) ) {
 			selected = selection.first().get('id');
 			selected = selected.toString();
+			// hide upload button
+			this.$uploader.detach();
 		} else {
 			current  = this.model.get( 'value' );
 			selected = (current) ? current.split(', ') : [];
@@ -224,6 +227,11 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		$attachment.find('.has-attachment').toggleClass( 'has-attachment', false );
 		$attachment.remove();
+
+		if ( ! this.model.get( 'multiple' ) ) {
+			// append upload button
+			this.$container.append(this.$uploader);
+		}
 	},
 
 }, {
