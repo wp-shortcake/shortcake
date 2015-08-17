@@ -116,7 +116,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		var $node = this.$container.find( 'li.attachment:not(.has-attachment)' ).clone();
 		var $thumbnailPreviewContainer = $node.find('.shortcake-attachment-preview');
-		var $thumbnailDetailsContainer = $node.find('.thumbnail-details-container');
 		var $thumbnail = jQuery('<div class="thumbnail"></div>');
 
 		if ( 'image' !== attachment.type ) {
@@ -150,13 +149,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		$thumbnailPreviewContainer.append($thumbnail);
 		$thumbnailPreviewContainer.toggleClass( 'has-attachment', true );		
-
-		$thumbnailDetailsContainer.find( '.filename' ).text( attachment.filename );
-		$thumbnailDetailsContainer.find( '.date-formatted' ).text( attachment.dateFormatted );
-		$thumbnailDetailsContainer.find( '.size' ).text( attachment.filesizeHumanReadable );
-		$thumbnailDetailsContainer.find( '.dimensions' ).text( attachment.height + ' × ' + attachment.width );
-		$thumbnailDetailsContainer.find( '.edit-link a' ).attr( "href", attachment.editLink );
-		$thumbnailDetailsContainer.toggleClass( 'has-attachment', true );
 
 		$node.attr('data-attachment-id', attachment.id);
 		$node.toggleClass( 'has-attachment', true );
