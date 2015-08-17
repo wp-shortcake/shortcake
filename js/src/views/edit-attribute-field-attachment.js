@@ -16,38 +16,57 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	 *
 	 * @param {int} id Attachment ID
 	 */
-	updateValue: function( id ) {
+	updateValue: function( ids ) {
 
-		if ( ! id ) {
+		if ( ! ids ) {
 			return;
 		}
 
-		this.setValue( id );
+		this.setValue( ids );
 
-		var self = this;
+		var self = this,
+			ids = ids.split(', '),		
+			nonCached = [];
 
-		if ( editAttributeFieldAttachment.getFromCache( id ) ) {
-			self._renderPreview( editAttributeFieldAttachment.getFromCache( id ) );
+		jQuery.each( ids, function(index, id) {
+
+			if ( editAttributeFieldAttachment.getFromCache( id ) ) {
+				self._renderPreview( editAttributeFieldAttachment.getFromCache( id ) );
+				return;
+				// Call the updateValue() function, to trigger any listeners
+				// hooked on it.
+				self.triggerCallbacks();
+			} else {
+				nonCached.push(id);
+			}
+		})
+
+		if ( nonCached.length == 0 ) {
 			return;
-
-			// Call the updateValue() function, to trigger any listeners
-			// hooked on it.
-			self.triggerCallbacks();
 		}
-
+	
 		this.$container.addClass( 'loading' );
 
-		wp.ajax.post( 'get-attachment', {
-			'id': id
-		} ).done( function( attachment ) {
-			// Cache for later.
-			editAttributeFieldAttachment.setInCache( id, attachment );
-			self._renderPreview( attachment );
+		query = {
+			'post_mime_type' : 'image',
+			'post__in' : nonCached
+		};
+
+		wp.ajax.post( 'query-attachments', {
+			'query': query
+		} ).done( function( attachments ) {
+			// Fetch non-cached data
+			jQuery.each( attachments, function( index, attachment ) {
+				console.log('FETCH: ', attachment.id, typeof(attachment.id));
+				// Cache for later.
+				editAttributeFieldAttachment.setInCache( attachment.id, attachment );
+				self._renderPreview( attachment );
+			})			
 
 			// Call the updateValue() function, to trigger any listeners
 			// hooked on it.
 			self.triggerCallbacks();
-		} ).always( function( attachment ) {
+		} ).always( function( attachments ) {
 			self.$container.removeClass( 'loading' );
 		});
 	},
@@ -63,19 +82,27 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		this.$el.html( this.template( this.model.toJSON() ) );
 
-		this.$container   = this.$el.find( '.shortcake-attachment-preview' );
-		this.$thumbnailDetailsContainer   = this.$el.find( '.thumbnail-details-container' );
-		var $addButton    = this.$container.find( 'button.add' );
+		this.$container = this.$el.find( '.shortcake-attachments' );
+		var $addButton = this.$container.find( 'button.add' );
+
+		this.mediaFrameQuery = {
+			'post_mime_type' : 'image',
+			'post__not_in' : this.model.get( 'value' )
+		};
 
 		this.frame = wp.media( {
-			multiple: false,
+			multiple: this.model.get( 'multiple' ),
 			title: this.model.get( 'frameTitle' ),
+			query: this.mediaFrameQuery,
 			library: {
 				type: this.model.get( 'libraryType' ),
 			},
+			button: {
+				text: 'Add Image',
+			},
 		} );
 
-		// Add initial Attachment if available.
+ 		// Add initial Attachment if available.
 		this.updateValue( this.model.get( 'value' ) );
 
 	},
@@ -87,6 +114,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	 */
 	_renderPreview: function( attachment ) {
 
+		var $node = this.$container.find( 'li.attachment:not(.has-attachment)' ).clone();
+		var $thumbnailPreviewContainer = $node.find('.shortcake-attachment-preview');
+		var $thumbnailDetailsContainer = $node.find('.thumbnail-details-container');
 		var $thumbnail = jQuery('<div class="thumbnail"></div>');
 
 		if ( 'image' !== attachment.type ) {
@@ -117,16 +147,21 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		}
 
 		$thumbnail.find( 'img' ).wrap( '<div class="centered"></div>' );
-		this.$container.append( $thumbnail );
-		this.$container.toggleClass( 'has-attachment', true );
 
-		this.$thumbnailDetailsContainer.find( '.filename' ).text( attachment.filename );
-		this.$thumbnailDetailsContainer.find( '.date-formatted' ).text( attachment.dateFormatted );
-		this.$thumbnailDetailsContainer.find( '.size' ).text( attachment.filesizeHumanReadable );
-		this.$thumbnailDetailsContainer.find( '.dimensions' ).text( attachment.height + ' × ' + attachment.width );
-		this.$thumbnailDetailsContainer.find( '.edit-link a' ).attr( "href", attachment.editLink );
-		this.$thumbnailDetailsContainer.toggleClass( 'has-attachment', true );
+		$thumbnailPreviewContainer.append($thumbnail);
+		$thumbnailPreviewContainer.toggleClass( 'has-attachment', true );		
 
+		$thumbnailDetailsContainer.find( '.filename' ).text( attachment.filename );
+		$thumbnailDetailsContainer.find( '.date-formatted' ).text( attachment.dateFormatted );
+		$thumbnailDetailsContainer.find( '.size' ).text( attachment.filesizeHumanReadable );
+		$thumbnailDetailsContainer.find( '.dimensions' ).text( attachment.height + ' × ' + attachment.width );
+		$thumbnailDetailsContainer.find( '.edit-link a' ).attr( "href", attachment.editLink );
+		$thumbnailDetailsContainer.toggleClass( 'has-attachment', true );
+
+		$node.attr('data-attachment-id', attachment.id);
+		$node.toggleClass( 'has-attachment', true );
+
+		this.$container.prepend( $node );
 	},
 
 	/**
@@ -149,13 +184,32 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	 *
 	 */
 	_selectAttachment: function(e) {
-		var selection  = this.frame.state().get('selection');
-			attachment = selection.first();
-		if ( attachment.id != this.model.get( 'value' ) ){
+		var selection = this.frame.state().get('selection');
+		var selected  = null;
+
+		if ( ! this.model.get( 'multiple' ) ) {
+			selected = selection.first().get('id');
+			selected = selected.toString();
+		} else {
+			selected  = [];
+			selection.map( function( attachment ) {
+			    attachment = attachment.toJSON();
+			    selected.push(attachment.id);
+			});
+			
+			if (this.model.get( 'value' )) {
+				current  = this.model.get( 'value' ).split(', ');
+				selected = _.union(selected, current);		
+			}			
+
+			selected = selected.join(', ');
+		}
+
+		if ( selected != this.model.get( 'value' ) ){
 			this.model.set( 'value', null );
 			this.$container.toggleClass( 'has-attachment', false );
-			this.$container.find( '.thumbnail' ).remove();
-			this.updateValue( attachment.id );
+			this.$container.find( 'li.has-attachment' ).remove();
+			this.updateValue( selected );
 		}
 		this.frame.close();
 	},
@@ -167,11 +221,24 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	_removeAttachment: function(e) {
 		e.preventDefault();
 
-		this.model.set( 'value', null );
+		var $attachment = jQuery(e.target).parents('li.attachment'),
+		    $id = $attachment.attr('data-attachment-id');
+			$attachmentIds = this.model.get( 'value' ).split(', ');
 
-		this.$container.toggleClass( 'has-attachment', false );
-		this.$container.find( '.thumbnail' ).remove();
-		this.$thumbnailDetailsContainer.toggleClass( 'has-attachment', false );
+		index = $attachmentIds.indexOf($id);
+
+		if (index > -1) {
+		    $attachmentIds.splice(index, 1);
+		}
+
+		if ( $attachmentIds.length > 0 ) {
+			this.setValue( $attachmentIds.join(', ') );
+		} else {
+			this.model.set( 'value', null );
+		}
+
+		$attachment.find('.has-attachment').toggleClass( 'has-attachment', false );
+		$attachment.remove();
 	},
 
 }, {

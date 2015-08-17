@@ -97,6 +97,7 @@ add_action( 'init', function() {
 					'libraryType' => array( 'image' ),
 					'addButton'   => 'Select Image',
 					'frameTitle'  => 'Select Image',
+					'multiple' => true,
 				),
 
 				array(
