@@ -47,17 +47,16 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	
 		this.$container.addClass( 'loading' );
 
-		query = {
+		queryArgs = {
 			'post_mime_type' : 'image',
 			'post__in' : nonCached
 		};
 
 		wp.ajax.post( 'query-attachments', {
-			'query': query
+			'query': queryArgs
 		} ).done( function( attachments ) {
 			// Fetch non-cached data
 			jQuery.each( attachments, function( index, attachment ) {
-				console.log('FETCH: ', attachment.id, typeof(attachment.id));
 				// Cache for later.
 				editAttributeFieldAttachment.setInCache( attachment.id, attachment );
 				self._renderPreview( attachment );
@@ -85,26 +84,19 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.$container = this.$el.find( '.shortcake-attachments' );
 		var $addButton = this.$container.find( 'button.add' );
 
-		this.mediaFrameQuery = {
-			'post_mime_type' : 'image',
-			'post__not_in' : this.model.get( 'value' )
-		};
-
 		this.frame = wp.media( {
 			multiple: this.model.get( 'multiple' ),
 			title: this.model.get( 'frameTitle' ),
-			query: this.mediaFrameQuery,
 			library: {
 				type: this.model.get( 'libraryType' ),
 			},
 			button: {
 				text: 'Add Image',
-			},
+			}
 		} );
 
  		// Add initial Attachment if available.
 		this.updateValue( this.model.get( 'value' ) );
-
 	},
 
 	/**
@@ -114,9 +106,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	 */
 	_renderPreview: function( attachment ) {
 
-		var $node = this.$container.find( 'li.attachment:not(.has-attachment)' ).clone();
-		var $thumbnailPreviewContainer = $node.find('.shortcake-attachment-preview');
-		var $thumbnail = jQuery('<div class="thumbnail"></div>');
+		var $node = this.$container.find( 'li.attachment:not(.has-attachment)' ).clone(),
+			$thumbnailPreviewContainer = $node.find('.shortcake-attachment-preview'),
+			$thumbnail = jQuery('<div class="thumbnail"></div>');
 
 		if ( 'image' !== attachment.type ) {
 
@@ -173,7 +165,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	/**
 	 * When an attachment is selected from the media frame, update the model value.
-	 *
 	 */
 	_selectAttachment: function(e) {
 		var selection = this.frame.state().get('selection');
@@ -183,16 +174,13 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			selected = selection.first().get('id');
 			selected = selected.toString();
 		} else {
-			selected  = [];
+			current  = this.model.get( 'value' );
+			selected = (current) ? current.split(', ') : [];
+
 			selection.map( function( attachment ) {
 			    attachment = attachment.toJSON();
 			    selected.push(attachment.id);
-			});
-			
-			if (this.model.get( 'value' )) {
-				current  = this.model.get( 'value' ).split(', ');
-				selected = _.union(selected, current);		
-			}			
+			});	
 
 			selected = selected.join(', ');
 		}
@@ -203,6 +191,11 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			this.$container.find( 'li.has-attachment' ).remove();
 			this.updateValue( selected );
 		}
+		/**
+		 * Fix duplicate insert by event
+		 * @TODO find better solution?
+		 */
+		this.frame.off('select');		
 		this.frame.close();
 	},
 
