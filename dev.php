@@ -54,7 +54,16 @@ add_action( 'init', function() {
 			<p style="margin:0; padding: 0;">
 				<b>Content:</b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
 				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
-				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
+				<b>Images:</b> 
+				<ul>
+					<?php 
+						$attachments = explode(', ', $attr['attachment']);
+						foreach ($attachments as $attachment) {
+							echo '<li>'. wp_get_attachment_image( $attachment , array( 50, 50 ) ) .'</li>';
+						} 
+					?>
+				</ul>
+				
 			</p>
 		</section>
 
