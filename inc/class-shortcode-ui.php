@@ -65,7 +65,6 @@ class Shortcode_UI {
 	 * Setup plugin actions.
 	 */
 	private function setup_actions() {
-		add_action( 'init',                  array( $this, 'action_init' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
@@ -130,9 +129,20 @@ class Shortcode_UI {
 	 * Enqueue scripts and styles used in the admin.
 	 *
 	 * Editor styles needs to be added before wp_enqueue_editor.
+	 *
+	 * @param array $editor_supports Whether or not the editor being enqueued has 'tinymce' or 'quicktags'
 	 */
-	public function action_admin_enqueue_scripts() {
+	public function action_admin_enqueue_scripts( $editor_supports ) {
 		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
+
+		/**
+		 * Register shortcode UI for shortcodes.
+		 *
+		 * Can be used to register shortcode UI only when an editor is being enqueued.
+		 *
+		 * @param array $editor_supports
+		 */
+		do_action( 'register_shortcode_ui', $editor_supports );
 	}
 
 	/**
