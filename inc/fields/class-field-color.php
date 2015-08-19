@@ -54,7 +54,6 @@ class Shortcake_Field_Color {
 	 */
 	private function setup_actions() {
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ), 100 );
 		add_action( 'shortcode_ui_loaded_editor', array( $this, 'load_template' ) );
 	}
 
@@ -83,7 +82,6 @@ class Shortcake_Field_Color {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -94,21 +92,6 @@ class Shortcake_Field_Color {
 	 */
 	public function filter_shortcode_ui_fields( $fields ) {
 		return array_merge( $fields, $this->fields );
-	}
-
-	/**
-	 * Enqueue scripts needed for Color field
-	 */
-	public function action_admin_enqueue_scripts() {
-
-		if ( ! $this->color_attribute_present() ) {
-			return;
-		}
-
-		$script = plugins_url( 'js/build/field-color.js', dirname( dirname( __FILE__ ) ) );
-
-		wp_enqueue_script( 'shortcake-field-color', $script, array( 'shortcode-ui' ) );
-
 	}
 
 	/**
