@@ -181,7 +181,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
-	grunt.registerTask( 'scripts', [ 'jshint', 'browserify', 'jasmine' ] );
+	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine', 'jshint' ] );
 	grunt.registerTask( 'styles', [ 'sass' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );

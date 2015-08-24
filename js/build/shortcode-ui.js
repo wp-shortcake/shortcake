@@ -313,7 +313,7 @@ var shortcodeViewConstructor = {
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
 			if ( innerContent ) {
-				innerContent.set('value', options.content)
+				innerContent.set('value', options.content);
 			}
 		}
 
@@ -514,7 +514,7 @@ var shortcodeViewConstructor = {
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
 				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content)
+					inner_content.set('value', options.shortcode.content);
 				}
 			}
 
@@ -600,7 +600,7 @@ module.exports = shortcodeViewConstructor;
 var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {
-	shortcodes: new Shortcodes,
+	shortcodes: new Shortcodes(),
 	views: {},
 	controllers: {},
 };
@@ -639,10 +639,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		if ( editAttributeFieldAttachment.getFromCache( id ) ) {
 			self._renderPreview( editAttributeFieldAttachment.getFromCache( id ) );
 			return;
-
-			// Call the updateValue() function, to trigger any listeners
-			// hooked on it.
-			self.triggerCallbacks();
 		}
 
 		this.$container.addClass( 'loading' );
@@ -722,7 +718,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 				width:  attachmentThumb.width,
 				height: attachmentThumb.height,
 				alt:    attachment.alt,
-			} ) .appendTo( $thumbnail )
+			} ) .appendTo( $thumbnail );
 
 		}
 
@@ -954,7 +950,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 						.val()
 						.split(',')
 						.map( function (str) { return str.trim(); } )
-						.map( function (str) { return parseInt( str ); } )
+						.map( function (str) { return parseInt( str ); } );
 
 					if ( ids.length < 1 ) {
 						return;
@@ -962,10 +958,11 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 					// Check if there is already cached data.
 					for ( var i = 0; i < ids.length; i++ ) {
-						if ( cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) ) ) {
+						cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) );
+						if ( cached ) {
 							parsedData.push( cached );
 						}
-					};
+					}
 
 					// If not multiple - return single value if we have one.
 					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
@@ -1117,7 +1114,7 @@ var editAttributeField = Backbone.View.extend( {
 		this.$el.html( this.template( data ) );
 		this.triggerCallbacks();
 
-		return this
+		return this;
 	},
 
 	/**
@@ -1129,10 +1126,12 @@ var editAttributeField = Backbone.View.extend( {
 	 */
 	inputChanged: function( e ) {
 
+		var $el;
+
 		if ( this.model.get( 'attr' ) ) {
-			var $el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
+			$el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
 		} else {
-			var $el = this.$el.find( '[name="inner_content"]' );
+			$el = this.$el.find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {
@@ -1260,7 +1259,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 				attr_raw: {
 					name: attr.get('value')
 				}
-			}
+			};
 
 			var viewObjName = shortcodeUIFieldData[ type ].view;
 			var tmplName    = shortcodeUIFieldData[ type ].template;
@@ -1273,7 +1272,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 		} );
 
-		if ( 0 == this.model.get( 'attrs' ).length && ( ! innerContent || typeof innerContent == 'undefined' ) ) {
+		if ( 0 === this.model.get( 'attrs' ).length && ( ! innerContent || typeof innerContent == 'undefined' ) ) {
 			var messageView = new Backbone.View({
 				tagName:      'div',
 				className:    'notice updated',
@@ -1311,10 +1310,8 @@ var insertShortcodeListItem = wp.Backbone.View.extend({
 		var data = this.model.toJSON();
 		this.$el.attr('data-shortcode', data.shortcode_tag);
 
-		if (('listItemImage' in data)
-				&& 0 === data.listItemImage.indexOf('dashicons-')) {
-			data.listItemImage = '<div class="dashicons ' + data.listItemImage
-					+ '"></div>';
+		if (('listItemImage' in data) && 0 === data.listItemImage.indexOf('dashicons-')) {
+			data.listItemImage = '<div class="dashicons ' + data.listItemImage + '"></div>';
 		}
 
 		this.$el.html(this.template(data));
@@ -1346,10 +1343,11 @@ var insertShortcodeList = wp.Backbone.View.extend({
 	},
 	
 	refresh: function( shortcodeData ) {
+		var options;
 		if ( shortcodeData instanceof Backbone.Collection ) {
-			var options = { shortcodes: shortcodeData };
+			options = { shortcodes: shortcodeData };
 		} else {
-			var options = { shortcodes: new Shortcodes( shortcodeData ) };
+			options = { shortcodes: new Shortcodes( shortcodeData ) };
 		}
 		this.displayShortcodes( options );
 	},
@@ -1480,10 +1478,7 @@ var mediaFrame = postMediaFrame.extend( {
 		// @todo - fix this.
 		// This is a hack.
 		// I just can't work out how to do it properly...
-		if (
-			view.controller.state().props
-			&& view.controller.state().props.get( 'currentShortcode' )
-		) {
+		if ( view.controller.state().props && view.controller.state().props.get( 'currentShortcode' ) ) {
 			window.setTimeout( function() {
 				view.controller.$el.addClass( 'hide-menu' );
 			} );
@@ -1568,7 +1563,7 @@ var SearchShortcode = wp.media.view.Search.extend({
 	},
 
 	search: function( event ) {
-		if ( event.target.value == '' ) {
+		if ( '' === event.target.value ) {
 			this.refreshShortcodes( sui.shortcodes );
 		} else {
 			this.refreshShortcodes( this.controller.search( event.target.value ) );
@@ -1578,6 +1573,7 @@ var SearchShortcode = wp.media.view.Search.extend({
 
 sui.views.SearchShortcode = SearchShortcode;
 module.exports = SearchShortcode;
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":9}],20:[function(require,module,exports){
 (function (global){
@@ -1648,7 +1644,7 @@ var ShortcodePreview = Backbone.View.extend({
 		var isIE = typeof tinymce != 'undefined' ? tinymce.Env.ie : false;
 
 		$iframe = $( '<iframe/>', {
-			src: isIE ? 'javascript:""' : '',
+			src: isIE ? 'javascript:""' : '', // jshint ignore:line
 			frameBorder: '0',
 			allowTransparency: 'true',
 			scrolling: 'no',
@@ -1751,8 +1747,9 @@ var ShortcodePreview = Backbone.View.extend({
 		var editors = typeof tinymce != 'undefined' ? tinymce.editors : [];
 		_.each( editors, function( editor ) {
 			_.each( editor.dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
-				var href;
-				( href = link.href ) && ( styles[href] = true );	// Poor man's de-duping.
+				if ( link.href ) {
+					styles[ link.href ] = true;
+				}
 			});
 		});
 
@@ -1794,7 +1791,7 @@ var Shortcode_UI = Backbone.View.extend({
 	createToolbar: function(options) {
 		toolbarOptions = {
 			controller: this.toolbar_controller
-		}
+		};
 
 		this.toolbar = new Toolbar( toolbarOptions );
 

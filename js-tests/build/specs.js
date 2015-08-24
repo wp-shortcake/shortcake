@@ -81,8 +81,8 @@ describe( "Shortcode Model", function() {
 		},
 	};
 
-	var defaultShortcode = new Shortcode();
-	var shortcode = new Shortcode( data );
+	defaultShortcode = new Shortcode();
+	shortcode = new Shortcode( data );
 
 	it( 'Defaults set correctly.', function() {
 		expect( defaultShortcode.get( 'label' ) ).toEqual( '' );
@@ -159,7 +159,7 @@ describe( 'Shortcode View Constructor', function(){
 		expect( _shortcode.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
 	});
 
-})
+});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../js/src/models/shortcode":11,"../../js/src/utils/shortcode-view-constructor":12,"../../js/src/utils/sui":13}],5:[function(require,module,exports){
@@ -281,39 +281,39 @@ describe( "MCE View Constructor", function() {
 	} );
 
 	it( 'parses simple shortcode', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value"]')
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value"]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'attr' }).get('value') ).toEqual( 'test value' );
 	});
 
 	it( 'parses shortcode with content', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value 1"]test content[/test_shortcode]')
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value 1"]test content[/test_shortcode]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'attr' }).get('value') ).toEqual( 'test value 1' );
 		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( 'test content' );
 	});
 
 	it( 'parses shortcode with dashes in name and attribute', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]')
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).not.toEqual( 'test value 2' );
 	});
 
 	// https://github.com/fusioneng/Shortcake/issues/171
 	it( 'parses shortcode with line breaks in inner content', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ntest \rtest[/test_shortcode]")
+		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]test \ntest \rtest[/test_shortcode]");
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test \ntest \rtest" );
 	} );
 
 	it( 'parses shortcode with paragraph and br tags in inner content', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]<p>test</p><p>test<br/>test</p>[/test_shortcode]")
+		var shortcode = MceViewConstructor.parseShortcodeString( "[test_shortcode]<p>test</p><p>test<br/>test</p>[/test_shortcode]");
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'inner_content' ).get('value') ).toEqual( "test\n\ntest\ntest" );
 	} );
 
 	it( 'parses shortcode with unquoted attributes', function() {
-		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test]')
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
 	});
@@ -566,7 +566,7 @@ var shortcodeViewConstructor = {
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
 			if ( innerContent ) {
-				innerContent.set('value', options.content)
+				innerContent.set('value', options.content);
 			}
 		}
 
@@ -767,7 +767,7 @@ var shortcodeViewConstructor = {
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
 				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content)
+					inner_content.set('value', options.shortcode.content);
 				}
 			}
 
@@ -853,7 +853,7 @@ module.exports = shortcodeViewConstructor;
 var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {
-	shortcodes: new Shortcodes,
+	shortcodes: new Shortcodes(),
 	views: {},
 	controllers: {},
 };
