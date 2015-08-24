@@ -112,7 +112,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 				width:  attachmentThumb.width,
 				height: attachmentThumb.height,
 				alt:    attachment.alt,
-			} ) .appendTo( $thumbnail )
+			} ) .appendTo( $thumbnail );
 
 		}
 

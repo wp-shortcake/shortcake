@@ -50,7 +50,7 @@ var editAttributeField = Backbone.View.extend( {
 		this.$el.html( this.template( data ) );
 		this.triggerCallbacks();
 
-		return this
+		return this;
 	},
 
 	/**
@@ -62,10 +62,12 @@ var editAttributeField = Backbone.View.extend( {
 	 */
 	inputChanged: function( e ) {
 
+		var $el;
+
 		if ( this.model.get( 'attr' ) ) {
-			var $el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
+			$el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
 		} else {
-			var $el = this.$el.find( '[name="inner_content"]' );
+			$el = this.$el.find( '[name="inner_content"]' );
 		}
 
 		if ( 'radio' === this.model.attributes.type ) {

@@ -83,7 +83,7 @@
 						.val()
 						.split(',')
 						.map( function (str) { return str.trim(); } )
-						.map( function (str) { return parseInt( str ); } )
+						.map( function (str) { return parseInt( str ); } );
 
 					if ( ids.length < 1 ) {
 						return;
@@ -91,10 +91,11 @@
 
 					// Check if there is already cached data.
 					for ( var i = 0; i < ids.length; i++ ) {
-						if ( cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) ) ) {
+						cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) );
+						if ( cached ) {
 							parsedData.push( cached );
 						}
-					};
+					}
 
 					// If not multiple - return single value if we have one.
 					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
