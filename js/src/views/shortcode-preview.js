@@ -65,7 +65,7 @@ var ShortcodePreview = Backbone.View.extend({
 		var isIE = typeof tinymce != 'undefined' ? tinymce.Env.ie : false;
 
 		$iframe = $( '<iframe/>', {
-			src: isIE ? 'javascript:""' : '',
+			src: isIE ? 'javascript:""' : '', // jshint ignore:line
 			frameBorder: '0',
 			allowTransparency: 'true',
 			scrolling: 'no',
