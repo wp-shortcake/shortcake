@@ -108,6 +108,9 @@ class Shortcake_Field_Attachment {
 					<div class="dimensions"></div>
 					<div class="edit-link"><a href="#"><?php esc_html_e( 'Edit Attachment', 'shortcode-ui' ); ?></a></div>
 				</div>
+				<# if ( typeof data.description == 'string' ) { #>
+					<p class="description">{{ data.description }}</p>
+				<# } #>
 			</div>
 		</script>
 
