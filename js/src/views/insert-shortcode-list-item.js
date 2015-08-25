@@ -1,4 +1,5 @@
-var wp = require('wp');
+var wp = require('wp'),
+	$ = require('jquery');
 
 /**
  * Single shortcode list item view.
@@ -15,7 +16,8 @@ var insertShortcodeListItem = wp.Backbone.View.extend({
 		this.$el.attr('data-shortcode', data.shortcode_tag);
 
 		if (('listItemImage' in data) && 0 === data.listItemImage.indexOf('dashicons-')) {
-			data.listItemImage = '<div class="dashicons ' + data.listItemImage + '"></div>';
+			var fakeEl = $('<div />').addClass( 'dashicons' ).addClass( data.listItemImage );
+			data.listItemImage = $('<div />').append( fakeEl ).html();
 		}
 
 		this.$el.html(this.template(data));
