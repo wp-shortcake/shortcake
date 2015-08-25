@@ -12,5 +12,4 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'color', $fields );
 		$this->assertArrayHasKey( 'post_select', $fields );
 	}
-
 }

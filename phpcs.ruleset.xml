@@ -6,7 +6,6 @@
 
 	<rule ref="WordPress-VIP">
 		<exclude name="WordPress.CSRF.NonceVerification" />
-		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing" />
 		<exclude name="WordPress.VIP.SuperGlobalInputUsage" />
 		<exclude name="WordPress.VIP.ValidatedSanitizedInput" />
 	</rule>

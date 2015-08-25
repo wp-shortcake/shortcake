@@ -116,5 +116,4 @@ class Shortcake_Field_Attachment {
 
 		<?php
 	}
-
 }
