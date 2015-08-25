@@ -155,5 +155,4 @@ class Shortcode_UI_Field_Post_Select {
 		wp_send_json_success( $response );
 
 	}
-
 }

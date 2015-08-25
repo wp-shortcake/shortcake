@@ -118,5 +118,4 @@ class Shortcode_UI_Fields {
 	public function action_enqueue_shortcode_ui() {
 		wp_localize_script( 'shortcode-ui', 'shortcodeUIFieldData', $this->fields );
 	}
-
 }
