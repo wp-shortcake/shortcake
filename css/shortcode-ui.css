@@ -98,6 +98,8 @@
     padding-top: 10px; }
     .edit-shortcode-form .field-inline label {
       display: inline-block; }
+  .edit-shortcode-form .description {
+    clear: both; }
 
 .edit-shortcode-form .shortcake-attachment-preview {
   width: 150px;
