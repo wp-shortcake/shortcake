@@ -28,6 +28,10 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		if ( editAttributeFieldAttachment.getFromCache( id ) ) {
 			self._renderPreview( editAttributeFieldAttachment.getFromCache( id ) );
+
+			// Call the updateValue() function, to trigger any listeners
+			// hooked on it.
+			self.triggerCallbacks();
 			return;
 		}
 
