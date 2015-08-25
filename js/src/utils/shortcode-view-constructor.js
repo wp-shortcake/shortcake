@@ -43,7 +43,7 @@ var shortcodeViewConstructor = {
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
 			if ( innerContent ) {
-				innerContent.set('value', options.content)
+				innerContent.set('value', options.content);
 			}
 		}
 
@@ -244,7 +244,7 @@ var shortcodeViewConstructor = {
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
 				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content)
+					inner_content.set('value', options.shortcode.content);
 				}
 			}
 

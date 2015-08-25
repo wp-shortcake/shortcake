@@ -15,10 +15,11 @@ var insertShortcodeList = wp.Backbone.View.extend({
 	},
 	
 	refresh: function( shortcodeData ) {
+		var options;
 		if ( shortcodeData instanceof Backbone.Collection ) {
-			var options = { shortcodes: shortcodeData };
+			options = { shortcodes: shortcodeData };
 		} else {
-			var options = { shortcodes: new Shortcodes( shortcodeData ) };
+			options = { shortcodes: new Shortcodes( shortcodeData ) };
 		}
 		this.displayShortcodes( options );
 	},

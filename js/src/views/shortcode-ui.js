@@ -23,7 +23,7 @@ var Shortcode_UI = Backbone.View.extend({
 	createToolbar: function(options) {
 		toolbarOptions = {
 			controller: this.toolbar_controller
-		}
+		};
 
 		this.toolbar = new Toolbar( toolbarOptions );
 

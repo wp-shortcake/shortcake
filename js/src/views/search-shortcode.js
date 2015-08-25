@@ -32,7 +32,7 @@ var SearchShortcode = wp.media.view.Search.extend({
 	},
 
 	search: function( event ) {
-		if ( event.target.value == '' ) {
+		if ( '' === event.target.value ) {
 			this.refreshShortcodes( sui.shortcodes );
 		} else {
 			this.refreshShortcodes( this.controller.search( event.target.value ) );
