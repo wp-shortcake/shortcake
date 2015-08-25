@@ -1298,7 +1298,8 @@ module.exports = EditShortcodeForm;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":9,"./edit-attribute-field-attachment.js":10,"./edit-attribute-field-color.js":11,"./edit-attribute-field-post-select.js":12,"./edit-attribute-field.js":13}],15:[function(require,module,exports){
 (function (global){
-var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
+	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
 
 /**
  * Single shortcode list item view.
@@ -1315,7 +1316,8 @@ var insertShortcodeListItem = wp.Backbone.View.extend({
 		this.$el.attr('data-shortcode', data.shortcode_tag);
 
 		if (('listItemImage' in data) && 0 === data.listItemImage.indexOf('dashicons-')) {
-			data.listItemImage = '<div class="dashicons ' + data.listItemImage + '"></div>';
+			var fakeEl = $('<div />').addClass( 'dashicons' ).addClass( data.listItemImage );
+			data.listItemImage = $('<div />').append( fakeEl ).html();
 		}
 
 		this.$el.html(this.template(data));
