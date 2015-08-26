@@ -3,7 +3,7 @@
 **Tags:** shortcodes  
 **Requires at least:** 4.1  
 **Tested up to:** 4.3  
-**Stable tag:** 0.4.0  
+**Stable tag:** 0.5.0  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -67,7 +67,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Bug fix: Hitting delete when a Shortcake preview is selected in the Visual editor now results in the shortcode being removed. (Fixed in Core.)
 * Bug fix: The Shortcake 'search' function no longer visually conflicts with the shortcode grid at small screen sizes. (Fixed in Core.)
 * Bug fix: Use `get_post_type()` instead of `get_current_screen()->post_type` so context is properly set on the frontend.
-* [FUll release notes](http://fusion.net/story/182883/introducing-shortcake-v0-5-0-sugar/)
+* [Full release notes](http://fusion.net/story/182883/introducing-shortcake-v0-5-0-sugar/)
 
 ### 0.4.0 (June 22, 2015) ###
 * Using [carldanley/wp-js-hooks](https://github.com/carldanley/WP-JS-Hooks) for a basic API to register JS callbacks on shortcode attributes.
