@@ -2,9 +2,9 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Shortcode UI 0.4.0-alpha\n"
+"Project-Id-Version: Shortcake (Shortcode UI) 0.5.0-alpha\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/shortcode-ui\n"
-"POT-Creation-Date: 2015-06-22 19:53:12+00:00\n"
+"POT-Creation-Date: 2015-08-26 22:28:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,57 +24,61 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
-#: inc/class-shortcode-ui.php:40
+#: inc/class-shortcode-ui.php:109
 msgid "Inner Content"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:109 inc/class-shortcode-ui.php:110
+#: inc/class-shortcode-ui.php:200 inc/class-shortcode-ui.php:201
 msgid "Insert Post Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:111
+#: inc/class-shortcode-ui.php:202
 msgid "%s Details"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:112
+#: inc/class-shortcode-ui.php:203
 msgid "Insert Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:113
+#: inc/class-shortcode-ui.php:204
 msgid "Update"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:114
+#: inc/class-shortcode-ui.php:205
 msgid "There are no attributes to configure for this Post Element."
 msgstr ""
 
-#: inc/class-shortcode-ui.php:115
+#: inc/class-shortcode-ui.php:206
 msgid "Edit"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:116
-msgid "Preview"
-msgstr ""
-
-#: inc/class-shortcode-ui.php:117
+#: inc/class-shortcode-ui.php:207
 msgid "Failed to load preview"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:118
+#: inc/class-shortcode-ui.php:208
 msgid "Search"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:119
+#: inc/class-shortcode-ui.php:209
 msgid "Insert Content"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:213
+#: inc/class-shortcode-ui.php:312
 msgid "Something's rotten in the state of Denmark"
 msgstr ""
 
-#: inc/fields/class-field-attachment.php:47
-#: inc/fields/class-field-attachment.php:48
+#: inc/fields/class-field-attachment.php:79
+#: inc/fields/class-field-attachment.php:80
 msgid "Select Attachment"
+msgstr ""
+
+#: inc/fields/class-field-attachment.php:104
+msgid "Thumbnail Details"
+msgstr ""
+
+#: inc/fields/class-field-attachment.php:109
+msgid "Edit Attachment"
 msgstr ""
 
 #: inc/templates/edit-form.tpl.php:3
@@ -82,7 +86,7 @@ msgid "Back to list"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "Shortcode UI"
+msgid "Shortcake (Shortcode UI)"
 msgstr ""
 
 #. Description of the plugin/theme
