@@ -25,6 +25,13 @@ Once you've done so, you'll need to [register the UI for your code](https://gith
 
 New in 0.4.0 is the ability to [attach javascript functions to event attribute updates](https://github.com/fusioneng/Shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
 
+## Frequently Asked Questions ##
+
+= How do I register UI for arbitrary key=>value pairs as shortcode attributes? =
+
+Shortcake doesn't support custom key=>value pairs as shortcode attributes because it isn't a great user experience.
+
+
 ## Screenshots ##
 
 ### 1. Without Shortcake, shortcodes have a minimal UI. ###
