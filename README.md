@@ -59,6 +59,9 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ## Changelog ##
 
+### 0.6.0 (???) ###
+* Added Danish translation.
+
 ### 0.5.0 (August 26, 2015) ###
 * Attachment field: Made it easier to change the attachment by clicking on the thumbnail; added attachment metadata in the field view.
 * Attachment field: Refactored JavaScript to trigger events.
