@@ -54,6 +54,10 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		jshint: {
+			uses_defaults: ['js/src/**/*.js', 'js-tests/src/**/*.js']
+		},
+
 		browserify : {
 
 			options: {
@@ -92,9 +96,7 @@ module.exports = function( grunt ) {
 
 			dist: {
 				files : {
-					'js/build/shortcode-ui.js' : ['js/src/shortcode-ui.js'],
-					'js/build/field-color.js' : ['js/src/field-color.js'],
-					'js/build/field-post-select.js' : ['js/src/field-post-select.js'],
+					'js/build/shortcode-ui.js' : ['js/src/shortcode-ui.js']
 				},
 				options: {
 					transform: ['browserify-shim']
@@ -177,8 +179,9 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 	grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
+	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
-	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine' ] );
+	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine', 'jshint' ] );
 	grunt.registerTask( 'styles', [ 'sass' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );

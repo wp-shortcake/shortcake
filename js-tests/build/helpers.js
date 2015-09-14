@@ -23,6 +23,6 @@ window.shortcodeUIData = {
 
 };
 
-window.shortcodeUIFieldData = {}
+window.shortcodeUIFieldData = {};
 
 },{}]},{},[1]);

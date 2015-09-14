@@ -43,7 +43,7 @@ var shortcodeViewConstructor = {
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
 			if ( innerContent ) {
-				innerContent.set('value', options.content)
+				innerContent.set('value', options.content);
 			}
 		}
 
@@ -184,7 +184,11 @@ var shortcodeViewConstructor = {
 
 		if ( matches[3] ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
-			inner_content.set( 'value', this.unAutoP( matches[3] ) );
+			if ( inner_content ) {
+				inner_content.set( 'value', this.unAutoP( matches[3] ) );
+			} else {
+				currentShortcode.set( 'inner_content_backup', this.unAutoP( matches[3] ) );
+			}
 		}
 
 		return currentShortcode;
@@ -240,7 +244,7 @@ var shortcodeViewConstructor = {
 			if ('content' in options.shortcode) {
 				var inner_content = shortcode.get('inner_content');
 				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content)
+					inner_content.set('value', options.shortcode.content);
 				}
 			}
 

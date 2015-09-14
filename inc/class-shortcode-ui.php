@@ -68,6 +68,31 @@ class Shortcode_UI {
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
+		add_filter( 'wp_editor_settings',    array( $this, 'filter_wp_editor_settings' ), 10, 2 );
+	}
+
+	/**
+	 * When a WP_Editor is initialized on a page, call the 'register_shortcode_ui' action.
+	 *
+	 * This action can be used to register styles and shortcode UI for any
+	 * shortcake-powered shortcodes, only on views which actually include a WP
+	 * Editor.
+	 */
+	public function filter_wp_editor_settings( $settings, $editor_id ) {
+
+		if ( ! did_action( 'register_shortcode_ui' ) ) {
+
+			/**
+			 * Register shortcode UI for shortcodes.
+			 *
+			 * Can be used to register shortcode UI only when an editor is being enqueued.
+			 *
+			 * @param array $settings Settings array for the ective WP_Editor.
+			 */
+			do_action( 'register_shortcode_ui', $settings, $editor_id );
+		}
+
+		return $settings;
 	}
 
 	/**
@@ -129,8 +154,10 @@ class Shortcode_UI {
 	 * Enqueue scripts and styles used in the admin.
 	 *
 	 * Editor styles needs to be added before wp_enqueue_editor.
+	 *
+	 * @param array $editor_supports Whether or not the editor being enqueued has 'tinymce' or 'quicktags'
 	 */
-	public function action_admin_enqueue_scripts() {
+	public function action_admin_enqueue_scripts( $editor_supports ) {
 		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
 	}
 

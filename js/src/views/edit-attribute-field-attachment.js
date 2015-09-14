@@ -28,11 +28,11 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		if ( editAttributeFieldAttachment.getFromCache( id ) ) {
 			self._renderPreview( editAttributeFieldAttachment.getFromCache( id ) );
-			return;
 
 			// Call the updateValue() function, to trigger any listeners
 			// hooked on it.
 			self.triggerCallbacks();
+			return;
 		}
 
 		this.$container.addClass( 'loading' );
@@ -112,7 +112,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 				width:  attachmentThumb.width,
 				height: attachmentThumb.height,
 				alt:    attachment.alt,
-			} ) .appendTo( $thumbnail )
+			} ) .appendTo( $thumbnail );
 
 		}
 

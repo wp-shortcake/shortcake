@@ -2,8 +2,8 @@
 Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver
 Tags: shortcodes
 Requires at least: 4.1
-Tested up to: 4.2.1
-Stable tag: 0.4.0
+Tested up to: 4.3
+Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,13 @@ Once you've done so, you'll need to [register the UI for your code](https://gith
 
 New in 0.4.0 is the ability to [attach javascript functions to event attribute updates](https://github.com/fusioneng/Shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
 
+== Frequently Asked Questions ==
+
+= How do I register UI for arbitrary key=>value pairs as shortcode attributes? =
+
+Shortcake doesn't support custom key=>value pairs as shortcode attributes because it isn't a great user experience.
+
+
 == Screenshots ==
 
 1. Without Shortcake, shortcodes have a minimal UI.
@@ -43,6 +50,26 @@ We've removed the compatibility shim for the `placeholder` attribute argument. Y
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 
 == Changelog ==
+
+= 0.6.0 (???) =
+* Added Danish translation.
+
+= 0.5.0 (August 26, 2015) =
+* Attachment field: Made it easier to change the attachment by clicking on the thumbnail; added attachment metadata in the field view.
+* Attachment field: Refactored JavaScript to trigger events.
+* Added a `range` input type.
+* Introduced a `register_shortcode_ui` hook for plugins to more safely register UI with.
+* Removed Preview tab to bring Shortcake's user experience closer to Core, in which the inline visual preview is preferred over a separate preview in the media modal.
+* Cleaned up JavaScript using JSHint.
+* Added Russian translation.
+* Added Portuguese translation.
+* Added PHPDoc to all classes.
+* Bug fix: Persists `inner_content` for a shortcode even when UI isn't defined.
+* Bug fix: Hitting esc in a Shortcake view will now close the modal. (Fixed in Core.)
+* Bug fix: Hitting delete when a Shortcake preview is selected in the Visual editor now results in the shortcode being removed. (Fixed in Core.)
+* Bug fix: The Shortcake 'search' function no longer visually conflicts with the shortcode grid at small screen sizes. (Fixed in Core.)
+* Bug fix: Use `get_post_type()` instead of `get_current_screen()->post_type` so context is properly set on the frontend.
+* [Full release notes](http://fusion.net/story/182883/introducing-shortcake-v0-5-0-sugar/)
 
 = 0.4.0 (June 22, 2015) =
 * Using [carldanley/wp-js-hooks](https://github.com/carldanley/WP-JS-Hooks) for a basic API to register JS callbacks on shortcode attributes.

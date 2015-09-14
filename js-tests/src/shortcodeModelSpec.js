@@ -25,8 +25,8 @@ describe( "Shortcode Model", function() {
 		},
 	};
 
-	var defaultShortcode = new Shortcode();
-	var shortcode = new Shortcode( data );
+	defaultShortcode = new Shortcode();
+	shortcode = new Shortcode( data );
 
 	it( 'Defaults set correctly.', function() {
 		expect( defaultShortcode.get( 'label' ) ).toEqual( '' );
@@ -71,3 +71,4 @@ describe( "Shortcode Model", function() {
 	});
 
 });
+
