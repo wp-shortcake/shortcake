@@ -747,21 +747,10 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		e.preventDefault();
 		this.frame.open();
 		if ( this.model.get( 'value' ) ) {
-			var query_args = {
-				'post__in': [ this.model.get( 'value' ) ],
-				'orderby': 'post__in',
-				'perPage': 1
-			};
-			var attachments = wp.media.query( query_args );
-			var selection = new wp.media.model.Selection( attachments.models, {
-				props:    attachments.props.toJSON()
-			});
-			selection.more().done( function() {
-				// Break ties with the query.
-				selection.props.set({ query: false });
-				selection.unmirror();
-				selection.props.unset('orderby');
-			});
+			var selection = this.frame.state().get('selection');
+			attachment = wp.media.attachment( this.model.get( 'value' ) );
+			attachment.fetch();
+			selection.reset( attachment ? [ attachment ] : [] );
 			this.frame.state().set('selection', selection);
 		}
 
