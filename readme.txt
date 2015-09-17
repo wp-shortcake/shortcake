@@ -53,6 +53,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 = 0.6.0 (???) =
 * Added Danish translation.
+* When an attachment is already selected for a shortcode attribute, opening media library will include it selected.
 
 = 0.5.0 (August 26, 2015) =
 * Attachment field: Made it easier to change the attachment by clicking on the thumbnail; added attachment metadata in the field view.
