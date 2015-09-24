@@ -19,7 +19,9 @@
  * GNU General Public License for more details.
  */
 
-add_action( 'init', function() {
+add_action( 'init', 'shortcode_ui_example' );
+
+function shortcode_ui_example() {
 
 	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
 		add_action( 'admin_notices', function(){
@@ -122,4 +124,4 @@ add_action( 'init', function() {
 		)
 	);
 
-} );
+}

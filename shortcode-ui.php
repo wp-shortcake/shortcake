@@ -29,15 +29,20 @@ require_once dirname( __FILE__ ) . '/inc/fields/class-field-post-select.php';
 
 add_action( 'init', 'shortcode_ui_load_textdomain' );
 
-add_action( 'init', function() {
+add_action( 'init', 'shortcode_ui_init', 5 );
 
+/**
+ * Init Shortcake
+ *
+ * @return null
+ */
+function shortcode_ui_init() {
 	$shortcode_ui     = Shortcode_UI::get_instance();
 	$fields           = Shortcode_UI_Fields::get_instance();
 	$attachment_field = Shortcake_Field_Attachment::get_instance();
 	$color_field      = Shortcake_Field_Color::get_instance();
 	$post_field       = Shortcode_UI_Field_Post_Select::get_instance();
-
-}, 5 );
+}
 
 /**
  * Load translations
