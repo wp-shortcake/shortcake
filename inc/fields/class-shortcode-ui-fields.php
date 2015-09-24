@@ -98,7 +98,7 @@ class Shortcode_UI_Fields {
 		// set default args for each field.
 		$array_map = array();
 		foreach ($this->fields as $field_name => $field) {
-			$array_map[$field_name] = wp_parse_args( $field, $this->field_defaults );
+			$array_map[ $field_name ] = wp_parse_args( $field, $this->field_defaults );
 		}
 		$this->fields = $array_map;
 
