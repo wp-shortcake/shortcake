@@ -24,11 +24,7 @@ add_action( 'init', 'shortcode_ui_example' );
 function shortcode_ui_example() {
 
 	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
-		add_action( 'admin_notices', function(){
-			if ( current_user_can( 'activate_plugins' ) ) {
-				echo '<div class="error message"><p>Shortcode UI plugin must be active for Shortcode UI Example plugin to function.</p></div>';
-			}
-		});
+		add_action( 'admin_notices', 'shortcode_ui_example_notices');
 		return;
 	}
 
@@ -41,30 +37,7 @@ function shortcode_ui_example() {
 	 * Register your shortcode as you would normally.
 	 * This is a simple example for a pullquote with a citation.
 	 */
-	add_shortcode( 'shortcake_dev', function( $attr, $content = '' ) {
-
-		$attr = wp_parse_args( $attr, array(
-			'source'     => '',
-			'attachment' => 0
-		) );
-
-		ob_start();
-
-		?>
-
-		<section class="pullquote" style="padding: 20px; background: rgba(0,0,0,0.1);">
-			<p style="margin:0; padding: 0;">
-				<b>Content:</b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
-				<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
-				<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
-			</p>
-		</section>
-
-		<?php
-
-		return ob_get_clean();
-
-	} );
+	add_shortcode( 'shortcake_dev', 'shortcake_dev_shortcode' );
 
 	/**
 	 * Register a UI for the Shortcode.
@@ -123,5 +96,36 @@ function shortcode_ui_example() {
 
 		)
 	);
+
+}
+
+function shortcode_ui_example_notices(){
+	if ( current_user_can( 'activate_plugins' ) ) {
+		echo '<div class="error message"><p>Shortcode UI plugin must be active for Shortcode UI Example plugin to function.</p></div>';
+	}
+}
+
+function shortcake_dev_shortcode( $attr, $content = '' ) {
+
+	$attr = wp_parse_args( $attr, array(
+		'source'     => '',
+		'attachment' => 0
+	) );
+
+	ob_start();
+
+?>
+
+	<section class="pullquote" style="padding: 20px; background: rgba(0,0,0,0.1);">
+		<p style="margin:0; padding: 0;">
+			<b>Content:</b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
+			<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
+			<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
+		</p>
+	</section>
+
+<?php
+
+	return ob_get_clean();
 
 }
