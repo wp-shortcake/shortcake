@@ -2,32 +2,44 @@ sudo: false
 
 language: php
 
-php:
-  - 5.3
-  - 5.5
-
-env:
-  - WP_VERSION=latest WP_MULTISITE=0
-
 matrix:
   include:
-    - php: 5.3
-      env: WP_VERSION=latest WP_MULTISITE=1
+    - php: 5.2
+      env: WP_VERSION=latest WP_MULTISITE=0 WP_TRAVISCI=travis:phpunit
+    - php: 5.6
+      env: WP_VERSION=latest WP_MULTISITE=0 WP_TRAVISCI=travis:phpunit
+    - php: 5.6
+      env: WP_VERSION=latest WP_MULTISITE=1 WP_TRAVISCI=travis:phpunit
+    - php: 5.6
+      env: WP_TRAVISCI=travis:validate
 
 cache:
   - composer
+  - $HOME/.composer/cache
   - npm
 
 before_script:
-  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-  - npm install -g grunt-cli
-  - npm install
-  - composer install
+  - |
+    if [[ "$WP_TRAVISCI" == "travis:phpunit" ]] ; then
+      bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+    fi
+  - |
+    if [[ "$WP_TRAVISCI" == "travis:validate" ]] ; then
+        npm install -g grunt-cli
+        npm install
+        composer install
+    fi
 
 script:
-  - grunt phpcs
-  - phpunit
-  - grunt jasmine;
+  - |
+    if [[ "$WP_TRAVISCI" == "travis:phpunit" ]] ; then
+      phpunit
+    fi
+  - |
+    if [[ "$WP_TRAVISCI" == "travis:validate" ]] ; then
+      grunt jasmine
+      grunt phpcs
+    fi
 
 notifications:
   email:
