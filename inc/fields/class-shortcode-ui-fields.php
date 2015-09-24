@@ -99,7 +99,7 @@ class Shortcode_UI_Fields {
 		$this->fields = array_map( array( $this, 'array_map_args' ) , $this->fields );
 
 	}
-	
+
 	public function array_map_args( $args ) {
 		return wp_parse_args( $args, $this->field_defaults );
 	}
