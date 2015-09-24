@@ -24,7 +24,7 @@ add_action( 'init', 'shortcode_ui_example' );
 function shortcode_ui_example() {
 
 	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
-		add_action( 'admin_notices', 'shortcode_ui_example_notices');
+		add_action( 'admin_notices', 'shortcode_ui_dev_example_notices');
 		return;
 	}
 
@@ -99,7 +99,7 @@ function shortcode_ui_example() {
 
 }
 
-function shortcode_ui_example_notices(){
+function shortcode_ui_dev_example_notices(){
 	if ( current_user_can( 'activate_plugins' ) ) {
 		echo '<div class="error message"><p>Shortcode UI plugin must be active for Shortcode UI Example plugin to function.</p></div>';
 	}
