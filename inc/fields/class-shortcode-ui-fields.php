@@ -96,10 +96,11 @@ class Shortcode_UI_Fields {
 		$this->fields = apply_filters( 'shortcode_ui_fields', $this->fields );
 
 		// set default args for each field.
-		$field_defaults = $this->field_defaults;
-		$this->fields = array_map( function( $args ) use ( $field_defaults ) {
-			return wp_parse_args( $args, $field_defaults );
-		}, $this->fields );
+		$array_map = array();
+		foreach ($this->fields as $field_name => $field) {
+			$array_map[ $field_name ] = wp_parse_args( $field, $this->field_defaults );
+		}
+		$this->fields = $array_map;
 
 	}
 
