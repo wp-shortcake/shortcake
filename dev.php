@@ -37,7 +37,7 @@ function shortcode_ui_dev_example() {
 	 * Register your shortcode as you would normally.
 	 * This is a simple example for a pullquote with a citation.
 	 */
-	add_shortcode( 'shortcake_dev', 'shortcake_dev_shortcode' );
+	add_shortcode( 'shortcake_dev', 'shortcode_ui_dev_shortcode' );
 
 	/**
 	 * Register a UI for the Shortcode.
@@ -105,7 +105,7 @@ function shortcode_ui_dev_example_notices(){
 	}
 }
 
-function shortcake_dev_shortcode( $attr, $content = '' ) {
+function shortcode_ui_dev_shortcode( $attr, $content = '' ) {
 
 	$attr = wp_parse_args( $attr, array(
 		'source'     => '',
