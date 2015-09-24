@@ -60,6 +60,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 ## Changelog ##
 
 ### 0.6.0 (???) ###
+* Core integration: Fully support PHP 5.2.
 * Added Danish translation.
 * Added Italian translation.
 * When an attachment is already selected for a shortcode attribute, opening media library will include it selected.
