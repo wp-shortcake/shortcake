@@ -35,16 +35,16 @@ Shortcake doesn't support custom key=>value pairs as shortcode attributes becaus
 ## Screenshots ##
 
 ### 1. Without Shortcake, shortcodes have a minimal UI. ###
-![Without Shortcake, shortcodes have a minimal UI.](http://s.wordpress.org/extend/plugins/shortcode-ui/screenshot-1.png)
+![Without Shortcake, shortcodes have a minimal UI.](https://s.w.org/plugins/shortcode-ui/screenshot-1.png)
 
 ### 2. But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view. ###
-![But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view.](http://s.wordpress.org/extend/plugins/shortcode-ui/screenshot-2.png)
+![But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view.](https://s.w.org/plugins/shortcode-ui/screenshot-2.png)
 
 ### 3. And add a user-friendly UI to edit shortcode content and attributes. ###
-![And add a user-friendly UI to edit shortcode content and attributes.](http://s.wordpress.org/extend/plugins/shortcode-ui/screenshot-3.png)
+![And add a user-friendly UI to edit shortcode content and attributes.](https://s.w.org/plugins/shortcode-ui/screenshot-3.png)
 
 ### 4. Add new shortcodes to your post through "Add Media". ###
-![Add new shortcodes to your post through "Add Media".](http://s.wordpress.org/extend/plugins/shortcode-ui/screenshot-4.png)
+![Add new shortcodes to your post through "Add Media".](https://s.w.org/plugins/shortcode-ui/screenshot-4.png)
 
 
 ## Upgrade Notice ##
