@@ -25,4 +25,22 @@ describe( 'Shortcode View Constructor', function(){
 		expect( _shortcode.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
 	});
 
+	it( 'Persists custom attribute when parsing a shortcode without the attribute defined in UI', function() {
+		var data = {
+			label: 'Test Label',
+			shortcode_tag: 'no_custom_attribute',
+			attrs: [
+				{
+					attr:        'foo',
+					label:       'Attribute',
+					type:        'text',
+				}
+			]
+		};
+		sui.shortcodes.add( data );
+		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
+		var _shortcode = $.extend( true, {}, shortcode );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+	});
+
 });

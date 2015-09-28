@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var ShortcodeAttributes = require('sui-collections/shortcode-attributes');
 var InnerContent = require('sui-models/inner-content');
+var $ = require('jquery');
 
 Shortcode = Backbone.Model.extend({
 
@@ -8,6 +9,7 @@ Shortcode = Backbone.Model.extend({
 		label: '',
 		shortcode_tag: '',
 		attrs: new ShortcodeAttributes(),
+		attributes_backup: {},
 	},
 
 	/**
@@ -74,6 +76,10 @@ Shortcode = Backbone.Model.extend({
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 
 		} );
+
+		$.each( this.get( 'attributes_backup' ), function( key, value){
+			attrs.push( key + '="' + value + '"' );
+		});
 
 		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );

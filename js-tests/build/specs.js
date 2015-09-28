@@ -159,6 +159,24 @@ describe( 'Shortcode View Constructor', function(){
 		expect( _shortcode.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
 	});
 
+	it( 'Persists custom attribute when parsing a shortcode without the attribute defined in UI', function() {
+		var data = {
+			label: 'Test Label',
+			shortcode_tag: 'no_custom_attribute',
+			attrs: [
+				{
+					attr:        'foo',
+					label:       'Attribute',
+					type:        'text',
+				}
+			]
+		};
+		sui.shortcodes.add( data );
+		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
+		var _shortcode = $.extend( true, {}, shortcode );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+	});
+
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -417,6 +435,7 @@ module.exports = ShortcodeAttribute;
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var ShortcodeAttributes = require('./../collections/shortcode-attributes.js');
 var InnerContent = require('./inner-content.js');
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 Shortcode = Backbone.Model.extend({
 
@@ -424,6 +443,7 @@ Shortcode = Backbone.Model.extend({
 		label: '',
 		shortcode_tag: '',
 		attrs: new ShortcodeAttributes(),
+		attributes_backup: {},
 	},
 
 	/**
@@ -490,6 +510,10 @@ Shortcode = Backbone.Model.extend({
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
 
 		} );
+
+		$.each( this.get( 'attributes_backup' ), function( key, value){
+			attrs.push( key + '="' + value + '"' );
+		});
 
 		if ( this.get( 'inner_content' ) ) {
 			content = this.get( 'inner_content' ).get( 'value' );
@@ -672,6 +696,7 @@ var shortcodeViewConstructor = {
 
 		currentShortcode = defaultShortcode.clone();
 
+		var attributes_backup = {};
 		if ( matches[2] ) {
 
 			var attributeRegex = /(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/gmi;
@@ -696,14 +721,18 @@ var shortcodeViewConstructor = {
 
 					// If attribute found - set value.
 					// Trim quotes from beginning and end.
+					attrValue = bits[2].replace( /^"|^'|"$|'$/gmi, "" );
 					if ( attr ) {
-						attr.set( 'value', bits[2].replace( /^"|^'|"$|'$/gmi, "" ) );
+						attr.set( 'value', attrValue );
+					} else {
+						attributes_backup[ bits[1] ] = attrValue;
 					}
 
 				}
 			}
 
 		}
+		currentShortcode.set( 'attributes_backup', attributes_backup );
 
 		if ( matches[3] ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
