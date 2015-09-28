@@ -308,6 +308,8 @@ class Shortcode_UI {
 			$post_id = null;
 		}
 
+		define( 'SHORTCODE_UI_DOING_PREVIEW', true );
+
 		if ( ! current_user_can( 'edit_post', $post_id ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-preview' ) ) {
 			echo esc_html__( "Something's rotten in the state of Denmark", 'shortcode-ui' );
 			exit;

@@ -61,6 +61,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ### 0.6.0 (???) ###
 * Core integration: Fully support PHP 5.2.
+* Defines a `SHORTCODE_UI_DOING_PREVIEW` constant when rendering a shortcode preview, which enables callbacks to serve a different representation of the shortcode in TinyMCE.
 * Added Danish translation.
 * Added Italian translation.
 * When an attachment is already selected for a shortcode attribute, opening media library will include it selected.
