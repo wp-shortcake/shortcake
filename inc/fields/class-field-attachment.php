@@ -92,22 +92,8 @@ class Shortcake_Field_Attachment {
 		<script type="text/html" id="tmpl-fusion-shortcake-field-attachment">
 			<div class="field-block">
 				<label for="{{ data.attr }}">{{ data.label }}</label>
-				<div class="shortcake-attachment-preview attachment-preview attachment">
-					<button id="{{ data.attr }}" class="button button-small add">{{ data.addButton }}</button>
-					<button class="button button-small remove">&times;</button>
-					<div class="loading-indicator">
-						<span class="dashicons dashicons-format-image"></span>
-						<div class="attachment-preview-loading"><ins></ins></div>
-					</div>
-				</div>
-				<div class="thumbnail-details-container">
-					<strong><?php esc_html_e( 'Thumbnail Details', 'shortcode-ui' ); ?></strong>
-					<div class="filename"></div>
-					<div class="date-formatted"></div>
-					<div class="size"></div>
-					<div class="dimensions"></div>
-					<div class="edit-link"><a href="#"><?php esc_html_e( 'Edit Attachment', 'shortcode-ui' ); ?></a></div>
-				</div>
+				<button id="{{ data.attr }}" class="shortcake-attachment-select button button-small add">{{ data.addButton }}</button>
+				<div class="attachment-previews"></div>
 				<# if ( typeof data.description == 'string' ) { #>
 					<p class="description">{{ data.description }}</p>
 				<# } #>

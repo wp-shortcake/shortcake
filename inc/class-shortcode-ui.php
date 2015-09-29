@@ -242,9 +242,11 @@ class Shortcode_UI {
 	 * Output required underscore.js templates in the footer
 	 */
 	public function action_admin_print_footer_scripts() {
+
 		echo $this->get_view( 'media-frame' ); // WPCS: xss ok
 		echo $this->get_view( 'list-item' ); // WPCS: xss ok
 		echo $this->get_view( 'edit-form' ); // WPCS: xss ok
+		echo $this->get_view( 'image-preview' ); // WPCS: xss ok
 
 		/**
 		 * Fires after base shortcode UI templates have been loaded.

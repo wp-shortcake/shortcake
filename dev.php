@@ -75,6 +75,16 @@ function shortcode_ui_dev_example() {
 				),
 
 				array(
+					'label' => 'Gallery',
+					'attr'  => 'gallery',
+					'type'  => 'attachment',
+					'libraryType' => array( 'image' ),
+					'multiple'    => true,
+					'addButton'   => 'Select Images',
+					'frameTitle'  => 'Select Images',
+				),
+
+				array(
 					'label' => 'Cite',
 					'attr'  => 'source',
 					'type'  => 'text',
@@ -120,7 +130,8 @@ function shortcode_ui_dev_shortcode( $attr, $content = '' ) {
 		<p style="margin:0; padding: 0;">
 			<b>Content:</b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
 			<b>Source:</b> <?php echo esc_html( $attr['source'] ); ?></br>
-			<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ); ?></br>
+			<b>Image:</b> <?php echo wp_get_attachment_image( $attr['attachment'], 'thumbnail' ); ?></br>
+			<b>Gallery:</b> <?php foreach ( explode( ',', $attr['gallery'] ) as $id ) { echo wp_get_attachment_image( $id, 'thumbnail' ); } ?></br>
 		</p>
 	</section>
 
