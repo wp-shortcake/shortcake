@@ -2,7 +2,7 @@
 	<form class="edit-shortcode-form">
 		<p><a href="#" class="edit-shortcode-form-cancel">&#8592; <?php esc_html_e( 'Back to list', 'shortcode-ui' ); ?></a></p>
 
-		<div class="edit-shortcode-form-fields"></div>
+		<div class="edit-shortcode-form-fields shortcake-edit-{{data.model.attributes.shortcode_tag}}"></div>
 	</form>
 </script>
 
