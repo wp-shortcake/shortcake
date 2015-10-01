@@ -323,9 +323,9 @@ var Fetcher = (function() {
 		delete fetcher.timeout;
 
 		request.done( function( response ) {
-			_.each( response.data, function( result ) {
+			_.each( response.data, function( result, index ) {
 				var matchedQuery = _.findWhere( fetcher.queries, {
-					counter: parseInt( result.counter ),
+					counter: parseInt( index ),
 				});
 				fetcher.queries = _.without( fetcher.queries, matchedQuery );
 				matchedQuery.promise.resolve( result );

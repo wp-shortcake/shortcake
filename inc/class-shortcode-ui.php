@@ -306,7 +306,7 @@ class Shortcode_UI {
 			global $post;
 			$post = get_post( $post_id );
 			setup_postdata( $post );
-			// @codingStandardsIgnoreStart
+			// @codingStandardsIgnoreEnd
 		}
 
 		ob_start();
@@ -375,11 +375,10 @@ class Shortcode_UI {
 					$post_id = null;
 				}
 
-				array_push( $responses, array(
+				$responses[ $posted_query['counter'] ] = array(
 					'query' => $posted_query,
-					'counter' => $posted_query['counter'],
 					'response' => $this->render_shortcode_for_preview( $shortcode, $post_id )
-				) );
+				);
 			}
 
 			wp_send_json_success( $responses );
