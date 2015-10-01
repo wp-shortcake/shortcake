@@ -302,10 +302,9 @@ var Fetcher = (function() {
 		});
 
 		if ( ! fetcher.timeout ) {
-			fetcher.timeout = setTimeout(
-				fetcher.fetchAll, 200
-			);
+			fetcher.timeout = setTimeout( fetcher.fetchAll );
 		}
+
 		return fetchPromise;
 	};
 
