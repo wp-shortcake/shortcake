@@ -68,6 +68,7 @@ class Shortcode_UI {
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',     array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_do_shortcode',  array( $this, 'handle_ajax_do_shortcode' ) );
+		add_action( 'wp_ajax_bulk_do_shortcode',  array( $this, 'handle_ajax_bulk_do_shortcode' ) );
 		add_filter( 'wp_editor_settings',    array( $this, 'filter_wp_editor_settings' ), 10, 2 );
 	}
 
@@ -292,27 +293,12 @@ class Shortcode_UI {
 	}
 
 	/**
-	 * Render a shortcode for preview in the TinyMCE editor.
+	 * Render a shortcode body for preview.
 	 */
-	public function handle_ajax_do_shortcode() {
+	private function render_shortcode_for_preview( $shortcode, $post_id = null ) {
 
-		// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
-		if ( ! empty( $_POST['shortcode'] ) ) {
-			$shortcode = stripslashes( $_POST['shortcode'] );
-		} else {
-			$shortcode = null;
-		}
-		if ( isset( $_POST['post_id'] ) ) {
-			$post_id = intval( $_POST['post_id'] );
-		} else {
-			$post_id = null;
-		}
-
-		define( 'SHORTCODE_UI_DOING_PREVIEW', true );
-
-		if ( ! current_user_can( 'edit_post', $post_id ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-preview' ) ) {
-			echo esc_html__( "Something's rotten in the state of Denmark", 'shortcode-ui' );
-			exit;
+		if ( ! defined( 'SHORTCODE_UI_DOING_PREVIEW' ) ) {
+			define( 'SHORTCODE_UI_DOING_PREVIEW', true );
 		}
 
 		if ( ! empty( $post_id ) ) {
@@ -338,8 +324,67 @@ class Shortcode_UI {
 		 */
 		do_action( 'shortcode_ui_after_do_shortcode', $shortcode );
 
-		wp_send_json_success( ob_get_clean() );
-
+		return ob_get_clean();
 	}
 
+	/**
+	 * Render a shortcode for preview in the TinyMCE editor.
+	 */
+	public function handle_ajax_do_shortcode() {
+
+		// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
+		if ( ! empty( $_POST['shortcode'] ) ) {
+			$shortcode = stripslashes( $_POST['shortcode'] );
+		} else {
+			$shortcode = null;
+		}
+		if ( isset( $_POST['post_id'] ) ) {
+			$post_id = intval( $_POST['post_id'] );
+		} else {
+			$post_id = null;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) || ! wp_verify_nonce( $_POST['nonce'], 'shortcode-ui-preview' ) ) {
+			echo esc_html__( "Something's rotten in the state of Denmark", 'shortcode-ui' );
+			exit;
+		}
+
+		wp_send_json_success( $this->render_shortcode_for_preview() );
+	}
+
+	/**
+	 * Get a bunch of shortcodes to render in preview.
+	 */
+	public function handle_ajax_bulk_do_shortcode() {
+
+		if ( is_array( $_POST['queries'] ) ) {
+
+			$responses = array();
+
+			foreach ( $_POST['queries'] as $posted_query ) {
+
+				// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
+				if ( ! empty( $posted_query['shortcode'] ) ) {
+					$shortcode = stripslashes( $posted_query['shortcode'] );
+				} else {
+					$shortcode = null;
+				}
+				if ( isset( $posted_query['post_id'] ) ) {
+					$post_id = intval( $posted_query['post_id'] );
+				} else {
+					$post_id = null;
+				}
+
+				array_push( $responses, array(
+					'query' => $posted_query,
+					'counter' => $posted_query['counter'],
+					'response' => $this->render_shortcode_for_preview( $shortcode, $post_id )
+				) );
+			}
+
+			wp_send_json_success( $responses );
+			exit;
+		}
+
+	}
 }
