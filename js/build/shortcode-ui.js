@@ -89,7 +89,7 @@ sui.controllers.MediaController = MediaController;
 module.exports = MediaController;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcodes.js":2,"./../utils/sui.js":9}],4:[function(require,module,exports){
+},{"./../collections/shortcodes.js":2,"./../utils/sui.js":10}],4:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
@@ -272,11 +272,90 @@ $(document).ready(function(){
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":8,"./utils/sui.js":9,"./views/media-frame.js":17}],8:[function(require,module,exports){
+},{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":9,"./utils/sui.js":10,"./views/media-frame.js":18}],8:[function(require,module,exports){
+(function (global){
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var Fetcher = (function() {
+	var fetcher = this;
+
+	this.counter = 0;
+	this.queries = [];
+	this.timeout = null;
+
+	/**
+	 * Add a query to the queue.
+	 *
+	 * Returns a promise that will be resolved when the query is successfully
+	 * returned.
+	 */
+	this.queueToFetch = function( query ) {
+		var fetchPromise = new $.Deferred();
+
+		query.counter = ++fetcher.counter;
+
+		fetcher.queries.push({
+			promise: fetchPromise,
+			query: query,
+			counter: query.counter
+		});
+
+		if ( ! fetcher.timeout ) {
+			fetcher.timeout = setTimeout( fetcher.fetchAll );
+		}
+
+		return fetchPromise;
+	};
+
+	/**
+	 * Execute all queued queries.
+	 *
+	 * Resolves their respective promises.
+	 */
+	this.fetchAll = function() {
+		delete fetcher.timeout;
+
+		if ( 0 === fetcher.queries.length ) {
+			return;
+		}
+
+		var request = $.post( ajaxurl + '?action=bulk_do_shortcode', {
+				queries: _.pluck( fetcher.queries, 'query' )
+			}
+		);
+
+		request.done( function( response ) {
+			_.each( response.data, function( result, index ) {
+				var matchedQuery = _.findWhere( fetcher.queries, {
+					counter: parseInt( index ),
+				});
+
+				if ( matchedQuery ) {
+					fetcher.queries = _.without( fetcher.queries, matchedQuery );
+					matchedQuery.promise.resolve( result );
+				}
+			} );
+		} );
+	};
+
+	// Public API methods available
+	return {
+		queueToFetch : this.queueToFetch,
+		fetchAll     : this.fetchAll
+	};
+
+})();
+
+module.exports = Fetcher;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],9:[function(require,module,exports){
 (function (global){
 var sui = require('./sui.js'),
-    wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
-    $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+	fetcher = require('./fetcher.js'),
+	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 /**
  * Generic shortcode mce view constructor.
@@ -285,8 +364,24 @@ var sui = require('./sui.js'),
 var shortcodeViewConstructor = {
 
 	initialize: function( options ) {
+		var self = this;
+
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
-		this.fetch();
+		this.fetching = this.delayedFetch();
+
+		this.fetching.done( function( queryResponse ) {
+			var response = queryResponse.response;
+			if ( '' === response ) {
+				self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
+			} else {
+				self.content = response;
+			}
+		}).fail( function() {
+			self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+		} ).always( function() {
+			delete self.fetching;
+			self.render( null, true );
+		} );
 	},
 
 	/**
@@ -325,6 +420,14 @@ var shortcodeViewConstructor = {
 
 		return shortcodeModel;
 
+	},
+
+	delayedFetch : function() {
+		return fetcher.queueToFetch({
+			post_id: $( '#post_ID' ).val(),
+			shortcode: this.shortcodeModel.formatShortcode(),
+			nonce: shortcodeUIData.nonces.preview,
+		});
 	},
 
 	/**
@@ -607,7 +710,7 @@ var shortcodeViewConstructor = {
 module.exports = shortcodeViewConstructor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./sui.js":9}],9:[function(require,module,exports){
+},{"./fetcher.js":8,"./sui.js":10}],10:[function(require,module,exports){
 var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {
@@ -618,7 +721,7 @@ window.Shortcode_UI = window.Shortcode_UI || {
 
 module.exports = window.Shortcode_UI;
 
-},{"./../collections/shortcodes.js":2}],10:[function(require,module,exports){
+},{"./../collections/shortcodes.js":2}],11:[function(require,module,exports){
 var sui = require('./../utils/sui.js');
 
 var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
@@ -828,7 +931,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 module.exports = sui.views.editAttributeFieldAttachment = editAttributeFieldAttachment;
 
 
-},{"./../utils/sui.js":9}],11:[function(require,module,exports){
+},{"./../utils/sui.js":10}],12:[function(require,module,exports){
 (function (global){
 var sui = require('./../utils/sui.js'),
     editAttributeField = require('./edit-attribute-field.js'),
@@ -886,7 +989,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":9,"./edit-attribute-field.js":13}],12:[function(require,module,exports){
+},{"./../utils/sui.js":10,"./edit-attribute-field.js":14}],13:[function(require,module,exports){
 ( function( $ ) {
 
 	var sui = window.Shortcode_UI;
@@ -1082,7 +1185,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 } )( jQuery );
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (global){
 var Backbone     = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	sui          = require('./../utils/sui.js'),
@@ -1230,7 +1333,7 @@ sui.views.editAttributeField = editAttributeField;
 module.exports = editAttributeField;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":9}],14:[function(require,module,exports){
+},{"./../utils/sui.js":10}],15:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	sui = require('./../utils/sui.js'),
@@ -1314,7 +1417,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 module.exports = EditShortcodeForm;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":9,"./edit-attribute-field-attachment.js":10,"./edit-attribute-field-color.js":11,"./edit-attribute-field-post-select.js":12,"./edit-attribute-field.js":13}],15:[function(require,module,exports){
+},{"./../utils/sui.js":10,"./edit-attribute-field-attachment.js":11,"./edit-attribute-field-color.js":12,"./edit-attribute-field-post-select.js":13,"./edit-attribute-field.js":14}],16:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
@@ -1348,7 +1451,7 @@ var insertShortcodeListItem = wp.Backbone.View.extend({
 module.exports = insertShortcodeListItem;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
@@ -1395,7 +1498,7 @@ var insertShortcodeList = wp.Backbone.View.extend({
 module.exports = insertShortcodeList;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcodes.js":2,"./insert-shortcode-list-item.js":15}],17:[function(require,module,exports){
+},{"./../collections/shortcodes.js":2,"./insert-shortcode-list-item.js":16}],18:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
@@ -1519,7 +1622,7 @@ var mediaFrame = postMediaFrame.extend( {
 module.exports = mediaFrame;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../controllers/media-controller.js":3,"./media-toolbar":18,"./shortcode-ui":21}],18:[function(require,module,exports){
+},{"./../controllers/media-controller.js":3,"./media-toolbar":19,"./shortcode-ui":22}],19:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 
@@ -1551,7 +1654,7 @@ var Toolbar = wp.media.view.Toolbar.extend({
 module.exports = Toolbar;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 sui = require('./../utils/sui.js');
@@ -1599,7 +1702,7 @@ sui.views.SearchShortcode = SearchShortcode;
 module.exports = SearchShortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":9}],20:[function(require,module,exports){
+},{"./../utils/sui.js":10}],21:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
     $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
@@ -1788,7 +1891,7 @@ var ShortcodePreview = Backbone.View.extend({
 module.exports = ShortcodePreview;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	insertShortcodeList = require('./insert-shortcode-list.js'),
@@ -1894,4 +1997,4 @@ var Shortcode_UI = Backbone.View.extend({
 module.exports = Shortcode_UI;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":9,"./edit-shortcode-form.js":14,"./insert-shortcode-list.js":16,"./media-toolbar.js":18,"./search-shortcode.js":19,"./shortcode-preview.js":20}]},{},[7]);
+},{"./../utils/sui.js":10,"./edit-shortcode-form.js":15,"./insert-shortcode-list.js":17,"./media-toolbar.js":19,"./search-shortcode.js":20,"./shortcode-preview.js":21}]},{},[7]);

@@ -180,7 +180,7 @@ describe( 'Shortcode View Constructor', function(){
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../js/src/models/shortcode":11,"../../js/src/utils/shortcode-view-constructor":12,"../../js/src/utils/sui":13}],5:[function(require,module,exports){
+},{"../../js/src/models/shortcode":11,"../../js/src/utils/shortcode-view-constructor":13,"../../js/src/utils/sui":14}],5:[function(require,module,exports){
 (function (global){
 var Shortcode = require('./../../../js/src/models/shortcode.js');
 var MceViewConstructor = require('./../../../js/src/utils/shortcode-view-constructor.js');
@@ -339,7 +339,7 @@ describe( "MCE View Constructor", function() {
 } );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../../../js/src/models/shortcode.js":11,"./../../../js/src/utils/shortcode-view-constructor.js":12,"./../../../js/src/utils/sui.js":13}],6:[function(require,module,exports){
+},{"./../../../js/src/models/shortcode.js":11,"./../../../js/src/utils/shortcode-view-constructor.js":13,"./../../../js/src/utils/sui.js":14}],6:[function(require,module,exports){
 var Shortcodes = require('./../../../js/src/collections/shortcodes.js');
 var sui = require('./../../../js/src/utils/sui.js');
 
@@ -356,7 +356,7 @@ describe( "SUI Util", function() {
 
 } );
 
-},{"./../../../js/src/collections/shortcodes.js":8,"./../../../js/src/utils/sui.js":13}],7:[function(require,module,exports){
+},{"./../../../js/src/collections/shortcodes.js":8,"./../../../js/src/utils/sui.js":14}],7:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var ShortcodeAttribute = require('./../models/shortcode-attribute.js');
@@ -545,9 +545,88 @@ module.exports = Shortcode;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcode-attributes.js":7,"./inner-content.js":9}],12:[function(require,module,exports){
 (function (global){
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+
+var Fetcher = (function() {
+	var fetcher = this;
+
+	this.counter = 0;
+	this.queries = [];
+	this.timeout = null;
+
+	/**
+	 * Add a query to the queue.
+	 *
+	 * Returns a promise that will be resolved when the query is successfully
+	 * returned.
+	 */
+	this.queueToFetch = function( query ) {
+		var fetchPromise = new $.Deferred();
+
+		query.counter = ++fetcher.counter;
+
+		fetcher.queries.push({
+			promise: fetchPromise,
+			query: query,
+			counter: query.counter
+		});
+
+		if ( ! fetcher.timeout ) {
+			fetcher.timeout = setTimeout( fetcher.fetchAll );
+		}
+
+		return fetchPromise;
+	};
+
+	/**
+	 * Execute all queued queries.
+	 *
+	 * Resolves their respective promises.
+	 */
+	this.fetchAll = function() {
+		delete fetcher.timeout;
+
+		if ( 0 === fetcher.queries.length ) {
+			return;
+		}
+
+		var request = $.post( ajaxurl + '?action=bulk_do_shortcode', {
+				queries: _.pluck( fetcher.queries, 'query' )
+			}
+		);
+
+		request.done( function( response ) {
+			_.each( response.data, function( result, index ) {
+				var matchedQuery = _.findWhere( fetcher.queries, {
+					counter: parseInt( index ),
+				});
+
+				if ( matchedQuery ) {
+					fetcher.queries = _.without( fetcher.queries, matchedQuery );
+					matchedQuery.promise.resolve( result );
+				}
+			} );
+		} );
+	};
+
+	// Public API methods available
+	return {
+		queueToFetch : this.queueToFetch,
+		fetchAll     : this.fetchAll
+	};
+
+})();
+
+module.exports = Fetcher;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],13:[function(require,module,exports){
+(function (global){
 var sui = require('./sui.js'),
-    wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
-    $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+	fetcher = require('./fetcher.js'),
+	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 /**
  * Generic shortcode mce view constructor.
@@ -556,8 +635,24 @@ var sui = require('./sui.js'),
 var shortcodeViewConstructor = {
 
 	initialize: function( options ) {
+		var self = this;
+
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
-		this.fetch();
+		this.fetching = this.delayedFetch();
+
+		this.fetching.done( function( queryResponse ) {
+			var response = queryResponse.response;
+			if ( '' === response ) {
+				self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
+			} else {
+				self.content = response;
+			}
+		}).fail( function() {
+			self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+		} ).always( function() {
+			delete self.fetching;
+			self.render( null, true );
+		} );
 	},
 
 	/**
@@ -596,6 +691,14 @@ var shortcodeViewConstructor = {
 
 		return shortcodeModel;
 
+	},
+
+	delayedFetch : function() {
+		return fetcher.queueToFetch({
+			post_id: $( '#post_ID' ).val(),
+			shortcode: this.shortcodeModel.formatShortcode(),
+			nonce: shortcodeUIData.nonces.preview,
+		});
 	},
 
 	/**
@@ -878,7 +981,7 @@ var shortcodeViewConstructor = {
 module.exports = shortcodeViewConstructor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./sui.js":13}],13:[function(require,module,exports){
+},{"./fetcher.js":12,"./sui.js":14}],14:[function(require,module,exports){
 var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {

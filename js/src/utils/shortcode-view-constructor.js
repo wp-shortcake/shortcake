@@ -1,6 +1,7 @@
 var sui = require('sui-utils/sui'),
-    wp = require('wp'),
-    $ = require('jquery');
+	fetcher = require('sui-utils/fetcher'),
+	wp = require('wp'),
+	$ = require('jquery');
 
 /**
  * Generic shortcode mce view constructor.
@@ -9,8 +10,24 @@ var sui = require('sui-utils/sui'),
 var shortcodeViewConstructor = {
 
 	initialize: function( options ) {
+		var self = this;
+
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
-		this.fetch();
+		this.fetching = this.delayedFetch();
+
+		this.fetching.done( function( queryResponse ) {
+			var response = queryResponse.response;
+			if ( '' === response ) {
+				self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
+			} else {
+				self.content = response;
+			}
+		}).fail( function() {
+			self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+		} ).always( function() {
+			delete self.fetching;
+			self.render( null, true );
+		} );
 	},
 
 	/**
@@ -49,6 +66,14 @@ var shortcodeViewConstructor = {
 
 		return shortcodeModel;
 
+	},
+
+	delayedFetch : function() {
+		return fetcher.queueToFetch({
+			post_id: $( '#post_ID' ).val(),
+			shortcode: this.shortcodeModel.formatShortcode(),
+			nonce: shortcodeUIData.nonces.preview,
+		});
 	},
 
 	/**
