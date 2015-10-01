@@ -27,7 +27,7 @@ var Fetcher = (function() {
 
 		if ( ! fetcher.timeout ) {
 			fetcher.timeout = setTimeout(
-				fetcher.fetchAll, 500
+				fetcher.fetchAll, 200
 			);
 		}
 		return fetchPromise;
@@ -43,6 +43,8 @@ var Fetcher = (function() {
 				queries: _.pluck( fetcher.queries, 'query' )
 			}
 		);
+
+		delete fetcher.timeout;
 
 		request.done( function( response ) {
 			_.each( response.data, function( result ) {
