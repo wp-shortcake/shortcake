@@ -34,30 +34,30 @@
 		height: 150px;
 
 		.add-shortcode-list-item-icon {
-
+			position: relative;
+			height: 120px;
 			font-size: 64px;
-			line-height: 150px;
-			vertical-align: middle;
 
-			.dashicons {
-				display: inline-block;
+			.dashicons,
+			img {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
 				font-size: inherit;
 				line-height: inherit;
 				width: auto;
 				height: auto;
-				position: relative;
-				top: -14px;
+				max-width: 80%;
+				max-height: 80%;
 			}
 
 		}
 
 		.add-shortcode-list-item-title {
 			margin: 0;
-			padding: 5px;
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
+			height: 30px;
+			line-height: 30px;
 			overflow: hidden;
 			max-height: 100%;
 			word-wrap: break-word;
