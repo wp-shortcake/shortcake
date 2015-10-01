@@ -75,7 +75,7 @@ class Shortcode_UI_Field_Post_Select {
 		</style>
 
 		<script type="text/html" id="tmpl-shortcode-ui-field-post-select">
-			<div class="field-block">
+			<div class="field-block shortcode-ui-field-post-select shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.id }}">{{ data.label }}</label>
 				<input type="text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="shortcode-ui-post-select" />
 			</div>
