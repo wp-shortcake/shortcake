@@ -90,7 +90,7 @@ class Shortcake_Field_Attachment {
 		?>
 
 		<script type="text/html" id="tmpl-fusion-shortcake-field-attachment">
-			<div class="field-block ui-field-attachment ui-attribute-{{ data.attr }}">
+			<div class="field-block shortcode-ui-field-attachment shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.attr }}">{{ data.label }}</label>
 				<div class="shortcake-attachment-preview attachment-preview attachment">
 					<button id="{{ data.attr }}" class="button button-small add">{{ data.addButton }}</button>
