@@ -20,6 +20,19 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		// Autoprefix
+		postcss: {
+			options: {
+				map: true, // inline sourcemaps
+				processors: [
+					require('autoprefixer')(),
+				]
+			},
+			dist: {
+				src: 'css/*.css'
+			}
+		},
+
 		watch:  {
 
 			styles: {
@@ -173,6 +186,7 @@ module.exports = function( grunt ) {
 	} );
 
 	grunt.loadNpmTasks( 'grunt-sass' );
+	grunt.loadNpmTasks( 'grunt-postcss' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-browserify' );
 	grunt.loadNpmTasks( 'grunt-phpcs' );
@@ -182,7 +196,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
 	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine', 'jshint' ] );
-	grunt.registerTask( 'styles', [ 'sass' ] );
+	grunt.registerTask( 'styles', [ 'sass', 'postcss' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
