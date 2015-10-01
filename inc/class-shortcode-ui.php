@@ -377,7 +377,7 @@ class Shortcode_UI {
 
 				$responses[ $posted_query['counter'] ] = array(
 					'query' => $posted_query,
-					'response' => $this->render_shortcode_for_preview( $shortcode, $post_id )
+					'response' => $this->render_shortcode_for_preview( $shortcode, $post_id ),
 				);
 			}
 
