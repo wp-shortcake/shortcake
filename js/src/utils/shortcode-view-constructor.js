@@ -69,7 +69,7 @@ var shortcodeViewConstructor = {
 	},
 
 	delayedFetch : function() {
-		return /* this.fetching ||*/ fetcher.queueToFetch({
+		return fetcher.queueToFetch({
 			post_id: $( '#post_ID' ).val(),
 			shortcode: this.shortcodeModel.formatShortcode(),
 			nonce: shortcodeUIData.nonces.preview,
