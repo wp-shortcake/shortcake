@@ -586,20 +586,27 @@ var Fetcher = (function() {
 	 * Resolves their respective promises.
 	 */
 	this.fetchAll = function() {
+		delete fetcher.timeout;
+
+		if ( 0 === fetcher.queries.length ) {
+			return;
+		}
+
 		var request = $.post( ajaxurl + '?action=bulk_do_shortcode', {
 				queries: _.pluck( fetcher.queries, 'query' )
 			}
 		);
-
-		delete fetcher.timeout;
 
 		request.done( function( response ) {
 			_.each( response.data, function( result, index ) {
 				var matchedQuery = _.findWhere( fetcher.queries, {
 					counter: parseInt( index ),
 				});
-				fetcher.queries = _.without( fetcher.queries, matchedQuery );
-				matchedQuery.promise.resolve( result );
+
+				if ( matchedQuery ) {
+					fetcher.queries = _.without( fetcher.queries, matchedQuery );
+					matchedQuery.promise.resolve( result );
+				}
 			} );
 		} );
 	};
