@@ -67,7 +67,7 @@ function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) 
 	 *
 	 * @since 0.6.0
 	 *
-	 * @param array $args   The configuration argument array specified in shortcode_ui_register_for_shortcode()
+	 * @param array $args           The configuration argument array specified in shortcode_ui_register_for_shortcode()
 	 * @param string $shortcode_tag The shortcode base.
 	 */
 	$args = apply_filters( 'shortcode_ui_shortcode_args', $args, $shortcode_tag );
@@ -79,7 +79,7 @@ function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) 
 	 *
 	 * @since 0.6.0
 	 *
-	 * @param array $args   The configuration argument array specified in shortcode_ui_register_for_shortcode()
+	 * @param array $args The configuration argument array specified in shortcode_ui_register_for_shortcode()
 	 */
 	$args = apply_filters( 'shortcode_ui_shortcode_args_' . $shortcode_tag, $args );
 
