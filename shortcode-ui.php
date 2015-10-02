@@ -61,7 +61,7 @@ function shortcode_ui_load_textdomain() {
  * @return null
  */
 function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) {
-	$args = apply_filters('shortcode_ui_shortcode_args_' . $shortcode_tag, apply_filters('shortcode_ui_shortcode_args', $args, $shortcode_tag));
+	$args = apply_filters( 'shortcode_ui_shortcode_args_' . $shortcode_tag, apply_filters( 'shortcode_ui_shortcode_args', $args, $shortcode_tag ) );
 	Shortcode_UI::get_instance()->register_shortcode_ui( $shortcode_tag, $args );
 }
 
