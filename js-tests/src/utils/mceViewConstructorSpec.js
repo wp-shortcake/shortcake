@@ -6,6 +6,12 @@ var wp = require('wp');
 
 describe( "MCE View Constructor", function() {
 
+	beforeEach( function() {
+		wp.shortcode.regexp = function( tag ) {
+			return new RegExp( '\\[(\\[?)(' + tag + ')(?![\\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*(?:\\[(?!\\/\\2\\])[^\\[]*)*)(\\[\\/\\2\\]))?)(\\]?)', 'g' );
+		};
+	});
+
 	sui.shortcodes.push( new Shortcode( {
 		label: 'Test Label',
 		shortcode_tag: 'test_shortcode',
