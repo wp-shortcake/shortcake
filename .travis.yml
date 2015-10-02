@@ -11,7 +11,9 @@ matrix:
     - php: 5.6
       env: WP_VERSION=latest WP_MULTISITE=1 WP_TRAVISCI=travis:phpunit
     - php: 5.6
-      env: WP_TRAVISCI=travis:validate
+      env: WP_TRAVISCI=travis:js-tests
+    - php: 5.6
+      env: WP_TRAVISCI=travis:php-lint
 
 cache:
   - composer
@@ -24,9 +26,12 @@ before_script:
       bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
     fi
   - |
-    if [[ "$WP_TRAVISCI" == "travis:validate" ]] ; then
+    if [[ "$WP_TRAVISCI" == "travis:php-lint" ]] || [[ "$WP_TRAVISCI" == "travis:js-tests" ]] ; then
         npm install -g grunt-cli
         npm install
+    fi
+  - |
+    if [[ "$WP_TRAVISCI" == "travis:php-lint" ]] ; then
         composer install
     fi
 
@@ -36,9 +41,12 @@ script:
       phpunit
     fi
   - |
-    if [[ "$WP_TRAVISCI" == "travis:validate" ]] ; then
-      grunt jasmine
+    if [[ "$WP_TRAVISCI" == "travis:php-lint" ]] ; then
       grunt phpcs
+    fi
+  - |
+    if [[ "$WP_TRAVISCI" == "travis:js-tests" ]] ; then
+      grunt jasmine
     fi
 
 notifications:
