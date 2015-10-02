@@ -138,6 +138,7 @@ module.exports = function( grunt ) {
 						'js-tests/vendor/jquery.js',
 						'js-tests/vendor/underscore.js',
 						'js-tests/vendor/backbone.js',
+						'js-tests/vendor/wp-shortcode.js',
 						'js-tests/vendor/wp-util.js',
 						'js-tests/vendor/wp-editors.js',
 						'js-tests/vendor/mock-ajax.js',
