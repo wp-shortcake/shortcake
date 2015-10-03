@@ -81,7 +81,7 @@ function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) 
 	 *
 	 * @param array $args The configuration argument array specified in shortcode_ui_register_for_shortcode()
 	 */
-	$args = apply_filters( 'shortcode_ui_shortcode_args_' . $shortcode_tag, $args );
+	$args = apply_filters( "shortcode_ui_shortcode_args_{$shortcode_tag}", $args );
 
 	Shortcode_UI::get_instance()->register_shortcode_ui( $shortcode_tag, $args );
 }
