@@ -292,6 +292,34 @@ class Shortcode_UI {
 	}
 
 	/**
+	 * Return a classname string to apply to the MCE view wrapping a shortcode preview.
+	 *
+	 * @param string $shortcode
+	 * @param int $post_id
+	 */
+	private function render_shortcode_classes_for_preview( $shortcode, $post_id = null ) {
+		$class_names = array( 'wpview-wrap' );
+
+		if ( preg_match( '#' . get_shortcode_regex() . '#', $shortcode, $parsed_shortcode ) ) {
+			$shortcode_tag = $parsed_shortcode[2];
+			$class_names[] = "wpview-{$shortcode_tag}";
+
+			/**
+			 * Filter the class names applied to the wpview div in the MCE editor.
+			 *
+			 * Can be used to render specific shortcodes as displaying floated or inline.
+			 *
+			 * @param array $class_names Array of class names to be applied.
+			 * @param string $shortcode_tag The shortcode tag
+			 * @param array $parsed_shortcode The parsed attributes, as returned by shortcode regex.
+			 */
+			$class_names = apply_filters( 'shortcode_ui_shortcode_preview_classes', $class_names, $shortcode_tag, $parsed_shortcode );
+		}
+
+		return implode( ' ', $class_names );
+	}
+
+	/**
 	 * Render a shortcode body for preview.
 	 */
 	private function render_shortcode_for_preview( $shortcode, $post_id = null ) {
@@ -354,8 +382,9 @@ class Shortcode_UI {
 				}
 
 				$responses[ $posted_query['counter'] ] = array(
-					'query' => $posted_query,
+					'query'    => $posted_query,
 					'response' => $this->render_shortcode_for_preview( $shortcode, $post_id ),
+					'classes'  => $this->render_shortcode_classes_for_preview( $shortcode, $post_id ),
 				);
 			}
 
