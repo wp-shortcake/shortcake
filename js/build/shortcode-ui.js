@@ -229,7 +229,7 @@ Shortcode = Backbone.Model.extend({
 
 			// Encode textareas incase HTML
 			if ( attr.get( 'escape' ) ) {
-			attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ), { silent: true } );
+				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ), { silent: true } );
 			}
 
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
