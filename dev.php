@@ -115,7 +115,7 @@ function shortcode_ui_dev_shortcode( $attr, $content = '' ) {
 	    <p style="margin:0; padding: 0;">
 		<b>Content:</b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
 		<b>Source:</b> <?php echo esc_html( $attr[ 'source' ] ); ?></br>
-		<b>Image:</b> <?php echo wp_get_attachment_image( $attr[ 'attachment' ], array( 50, 50 ) ); ?></br>
+		<b>Image:</b> <?php echo wp_kses_post( wp_get_attachment_image( $attr[ 'attachment' ], array( 50, 50 ) ) ); ?></br>
 	    </p>
 	</section>
 
