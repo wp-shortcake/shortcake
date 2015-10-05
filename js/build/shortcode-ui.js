@@ -542,7 +542,7 @@ var shortcodeViewConstructor = {
 			// convert attribute strings to object.
 			for ( var i = 0; i < attributeMatches.length; i++ ) {
 
-				var bitsRegEx = /(\S+?)=(.*)/g;
+				var bitsRegEx = /(\S+?)=([\s\S]*)/gmi;
 				var bits = bitsRegEx.exec( attributeMatches[i] );
 
 				if ( bits && bits[1] ) {
