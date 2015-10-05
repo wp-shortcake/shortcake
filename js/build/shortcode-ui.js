@@ -113,6 +113,7 @@ module.exports = InnerContent;
 var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
 
 var ShortcodeAttribute = Backbone.Model.extend({
+
 	defaults: {
 		attr:        '',
 		label:       '',
@@ -124,6 +125,26 @@ var ShortcodeAttribute = Backbone.Model.extend({
 			placeholder: '',
 		},
 	},
+
+	initialize: function() {
+
+		// If value not escaped, set to the default for this field type.
+		if ( ! this.get( 'escape' ) && shortcodeUIFieldData[ this.get( 'type' ) ] ) {
+			this.set( 'escape', shortcodeUIFieldData[ this.get( 'type' ) ].escape );
+		}
+
+		this.on( 'change:value', this.decodeValue );
+
+	},
+
+	decodeValue: function () {
+
+		if ( this.get('escape') ) {
+			this.set( 'value', decodeURIComponent( this.get('value') ), { slient: true } );
+		}
+
+	},
+
 });
 
 module.exports = ShortcodeAttribute;
@@ -206,11 +227,9 @@ Shortcode = Backbone.Model.extend({
 				return;
 			}
 
-			var type = attr.get( 'type' );
-
 			// Encode textareas incase HTML
-			if ( shortcodeUIFieldData[ type ] && shortcodeUIFieldData[ type ].escape  ) {
-				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ) );
+			if ( attr.get( 'escape' ) ) {
+			attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ), { silent: true } );
 			}
 
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
@@ -1396,11 +1415,6 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 			var viewObjName = shortcodeUIFieldData[ type ].view;
 			var tmplName    = shortcodeUIFieldData[ type ].template;
-
-			// decode textareas / html
-			if ( shortcodeUIFieldData[ type ].escape ) {
-				attr.set( 'value', decodeURIComponent( attr.get( 'value' ) ) );
-			}
 
 			var view       = new sui.views[viewObjName]( { model: attr } );
 			view.template  = wp.media.template( tmplName );
