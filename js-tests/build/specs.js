@@ -815,11 +815,11 @@ var shortcodeViewConstructor = {
 
 		var attributes_backup = {};
 		var attributes = wp.shortcode.attrs( matches[3] );
-		for ( var key in attributes['named'] ) {
-			if ( ! attributes['named'].hasOwnProperty( key ) ) {
+		for ( var key in attributes.named ) {
+			if ( ! attributes.named.hasOwnProperty( key ) ) {
 				continue;
 			}
-			value = attributes['named'][ key ];
+			value = attributes.named[ key ];
 			attr = currentShortcode.get( 'attrs' ).findWhere({
 				attr : key
 			});
