@@ -9,6 +9,8 @@ var sui = require('sui-utils/sui'),
  */
 var shortcodeViewConstructor = {
 
+	classes: 'wpview-wrap',
+
 	initialize: function( options ) {
 		var self = this;
 
@@ -22,11 +24,15 @@ var shortcodeViewConstructor = {
 			} else {
 				self.content = response;
 			}
+			self.classes = queryResponse.classes;
 		}).fail( function() {
 			self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 		} ).always( function() {
 			delete self.fetching;
 			self.render( null, true );
+			self.getNodes( function( editor, node, contentNode ) {
+				$(node).attr( 'class', self.classes );
+			} );
 		} );
 	},
 
