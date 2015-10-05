@@ -65,7 +65,7 @@ var ShortcodePreview = Backbone.View.extend({
 		var isIE = typeof tinymce != 'undefined' ? tinymce.Env.ie : false;
 
 		$iframe = $( '<iframe/>', {
-			src: isIE ? 'javascript:""' : '',
+			src: isIE ? 'javascript:""' : '', // jshint ignore:line
 			frameBorder: '0',
 			allowTransparency: 'true',
 			scrolling: 'no',
@@ -168,8 +168,9 @@ var ShortcodePreview = Backbone.View.extend({
 		var editors = typeof tinymce != 'undefined' ? tinymce.editors : [];
 		_.each( editors, function( editor ) {
 			_.each( editor.dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
-				var href;
-				( href = link.href ) && ( styles[href] = true );	// Poor man's de-duping.
+				if ( link.href ) {
+					styles[ link.href ] = true;
+				}
 			});
 		});
 

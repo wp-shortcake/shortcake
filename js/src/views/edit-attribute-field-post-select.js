@@ -8,7 +8,12 @@
 	sui.views.editAttributeFieldPostSelect = sui.views.editAttributeField.extend( {
 
 		events: {
-			'change .shortcode-ui-post-select': 'updateValue',
+			'change .shortcode-ui-post-select': 'inputChanged',
+		},
+
+		inputChanged: function(e) {
+			this.setValue( e.val );
+			this.triggerCallbacks();
 		},
 
 		render: function() {
@@ -78,7 +83,7 @@
 						.val()
 						.split(',')
 						.map( function (str) { return str.trim(); } )
-						.map( function (str) { return parseInt( str ); } )
+						.map( function (str) { return parseInt( str ); } );
 
 					if ( ids.length < 1 ) {
 						return;
@@ -86,10 +91,11 @@
 
 					// Check if there is already cached data.
 					for ( var i = 0; i < ids.length; i++ ) {
-						if ( cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) ) ) {
+						cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) );
+						if ( cached ) {
 							parsedData.push( cached );
 						}
-					};
+					}
 
 					// If not multiple - return single value if we have one.
 					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
@@ -183,17 +189,6 @@
 			$('.shortcode-ui-post-select.select2-container').select2( "close" );
 		}
 
-	});
-
-	/**
-	 * Extending the SUI Tabbed View to hide Select2 UI dropdown when previewing the shortcake
-	 */
-	var tabbedView = sui.views.TabbedView;
-	sui.views.TabbedView = tabbedView.extend({
-		tabSwitcher: function() {
-			tabbedView.prototype.tabSwitcher.apply( this, arguments );
-			$('.shortcode-ui-post-select.select2-container').select2( "close" );
-		}
 	});
 
 } )( jQuery );

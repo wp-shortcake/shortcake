@@ -13,7 +13,6 @@
   .add-shortcode-list .shortcode-list-item {
     margin: 10px;
     float: left;
-    -webkit-box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.1);
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.1);
     background: #eee;
     cursor: pointer;
@@ -22,31 +21,37 @@
     width: 150px;
     height: 150px; }
     .add-shortcode-list .shortcode-list-item .add-shortcode-list-item-icon {
-      font-size: 64px;
-      line-height: 150px;
-      vertical-align: middle; }
-      .add-shortcode-list .shortcode-list-item .add-shortcode-list-item-icon .dashicons {
-        display: inline-block;
+      position: relative;
+      height: 120px;
+      font-size: 64px; }
+      .add-shortcode-list .shortcode-list-item .add-shortcode-list-item-icon .dashicons, .add-shortcode-list .shortcode-list-item .add-shortcode-list-item-icon img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
         font-size: inherit;
         line-height: inherit;
         width: auto;
         height: auto;
-        position: relative;
-        top: -14px; }
+        max-width: 80%;
+        max-height: 80%; }
     .add-shortcode-list .shortcode-list-item .add-shortcode-list-item-title {
-      margin: 0;
-      padding: 5px;
+      box-sizing: border-box;
       position: absolute;
-      left: 0;
-      right: 0;
       bottom: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+      line-height: 1.2;
+      padding: 8px;
       overflow: hidden;
       max-height: 100%;
       word-wrap: break-word;
       text-align: center;
       font-weight: bold;
       background: rgba(255, 255, 255, 0.8);
-      -webkit-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
       box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15); }
 
 .shortcode-ui-content .edit-shortcode-tabs {
@@ -68,7 +73,6 @@
     clear: both; }
   .edit-shortcode-form input, .edit-shortcode-form textarea {
     border: 1px solid #ddd;
-    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
     background-color: #fff;
     color: #333;
@@ -76,6 +80,12 @@
     -webkit-transition: 0.05s border-color ease-in-out;
     transition: 0.05s border-color ease-in-out;
     max-width: 100%; }
+  .edit-shortcode-form input[type="range"] {
+    box-shadow: none; }
+  .edit-shortcode-form output.range {
+    display: inline-block;
+    padding: 6px 8px;
+    vertical-align: top; }
   .edit-shortcode-form textarea {
     width: 100%;
     max-width: 100%;
@@ -91,6 +101,8 @@
     padding-top: 10px; }
     .edit-shortcode-form .field-inline label {
       display: inline-block; }
+  .edit-shortcode-form .description {
+    clear: both; }
 
 .edit-shortcode-form .shortcake-attachment-preview {
   width: 150px;
@@ -101,6 +113,10 @@
   padding: 0; }
   .edit-shortcode-form .shortcake-attachment-preview:before {
     display: none; }
+  .edit-shortcode-form .shortcake-attachment-preview .thumbnail:hover:after {
+    background: rgba(0, 0, 0, 0.1);
+    -webkit-transition: all .3s linear;
+            transition: all .3s linear; }
   .edit-shortcode-form .shortcake-attachment-preview:not(.has-attachment) {
     border: 2px dashed #DDD;
     border-radius: 2px;
@@ -121,7 +137,8 @@
     whitespace: nowrap;
     width: 24px;
     height: 24px;
-    padding: 0; }
+    padding: 0;
+    overflow: hidden; }
     .edit-shortcode-form .shortcake-attachment-preview .button.remove:after {
       content: "\00d7";
       position: absolute;
@@ -133,10 +150,30 @@
     display: none; }
   .edit-shortcode-form .shortcake-attachment-preview.loading .loading-indicator {
     display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -10px 0 0 -10px; }
+    position: relative;
+    width: 100%;
+    height: 100%; }
+  .edit-shortcode-form .shortcake-attachment-preview .loading-indicator .dashicons {
+    font-size: 80px;
+    height: 100px;
+    line-height: 100px;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle; }
+  .edit-shortcode-form .shortcake-attachment-preview .loading-indicator .attachment-preview-loading {
+    width: 60px;
+    height: 5px;
+    overflow: hidden;
+    background-color: transparent;
+    margin: -30px auto 0; }
+    .edit-shortcode-form .shortcake-attachment-preview .loading-indicator .attachment-preview-loading ins {
+      background-color: #464646;
+      margin: 0 0 0 -60px;
+      width: 60px;
+      height: 5px;
+      display: block;
+      -webkit-animation: attachment-preview-loading 1.3s infinite 1s linear;
+      animation: attachment-preview-loading 1.3s infinite 1s linear; }
   .edit-shortcode-form .shortcake-attachment-preview .filename {
     line-height: 1.4em; }
   .edit-shortcode-form .shortcake-attachment-preview.has-attachment .button.add {
@@ -144,4 +181,22 @@
   .edit-shortcode-form .shortcake-attachment-preview.has-attachment .button.remove {
     display: block; }
 
+.edit-shortcode-form .thumbnail-details-container {
+  display: none; }
+  .edit-shortcode-form .thumbnail-details-container.has-attachment {
+    display: block; }
+
+@-webkit-keyframes attachment-preview-loading {
+  0% {
+    margin-left: -60px; }
+
+  100% {
+    margin-left: 60px; } }
+
+@keyframes attachment-preview-loading {
+  0% {
+    margin-left: -60px; }
+
+  100% {
+    margin-left: 60px; } }
 /*# sourceMappingURL=shortcode-ui.css.map */

@@ -11,7 +11,7 @@ describe( "Shortcode Attribute Model", function() {
 		escape:      false,
 		meta:  {
 			placeholder: 'test placeholder'
-		}
+		},
 	};
 
 	var attr = new ShortcodeAttribute( attrData );

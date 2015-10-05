@@ -52,7 +52,7 @@ var mediaFrame = postMediaFrame.extend( {
 	},
 
 	resetMediaController: function( event ) {
-		if ( this.state().props.get('currentShortcode') ) {
+		if ( this.state() && this.state().props.get('currentShortcode') ) {
 			this.mediaController.reset();
 			this.contentRender( 'shortcode-ui', 'insert' );
 		}
@@ -103,10 +103,7 @@ var mediaFrame = postMediaFrame.extend( {
 		// @todo - fix this.
 		// This is a hack.
 		// I just can't work out how to do it properly...
-		if (
-			view.controller.state().props
-			&& view.controller.state().props.get( 'currentShortcode' )
-		) {
+		if ( view.controller.state().props && view.controller.state().props.get( 'currentShortcode' ) ) {
 			window.setTimeout( function() {
 				view.controller.$el.addClass( 'hide-menu' );
 			} );

@@ -25,8 +25,8 @@ describe( "Shortcode Model", function() {
 		},
 	};
 
-	var defaultShortcode = new Shortcode();
-	var shortcode = new Shortcode( data );
+	defaultShortcode = new Shortcode();
+	shortcode = new Shortcode( data );
 
 	it( 'Defaults set correctly.', function() {
 		expect( defaultShortcode.get( 'label' ) ).toEqual( '' );
@@ -64,6 +64,11 @@ describe( "Shortcode Model", function() {
 		_shortcode.get('inner_content').unset( 'value' );
 		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]' );
 
+		// Test without attributes
+		_shortcode.get( 'attrs' ).first().unset( 'value' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode]' );
+
 	});
 
 });
+

@@ -40,16 +40,10 @@ class Shortcode_UI_Field_Post_Select {
 
 		$plugin_dir = dirname( dirname( __FILE__ ) );
 
-		wp_enqueue_script(
-			'shortcode-ui-field-post-select',
-			plugins_url( 'js/build/field-post-select.js', $plugin_dir ),
-			array( 'shortcode-ui', 'select2' )
-		);
-
 		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ) , array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
 		wp_enqueue_style( 'select2', plugins_url( 'lib/select2/select2.css', $plugin_dir ), null, '3.5.2' );
 
-		wp_localize_script( 'shortcode-ui-field-post-select', 'shortcodeUiPostFieldData', array(
+		wp_localize_script( 'shortcode-ui', 'shortcodeUiPostFieldData', array(
 			'nonce' => wp_create_nonce( 'shortcode_ui_field_post_select' ),
 		) );
 
@@ -81,9 +75,12 @@ class Shortcode_UI_Field_Post_Select {
 		</style>
 
 		<script type="text/html" id="tmpl-shortcode-ui-field-post-select">
-			<div class="field-block">
+			<div class="field-block shortcode-ui-field-post-select shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.id }}">{{ data.label }}</label>
 				<input type="text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="shortcode-ui-post-select" />
+				<# if ( typeof data.description == 'string' ) { #>
+					<p class="description">{{ data.description }}</p>
+				<# } #>
 			</div>
 		</script>
 
@@ -115,7 +112,6 @@ class Shortcode_UI_Field_Post_Select {
 		// Shortcode not found.
 		if ( ! isset( $shortcodes[ $requested_shortcode ] ) ) {
 			wp_send_json_error( $response );
-			die;
 		}
 
 		$shortcode = $shortcodes[ $requested_shortcode ];
@@ -129,7 +125,6 @@ class Shortcode_UI_Field_Post_Select {
 		// Query not found.
 		if ( empty( $query_args ) ) {
 			wp_send_json_error( $response );
-			die;
 		}
 
 		// Hardcoded query args.
@@ -148,6 +143,7 @@ class Shortcode_UI_Field_Post_Select {
 			$post__in = is_array( $_GET['post__in'] ) ? $_GET['post__in'] : explode( ',', $_GET['post__in'] );
 			$query_args['post__in'] = array_map( 'intval', $post__in );
 			$query_args['orderby']  = 'post__in';
+			$query_args['ignore_sticky_posts'] = true;
 		}
 
 		$query = new WP_Query( $query_args );

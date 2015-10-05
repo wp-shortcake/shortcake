@@ -1,6 +1,5 @@
 var Backbone = require('backbone'),
 	insertShortcodeList = require('sui-views/insert-shortcode-list'),
-	TabbedView = require('sui-views/tabbed-view'),
 	ShortcodePreview = require('sui-views/shortcode-preview'),
 	EditShortcodeForm = require('sui-views/edit-shortcode-form'),
 	Toolbar = require('sui-views/media-toolbar'),
@@ -24,7 +23,7 @@ var Shortcode_UI = Backbone.View.extend({
 	createToolbar: function(options) {
 		toolbarOptions = {
 			controller: this.toolbar_controller
-		}
+		};
 
 		this.toolbar = new Toolbar( toolbarOptions );
 
@@ -64,28 +63,7 @@ var Shortcode_UI = Backbone.View.extend({
 
 	renderEditShortcodeView: function() {
 		var shortcode = this.controller.props.get( 'currentShortcode' );
-		var view = new TabbedView({
-			tabs: {
-				edit: {
-					label: shortcodeUIData.strings.edit_tab_label,
-					content: new EditShortcodeForm({ model: shortcode })
-				},
-
-				preview: {
-					label: shortcodeUIData.strings.preview_tab_label,
-					content: new ShortcodePreview({ model: shortcode }),
-					open: function() {
-						this.render();
-					}
-				}
-			},
-
-			styles: {
-				group:	'media-router edit-shortcode-tabs',
-				tab:	'media-menu-item edit-shortcode-tab'
-			}
-		});
-
+		var view = new EditShortcodeForm({ model: shortcode });
 		this.$el.append( view.render().el );
 
 		if ( this.controller.props.get('action') === 'update' ) {
