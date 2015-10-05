@@ -61,33 +61,31 @@ function shortcode_ui_dev_advanced_example() {
 	 */
 	shortcode_ui_register_for_shortcode(
 		'shortcake_dev', array(
-	    // Display label. String. Required.
-	    'label' => 'Shortcake Dev',
-	    // Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
-	    'listItemImage' => 'dashicons-editor-quote',
+	    'label' => 'Shortcake Dev', // Display label. String. Required.
+	    'listItemImage' => 'dashicons-editor-quote', // Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 	    'inner_content' => array(
 		'label' => 'Quote',
 	    ),
-	    'post_type' => array( 'post' ),
+	    'post_type' => array( 'post' ), //Post type support
 	    // Available shortcode attributes and default values. Required. Array.
 	    // Attribute model expects 'attr', 'type' and 'label'
 	    // Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
 	    'attrs' => array(
 		array(
-		    'label' => 'Attachment',
-		    'attr' => 'attachment',
+		    'label' => __( 'Attachment', 'your-text-domain' ), // Field label
+		    'attr' => 'attachment', // Field type
 		    'type' => 'attachment',
-		    'libraryType' => array( 'image' ),
-		    'addButton' => 'Select Image',
-		    'frameTitle' => 'Select Image',
+		    'libraryType' => array( 'image' ), // Media type to insert
+		    'addButton' => __( 'Select Image', 'your-text-domain' ), // Button text that opens Media Library
+		    'frameTitle' => __( 'Select Image', 'your-text-domain ' ), // Media Library frame title
 		),
 		array(
-		    'label' => 'Cite',
+		    'label' => __( 'Citation Source', 'your-text-domain' ),
 		    'attr' => 'source',
 		    'type' => 'text',
-		    'meta' => array(
+		    'meta' => array( // Holds custom field attributes.
 			'placeholder' => 'Test placeholder',
-			'data-test' => 1,
+			'data-test' => 1, // Custom data attribute
 		    ),
 		),
 		array(
@@ -104,6 +102,7 @@ function shortcode_ui_dev_advanced_example() {
 
 function shortcode_ui_dev_shortcode( $attr, $content = '' ) {
 
+	//Parse the attribute of the shortcode
 	$attr = wp_parse_args( $attr, array(
 	    'source' => '',
 	    'attachment' => 0
