@@ -124,13 +124,18 @@ class Shortcode_UI {
 			$fields = Shortcode_UI_Fields::get_instance()->get_fields();
 
 			foreach ( $args['attrs'] as $attr ) {
-				if ( ! $fields[ $attr['type'] ]['escape'] ) {
-					continue;
+
+				$default = isset( $fields[ $attr['type'] ]['escape'] ) ? $fields[ $attr['type'] ]['escape'] : false;
+				$escaped = isset( $attr['escape'] ) ? $attr['escape'] : $default;
+
+				if ( $escaped ) {
+					$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
 				}
-				$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
+
 			}
 
 			return $out;
+
 		}, 1, 3 );
 
 	}
