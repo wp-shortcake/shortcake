@@ -6,6 +6,12 @@ var wp = require('wp');
 
 describe( "MCE View Constructor", function() {
 
+	beforeEach( function() {
+		wp.shortcode.regexp = function( tag ) {
+			return new RegExp( '\\[(\\[?)(' + tag + ')(?![\\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*(?:\\[(?!\\/\\2\\])[^\\[]*)*)(\\[\\/\\2\\]))?)(\\]?)', 'g' );
+		};
+	});
+
 	sui.shortcodes.push( new Shortcode( {
 		label: 'Test Label',
 		shortcode_tag: 'test_shortcode',
@@ -147,6 +153,13 @@ describe( "MCE View Constructor", function() {
 	} );
 
 	it( 'parses shortcode with unquoted attributes', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr=test]');
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'attr' }).get('value') ).toEqual( 'test' );
+	});
+
+	// See https://github.com/fusioneng/Shortcake/issues/495
+	xit( 'parses shortcode with hyphened-attribute', function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
