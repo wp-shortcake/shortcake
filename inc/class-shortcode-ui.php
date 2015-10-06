@@ -369,13 +369,14 @@ class Shortcode_UI {
 	}
 
 	/**
-	 * Decode any attributes
-	 * @param  [type] $out   [description]
-	 * @param  [type] $pairs [description]
-	 * @param  [type] $atts  [description]
-	 * @return [type]        [description]
+	 * Decode any encoded attributes.
+	 *
+	 * @param array $out   The output array of shortcode attributes.
+	 * @param array $pairs The supported attributes and their defaults.
+	 * @param array $atts  The user defined shortcode attributes.
+	 * @return array $out  The output array of shortcode attributes.
 	 */
-	function filter_shotcode_atts_decode_encoded( $out, $pairs, $atts ) {
+	public function filter_shotcode_atts_decode_encoded( $out, $pairs, $atts ) {
 
 		// Get current shortcode tag from the current filter
 		// by stripping `shortcode_atts_` from start of string.
@@ -396,7 +397,6 @@ class Shortcode_UI {
 			if ( $encoded ) {
 				$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
 			}
-
 		}
 
 		return $out;
