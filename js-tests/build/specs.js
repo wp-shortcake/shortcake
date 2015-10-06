@@ -59,7 +59,7 @@ var Shortcode = require('../../js/src/models/shortcode');
 var InnerContent = require('../../js/src/models/inner-content');
 var ShortcodeAttribute = require('../../js/src/models/shortcode-attribute');
 var ShortcodeAttributes = require('../../js/src/collections/shortcode-attributes');
-var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 describe( "Shortcode Model", function() {
 
@@ -158,7 +158,7 @@ describe( "Shortcode Model", function() {
 var Shortcode = require('../../js/src/models/shortcode');
 var ShortcodeViewConstructor = require('../../js/src/utils/shortcode-view-constructor');
 var sui = require('../../js/src/utils/sui');
-var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 describe( 'Shortcode View Constructor', function(){
 
@@ -208,8 +208,8 @@ describe( 'Shortcode View Constructor', function(){
 var Shortcode = require('./../../../js/src/models/shortcode.js');
 var MceViewConstructor = require('./../../../js/src/utils/shortcode-view-constructor.js');
 var sui = require('./../../../js/src/utils/sui.js');
-var jQuery = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
-var wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null);
+var jQuery = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 
 describe( "MCE View Constructor", function() {
 
@@ -412,7 +412,7 @@ describe( "SUI Util", function() {
 
 },{"./../../../js/src/collections/shortcodes.js":8,"./../../../js/src/utils/sui.js":14}],7:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var ShortcodeAttribute = require('./../models/shortcode-attribute.js');
 
 /**
@@ -434,7 +434,7 @@ module.exports = ShortcodeAttributes;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../models/shortcode-attribute.js":10}],8:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var Shortcode = require('./../models/shortcode.js');
 
 // Shortcode Collection
@@ -447,7 +447,7 @@ module.exports = Shortcodes;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../models/shortcode.js":11}],9:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
 /**
  * Shortcode Attribute Model.
@@ -466,7 +466,7 @@ module.exports = InnerContent;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],10:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
 var ShortcodeAttribute = Backbone.Model.extend({
 
@@ -498,10 +498,10 @@ module.exports = ShortcodeAttribute;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],11:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window.Backbone : typeof global !== "undefined" ? global.Backbone : null);
+var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var ShortcodeAttributes = require('./../collections/shortcode-attributes.js');
 var InnerContent = require('./inner-content.js');
-var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 Shortcode = Backbone.Model.extend({
 
@@ -616,8 +616,8 @@ module.exports = Shortcode;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcode-attributes.js":7,"./inner-content.js":9}],12:[function(require,module,exports){
 (function (global){
-var $ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
-var _ = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 var Fetcher = (function() {
 	var fetcher = this;
@@ -696,8 +696,8 @@ module.exports = Fetcher;
 (function (global){
 var sui = require('./sui.js'),
 	fetcher = require('./fetcher.js'),
-	wp = (typeof window !== "undefined" ? window.wp : typeof global !== "undefined" ? global.wp : null),
-	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null);
+	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 /**
  * Generic shortcode mce view constructor.
