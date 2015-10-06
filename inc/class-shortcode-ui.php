@@ -394,7 +394,7 @@ class Shortcode_UI {
 			$default = isset( $fields[ $attr['type'] ]['encoded'] ) ? $fields[ $attr['type'] ]['encoded'] : false;
 			$encoded = isset( $attr['encoded'] ) ? $attr['encoded'] : $default;
 
-			if ( $encoded ) {
+			if ( $encoded && isset( $out[ $attr['attr'] ] ) ) {
 				$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
 			}
 		}
