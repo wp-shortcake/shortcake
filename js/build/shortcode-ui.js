@@ -133,16 +133,6 @@ var ShortcodeAttribute = Backbone.Model.extend({
 			this.set( 'escape', shortcodeUIFieldData[ this.get( 'type' ) ].escape );
 		}
 
-		this.on( 'change:value', this.decodeValue );
-
-	},
-
-	decodeValue: function () {
-
-		if ( this.get('escape') ) {
-			this.set( 'value', decodeURIComponent( this.get('value') ), { slient: true } );
-		}
-
 	},
 
 });
@@ -427,16 +417,23 @@ var shortcodeViewConstructor = {
 
 		shortcodeModel = shortcodeModel.clone();
 
-		shortcodeModel.get('attrs').each(
-			function( attr ) {
-				if ( attr.get('attr') in options.attrs.named ) {
-					attr.set(
-						'value',
-						options.attrs.named[ attr.get('attr') ]
-					);
-				}
+		shortcodeModel.get('attrs').each( function( attr ) {
+
+			// Verify value exists for attribute.
+			if ( ! ( attr.get('attr') in options.attrs.named ) ) {
+				return;
 			}
-		);
+
+			var value = options.attrs.named[ attr.get('attr') ];
+
+			// Maybe decode value.
+			if ( attr.get('escape') ) {
+				value = decodeURIComponent( value );
+			}
+
+			attr.set( 'value', value );
+
+		} );
 
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
@@ -558,20 +555,27 @@ var shortcodeViewConstructor = {
 
 		var attributes_backup = {};
 		var attributes = wp.shortcode.attrs( matches[3] );
+
 		for ( var key in attributes.named ) {
+
 			if ( ! attributes.named.hasOwnProperty( key ) ) {
 				continue;
 			}
+
 			value = attributes.named[ key ];
-			attr = currentShortcode.get( 'attrs' ).findWhere({
-				attr : key
-			});
+			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
+
+			if ( attr && attr.get('escape') ) {
+				value = decodeURIComponent( value );
+			}
+
 			if ( attr ) {
 				attr.set( 'value', value );
 			} else {
 				attributes_backup[ key ] = value;
 			}
 		}
+
 		currentShortcode.set( 'attributes_backup', attributes_backup );
 
 		if ( matches[5] ) {
