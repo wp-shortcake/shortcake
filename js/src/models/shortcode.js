@@ -87,6 +87,11 @@ Shortcode = Backbone.Model.extend({
 			content = this.get( 'inner_content_backup' );
 		}
 
+		//Run autop before shooting into view
+		if( content ) {
+			content = window.wp.editor.autop( content );
+		}
+
 		if ( attrs.length > 0 ) {
 			template = "[{{ shortcode }} {{ attributes }}]";
 		} else {
