@@ -119,7 +119,7 @@ class Shortcode_UI {
 		$this->shortcodes[ $shortcode_tag ] = $args;
 
 		// Setup filter to handle decoding encoded attributes.
-		add_filter( "shortcode_atts_{$shortcode_tag}", array( $this, 'filter_shotcode_atts_decode_encoded' ), 5, 3 );
+		add_filter( "shortcode_atts_{$shortcode_tag}", array( $this, 'filter_shortcode_atts_decode_encoded' ), 5, 3 );
 
 	}
 
@@ -376,7 +376,7 @@ class Shortcode_UI {
 	 * @param array $atts  The user defined shortcode attributes.
 	 * @return array $out  The output array of shortcode attributes.
 	 */
-	public function filter_shotcode_atts_decode_encoded( $out, $pairs, $atts ) {
+	public function filter_shortcode_atts_decode_encoded( $out, $pairs, $atts ) {
 
 		// Get current shortcode tag from the current filter
 		// by stripping `shortcode_atts_` from start of string.
