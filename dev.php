@@ -40,7 +40,7 @@ function shortcode_ui_dev_minimal_example() {
 
 	add_shortcode( 'shortcake-no-attributes', '__return_false' );
 	shortcode_ui_register_for_shortcode( 'no-attributes', array(
-	    'label' => 'Shortcake With No Attributes',
+		'label' => 'Shortcake With No Attributes',
 	) );
 }
 
@@ -61,41 +61,41 @@ function shortcode_ui_dev_advanced_example() {
 	 */
 	shortcode_ui_register_for_shortcode(
 		'shortcake_dev', array(
-	    'label' => 'Shortcake Dev', // Display label. String. Required.
-	    'listItemImage' => 'dashicons-editor-quote', // Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
-	    'inner_content' => array(
+		'label' => 'Shortcake Dev', // Display label. String. Required.
+		'listItemImage' => 'dashicons-editor-quote', // Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
+		'inner_content' => array(
 		'label' => 'Quote',
-	    ),
-	    'post_type' => array( 'post' ), //Post type support
-	    // Available shortcode attributes and default values. Required. Array.
-	    // Attribute model expects 'attr', 'type' and 'label'
-	    // Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
-	    'attrs' => array(
+		),
+		'post_type' => array( 'post' ), //Post type support
+		// Available shortcode attributes and default values. Required. Array.
+		// Attribute model expects 'attr', 'type' and 'label'
+		// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
+		'attrs' => array(
 		array(
-		    'label' => __( 'Attachment', 'your-text-domain' ), // Field label
-		    'attr' => 'attachment', // Field type
-		    'type' => 'attachment',
-		    'libraryType' => array( 'image' ), // Media type to insert
-		    'addButton' => __( 'Select Image', 'your-text-domain' ), // Button text that opens Media Library
-		    'frameTitle' => __( 'Select Image', 'your-text-domain ' ), // Media Library frame title
+			'label' => esc_html__( 'Attachment', 'your-text-domain' ), // Field label
+			'attr' => 'attachment', // Field type
+			'type' => 'attachment',
+			'libraryType' => array( 'image' ), // Media type to insert
+			'addButton' => esc_html__( 'Select Image', 'your-text-domain' ), // Button text that opens Media Library
+			'frameTitle' => esc_html__( 'Select Image', 'your-text-domain ' ), // Media Library frame title
 		),
 		array(
-		    'label' => __( 'Citation Source', 'your-text-domain' ),
-		    'attr' => 'source',
-		    'type' => 'text',
-		    'meta' => array( // Holds custom field attributes.
+			'label' => esc_html__( 'Citation Source', 'your-text-domain' ),
+			'attr' => 'source',
+			'type' => 'text',
+			'meta' => array( // Holds custom field attributes.
 			'placeholder' => 'Test placeholder',
 			'data-test' => 1, // Custom data attribute
-		    ),
+			),
 		),
 		array(
-		    'label' => 'Select Page',
-		    'attr' => 'page',
-		    'type' => 'post_select',
-		    'query' => array( 'post_type' => 'page' ),
-		    'multiple' => true,
+			'label' => 'Select Page',
+			'attr' => 'page',
+			'type' => 'post_select',
+			'query' => array( 'post_type' => 'page' ),
+			'multiple' => true,
 		),
-	    ),
+		),
 		)
 	);
 }
@@ -104,19 +104,19 @@ function shortcode_ui_dev_shortcode( $attr, $content = '' ) {
 
 	//Parse the attribute of the shortcode
 	$attr = wp_parse_args( $attr, array(
-	    'source' => '',
-	    'attachment' => 0
+		'source' => '',
+		'attachment' => 0
 		) );
 
 	ob_start();
 	?>
 
 	<section class="pullquote" style="padding: 20px; background: rgba(0,0,0,0.1);">
-	    <p style="margin:0; padding: 0;">
+		<p style="margin:0; padding: 0;">
 		<b>Content:</b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
 		<b>Source:</b> <?php echo esc_html( $attr[ 'source' ] ); ?></br>
 		<b>Image:</b> <?php echo wp_kses_post( wp_get_attachment_image( $attr[ 'attachment' ], array( 50, 50 ) ) ); ?></br>
-	    </p>
+		</p>
 	</section>
 
 	<?php
