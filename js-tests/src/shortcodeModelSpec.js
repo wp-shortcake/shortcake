@@ -79,10 +79,10 @@ describe( "Shortcode Model", function() {
 			shortcode_tag: 'test_shortcode_encoded',
 			attrs: [
 				{
-					attr:   'attr',
-					type:   'text',
-					value:  '<b class="foo">bar</b>',
-					escape: true,
+					attr:    'attr',
+					type:    'text',
+					value:   '<b class="foo">bar</b>',
+					encoded: true,
 				},
 			],
 		});

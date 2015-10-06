@@ -38,7 +38,7 @@ describe( "Shortcode Attribute Model", function() {
 		type:        'text',
 		value:       'test value',
 		description: 'test description',
-		escape:      false,
+		encoded:     false,
 		meta:  {
 			placeholder: 'test placeholder'
 		},
@@ -136,10 +136,10 @@ describe( "Shortcode Model", function() {
 			shortcode_tag: 'test_shortcode_encoded',
 			attrs: [
 				{
-					attr:   'attr',
-					type:   'text',
-					value:  '<b class="foo">bar</b>',
-					escape: true,
+					attr:    'attr',
+					type:    'text',
+					value:   '<b class="foo">bar</b>',
+					encoded: true,
 				},
 			],
 		});
@@ -252,9 +252,9 @@ describe( "MCE View Constructor", function() {
 		shortcode_tag: 'test_shortcode_encoded',
 		attrs: [
 			{
-				attr:        'attr',
-				label:       'Attribute',
-				escape:      true,
+				attr:    'attr',
+				label:   'Attribute',
+				encoded: true,
 			}
 		],
 	} ) );
@@ -476,7 +476,7 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		type:        '',
 		value:       '',
 		description: '',
-		escape:      false,
+		encoded:     false,
 		meta: {
 			placeholder: '',
 		},
@@ -484,9 +484,9 @@ var ShortcodeAttribute = Backbone.Model.extend({
 
 	initialize: function() {
 
-		// If value not escaped, set to the default for this field type.
-		if ( ! this.get( 'escape' ) && shortcodeUIFieldData[ this.get( 'type' ) ] ) {
-			this.set( 'escape', shortcodeUIFieldData[ this.get( 'type' ) ].escape );
+		// If value not encoded, set to the default for this field type.
+		if ( ! this.get( 'encoded' ) && shortcodeUIFieldData[ this.get( 'type' ) ] ) {
+			this.set( 'encoded', shortcodeUIFieldData[ this.get( 'type' ) ].encoded );
 		}
 
 	},
@@ -574,7 +574,7 @@ Shortcode = Backbone.Model.extend({
 			}
 
 			// Encode textareas incase HTML
-			if ( attr.get( 'escape' ) ) {
+			if ( attr.get( 'encoded' ) ) {
 				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ), { silent: true } );
 			}
 
@@ -752,7 +752,7 @@ var shortcodeViewConstructor = {
 			var value = options.attrs.named[ attr.get('attr') ];
 
 			// Maybe decode value.
-			if ( attr.get('escape') ) {
+			if ( attr.get('encoded') ) {
 				value = decodeURIComponent( value );
 			}
 
@@ -890,7 +890,7 @@ var shortcodeViewConstructor = {
 			value = attributes.named[ key ];
 			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
 
-			if ( attr && attr.get('escape') ) {
+			if ( attr && attr.get('encoded') ) {
 				value = decodeURIComponent( value );
 			}
 

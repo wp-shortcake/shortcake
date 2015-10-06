@@ -8,7 +8,7 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		type:        '',
 		value:       '',
 		description: '',
-		escape:      false,
+		encoded:     false,
 		meta: {
 			placeholder: '',
 		},
@@ -16,9 +16,9 @@ var ShortcodeAttribute = Backbone.Model.extend({
 
 	initialize: function() {
 
-		// If value not escaped, set to the default for this field type.
-		if ( ! this.get( 'escape' ) && shortcodeUIFieldData[ this.get( 'type' ) ] ) {
-			this.set( 'escape', shortcodeUIFieldData[ this.get( 'type' ) ].escape );
+		// If value not encoded, set to the default for this field type.
+		if ( ! this.get( 'encoded' ) && shortcodeUIFieldData[ this.get( 'type' ) ] ) {
+			this.set( 'encoded', shortcodeUIFieldData[ this.get( 'type' ) ].encoded );
 		}
 
 	},

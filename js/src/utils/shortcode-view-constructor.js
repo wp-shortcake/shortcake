@@ -56,7 +56,7 @@ var shortcodeViewConstructor = {
 			var value = options.attrs.named[ attr.get('attr') ];
 
 			// Maybe decode value.
-			if ( attr.get('escape') ) {
+			if ( attr.get('encoded') ) {
 				value = decodeURIComponent( value );
 			}
 
@@ -194,7 +194,7 @@ var shortcodeViewConstructor = {
 			value = attributes.named[ key ];
 			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
 
-			if ( attr && attr.get('escape') ) {
+			if ( attr && attr.get('encoded') ) {
 				value = decodeURIComponent( value );
 			}
 
