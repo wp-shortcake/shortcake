@@ -127,8 +127,30 @@ describe( "Shortcode Model", function() {
 
 	});
 
-});
+	it( 'Format shortcode with encoded attributes.', function() {
 
+		var shortcode_encoded_attribute, formatted, expected;
+
+		shortcode_encoded_attribute = new Shortcode({
+			label: 'Test Label',
+			shortcode_tag: 'test_shortcode_encoded',
+			attrs: [
+				{
+					attr:   'attr',
+					type:   'text',
+					value:  '<b class="foo">bar</b>',
+					escape: true,
+				},
+			],
+		});
+
+		formatted = shortcode_encoded_attribute.formatShortcode();
+		expected  = '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E"]';
+		expect( formatted ).toEqual( expected );
+
+	});
+
+});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../js/src/collections/shortcode-attributes":7,"../../js/src/models/inner-content":9,"../../js/src/models/shortcode":11,"../../js/src/models/shortcode-attribute":10}],4:[function(require,module,exports){
@@ -223,6 +245,18 @@ describe( "MCE View Constructor", function() {
 		inner_content: {
 			value: 'test content',
 		},
+	} ) );
+
+	sui.shortcodes.push( new Shortcode( {
+		label: 'Test Label',
+		shortcode_tag: 'test_shortcode_encoded',
+		attrs: [
+			{
+				attr:        'attr',
+				label:       'Attribute',
+				escape:      true,
+			}
+		],
 	} ) );
 
 	it ( 'test get shortcode model', function() {
@@ -348,6 +382,12 @@ describe( "MCE View Constructor", function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
+	});
+
+	it( 'parses shortcode with encoded attribute', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E"]');
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere({ attr: 'attr' }).get('value') ).toEqual( '<b class="foo">bar</b>' );
 	});
 
 } );
