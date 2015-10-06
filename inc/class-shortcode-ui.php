@@ -133,7 +133,27 @@ class Shortcode_UI {
 		 *
 		 * @param array $shortcodes
 		 */
-		return apply_filters( 'shortcode_ui_shortcodes', $this->shortcodes );
+		$shortcodes = apply_filters( 'shortcode_ui_shortcodes', $this->shortcodes );
+
+		foreach ( $shortcodes as $shortcode => $args ) {
+
+			foreach ( $args['attrs'] as $key => $value ) {
+				foreach ( array( 'label', 'description' ) as $field ) {
+					if ( ! empty( $value[ $field ] ) ) {
+						$shortcodes[ $shortcode ]['attrs'][ $key ][ $field ] = wp_kses_post( $value[ $field ] );
+					}
+				}
+			}
+
+			foreach ( array( 'label', 'description' ) as $field ) {
+				if ( ! empty( $args['inner_content'][ $field ] ) ) {
+					$shortcodes[ $shortcode ]['inner_content'][ $field ] = wp_kses_post( $args['inner_content'][ $field ] );
+				}
+			}
+
+		}
+
+		return $shortcodes;
 	}
 
 	/**
