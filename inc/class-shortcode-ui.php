@@ -377,8 +377,9 @@ class Shortcode_UI {
 	 */
 	function filter_shotcode_atts_decode_encoded( $out, $pairs, $atts ) {
 
-		// Get current shortcode tag from the current filter.
-		$shortcode_tag = substr( current_filter(), strlen( 'shortcode_atts_' ) );
+		// Get current shortcode tag from the current filter
+		// by stripping `shortcode_atts_` from start of string.
+		$shortcode_tag = substr( current_filter(), 15 );
 
 		if ( ! isset( $this->shortcodes[ $shortcode_tag ] ) ) {
 			return $out;
