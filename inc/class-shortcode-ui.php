@@ -115,6 +115,20 @@ class Shortcode_UI {
 			$args['attrs'] = array();
 		}
 
+		foreach ( $args['attrs'] as $key => $value ) {
+			foreach ( array( 'label', 'description' ) as $field ) {
+				if ( ! empty( $value[ $field ] ) ) {
+					$args['attrs'][ $key ][ $field ] = wp_kses_post( $value[ $field ] );
+				}
+			}
+		}
+
+		foreach ( array( 'label', 'description' ) as $field ) {
+			if ( ! empty( $args['inner_content'][ $field ] ) ) {
+				$args['inner_content'][ $field ] = wp_kses_post( $args['inner_content'][ $field ] );
+			}
+		}
+
 		$args['shortcode_tag'] = $shortcode_tag;
 		$this->shortcodes[ $shortcode_tag ] = $args;
 

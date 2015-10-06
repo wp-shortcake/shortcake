@@ -76,10 +76,10 @@ class Shortcode_UI_Field_Post_Select {
 
 		<script type="text/html" id="tmpl-shortcode-ui-field-post-select">
 			<div class="field-block shortcode-ui-field-post-select shortcode-ui-attribute-{{ data.attr }}">
-				<label for="{{ data.id }}">{{ data.label }}</label>
+				<label for="{{ data.id }}">{{{ data.label }}}</label>
 				<input type="text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="shortcode-ui-post-select" />
 				<# if ( typeof data.description == 'string' ) { #>
-					<p class="description">{{ data.description }}</p>
+					<p class="description">{{{ data.description }}}</p>
 				<# } #>
 			</div>
 		</script>
