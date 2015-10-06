@@ -35,7 +35,7 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 		$decoded = '<b class="foo">bar</b>';
 
 		// Parse shortcode attributes.
-		$attr = shortcode_atts( array(), array( 'test' => $encoded ), $shortcode );
+		$attr = shortcode_atts( array( 'test' => null ), array( 'test' => $encoded ), $shortcode );
 
 		// Expect value of $attr['test'] to be decoded.
 		$this->assertEquals( $attr['test'], $decoded );
