@@ -20,7 +20,7 @@
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<input type="text" class="regular-text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" {{{ data.meta }}}/>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -30,7 +30,7 @@
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<input type="url" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="code" {{{ data.meta }}}/>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -40,7 +40,7 @@
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<textarea name="{{ data.attr }}" id="{{ data.id }}" {{{ data.meta }}}>{{ data.value }}</textarea>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -54,7 +54,7 @@
 			<# }); #>
 		</select>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -69,7 +69,7 @@
 			</label>
 		<# }); #>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -81,7 +81,7 @@
 			{{ data.label }}
 		</label>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -91,7 +91,7 @@
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<input type="email" class="regular-text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" {{{ data.meta }}}/>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -101,7 +101,7 @@
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<input type="number" class="regular-text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" {{{ data.meta }}}/>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -111,7 +111,7 @@
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<input type="hidden" name="{{ data.attr }}" id="{{ data.id }}" value="true" {{{ data.meta }}}/>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
@@ -121,7 +121,7 @@
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<input type="date" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" {{{ data.meta }}}/>
 		<# if ( typeof data.description == 'string' ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
 </script>
