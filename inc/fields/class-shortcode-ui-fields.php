@@ -35,7 +35,6 @@ class Shortcode_UI_Fields {
 		'text' => array(),
 		'textarea' => array(
 			'template' => 'shortcode-ui-field-textarea',
-			'encoded'  => true,
 		),
 		'url' => array(
 			'template' => 'shortcode-ui-field-url',
