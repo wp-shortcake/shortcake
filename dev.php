@@ -65,6 +65,7 @@ function shortcode_ui_dev_advanced_example() {
 			'listItemImage' => 'dashicons-editor-quote', // Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 			'inner_content' => array(
 				'label' => 'Quote',
+				'encoded' => true,
 			),
 			'post_type' => array( 'post' ), //Post type support
 			// Available shortcode attributes and default values. Required. Array.
@@ -72,15 +73,15 @@ function shortcode_ui_dev_advanced_example() {
 			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
 			'attrs' => array(
 				array(
-					'label'       => __( 'Attachment', 'your-text-domain' ), // Field label
+					'label'       => esc_html__( 'Attachment', 'your-text-domain' ), // Field label
 					'attr'        => 'attachment', // Field type
 					'type'        => 'attachment',
 					'libraryType' => array( 'image' ), // Media type to insert
-					'addButton'   => __( 'Select Image', 'your-text-domain' ), // Button text that opens Media Library
-					'frameTitle'  => __( 'Select Image', 'your-text-domain ' ), // Media Library frame title
+					'addButton'   => esc_html__( 'Select Image', 'your-text-domain' ), // Button text that opens Media Library
+					'frameTitle'  => esc_html__( 'Select Image', 'your-text-domain ' ), // Media Library frame title
 				),
 				array(
-					'label'   => __( 'Citation Source', 'your-text-domain' ),
+					'label'   => esc_html__( 'Citation Source', 'your-text-domain' ),
 					'attr'    => 'source',
 					'type'    => 'text',
 					'encoded' => true,
