@@ -38,7 +38,7 @@ describe( "Shortcode Attribute Model", function() {
 		type:        'text',
 		value:       'test value',
 		description: 'test description',
-		encoded:     false,
+		encode:      false,
 		meta:  {
 			placeholder: 'test placeholder'
 		},
@@ -136,10 +136,10 @@ describe( "Shortcode Model", function() {
 			shortcode_tag: 'test_shortcode_encoded',
 			attrs: [
 				{
-					attr:    'attr',
-					type:    'text',
-					value:   '<b class="foo">bar</b>',
-					encoded: true,
+					attr:   'attr',
+					type:   'text',
+					value:  '<b class="foo">bar</b>',
+					encode: true,
 				},
 			],
 		});
@@ -252,9 +252,9 @@ describe( "MCE View Constructor", function() {
 		shortcode_tag: 'test_shortcode_encoded',
 		attrs: [
 			{
-				attr:    'attr',
-				label:   'Attribute',
-				encoded: true,
+				attr:   'attr',
+				label:  'Attribute',
+				encode: true,
 			}
 		],
 	} ) );
@@ -476,7 +476,7 @@ var ShortcodeAttribute = Backbone.Model.extend({
 		type:        '',
 		value:       '',
 		description: '',
-		encoded:     false,
+		encode:      false,
 		meta: {
 			placeholder: '',
 		},
@@ -565,7 +565,7 @@ Shortcode = Backbone.Model.extend({
 			}
 
 			// Encode textareas incase HTML
-			if ( attr.get( 'encoded' ) ) {
+			if ( attr.get( 'encode' ) ) {
 				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ), { silent: true } );
 			}
 
@@ -743,7 +743,7 @@ var shortcodeViewConstructor = {
 			var value = options.attrs.named[ attr.get('attr') ];
 
 			// Maybe decode value.
-			if ( attr.get('encoded') ) {
+			if ( attr.get('encode') ) {
 				value = decodeURIComponent( value );
 			}
 
@@ -881,7 +881,7 @@ var shortcodeViewConstructor = {
 			value = attributes.named[ key ];
 			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
 
-			if ( attr && attr.get('encoded') ) {
+			if ( attr && attr.get('encode') ) {
 				value = decodeURIComponent( value );
 			}
 

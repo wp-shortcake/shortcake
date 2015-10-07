@@ -65,7 +65,6 @@ function shortcode_ui_dev_advanced_example() {
 			'listItemImage' => 'dashicons-editor-quote', // Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
 			'inner_content' => array(
 				'label' => 'Quote',
-				'encoded' => true,
 			),
 			'post_type' => array( 'post' ), //Post type support
 			// Available shortcode attributes and default values. Required. Array.
@@ -81,11 +80,11 @@ function shortcode_ui_dev_advanced_example() {
 					'frameTitle'  => esc_html__( 'Select Image', 'your-text-domain ' ), // Media Library frame title
 				),
 				array(
-					'label'   => esc_html__( 'Citation Source', 'your-text-domain' ),
-					'attr'    => 'source',
-					'type'    => 'text',
-					'encoded' => true,
-					'meta' => array( // Holds custom field attributes.
+					'label'  => esc_html__( 'Citation Source', 'your-text-domain' ),
+					'attr'   => 'source',
+					'type'   => 'text',
+					'encode' => true,
+					'meta'   => array( // Holds custom field attributes.
 						'placeholder' => 'Test placeholder',
 						'data-test'   => 1, // Custom data attribute
 					),

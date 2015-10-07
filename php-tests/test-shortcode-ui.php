@@ -24,9 +24,9 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 		shortcode_ui_register_for_shortcode( $shortcode, array(
 			'attrs' => array(
 				array(
-					'attr'    => 'test',
-					'type'    => 'text',
-					'encoded' => true,
+					'attr'   => 'test',
+					'type'   => 'text',
+					'encode' => true,
 				),
 			),
 		) );

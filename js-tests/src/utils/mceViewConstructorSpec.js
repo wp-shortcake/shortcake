@@ -45,9 +45,9 @@ describe( "MCE View Constructor", function() {
 		shortcode_tag: 'test_shortcode_encoded',
 		attrs: [
 			{
-				attr:    'attr',
-				label:   'Attribute',
-				encoded: true,
+				attr:   'attr',
+				label:  'Attribute',
+				encode: true,
 			}
 		],
 	} ) );
