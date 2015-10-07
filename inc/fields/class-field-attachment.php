@@ -91,7 +91,7 @@ class Shortcake_Field_Attachment {
 
 		<script type="text/html" id="tmpl-fusion-shortcake-field-attachment">
 			<div class="field-block shortcode-ui-field-attachment shortcode-ui-attribute-{{ data.attr }}">
-				<label for="{{ data.attr }}">{{ data.label }}</label>
+				<label for="{{ data.attr }}">{{{ data.label }}}</label>
 				<div class="shortcake-attachment-preview attachment-preview attachment">
 					<button id="{{ data.attr }}" class="button button-small add">{{ data.addButton }}</button>
 					<button class="button button-small remove">&times;</button>
@@ -109,7 +109,7 @@ class Shortcake_Field_Attachment {
 					<div class="edit-link"><a href="#"><?php esc_html_e( 'Edit Attachment', 'shortcode-ui' ); ?></a></div>
 				</div>
 				<# if ( typeof data.description == 'string' ) { #>
-					<p class="description">{{ data.description }}</p>
+					<p class="description">{{{ data.description }}}</p>
 				<# } #>
 			</div>
 		</script>
