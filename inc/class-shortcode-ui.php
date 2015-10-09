@@ -217,16 +217,16 @@ class Shortcode_UI {
 		wp_localize_script( 'shortcode-ui', ' shortcodeUIData', array(
 			'shortcodes'      => $shortcodes,
 			'strings'         => array(
-				'media_frame_title'                 => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
-				'media_frame_menu_insert_label'     => esc_html__( 'Insert Post Element', 'shortcode-ui' ),
-				'media_frame_menu_update_label'     => esc_html__( '%s Details', 'shortcode-ui' ), // Substituted in JS
-				'media_frame_toolbar_insert_label'  => esc_html__( 'Insert Element', 'shortcode-ui' ),
-				'media_frame_toolbar_update_label'  => esc_html__( 'Update', 'shortcode-ui' ),
-				'media_frame_no_attributes_message' => esc_html__( 'There are no attributes to configure for this Post Element.', 'shortcode-ui' ),
-				'edit_tab_label'                    => esc_html__( 'Edit', 'shortcode-ui' ),
-				'mce_view_error'                    => esc_html__( 'Failed to load preview', 'shortcode-ui' ),
-				'search_placeholder'                => esc_html__( 'Search', 'shortcode-ui' ),
-				'insert_content_label'              => esc_html__( 'Insert Content', 'shortcode-ui' ),
+				'media_frame_title'                 => __( 'Insert Post Element', 'shortcode-ui' ),
+				'media_frame_menu_insert_label'     => __( 'Insert Post Element', 'shortcode-ui' ),
+				'media_frame_menu_update_label'     => __( '%s Details', 'shortcode-ui' ), // Substituted in JS
+				'media_frame_toolbar_insert_label'  => __( 'Insert Element', 'shortcode-ui' ),
+				'media_frame_toolbar_update_label'  => __( 'Update', 'shortcode-ui' ),
+				'media_frame_no_attributes_message' => __( 'There are no attributes to configure for this Post Element.', 'shortcode-ui' ),
+				'edit_tab_label'                    => __( 'Edit', 'shortcode-ui' ),
+				'mce_view_error'                    => __( 'Failed to load preview', 'shortcode-ui' ),
+				'search_placeholder'                => __( 'Search', 'shortcode-ui' ),
+				'insert_content_label'              => __( 'Insert Content', 'shortcode-ui' ),
 			),
 			'nonces'     => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
