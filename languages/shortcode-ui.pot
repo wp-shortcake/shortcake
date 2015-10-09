@@ -2,16 +2,16 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Shortcake (Shortcode UI) 0.5.0-alpha\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/shortcode-ui\n"
-"POT-Creation-Date: 2015-08-26 22:28:38+00:00\n"
+"Project-Id-Version: Shortcake (Shortcode UI) 0.6.0-alpha\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shortcode-ui\n"
+"POT-Creation-Date: 2015-10-09 18:13:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"X-Generator: grunt-wp-i18n 0.5.2\n"
+"X-Generator: grunt-wp-i18n 0.5.3\n"
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
@@ -24,47 +24,55 @@ msgstr ""
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
 
+#: dev.php:75
+msgid "Attachment"
+msgstr ""
+
+#: dev.php:79 dev.php:80
+msgid "Select Image"
+msgstr ""
+
+#: dev.php:83
+msgid "Citation Source"
+msgstr ""
+
 #: inc/class-shortcode-ui.php:109
 msgid "Inner Content"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:200 inc/class-shortcode-ui.php:201
+#: inc/class-shortcode-ui.php:220 inc/class-shortcode-ui.php:221
 msgid "Insert Post Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:202
+#: inc/class-shortcode-ui.php:222
 msgid "%s Details"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:203
+#: inc/class-shortcode-ui.php:223
 msgid "Insert Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:204
+#: inc/class-shortcode-ui.php:224
 msgid "Update"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:205
+#: inc/class-shortcode-ui.php:225
 msgid "There are no attributes to configure for this Post Element."
 msgstr ""
 
-#: inc/class-shortcode-ui.php:206
-msgid "Edit"
-msgstr ""
-
-#: inc/class-shortcode-ui.php:207
+#: inc/class-shortcode-ui.php:226
 msgid "Failed to load preview"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:208
+#: inc/class-shortcode-ui.php:227
 msgid "Search"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:209
+#: inc/class-shortcode-ui.php:228
 msgid "Insert Content"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:312
+#: inc/class-shortcode-ui.php:323
 msgid "Something's rotten in the state of Denmark"
 msgstr ""
 
