@@ -18,12 +18,16 @@ var shortcodeViewConstructor = {
 		this.fetching.done( function( queryResponse ) {
 			var response = queryResponse.response;
 			if ( '' === response ) {
-				self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
+				var span = $('<span />').addClass('shortcake-notice shortcake-empty').text( self.shortcodeModel.formatShortcode() );
+				var wrapper = $('<div />').html( span );
+				self.content = wrapper.html();
 			} else {
 				self.content = response;
 			}
 		}).fail( function() {
-			self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
+			var span = $('<span />').addClass('shortcake-error').text( shortcodeUIData.strings.mce_view_error );
+			var wrapper = $('<div />').html( span );
+			self.content = wrapper.html();
 		} ).always( function() {
 			delete self.fetching;
 			self.render( null, true );

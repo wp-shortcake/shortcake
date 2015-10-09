@@ -151,7 +151,9 @@ var ShortcodePreview = Backbone.View.extend({
 		}).done( function( response ) {
 			callback( response );
 		}).fail( function() {
-			callback( '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>' );
+			var span = $('<span />').addClass('shortcake-error').text( shortcodeUIData.strings.mce_view_error );
+			var wrapper = $('<div />').html( span );
+			callback( wrapper.html() );
 		} );
 
 	},
