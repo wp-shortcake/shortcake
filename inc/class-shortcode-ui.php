@@ -223,7 +223,6 @@ class Shortcode_UI {
 				'media_frame_toolbar_insert_label'  => __( 'Insert Element', 'shortcode-ui' ),
 				'media_frame_toolbar_update_label'  => __( 'Update', 'shortcode-ui' ),
 				'media_frame_no_attributes_message' => __( 'There are no attributes to configure for this Post Element.', 'shortcode-ui' ),
-				'edit_tab_label'                    => __( 'Edit', 'shortcode-ui' ),
 				'mce_view_error'                    => __( 'Failed to load preview', 'shortcode-ui' ),
 				'search_placeholder'                => __( 'Search', 'shortcode-ui' ),
 				'insert_content_label'              => __( 'Insert Content', 'shortcode-ui' ),
