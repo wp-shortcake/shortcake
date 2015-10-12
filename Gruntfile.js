@@ -20,6 +20,19 @@ module.exports = function( grunt ) {
 			}
 		},
 
+		// Autoprefix
+		postcss: {
+			options: {
+				map: true, // inline sourcemaps
+				processors: [
+					require('autoprefixer')(),
+				]
+			},
+			dist: {
+				src: 'css/*.css'
+			}
+		},
+
 		watch:  {
 
 			styles: {
@@ -125,6 +138,7 @@ module.exports = function( grunt ) {
 						'js-tests/vendor/jquery.js',
 						'js-tests/vendor/underscore.js',
 						'js-tests/vendor/backbone.js',
+						'js-tests/vendor/wp-shortcode.js',
 						'js-tests/vendor/wp-util.js',
 						'js-tests/vendor/wp-editors.js',
 						'js-tests/vendor/mock-ajax.js',
@@ -150,7 +164,7 @@ module.exports = function( grunt ) {
 					'README.md': 'readme.txt'
 				},
 				options: {
-					screenshot_url: 'http://s.wordpress.org/extend/plugins/shortcode-ui/{screenshot}.png',
+					screenshot_url: 'https://s.w.org/plugins/shortcode-ui/{screenshot}.png',
 				}
 			},
 		},
@@ -173,6 +187,7 @@ module.exports = function( grunt ) {
 	} );
 
 	grunt.loadNpmTasks( 'grunt-sass' );
+	grunt.loadNpmTasks( 'grunt-postcss' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-browserify' );
 	grunt.loadNpmTasks( 'grunt-phpcs' );
@@ -182,7 +197,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
 	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine', 'jshint' ] );
-	grunt.registerTask( 'styles', [ 'sass' ] );
+	grunt.registerTask( 'styles', [ 'sass', 'postcss' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
