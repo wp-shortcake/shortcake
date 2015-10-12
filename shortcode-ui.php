@@ -50,7 +50,21 @@ function shortcode_ui_init() {
  * @return null
  */
 function shortcode_ui_load_textdomain() {
-	load_plugin_textdomain( 'shortcode-ui', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	// Don't use load_plugin_textdomain because it doesn't support non-standard directories
+	// See https://core.trac.wordpress.org/ticket/23794
+	$locale = get_locale();
+	$domain = 'shortcode-ui';
+	$locale = apply_filters( 'plugin_locale', $locale, $domain );
+	$path = dirname( __FILE__ ) . '/languages';
+	// Load the textdomain according to the plugin first
+	$mofile = $domain . '-' . $locale . '.mo';
+	if ( $loaded = load_textdomain( $domain, $path . '/'. $mofile ) ) {
+		return;
+	}
+
+	// Otherwise, load from the languages directory
+	$mofile = WP_LANG_DIR . '/plugins/' . $mofile;
+	load_textdomain( $domain, $mofile );
 }
 
 /**
