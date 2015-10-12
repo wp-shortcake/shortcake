@@ -61,6 +61,28 @@ function shortcode_ui_load_textdomain() {
  * @return null
  */
 function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) {
+
+	/**
+	 * Filter the Shortcode UI options for all registered shortcodes.
+	 *
+	 * @since 0.6.0
+	 *
+	 * @param array $args           The configuration argument array specified in shortcode_ui_register_for_shortcode()
+	 * @param string $shortcode_tag The shortcode base.
+	 */
+	$args = apply_filters( 'shortcode_ui_shortcode_args', $args, $shortcode_tag );
+
+	/**
+	 * Filter the Shortcode UI options for a specific registered shortcode.
+	 *
+	 * This dynamic filter uses the shortcode base and thus lets you hook on the options on a specific shortcode.
+	 *
+	 * @since 0.6.0
+	 *
+	 * @param array $args The configuration argument array specified in shortcode_ui_register_for_shortcode()
+	 */
+	$args = apply_filters( "shortcode_ui_shortcode_args_{$shortcode_tag}", $args );
+
 	Shortcode_UI::get_instance()->register_shortcode_ui( $shortcode_tag, $args );
 }
 
