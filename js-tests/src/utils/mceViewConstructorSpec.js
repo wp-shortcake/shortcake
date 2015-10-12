@@ -40,6 +40,18 @@ describe( "MCE View Constructor", function() {
 		},
 	} ) );
 
+	sui.shortcodes.push( new Shortcode( {
+		label: 'Test Label',
+		shortcode_tag: 'test_shortcode_encoded',
+		attrs: [
+			{
+				attr:   'attr',
+				label:  'Attribute',
+				encode: true,
+			}
+		],
+	} ) );
+
 	it ( 'test get shortcode model', function() {
 
 		var constructor = jQuery.extend( true, {}, MceViewConstructor );
@@ -163,6 +175,12 @@ describe( "MCE View Constructor", function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr=test]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
+	});
+
+	it( 'parses shortcode with encoded attribute', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E"]');
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere({ attr: 'attr' }).get('value') ).toEqual( '<b class="foo">bar</b>' );
 	});
 
 } );

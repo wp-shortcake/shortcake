@@ -113,16 +113,19 @@ module.exports = InnerContent;
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
 var ShortcodeAttribute = Backbone.Model.extend({
+
 	defaults: {
 		attr:        '',
 		label:       '',
 		type:        '',
 		value:       '',
 		description: '',
+		encode:      false,
 		meta: {
 			placeholder: '',
 		},
 	},
+
 });
 
 module.exports = ShortcodeAttribute;
@@ -203,6 +206,11 @@ Shortcode = Backbone.Model.extend({
 			// Skip empty attributes.
 			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
 				return;
+			}
+
+			// Encode textareas incase HTML
+			if ( attr.get( 'encode' ) ) {
+				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ), { silent: true } );
 			}
 
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
@@ -404,16 +412,23 @@ var shortcodeViewConstructor = {
 
 		shortcodeModel = shortcodeModel.clone();
 
-		shortcodeModel.get('attrs').each(
-			function( attr ) {
-				if ( attr.get('attr') in options.attrs.named ) {
-					attr.set(
-						'value',
-						options.attrs.named[ attr.get('attr') ]
-					);
-				}
+		shortcodeModel.get('attrs').each( function( attr ) {
+
+			// Verify value exists for attribute.
+			if ( ! ( attr.get('attr') in options.attrs.named ) ) {
+				return;
 			}
-		);
+
+			var value = options.attrs.named[ attr.get('attr') ];
+
+			// Maybe decode value.
+			if ( attr.get('encode') ) {
+				value = decodeURIComponent( value );
+			}
+
+			attr.set( 'value', value );
+
+		} );
 
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
@@ -535,20 +550,27 @@ var shortcodeViewConstructor = {
 
 		var attributes_backup = {};
 		var attributes = wp.shortcode.attrs( matches[3] );
+
 		for ( var key in attributes.named ) {
+
 			if ( ! attributes.named.hasOwnProperty( key ) ) {
 				continue;
 			}
+
 			value = attributes.named[ key ];
-			attr = currentShortcode.get( 'attrs' ).findWhere({
-				attr : key
-			});
+			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
+
+			if ( attr && attr.get('encode') ) {
+				value = decodeURIComponent( value );
+			}
+
 			if ( attr ) {
 				attr.set( 'value', value );
 			} else {
 				attributes_backup[ key ] = value;
 			}
 		}
+
 		currentShortcode.set( 'attributes_backup', attributes_backup );
 
 		if ( matches[5] ) {
@@ -1342,8 +1364,8 @@ module.exports = editAttributeField;
 },{"./../utils/sui.js":10}],15:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
-	sui = require('./../utils/sui.js'),
-	backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
+sui = require('./../utils/sui.js'),
+backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	editAttributeField = require('./edit-attribute-field.js'),
 
 	// Additional attribute field types: these fields are all standalone in functionality,
@@ -1370,7 +1392,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			var view = new editAttributeField( { model: innerContent } );
 
 			view.shortcode = t.model;
-			view.template  = wp.media.template( 'shortcode-ui-content' );
+			view.template = wp.media.template( 'shortcode-ui-content' );
 
 			t.views.add( '.edit-shortcode-form-fields', view );
 

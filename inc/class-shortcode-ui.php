@@ -118,6 +118,9 @@ class Shortcode_UI {
 		$args['shortcode_tag'] = $shortcode_tag;
 		$this->shortcodes[ $shortcode_tag ] = $args;
 
+		// Setup filter to handle decoding encoded attributes.
+		add_filter( "shortcode_atts_{$shortcode_tag}", array( $this, 'filter_shortcode_atts_decode_encoded' ), 5, 3 );
+
 	}
 
 	/**
@@ -383,4 +386,40 @@ class Shortcode_UI {
 		}
 
 	}
+
+	/**
+	 * Decode any encoded attributes.
+	 *
+	 * @param array $out   The output array of shortcode attributes.
+	 * @param array $pairs The supported attributes and their defaults.
+	 * @param array $atts  The user defined shortcode attributes.
+	 * @return array $out  The output array of shortcode attributes.
+	 */
+	public function filter_shortcode_atts_decode_encoded( $out, $pairs, $atts ) {
+
+		// Get current shortcode tag from the current filter
+		// by stripping `shortcode_atts_` from start of string.
+		$shortcode_tag = substr( current_filter(), 15 );
+
+		if ( ! isset( $this->shortcodes[ $shortcode_tag ] ) ) {
+			return $out;
+		}
+
+		$fields = Shortcode_UI_Fields::get_instance()->get_fields();
+		$args   = $this->shortcodes[ $shortcode_tag ];
+
+		foreach ( $args['attrs'] as $attr ) {
+
+			$default = isset( $fields[ $attr['type'] ]['encode'] ) ? $fields[ $attr['type'] ]['encode'] : false;
+			$encoded = isset( $attr['encode'] ) ? $attr['encode'] : $default;
+
+			if ( $encoded && isset( $out[ $attr['attr'] ] ) ) {
+				$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
+			}
+		}
+
+		return $out;
+
+	}
+
 }

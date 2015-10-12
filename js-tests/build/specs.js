@@ -38,6 +38,7 @@ describe( "Shortcode Attribute Model", function() {
 		type:        'text',
 		value:       'test value',
 		description: 'test description',
+		encode:      false,
 		meta:  {
 			placeholder: 'test placeholder'
 		},
@@ -73,7 +74,7 @@ describe( "Shortcode Model", function() {
 				label:       'Attribute',
 				type:        'text',
 				value:       'test value',
-				placeholder: 'test placeholder',
+				placeholder: 'test placeholder'
 			}
 		],
 		inner_content: {
@@ -126,8 +127,30 @@ describe( "Shortcode Model", function() {
 
 	});
 
-});
+	it( 'Format shortcode with encoded attributes.', function() {
 
+		var shortcode_encoded_attribute, formatted, expected;
+
+		shortcode_encoded_attribute = new Shortcode({
+			label: 'Test Label',
+			shortcode_tag: 'test_shortcode_encoded',
+			attrs: [
+				{
+					attr:   'attr',
+					type:   'text',
+					value:  '<b class="foo">bar</b>',
+					encode: true,
+				},
+			],
+		});
+
+		formatted = shortcode_encoded_attribute.formatShortcode();
+		expected  = '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E"]';
+		expect( formatted ).toEqual( expected );
+
+	});
+
+});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../js/src/collections/shortcode-attributes":7,"../../js/src/models/inner-content":9,"../../js/src/models/shortcode":11,"../../js/src/models/shortcode-attribute":10}],4:[function(require,module,exports){
@@ -222,6 +245,18 @@ describe( "MCE View Constructor", function() {
 		inner_content: {
 			value: 'test content',
 		},
+	} ) );
+
+	sui.shortcodes.push( new Shortcode( {
+		label: 'Test Label',
+		shortcode_tag: 'test_shortcode_encoded',
+		attrs: [
+			{
+				attr:   'attr',
+				label:  'Attribute',
+				encode: true,
+			}
+		],
 	} ) );
 
 	it ( 'test get shortcode model', function() {
@@ -349,6 +384,12 @@ describe( "MCE View Constructor", function() {
 		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test' );
 	});
 
+	it( 'parses shortcode with encoded attribute', function() {
+		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E"]');
+		expect( shortcode instanceof Shortcode ).toEqual( true );
+		expect( shortcode.get( 'attrs' ).findWhere({ attr: 'attr' }).get('value') ).toEqual( '<b class="foo">bar</b>' );
+	});
+
 } );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -428,16 +469,19 @@ module.exports = InnerContent;
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
 var ShortcodeAttribute = Backbone.Model.extend({
+
 	defaults: {
 		attr:        '',
 		label:       '',
 		type:        '',
 		value:       '',
 		description: '',
+		encode:      false,
 		meta: {
 			placeholder: '',
 		},
 	},
+
 });
 
 module.exports = ShortcodeAttribute;
@@ -518,6 +562,11 @@ Shortcode = Backbone.Model.extend({
 			// Skip empty attributes.
 			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
 				return;
+			}
+
+			// Encode textareas incase HTML
+			if ( attr.get( 'encode' ) ) {
+				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ), { silent: true } );
 			}
 
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
@@ -688,16 +737,23 @@ var shortcodeViewConstructor = {
 
 		shortcodeModel = shortcodeModel.clone();
 
-		shortcodeModel.get('attrs').each(
-			function( attr ) {
-				if ( attr.get('attr') in options.attrs.named ) {
-					attr.set(
-						'value',
-						options.attrs.named[ attr.get('attr') ]
-					);
-				}
+		shortcodeModel.get('attrs').each( function( attr ) {
+
+			// Verify value exists for attribute.
+			if ( ! ( attr.get('attr') in options.attrs.named ) ) {
+				return;
 			}
-		);
+
+			var value = options.attrs.named[ attr.get('attr') ];
+
+			// Maybe decode value.
+			if ( attr.get('encode') ) {
+				value = decodeURIComponent( value );
+			}
+
+			attr.set( 'value', value );
+
+		} );
 
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
@@ -819,20 +875,27 @@ var shortcodeViewConstructor = {
 
 		var attributes_backup = {};
 		var attributes = wp.shortcode.attrs( matches[3] );
+
 		for ( var key in attributes.named ) {
+
 			if ( ! attributes.named.hasOwnProperty( key ) ) {
 				continue;
 			}
+
 			value = attributes.named[ key ];
-			attr = currentShortcode.get( 'attrs' ).findWhere({
-				attr : key
-			});
+			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
+
+			if ( attr && attr.get('encode') ) {
+				value = decodeURIComponent( value );
+			}
+
 			if ( attr ) {
 				attr.set( 'value', value );
 			} else {
 				attributes_backup[ key ] = value;
 			}
 		}
+
 		currentShortcode.set( 'attributes_backup', attributes_backup );
 
 		if ( matches[5] ) {

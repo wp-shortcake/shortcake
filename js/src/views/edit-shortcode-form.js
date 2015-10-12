@@ -1,6 +1,6 @@
 var wp = require('wp'),
-	sui = require('sui-utils/sui'),
-	backbone = require('backbone'),
+sui = require('sui-utils/sui'),
+backbone = require('backbone'),
 	editAttributeField = require( 'sui-views/edit-attribute-field' ),
 
 	// Additional attribute field types: these fields are all standalone in functionality,
@@ -27,7 +27,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			var view = new editAttributeField( { model: innerContent } );
 
 			view.shortcode = t.model;
-			view.template  = wp.media.template( 'shortcode-ui-content' );
+			view.template = wp.media.template( 'shortcode-ui-content' );
 
 			t.views.add( '.edit-shortcode-form-fields', view );
 

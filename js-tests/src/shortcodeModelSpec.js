@@ -17,7 +17,7 @@ describe( "Shortcode Model", function() {
 				label:       'Attribute',
 				type:        'text',
 				value:       'test value',
-				placeholder: 'test placeholder',
+				placeholder: 'test placeholder'
 			}
 		],
 		inner_content: {
@@ -70,5 +70,27 @@ describe( "Shortcode Model", function() {
 
 	});
 
-});
+	it( 'Format shortcode with encoded attributes.', function() {
 
+		var shortcode_encoded_attribute, formatted, expected;
+
+		shortcode_encoded_attribute = new Shortcode({
+			label: 'Test Label',
+			shortcode_tag: 'test_shortcode_encoded',
+			attrs: [
+				{
+					attr:   'attr',
+					type:   'text',
+					value:  '<b class="foo">bar</b>',
+					encode: true,
+				},
+			],
+		});
+
+		formatted = shortcode_encoded_attribute.formatShortcode();
+		expected  = '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E"]';
+		expect( formatted ).toEqual( expected );
+
+	});
+
+});
