@@ -55,7 +55,15 @@ function shortcode_ui_load_textdomain() {
 	$locale = get_locale();
 	$domain = 'shortcode-ui';
 	$locale = apply_filters( 'plugin_locale', $locale, $domain );
-	$mofile = dirname( __FILE__ ) . '/languages/' . $domain . '-' . $locale . '.mo';
+	$path = dirname( __FILE__ ) . '/languages';
+	// Load the textdomain according to the plugin first
+	$mofile = $domain . '-' . $locale . '.mo';
+	if ( $loaded = load_textdomain( $domain, $path . '/'. $mofile ) ) {
+		return;
+	}
+
+	// Otherwise, load from the languages directory
+	$mofile = WP_LANG_DIR . '/plugins/' . $mofile;
 	load_textdomain( $domain, $mofile );
 }
 
