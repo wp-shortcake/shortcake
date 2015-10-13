@@ -18,12 +18,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-add_action( 'init', 'shortcode_ui_detection' );
 
+/**
+ * If Shortcake isn't active, then this demo plugin doesn't work either
+ */
+add_action( 'init', 'shortcode_ui_detection' );
 function shortcode_ui_detection() {
 	if ( !function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
 		add_action( 'admin_notices', 'shortcode_ui_dev_example_notices' );
-		return;
 	}
 }
 
@@ -33,19 +35,23 @@ function shortcode_ui_dev_example_notices() {
 	}
 }
 
-add_action( 'init', 'shortcode_ui_dev_minimal_example' );
-
+/**
+ * An example shortcode with no attributes and minimal UI
+ */
 function shortcode_ui_dev_minimal_example() {
-
-
 	add_shortcode( 'shortcake-no-attributes', '__return_false' );
+	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
+		return;
+	}
 	shortcode_ui_register_for_shortcode( 'no-attributes', array(
 	    'label' => 'Shortcake With No Attributes',
 	) );
 }
+add_action( 'init', 'shortcode_ui_dev_minimal_example' );
 
-add_action( 'init', 'shortcode_ui_dev_advanced_example' );
-
+/**
+ * An example shortcode with many editable attributes (and more complex UI)
+ */
 function shortcode_ui_dev_advanced_example() {
 
 	/**
@@ -54,43 +60,75 @@ function shortcode_ui_dev_advanced_example() {
 	 */
 	add_shortcode( 'shortcake_dev', 'shortcode_ui_dev_shortcode' );
 
+	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
+		return;
+	}
+
 	/**
-	 * Register a UI for the Shortcode.
-	 * Pass the shortcode tag (string)
-	 * and an array or args.
+	 * Register UI for your shortcode
+	 *
+	 * @param string $shortcode_tag
+	 * @param array $ui_args
 	 */
-	shortcode_ui_register_for_shortcode(
-		'shortcake_dev', array(
-			'label' => 'Shortcake Dev', // Display label. String. Required.
-			'listItemImage' => 'dashicons-editor-quote', // Icon/attachment for shortcode. Optional. src or dashicons-$icon. Defaults to carrot.
+	shortcode_ui_register_for_shortcode( 'shortcake_dev',
+		array(
+			/*
+			 * How the shortcode should be labeled in the UI. Required argument.
+			 */
+			'label' => esc_html__( 'Shortcake Dev', 'shortcode-ui' ),
+			/*
+			 * Include an icon with your shortcode. Optional.
+			 * Use a dashicon, or full URL to image.
+			 */
+			'listItemImage' => 'dashicons-editor-quote',
+			/*
+			 * Limit this shortcode UI to specific posts. Optional.
+			 */
+			'post_type' => array( 'post' ),
+			/*
+			 * Register UI for the "inner content" of the shortcode. Optional.
+			 * If no UI is registered for the inner content, then any inner content
+			 * data present will be backed up during editing.
+			 */
 			'inner_content' => array(
-				'label' => 'Quote',
+				'label'        => esc_html__( 'Quote', 'shortcode-ui' ),
+				'description'  => esc_html__( 'Include a statement from someone famous.', 'shortcode-ui' ),
 			),
-			'post_type' => array( 'post' ), //Post type support
-			// Available shortcode attributes and default values. Required. Array.
-			// Attribute model expects 'attr', 'type' and 'label'
-			// Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date.
+			/*
+			 * Register UI for attributes of the shortcode. Optional.
+			 * Each array must include 'attr', 'type', and 'label'.
+			 * Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date, post_select, attachment, color.
+			 * Use 'meta' to add arbitrary attributes to the HTML of the field.
+			 * Use 'encode' to encode attribute data. Requires customization to callback to decode.
+			 * Depending on 'type', additional arguments may be available.
+			 */
 			'attrs' => array(
 				array(
-					'label'       => esc_html__( 'Attachment', 'your-text-domain' ), // Field label
-					'attr'        => 'attachment', // Field type
+					'label'       => esc_html__( 'Attachment', 'shortcode-ui' ),
+					'attr'        => 'attachment',
 					'type'        => 'attachment',
-					'libraryType' => array( 'image' ), // Media type to insert
-					'addButton'   => esc_html__( 'Select Image', 'your-text-domain' ), // Button text that opens Media Library
-					'frameTitle'  => esc_html__( 'Select Image', 'your-text-domain ' ), // Media Library frame title
+					/*
+					 * These arguments are passed to the instantiation of the media library:
+					 * 'libraryType' - Type of media to make available.
+					 * 'addButton' - Text for the button to open media library.
+					 * 'frameTitle' - Title for the modal UI once the library is open.
+					 */
+					'libraryType' => array( 'image' ),
+					'addButton'   => esc_html__( 'Select Image', 'shortcode-ui' ),
+					'frameTitle'  => esc_html__( 'Select Image', 'shortcode-ui ' ),
 				),
 				array(
-					'label'  => esc_html__( 'Citation Source', 'your-text-domain' ),
+					'label'  => esc_html__( 'Citation Source', 'shortcode-ui' ),
 					'attr'   => 'source',
 					'type'   => 'text',
 					'encode' => true,
-					'meta'   => array( // Holds custom field attributes.
-						'placeholder' => 'Test placeholder',
-						'data-test'   => 1, // Custom data attribute
+					'meta'   => array(
+						'placeholder' => esc_html__( 'Test placeholder', 'shortcode-ui' ),
+						'data-test'   => 1,
 					),
 				),
 				array(
-					'label' => 'Select Page',
+					'label' => esc_html__( 'Select Page', 'shortcode-ui' ),
 					'attr' => 'page',
 					'type' => 'post_select',
 					'query' => array( 'post_type' => 'page' ),
@@ -100,7 +138,11 @@ function shortcode_ui_dev_advanced_example() {
 		)
 	);
 }
+add_action( 'init', 'shortcode_ui_dev_advanced_example' );
 
+/**
+ * Render the shortcode based on supplied attributes
+ */
 function shortcode_ui_dev_shortcode( $attr, $content = '', $shortcode_tag ) {
 
 	$attr = shortcode_atts( array(
