@@ -96,7 +96,11 @@ function shortcode_ui_dev_advanced_example() {
 			),
 			/*
 			 * Register UI for attributes of the shortcode. Optional.
-			 * If no UI is registered for an attribute, then the attribute value will be backed up during editing.
+			 *
+			 * If no UI is registered for an attribute, then the attribute will 
+			 * not be editable through Shortcake's UI. However, the value of any 
+			 * unregistered attributes will be preserved when editing.
+			 * 
 			 * Each array must include 'attr', 'type', and 'label'.
 			 * 'attr' should be the name of the attribute.
 			 * Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date, post_select, attachment, color.
