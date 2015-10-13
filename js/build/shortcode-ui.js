@@ -980,12 +980,23 @@ var sui = require('./../utils/sui.js'),
     editAttributeField = require('./edit-attribute-field.js'),
     $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
+/**
+ * sui.views.editAttributeFieldColor
+ *
+ * The controller for the Color Field.
+ *
+ * @class
+ * @augments sui.views.editAttributeField
+ */
 sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 	// All events are being listened by iris, and they don't bubble very well,
 	// so remove Backbone's listeners.
 	events: {},
 
+	/**
+	 * Render the Color Field.
+	 */
 	render: function() {
 		var self = this;
 
@@ -1030,6 +1041,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 });
 
+module.exports = sui.views.editAttributeFieldColor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":10,"./edit-attribute-field.js":14}],13:[function(require,module,exports){
