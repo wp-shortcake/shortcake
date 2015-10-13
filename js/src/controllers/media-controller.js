@@ -21,6 +21,7 @@ var MediaController = wp.media.controller.State.extend({
 		if ( this.frame && this.frame.toolbar ) {
 			this.frame.toolbar.get().refresh();
 		}
+		this.destroySelect2UI();
 	},
 
 	search: function( searchTerm ) {
@@ -44,6 +45,14 @@ var MediaController = wp.media.controller.State.extend({
 		this.props.set( 'action', 'select' );
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'search', null );
+	},
+
+	deactivate: function() {
+		this.destroySelect2UI();
+	},
+
+	destroySelect2UI: function() {
+		$('.shortcode-ui-post-select.select2-container').select2( "close" );
 	},
 
 });
