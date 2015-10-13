@@ -8,7 +8,7 @@ var sui = require('sui-utils/sui');
  * @class
  * @augments sui.views.editAttributeField
  */
-var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
+sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	events: {
 		'click .add'       : '_openMediaFrame',
@@ -220,5 +220,4 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 });
 
-module.exports = sui.views.editAttributeFieldAttachment = editAttributeFieldAttachment;
-
+module.exports = sui.views.editAttributeFieldAttachment;
