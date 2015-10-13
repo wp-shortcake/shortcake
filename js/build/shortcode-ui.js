@@ -752,6 +752,14 @@ module.exports = window.Shortcode_UI;
 },{"./../collections/shortcodes.js":2}],11:[function(require,module,exports){
 var sui = require('./../utils/sui.js');
 
+/**
+ * sui.views.editAttributeFieldAttachment
+ *
+ * The controller for the Attachment Field.
+ *
+ * @class
+ * @augments sui.views.editAttributeField
+ */
 var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	events: {
@@ -762,11 +770,10 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	},
 
 	/**
-	 * Update the field attachment.
-	 * Re-renders UI.
-	 * If ID is empty - does nothing.
+	 * Update the Field Attachment to use a new attachment ID.
+	 * Re-renders UI. But, bails early if the ID isn't set.
 	 *
-	 * @param {int} id Attachment ID
+	 * @param integer id Attachment ID
 	 */
 	updateValue: function( id ) {
 
@@ -804,6 +811,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		});
 	},
 
+	/**
+	 * Render the Attachment Field.
+	 */
 	render: function() {
 
 		// Set model default values.
@@ -834,8 +844,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	/**
 	 * Renders attachment preview in field.
+	 *
 	 * @param {object} attachment model
-	 * @return null
 	 */
 	_renderPreview: function( attachment ) {
 
@@ -884,6 +894,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	/**
 	 * Open media frame when add button is clicked.
 	 *
+	 * Sets the frame to display the media library with the attachment selected if set.
+	 *
+	 * @param {object} e
 	 */
 	_openMediaFrame: function(e) {
 		e.preventDefault();
@@ -906,6 +919,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	/**
 	 * When an attachment is selected from the media frame, update the model value.
 	 *
+	 * @param {object} e
 	 */
 	_selectAttachment: function(e) {
 		var selection  = this.frame.state().get('selection');
@@ -922,6 +936,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	/**
 	 * Remove the attachment.
 	 * Render preview & Update the model.
+	 *
+	 * @param {object} e
 	 */
 	_removeAttachment: function(e) {
 		e.preventDefault();
