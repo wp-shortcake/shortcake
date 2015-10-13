@@ -103,7 +103,8 @@ function shortcode_ui_dev_advanced_example() {
 			 * 
 			 * Each array must include 'attr', 'type', and 'label'.
 			 * 'attr' should be the name of the attribute.
-			 * Supported field types: text, checkbox, textarea, radio, select, email, url, number, and date, post_select, attachment, color.
+			 * 'type' options include: text, checkbox, textarea, radio, select, email, 
+			 *     url, number, and date, post_select, attachment, color.
 			 * Use 'meta' to add arbitrary attributes to the HTML of the field.
 			 * Use 'encode' to encode attribute data. Requires customization to callback to decode.
 			 * Depending on 'type', additional arguments may be available.
