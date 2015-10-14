@@ -36,33 +36,32 @@ function shortcode_ui_dev_example_notices() {
 }
 
 /**
+ * Register the two shortcodes independently of their UI.
+ * Shortcodes should always be registered, but shortcode UI should only
+ * be registered when Shortcake is active.
+ */
+function shortcode_ui_dev_register_shortcodes() {
+	// This shortcode doesn't actually do anything.
+	add_shortcode( 'shortcake-no-attributes', '__return_false' );
+	// This is a simple example for a pullquote with a citation.
+	add_shortcode( 'shortcake_dev', 'shortcode_ui_dev_shortcode' );
+}
+add_action( 'init', 'shortcode_ui_dev_register_shortcodes' );
+
+/**
  * An example shortcode with no attributes and minimal UI
  */
 function shortcode_ui_dev_minimal_example() {
-	add_shortcode( 'shortcake-no-attributes', '__return_false' );
-	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
-		return;
-	}
 	shortcode_ui_register_for_shortcode( 'no-attributes', array(
 	    'label' => 'Shortcake With No Attributes',
 	) );
 }
-add_action( 'init', 'shortcode_ui_dev_minimal_example' );
+add_action( 'register_shortcode_ui', 'shortcode_ui_dev_minimal_example' );
 
 /**
  * An example shortcode with many editable attributes (and more complex UI)
  */
 function shortcode_ui_dev_advanced_example() {
-
-	/**
-	 * Register your shortcode as you would normally.
-	 * This is a simple example for a pullquote with a citation.
-	 */
-	add_shortcode( 'shortcake_dev', 'shortcode_ui_dev_shortcode' );
-
-	if ( ! function_exists( 'shortcode_ui_register_for_shortcode' ) ) {
-		return;
-	}
 
 	/**
 	 * Register UI for your shortcode
@@ -145,7 +144,7 @@ function shortcode_ui_dev_advanced_example() {
 		)
 	);
 }
-add_action( 'init', 'shortcode_ui_dev_advanced_example' );
+add_action( 'register_shortcode_ui', 'shortcode_ui_dev_advanced_example' );
 
 /**
  * Render the shortcode based on supplied attributes
