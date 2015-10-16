@@ -285,18 +285,51 @@ $(document).ready(function(){
 var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
+/**
+ * A Utility object for batching requests for shortcode previews.
+ *
+ * Returns a "singleton" object with two methods, `queueToFetch` and
+ * `fetchAll`. Calling `Fetcher.queueToFetch()` will add the requested query to
+ * the fetcher's array, and set a timeout to run all queries after the current
+ * call stack has finished.
+ *
+ * @this {Fetcher} aliased as `fetcher`
+ */
 var Fetcher = (function() {
 	var fetcher = this;
 
+	/*
+	 * Counter, used to match each request in a batch with its response.
+	 * @private
+	 */
 	this.counter = 0;
+
+	/*
+	 * Array of queries to be executed in a batch.
+	 * @private
+	 */
 	this.queries = [];
+
+	/*
+	 * The timeout for the current batch request.
+	 * @private
+	 */
 	this.timeout = null;
 
 	/**
 	 * Add a query to the queue.
 	 *
-	 * Returns a promise that will be resolved when the query is successfully
-	 * returned.
+	 * Adds the requested query to the next batch. Either sets a timeout to
+	 * fetch previews, or adds to the current one if one is already being
+	 * built. Returns a jQuery Deferred promise that will be resolved when the
+	 * query is successful or otherwise complete.
+	 *
+	 * @param {object} query Object containing fields required to render preview: {
+	 *   @var {integer} post_id Post ID
+	 *   @var {string} shortcode Shortcode string to render
+	 *   @var {string} nonce Preview nonce
+	 * }
+	 * @return {Deferred}
 	 */
 	this.queueToFetch = function( query ) {
 		var fetchPromise = new $.Deferred();
@@ -319,7 +352,11 @@ var Fetcher = (function() {
 	/**
 	 * Execute all queued queries.
 	 *
-	 * Resolves their respective promises.
+	 * Posts to the `bulk_do_shortcode` ajax endpoint to retrieve any queued
+	 * previews. When that request recieves a response, goes through the
+	 * response and resolves each of the promises in it.
+	 *
+	 * @this {Fetcher}
 	 */
 	this.fetchAll = function() {
 		delete fetcher.timeout;
@@ -366,11 +403,24 @@ var sui = require('./sui.js'),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 /**
- * Generic shortcode mce view constructor.
+ * Generic shortcode MCE view constructor.
+ *
+ * A Backbone-like View constructor intended for use when rendering a TinyMCE View.
+ * The main difference is that the TinyMCE View is not tied to a particular DOM node.
  * This is cloned and used by each shortcode when registering a view.
+ *
  */
 var shortcodeViewConstructor = {
 
+	/**
+	 * Initialize a shortcode preview View.
+	 *
+	 * Fetches the preview by making a delayed Ajax call, and renders if a preview can be fetched.
+	 *
+	 * @constructor
+	 * @this {Shortcode} Model registered with sui.shortcodes
+	 * @param {Object} options Options
+	 */
 	initialize: function( options ) {
 		var self = this;
 
@@ -398,10 +448,15 @@ var shortcodeViewConstructor = {
 
 	/**
 	 * Get the shortcode model given the view shortcode options.
-	 * Must be a registered shortcode (see sui.shortcodes)
+	 *
+	 * If the shortcode found in the view is registered with Shortcake, this
+	 * will clone the shortcode's Model and assign appropriate attribute
+	 * values.
+	 *
+	 * @this {Shortcode}
+	 * @param {Object} options Options
 	 */
 	getShortcodeModel: function( options ) {
-
 		var shortcodeModel;
 
 		shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.tag } );
@@ -427,7 +482,6 @@ var shortcodeViewConstructor = {
 			}
 
 			attr.set( 'value', value );
-
 		} );
 
 		if ( 'content' in options ) {
@@ -438,10 +492,14 @@ var shortcodeViewConstructor = {
 		}
 
 		return shortcodeModel;
-
 	},
 
-	delayedFetch : function() {
+	/**
+	 * Queue a request with Fetcher class, and return a promise.
+	 *
+	 * @return {Promise}
+	 */
+	delayedFetch: function() {
 		return fetcher.queueToFetch({
 			post_id: $( '#post_ID' ).val(),
 			shortcode: this.shortcodeModel.formatShortcode(),
@@ -450,17 +508,16 @@ var shortcodeViewConstructor = {
 	},
 
 	/**
-	 * Fetch preview.
+	 * Fetch a preview of a single shortcode.
+	 *
 	 * Async. Sets this.content and calls this.render.
 	 *
 	 * @return undefined
 	 */
-	fetch : function() {
-
+	fetch: function() {
 		var self = this;
 
 		if ( ! this.fetching ) {
-
 			this.fetching = true;
 
 			wp.ajax.post( 'do_shortcode', {
@@ -468,31 +525,26 @@ var shortcodeViewConstructor = {
 				shortcode: this.shortcodeModel.formatShortcode(),
 				nonce: shortcodeUIData.nonces.preview,
 			}).done( function( response ) {
-
 				if ( '' === response ) {
 					self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
 				} else {
 					self.content = response;
 				}
-
 			}).fail( function() {
 				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
 			} ).always( function() {
 				delete self.fetching;
 				self.render( null, true );
 			} );
-
 		}
-
 	},
 
 	/**
-	 * Edit shortcode.
-	 * Get shortcode model and open edit modal.
+	 * Get the shortcode model and open modal UI for editing.
 	 *
+	 * @param {string} shortcodeString String representation of the shortcode
 	 */
-	edit : function( shortcodeString ) {
-
+	edit: function( shortcodeString ) {
 		var currentShortcode;
 
 		// Backwards compatability for WP pre-4.2
@@ -518,16 +570,16 @@ var shortcodeViewConstructor = {
 
 	/**
 	 * Parse a shortcode string and return shortcode model.
-	 * Must be a registered shortcode - see window.Shortcode_UI.shortcodes.
+	 * Must be a shortcode which has UI registered with Shortcake - see
+	 * `window.sui.shortcodes`.
 	 *
 	 * @todo - I think there must be a cleaner way to get the
 	 * shortcode & args here that doesn't use regex.
 	 *
-	 * @param  string shortcodeString
+	 * @param  {string} shortcodeString
 	 * @return Shortcode
 	 */
 	parseShortcodeString: function( shortcodeString ) {
-
 		var model, attr;
 
 		var shortcode_tags = _.map( sui.shortcodes.pluck( 'shortcode_tag' ), this.pregQuote ).join( '|' );
@@ -583,12 +635,15 @@ var shortcodeViewConstructor = {
 		}
 
 		return currentShortcode;
-
 	},
 
  	/**
 	 * Strip 'p' and 'br' tags, replace with line breaks.
-	 * Reverse the effect of the WP editor autop functionality.
+	 *
+	 * Reverses the effect of the WP editor autop functionality.
+	 *
+	 * @param {string} content Content with `<p>` and `<br>` tags inserted
+	 * @return {string}
 	 */
 	unAutoP: function( content ) {
 		if ( switchEditors && switchEditors.pre_wpautop ) {
@@ -596,28 +651,24 @@ var shortcodeViewConstructor = {
 		}
 
 		return content;
-
 	},
 
 	/**
+	 * Escape any special characters in a string to be used as a regular expression.
+	 *
 	 * JS version of PHP's preg_quote()
+	 *
+	 * @see http://phpjs.org/functions/preg_quote/
+	 *
+	 * @param {string} str String to parse
+	 * @param {string} delimiter Delimiter character to be also escaped - not used here
+	 * @return {string}
 	 */
 	pregQuote: function( str, delimiter ) {
-		//  discuss at: http://phpjs.org/functions/preg_quote/
-		// original by: booeyOH
-		// improved by: Ates Goral (http://magnetiq.com)
-		// improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-		// improved by: Brett Zamir (http://brett-zamir.me)
-		// bugfixed by: Onno Marsman
-		//   example 1: preg_quote("$40");
-		//   returns 1: '\\$40'
-		//   example 2: preg_quote("*RRRING* Hello?");
-		//   returns 2: '\\*RRRING\\* Hello\\?'
-		//   example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
-		//   returns 3: '\\\\\\.\\+\\*\\?\\[\\^\\]\\$\\(\\)\\{\\}\\=\\!\\<\\>\\|\\:'
-
 		return String(str)
-		.replace( new RegExp( '[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + ( delimiter || '' ) + '-]', 'g' ), '\\$&' );
+			.replace(
+				new RegExp( '[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + ( delimiter || '' ) + '-]', 'g' ),
+				'\\$&' );
 	},
 
 	// Backwards compatability for Pre WP 4.2.
@@ -732,7 +783,6 @@ var shortcodeViewConstructor = {
 		},
 
 	},
-
 };
 
 module.exports = shortcodeViewConstructor;
