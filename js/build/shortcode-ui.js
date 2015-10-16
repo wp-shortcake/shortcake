@@ -1274,16 +1274,9 @@ var editAttributeField = Backbone.View.extend( {
 	tagName: "div",
 
 	events: {
-		'keyup  input[type="text"]':   'inputChanged',
-		'keyup  textarea':             'inputChanged',
-		'change select':               'inputChanged',
-		'change input[type=checkbox]': 'inputChanged',
-		'change input[type=radio]':    'inputChanged',
-		'change input[type=email]':    'inputChanged',
-		'change input[type=number]':   'inputChanged',
-		'change input[type=date]':     'inputChanged',
-		'change input[type=url]':      'inputChanged',
-		'input input[type=range]':     'inputChanged',
+		'input  input':    'inputChanged',
+		'input  textarea': 'inputChanged',
+		'change select':   'inputChanged',
 	},
 
 	render: function() {
