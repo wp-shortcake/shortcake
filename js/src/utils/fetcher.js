@@ -1,18 +1,51 @@
 var $ = require('jquery');
 var _ = require('underscore');
 
+/**
+ * A Utility object for batching requests for shortcode previews.
+ *
+ * Returns a "singleton" object with two methods, `queueToFetch` and
+ * `fetchAll`. Calling `Fetcher.queueToFetch()` will add the requested query to
+ * the fetcher's array, and set a timeout to run all queries after the current
+ * call stack has finished.
+ *
+ * @this {Fetcher} aliased as `fetcher`
+ */
 var Fetcher = (function() {
 	var fetcher = this;
 
+	/*
+	 * Counter, used to match each request in a batch with its response.
+	 * @private
+	 */
 	this.counter = 0;
+
+	/*
+	 * Array of queries to be executed in a batch.
+	 * @private
+	 */
 	this.queries = [];
+
+	/*
+	 * The timeout for the current batch request.
+	 * @private
+	 */
 	this.timeout = null;
 
 	/**
 	 * Add a query to the queue.
 	 *
-	 * Returns a promise that will be resolved when the query is successfully
-	 * returned.
+	 * Adds the requested query to the next batch. Either sets a timeout to
+	 * fetch previews, or adds to the current one if one is already being
+	 * built. Returns a jQuery Deferred promise that will be resolved when the
+	 * query is successful or otherwise complete.
+	 *
+	 * @param {object} query Object containing fields required to render preview: {
+	 *   @var {integer} post_id Post ID
+	 *   @var {string} shortcode Shortcode string to render
+	 *   @var {string} nonce Preview nonce
+	 * }
+	 * @return {Deferred}
 	 */
 	this.queueToFetch = function( query ) {
 		var fetchPromise = new $.Deferred();
@@ -35,7 +68,11 @@ var Fetcher = (function() {
 	/**
 	 * Execute all queued queries.
 	 *
-	 * Resolves their respective promises.
+	 * Posts to the `bulk_do_shortcode` ajax endpoint to retrieve any queued
+	 * previews. When that request recieves a response, goes through the
+	 * response and resolves each of the promises in it.
+	 *
+	 * @this {Fetcher}
 	 */
 	this.fetchAll = function() {
 		delete fetcher.timeout;
