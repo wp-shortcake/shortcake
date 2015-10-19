@@ -122,11 +122,13 @@ function shortcode_ui_dev_advanced_example() {
 					'libraryType' => array( 'image' ),
 					'addButton'   => esc_html__( 'Select Image', 'shortcode-ui' ),
 					'frameTitle'  => esc_html__( 'Select Image', 'shortcode-ui ' ),
+					'description' => esc_html__( 'You can only select a single image.' ),
 				),
 
 				array(
 					'label'       => 'Gallery',
 					'attr'        => 'gallery',
+					'description' => esc_html__( 'You can select multiple images.' ),
 					'type'        => 'attachment',
 					'libraryType' => array( 'image' ),
 					'multiple'    => true,

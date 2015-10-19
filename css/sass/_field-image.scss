@@ -12,6 +12,11 @@
 		width: 150px;
 	}
 
+	.shortcode-ui-field-attachment .description + .attachment-previews {
+		margin-top: 16px;
+		overflow: hidden;
+	}
+
 	.shortcake-attachment-preview-container {
 
 		width: 150px;
@@ -104,6 +109,7 @@
 		// 	}
 		// }
 	}
+
 }
 
 .edit-shortcode-form .thumbnail-details-container {
