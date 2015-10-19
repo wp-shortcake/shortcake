@@ -268,7 +268,6 @@ class Shortcode_UI {
 		echo $this->get_view( 'media-frame' ); // WPCS: xss ok
 		echo $this->get_view( 'list-item' ); // WPCS: xss ok
 		echo $this->get_view( 'edit-form' ); // WPCS: xss ok
-		echo $this->get_view( 'image-preview' ); // WPCS: xss ok
 
 		/**
 		 * Fires after base shortcode UI templates have been loaded.
