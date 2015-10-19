@@ -840,9 +840,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	 */
 	initSelection: function() {
 
-		// console.log( 'initSelection', this.model.get( 'multiple' ) ? true : false );
-		// this.currentSelection = new wp.media.model.Attachments();
-
 		this.currentSelection = new wp.media.model.Selection( [], {
 			multiple: this.model.get( 'multiple' ) ? true : false,
 		} );
@@ -910,8 +907,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	},
 
 	_renderAll: function() {
-
-		console.log( '_renderAll', this.currentSelection.toJSON() );
 
 		// Empty container.
 		this.$container.html('');
