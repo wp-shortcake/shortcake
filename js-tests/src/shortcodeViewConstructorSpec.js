@@ -43,4 +43,46 @@ describe( 'Shortcode View Constructor', function(){
 		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
 	});
 
+	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){
+		var shortcode = {
+			tag: 'pullquote',
+			content: 'This quote has</p>\n<p>Multiple line breaks two</p>\n<p>Test one',
+			type: 'closed',
+		};
+		var data = {
+			label: 'Pullquote',
+			shortcode_tag: 'pullquote',
+			inner_content: true,
+		};
+		sui.shortcodes.add( data );
+		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
+		expect( model.get('inner_content').get('value') ).toEqual( 'This quote has\n\nMultiple line breaks two\n\nTest one' );
+	});
+
+	it( 'Reverses the effect of core adding wpautop to shortcode attribute', function(){
+		var shortcode = {
+			tag: 'pullquote_attr',
+			attrs: {
+				named: {
+					quote: 'This quote has</p>\n<p>Multiple line breaks two</p>\n<p>Test one',
+				},
+			},
+			type: 'single',
+		};
+		var data = {
+			label: 'Pullquote',
+			shortcode_tag: 'pullquote_attr',
+			attrs: [
+				{
+					attr: 'quote',
+					label: 'Quote',
+					type: 'text',
+				}
+			],
+		};
+		sui.shortcodes.add( data );
+		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
+		expect( model.get('attrs').first().get('value') ).toEqual( 'This quote has\n\nMultiple line breaks two\n\nTest one' );
+	});
+
 });
