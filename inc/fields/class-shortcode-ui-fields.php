@@ -22,6 +22,7 @@ class Shortcode_UI_Fields {
 	private $field_defaults = array(
 		'template' => 'shortcode-ui-field-text',
 		'view'     => 'editAttributeField',
+		'encode'   => false,
 	);
 
 	/**

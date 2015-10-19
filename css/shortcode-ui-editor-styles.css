@@ -1,8 +1,10 @@
 .wpview-wrap.wp-mce-view-show-toolbar .toolbar {
   display: block; }
+
 .wpview-wrap .shortcake-error {
   color: red;
   font-weight: bold; }
+
 .wpview-wrap .shortcake-empty {
   font-family: Consolas, Monaco, monospace;
   color: #666;
@@ -12,5 +14,4 @@ body#wpview-iframe-sandbox {
   display: inline-block;
   width: 100%;
   overflow: hidden; }
-
 /*# sourceMappingURL=shortcode-ui-editor-styles.css.map */

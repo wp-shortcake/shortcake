@@ -90,12 +90,12 @@ class Shortcake_Field_Attachment {
 		?>
 
 		<script type="text/html" id="tmpl-fusion-shortcake-field-attachment">
-			<div class="field-block">
-				<label for="{{ data.attr }}">{{ data.label }}</label>
+			<div class="field-block shortcode-ui-field-attachment shortcode-ui-attribute-{{ data.attr }}">
+				<label for="{{ data.attr }}">{{{ data.label }}}</label>
 				<button id="{{ data.attr }}" class="shortcake-attachment-select button button-small add">{{ data.addButton }}</button>
 				<div class="attachment-previews"></div>
 				<# if ( typeof data.description == 'string' ) { #>
-					<p class="description">{{ data.description }}</p>
+					<p class="description">{{{ data.description }}}</p>
 				<# } #>
 			</div>
 		</script>
