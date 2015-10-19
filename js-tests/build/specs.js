@@ -200,6 +200,48 @@ describe( 'Shortcode View Constructor', function(){
 		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
 	});
 
+	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){
+		var shortcode = {
+			tag: 'pullquote',
+			content: 'This quote has</p>\n<p>Multiple line breaks two</p>\n<p>Test one',
+			type: 'closed',
+		};
+		var data = {
+			label: 'Pullquote',
+			shortcode_tag: 'pullquote',
+			inner_content: true,
+		};
+		sui.shortcodes.add( data );
+		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
+		expect( model.get('inner_content').get('value') ).toEqual( 'This quote has\n\nMultiple line breaks two\n\nTest one' );
+	});
+
+	it( 'Reverses the effect of core adding wpautop to shortcode attribute', function(){
+		var shortcode = {
+			tag: 'pullquote_attr',
+			attrs: {
+				named: {
+					quote: 'This quote has</p>\n<p>Multiple line breaks two</p>\n<p>Test one',
+				},
+			},
+			type: 'single',
+		};
+		var data = {
+			label: 'Pullquote',
+			shortcode_tag: 'pullquote_attr',
+			attrs: [
+				{
+					attr: 'quote',
+					label: 'Quote',
+					type: 'text',
+				}
+			],
+		};
+		sui.shortcodes.add( data );
+		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
+		expect( model.get('attrs').first().get('value') ).toEqual( 'This quote has\n\nMultiple line breaks two\n\nTest one' );
+	});
+
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -727,7 +769,8 @@ var shortcodeViewConstructor = {
 	 */
 	getShortcodeModel: function( options ) {
 
-		var shortcodeModel;
+		var shortcodeModel,
+			self = this;
 
 		shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.tag } );
 
@@ -746,6 +789,9 @@ var shortcodeViewConstructor = {
 
 			var value = options.attrs.named[ attr.get('attr') ];
 
+			// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+			value = self.unAutoP( value );
+
 			// Maybe decode value.
 			if ( attr.get('encode') ) {
 				value = decodeURIComponent( value );
@@ -758,7 +804,9 @@ var shortcodeViewConstructor = {
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
 			if ( innerContent ) {
-				innerContent.set('value', options.content);
+				// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+				options.content = self.unAutoP( options.content );
+				innerContent.set('value', options.content );
 			}
 		}
 
