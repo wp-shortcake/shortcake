@@ -824,7 +824,8 @@ var shortcodeViewConstructor = {
 	 * @param {Object} options Options
 	 */
 	getShortcodeModel: function( options ) {
-		var shortcodeModel;
+		var shortcodeModel,
+			self = this;
 
 		shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.tag } );
 
@@ -843,6 +844,9 @@ var shortcodeViewConstructor = {
 
 			var value = options.attrs.named[ attr.get('attr') ];
 
+			// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+			value = self.unAutoP( value );
+
 			// Maybe decode value.
 			if ( attr.get('encode') ) {
 				value = decodeURIComponent( value );
@@ -854,7 +858,9 @@ var shortcodeViewConstructor = {
 		if ( 'content' in options ) {
 			var innerContent = shortcodeModel.get('inner_content');
 			if ( innerContent ) {
-				innerContent.set('value', options.content);
+				// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+				options.content = self.unAutoP( options.content );
+				innerContent.set('value', options.content );
 			}
 		}
 
