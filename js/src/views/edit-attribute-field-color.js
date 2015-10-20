@@ -2,12 +2,23 @@ var sui = require('sui-utils/sui'),
     editAttributeField = require( 'sui-views/edit-attribute-field' ),
     $ = require('jquery');
 
+/**
+ * sui.views.editAttributeFieldColor
+ *
+ * The controller for the Color Field.
+ *
+ * @class
+ * @augments sui.views.editAttributeField
+ */
 sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 	// All events are being listened by iris, and they don't bubble very well,
 	// so remove Backbone's listeners.
 	events: {},
 
+	/**
+	 * Render the Color Field.
+	 */
 	render: function() {
 		var self = this;
 
@@ -52,3 +63,4 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 });
 
+module.exports = sui.views.editAttributeFieldColor;

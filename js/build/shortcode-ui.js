@@ -58,6 +58,7 @@ var MediaController = wp.media.controller.State.extend({
 		if ( this.frame && this.frame.toolbar ) {
 			this.frame.toolbar.get().refresh();
 		}
+		this.destroySelect2UI();
 	},
 
 	search: function( searchTerm ) {
@@ -81,6 +82,14 @@ var MediaController = wp.media.controller.State.extend({
 		this.props.set( 'action', 'select' );
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'search', null );
+	},
+
+	deactivate: function() {
+		this.destroySelect2UI();
+	},
+
+	destroySelect2UI: function() {
+		$('.shortcode-ui-post-select.select2-container').select2( "close" );
 	},
 
 });
@@ -808,7 +817,15 @@ module.exports = window.Shortcode_UI;
 },{"./../collections/shortcodes.js":2}],11:[function(require,module,exports){
 var sui = require('./../utils/sui.js');
 
-var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
+/**
+ * sui.views.editAttributeFieldAttachment
+ *
+ * The controller for the Attachment Field.
+ *
+ * @class
+ * @augments sui.views.editAttributeField
+ */
+sui.views.editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	events: {
 		'click .add'       : '_openMediaFrame',
@@ -818,11 +835,10 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	},
 
 	/**
-	 * Update the field attachment.
-	 * Re-renders UI.
-	 * If ID is empty - does nothing.
+	 * Update the Field Attachment to use a new attachment ID.
+	 * Re-renders UI. But, bails early if the ID isn't set.
 	 *
-	 * @param {int} id Attachment ID
+	 * @param integer id Attachment ID
 	 */
 	updateValue: function( id ) {
 
@@ -860,6 +876,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		});
 	},
 
+	/**
+	 * Render the Attachment Field.
+	 */
 	render: function() {
 
 		// Set model default values.
@@ -890,8 +909,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 	/**
 	 * Renders attachment preview in field.
+	 *
 	 * @param {object} attachment model
-	 * @return null
 	 */
 	_renderPreview: function( attachment ) {
 
@@ -940,6 +959,9 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	/**
 	 * Open media frame when add button is clicked.
 	 *
+	 * Sets the frame to display the media library with the attachment selected if set.
+	 *
+	 * @param {object} e
 	 */
 	_openMediaFrame: function(e) {
 		e.preventDefault();
@@ -962,6 +984,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	/**
 	 * When an attachment is selected from the media frame, update the model value.
 	 *
+	 * @param {object} e
 	 */
 	_selectAttachment: function(e) {
 		var selection  = this.frame.state().get('selection');
@@ -978,6 +1001,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	/**
 	 * Remove the attachment.
 	 * Render preview & Update the model.
+	 *
+	 * @param {object} e
 	 */
 	_removeAttachment: function(e) {
 		e.preventDefault();
@@ -1012,8 +1037,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 });
 
-module.exports = sui.views.editAttributeFieldAttachment = editAttributeFieldAttachment;
-
+module.exports = sui.views.editAttributeFieldAttachment;
 
 },{"./../utils/sui.js":10}],12:[function(require,module,exports){
 (function (global){
@@ -1021,12 +1045,23 @@ var sui = require('./../utils/sui.js'),
     editAttributeField = require('./edit-attribute-field.js'),
     $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
+/**
+ * sui.views.editAttributeFieldColor
+ *
+ * The controller for the Color Field.
+ *
+ * @class
+ * @augments sui.views.editAttributeField
+ */
 sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 	// All events are being listened by iris, and they don't bubble very well,
 	// so remove Backbone's listeners.
 	events: {},
 
+	/**
+	 * Render the Color Field.
+	 */
 	render: function() {
 		var self = this;
 
@@ -1071,205 +1106,195 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 });
 
+module.exports = sui.views.editAttributeFieldColor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":10,"./edit-attribute-field.js":14}],13:[function(require,module,exports){
-( function( $ ) {
+(function (global){
+var sui = require('./../utils/sui.js'),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
-	var sui = window.Shortcode_UI;
+// Cached Data.
+var postSelectCache = {};
 
-	// Cached Data.
-	var postSelectCache = {};
+/**
+ * sui.views.editAttributeFieldPostSelect
+ *
+ * The controller for the Post Select Field.
+ *
+ * @class
+ * @augments sui.views.editAttributeField
+ */
+sui.views.editAttributeFieldPostSelect = sui.views.editAttributeField.extend( {
 
-	sui.views.editAttributeFieldPostSelect = sui.views.editAttributeField.extend( {
+	events: {
+		'change .shortcode-ui-post-select': 'inputChanged',
+	},
 
-		events: {
-			'change .shortcode-ui-post-select': 'inputChanged',
-		},
+	/**
+	 * Update saved value and trigger callbacks when input changes
+	 */
+	inputChanged: function(e) {
+		this.setValue( e.val );
+		this.triggerCallbacks();
+	},
 
-		inputChanged: function(e) {
-			this.setValue( e.val );
-			this.triggerCallbacks();
-		},
+	/**
+	 * Render the Post Select field
+	 */
+	render: function() {
 
-		render: function() {
+		var self = this,
+		    defaults = { multiple: false };
 
-			var self = this,
-			    defaults = { multiple: false };
-
-			for ( var arg in defaults ) {
-				if ( ! this.model.get( arg ) ) {
-					this.model.set( arg, defaults[ arg ] );
-				}
+		for ( var arg in defaults ) {
+			if ( ! this.model.get( arg ) ) {
+				this.model.set( arg, defaults[ arg ] );
 			}
+		}
 
-			var data = this.model.toJSON();
-			data.id = 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid;
+		var data = this.model.toJSON();
+		data.id = 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid;
 
-			this.$el.html( this.template( data ) );
+		this.$el.html( this.template( data ) );
 
-			var ajaxData = {
-				action    : 'shortcode_ui_post_field',
-				nonce     : shortcodeUiPostFieldData.nonce,
-				shortcode : this.shortcode.get( 'shortcode_tag'),
-				attr      : this.model.get( 'attr' )
-			};
+		var ajaxData = {
+			action    : 'shortcode_ui_post_field',
+			nonce     : shortcodeUiPostFieldData.nonce,
+			shortcode : this.shortcode.get( 'shortcode_tag'),
+			attr      : this.model.get( 'attr' )
+		};
 
-			var $field = this.$el.find( '.shortcode-ui-post-select' );
+		var $field = this.$el.find( '.shortcode-ui-post-select' );
 
-			$field.select2({
+		$field.select2({
 
-				placeholder: "Search",
-				multiple: this.model.get( 'multiple' ),
-				ajax: {
-					url: ajaxurl,
-					dataType: 'json',
-					quietMillis: 250,
-					data: function (term, page) {
-						ajaxData.s    = term;
-						ajaxData.page = page;
-						return ajaxData;
-					},
-					results: function ( response, page ) {
+			placeholder: "Search",
+			multiple: this.model.get( 'multiple' ),
+			ajax: {
+				url: ajaxurl,
+				dataType: 'json',
+				quietMillis: 250,
+				data: function (term, page) {
+					ajaxData.s    = term;
+					ajaxData.page = page;
+					return ajaxData;
+				},
+				results: function ( response, page ) {
+
+					if ( ! response.success ) {
+						return { results: {}, more: false };
+					}
+
+					// Cache data for quicker rendering later.
+					postSelectCache = $.extend( postSelectCache, response.data.posts );
+
+					var more = ( page * response.data.posts_per_page ) < response.data.found_posts; // whether or not there are more results available
+					return { results: response.data.posts, more: more };
+
+				},
+			},
+
+			/**
+			 * Initialize Callback
+			 * Used to set render the initial value.
+			 * Has to make a request to get the title for the current ID.
+			 */
+			initSelection: function(element, callback) {
+
+				var ids, parsedData = [], cached;
+
+				// Convert stored value to array of IDs (int).
+				ids = $(element)
+					.val()
+					.split(',')
+					.map( function (str) { return str.trim(); } )
+					.map( function (str) { return parseInt( str ); } );
+
+				if ( ids.length < 1 ) {
+					return;
+				}
+
+				// Check if there is already cached data.
+				for ( var i = 0; i < ids.length; i++ ) {
+					cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) );
+					if ( cached ) {
+						parsedData.push( cached );
+					}
+				}
+
+				// If not multiple - return single value if we have one.
+				if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
+					callback( parsedData[0] );
+					return;
+				}
+
+				var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
+
+				if ( ! uncachedIds.length ) {
+
+					callback( parsedData );
+
+				} else {
+
+					var initAjaxData      = jQuery.extend( true, {}, ajaxData );
+					initAjaxData.action   = 'shortcode_ui_post_field';
+					initAjaxData.post__in = uncachedIds;
+
+					$.get( ajaxurl, initAjaxData ).done( function( response ) {
 
 						if ( ! response.success ) {
 							return { results: {}, more: false };
 						}
 
-						// Cache data for quicker rendering later.
 						postSelectCache = $.extend( postSelectCache, response.data.posts );
 
-						var more = ( page * response.data.posts_per_page ) < response.data.found_posts; // whether or not there are more results available
-						return { results: response.data.posts, more: more };
-
-					},
-				},
-
-				/**
-				 * Initialize Callback
-				 * Used to set render the initial value.
-				 * Has to make a request to get the title for the current ID.
-				 */
-				initSelection: function(element, callback) {
-
-					var ids, parsedData = [], cached;
-
-					// Convert stored value to array of IDs (int).
-					ids = $(element)
-						.val()
-						.split(',')
-						.map( function (str) { return str.trim(); } )
-						.map( function (str) { return parseInt( str ); } );
-
-					if ( ids.length < 1 ) {
-						return;
-					}
-
-					// Check if there is already cached data.
-					for ( var i = 0; i < ids.length; i++ ) {
-						cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) );
-						if ( cached ) {
-							parsedData.push( cached );
+						// If not multi-select, expects single object, not array of objects.
+						if ( ! self.model.get( 'multiple' ) ) {
+							callback( response.data.posts[0] );
+							return;
 						}
-					}
 
-					// If not multiple - return single value if we have one.
-					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
-						callback( parsedData[0] );
-						return;
-					}
-
-					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
-
-					if ( ! uncachedIds.length ) {
+						// Append new data to cached data.
+						// Sort by original order.
+						parsedData = parsedData
+							.concat( response.data.posts )
+							.sort(function (a, b) {
+								if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
+								if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
+								return 0;
+							});
 
 						callback( parsedData );
+						return;
 
-					} else {
+					} );
 
-						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
-						initAjaxData.action   = 'shortcode_ui_post_field';
-						initAjaxData.post__in = uncachedIds;
+				}
 
-						$.get( ajaxurl, initAjaxData ).done( function( response ) {
+			},
 
-							if ( ! response.success ) {
-								return { results: {}, more: false };
-							}
+		} );
 
-							postSelectCache = $.extend( postSelectCache, response.data.posts );
-
-							// If not multi-select, expects single object, not array of objects.
-							if ( ! self.model.get( 'multiple' ) ) {
-								callback( response.data.posts[0] );
-								return;
-							}
-
-							// Append new data to cached data.
-							// Sort by original order.
-							parsedData = parsedData
-								.concat( response.data.posts )
-								.sort(function (a, b) {
-									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
-									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
-									return 0;
-								});
-
-							callback( parsedData );
-							return;
-
-						} );
-
-					}
-
-				},
-
-			} );
-
-			// Make multiple values sortable.
-			if ( this.model.get( 'multiple' ) ) {
-				$field.select2('container').find('ul.select2-choices').sortable({
-	    			containment: 'parent',
-	    			start: function() { $('.shortcode-ui-post-select').select2('onSortStart'); },
-	    			update: function() { $('.shortcode-ui-post-select').select2('onSortEnd'); }
-				});
-			}
-
-			return this;
-
+		// Make multiple values sortable.
+		if ( this.model.get( 'multiple' ) ) {
+			$field.select2('container').find('ul.select2-choices').sortable({
+				containment: 'parent',
+				start: function() { $('.shortcode-ui-post-select').select2('onSortStart'); },
+				update: function() { $('.shortcode-ui-post-select').select2('onSortEnd'); }
+			});
 		}
 
-	} );
+		return this;
 
-	/**
-	 * Extending SUI Media Controller to hide Select2 UI Drop-Down when menu
-	 * changes in Meida modal
-	 * 1. going back/forth between different shortcakes (refresh)
-	 * 2. changing the menu in left column (deactivate)
-	 * 3. @TODO closing the modal.
-	 */
-	var mediaController = sui.controllers.MediaController;
-	sui.controllers.MediaController = mediaController.extend({
+	}
 
-		refresh: function(){
-			mediaController.prototype.refresh.apply( this, arguments );
-			this.destroySelect2UI();
-		},
+} );
 
-		//doesn't need to call parent as it already an "abstract" method in parent to provide callback
-		deactivate: function() {
-			this.destroySelect2UI();
-		},
+module.exports = sui.views.editAttributeFieldPostSelect;
 
-		destroySelect2UI: function() {
-			$('.shortcode-ui-post-select.select2-container').select2( "close" );
-		}
-
-	});
-
-} )( jQuery );
-
-},{}],14:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./../utils/sui.js":10}],14:[function(require,module,exports){
 (function (global){
 var Backbone     = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	sui          = require('./../utils/sui.js'),
