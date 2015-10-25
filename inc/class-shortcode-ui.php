@@ -66,7 +66,9 @@ class Shortcode_UI {
 	 */
 	private function setup_actions() {
 		add_action( 'admin_enqueue_scripts',     array( $this, 'action_admin_enqueue_scripts' ) );
+		add_action( 'wa_fronted_after_scripts',  array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',         array( $this, 'action_wp_enqueue_editor' ) );
+		add_action( 'wa_fronted_after_scripts',  array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_bulk_do_shortcode', array( $this, 'handle_ajax_bulk_do_shortcode' ) );
 		add_filter( 'wp_editor_settings',        array( $this, 'filter_wp_editor_settings' ), 10, 2 );
 	}
@@ -238,6 +240,7 @@ class Shortcode_UI {
 
 		// add templates to the footer, instead of where we're at now
 		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
+		add_action( 'wa_fronted_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
 
 		/**
 		 * Fires after shortcode UI assets have been enqueued.
