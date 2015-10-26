@@ -791,7 +791,7 @@ var shortcodeViewConstructor = {
 	},
 };
 
-module.exports = shortcodeViewConstructor;
+module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./fetcher.js":8,"./sui.js":10}],10:[function(require,module,exports){
