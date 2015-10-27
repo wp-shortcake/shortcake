@@ -392,4 +392,4 @@ var shortcodeViewConstructor = {
 	},
 };
 
-module.exports = shortcodeViewConstructor;
+module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
