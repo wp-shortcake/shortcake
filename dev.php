@@ -135,7 +135,8 @@ function shortcode_ui_dev_advanced_example() {
 	/*
 	 * Define the UI for attributes of the shortcode. Optional.
 	 *
-	 * In this demo example, we register three fields - Attachment, Citation Source, and Select Page.
+	 * In this demo example, we register multiple fields related to showing a quotation
+	 * - Attachment, Citation Source, Select Page, Background Color, Alignment and Year.
 	 *
 	 * If no UI is registered for an attribute, then the attribute will
 	 * not be editable through Shortcake's UI. However, the value of any
@@ -184,6 +185,38 @@ function shortcode_ui_dev_advanced_example() {
 			'type'     => 'post_select',
 			'query'    => array( 'post_type' => 'page' ),
 			'multiple' => true,
+		),
+		array(
+			'label'  => esc_html__( 'Background Color', 'shortcode-ui-example' ),
+			'attr'   => 'background-color',
+			'type'   => 'color',
+			'encode' => true,
+			'meta'   => array(
+				'placeholder' => esc_html__( 'Hex color code', 'shortcode-ui-example' ),
+			),
+		),
+		array(
+			'label'       => esc_html__( 'Alignment', 'shortcode-ui-example' ),
+			'description' => esc_html__( 'Whether the quotation should be displayed as pull-left, pull-right, or neither.', 'shortcode-ui-example' ),
+			'attr'        => 'alignment',
+			'type'        => 'select',
+			'options'     => array(
+				''      => esc_html__( 'None', 'shortcode-ui-example' ),
+				'left'  => esc_html__( 'Pull Left', 'shortcode-ui-example' ),
+				'right' => esc_html__( 'Pull Right', 'shortcode-ui-example' ),
+			),
+		),
+		array(
+			'label'       => esc_html__( 'Year', 'shortcode-ui-example' ),
+			'description' => esc_html__( 'Optional. The year the quotation is from.', 'shortcode-ui-example' ),
+			'attr'        => 'year',
+			'type'        => 'number',
+			'meta'        => array(
+				'placeholder' => 'YYYY',
+				'min'         => '1990',
+				'max'         => date_i18n( 'Y' ),
+				'step'        => '1',
+			),
 		),
 	);
 
