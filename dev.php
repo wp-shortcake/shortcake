@@ -132,91 +132,100 @@ add_action( 'register_shortcode_ui', 'shortcode_ui_dev_advanced_example' );
  * @since 1.0.0
  */
 function shortcode_ui_dev_advanced_example() {
-	shortcode_ui_register_for_shortcode(
-		'shortcake_dev', // Shortcode tag this UI is for.
-		array(           // Shortcode UI args.
-		                 /*
-						  * How the shortcode should be labeled in the UI. Required argument.
-						  */
-		                 'label' => esc_html__( 'Shortcake Dev', 'shortcode-ui-example' ),
-
-		                 /*
-						  * Include an icon with your shortcode. Optional.
-						  * Use a dashicon, or full URL to image.
-						  */
-		                 'listItemImage' => 'dashicons-editor-quote',
-
-		                 /*
-						  * Limit this shortcode UI to specific posts. Optional.
-						  */
-		                 'post_type' => array( 'post' ),
-
-		                 /*
-						  * Register UI for the "inner content" of the shortcode. Optional.
-						  * If no UI is registered for the inner content, then any inner content
-						  * data present will be backed-up during editing.
-						  */
-		                 'inner_content' => array(
-			                 'label'        => esc_html__( 'Quote', 'shortcode-ui-example' ),
-			                 'description'  => esc_html__( 'Include a statement from someone famous.', 'shortcode-ui-example' ),
-		                 ),
-
-		                 /*
-						  * Register UI for attributes of the shortcode. Optional.
-						  *
-						  * In this demo example, we register three fields - Attachment, Citation Source, and Select Page.
-						  *
-						  * If no UI is registered for an attribute, then the attribute will
-						  * not be editable through Shortcake's UI. However, the value of any
-						  * unregistered attributes will be preserved when editing.
-						  *
-						  * Each array must include 'attr', 'type', and 'label'.
-						  * * 'attr' should be the name of the attribute.
-						  * * 'type' options include: text, checkbox, textarea, radio, select, email,
-						  *     url, number, and date, post_select, attachment, color.
-						  * * 'label' is the label text associated with that input field.
-						  *
-						  * Use 'meta' to add arbitrary attributes to the HTML of the field.
-						  *
-						  * Use 'encode' to encode attribute data. Requires customization in shortcode callback to decode.
-						  *
-						  * Depending on 'type', additional arguments may be available.
-						  */
-		                 'attrs' => array(
-			                 array(
-				                 'label'       => esc_html__( 'Attachment', 'shortcode-ui-example' ),
-				                 'attr'        => 'attachment',
-				                 'type'        => 'attachment',
-				                 /*
-								  * These arguments are passed to the instantiation of the media library:
-								  * 'libraryType' - Type of media to make available.
-								  * 'addButton' - Text for the button to open media library.
-								  * 'frameTitle' - Title for the modal UI once the library is open.
-								  */
-				                 'libraryType' => array( 'image' ),
-				                 'addButton'   => esc_html__( 'Select Image', 'shortcode-ui-example' ),
-				                 'frameTitle'  => esc_html__( 'Select Image', 'shortcode-ui-example' ),
-			                 ),
-			                 array(
-				                 'label'  => esc_html__( 'Citation Source', 'shortcode-ui-example' ),
-				                 'attr'   => 'source',
-				                 'type'   => 'text',
-				                 'encode' => true,
-				                 'meta'   => array(
-					                 'placeholder' => esc_html__( 'Test placeholder', 'shortcode-ui-example' ),
-					                 'data-test'   => 1,
-				                 ),
-			                 ),
-			                 array(
-				                 'label'    => esc_html__( 'Select Page', 'shortcode-ui-example' ),
-				                 'attr'     => 'page',
-				                 'type'     => 'post_select',
-				                 'query'    => array( 'post_type' => 'page' ),
-				                 'multiple' => true,
-			                 ),
-		                 ),
-		)
+	/*
+	 * Define the UI for attributes of the shortcode. Optional.
+	 *
+	 * In this demo example, we register three fields - Attachment, Citation Source, and Select Page.
+	 *
+	 * If no UI is registered for an attribute, then the attribute will
+	 * not be editable through Shortcake's UI. However, the value of any
+	 * unregistered attributes will be preserved when editing.
+	 *
+	 * Each array must include 'attr', 'type', and 'label'.
+	 * * 'attr' should be the name of the attribute.
+	 * * 'type' options include: text, checkbox, textarea, radio, select, email,
+	 *     url, number, and date, post_select, attachment, color.
+	 * * 'label' is the label text associated with that input field.
+	 *
+	 * Use 'meta' to add arbitrary attributes to the HTML of the field.
+	 *
+	 * Use 'encode' to encode attribute data. Requires customization in shortcode callback to decode.
+	 *
+	 * Depending on 'type', additional arguments may be available.
+	 */
+	$fields = array(
+		array(
+			'label'       => esc_html__( 'Attachment', 'shortcode-ui-example' ),
+			'attr'        => 'attachment',
+			'type'        => 'attachment',
+			/*
+			 * These arguments are passed to the instantiation of the media library:
+			 * 'libraryType' - Type of media to make available.
+			 * 'addButton'   - Text for the button to open media library.
+			 * 'frameTitle'  - Title for the modal UI once the library is open.
+			 */
+			'libraryType' => array( 'image' ),
+			'addButton'   => esc_html__( 'Select Image', 'shortcode-ui-example' ),
+			'frameTitle'  => esc_html__( 'Select Image', 'shortcode-ui-example' ),
+		),
+		array(
+			'label'  => esc_html__( 'Citation Source', 'shortcode-ui-example' ),
+			'attr'   => 'source',
+			'type'   => 'text',
+			'encode' => true,
+			'meta'   => array(
+				'placeholder' => esc_html__( 'Test placeholder', 'shortcode-ui-example' ),
+				'data-test'   => 1,
+			),
+		),
+		array(
+			'label'    => esc_html__( 'Select Page', 'shortcode-ui-example' ),
+			'attr'     => 'page',
+			'type'     => 'post_select',
+			'query'    => array( 'post_type' => 'page' ),
+			'multiple' => true,
+		),
 	);
+
+	/*
+	 * Define the Shortcode UI arguments.
+	 */
+	$shortcode_ui_args = array(
+		/*
+		 * How the shortcode should be labeled in the UI. Required argument.
+		 */
+		'label' => esc_html__( 'Shortcake Dev', 'shortcode-ui-example' ),
+
+		/*
+		 * Include an icon with your shortcode. Optional.
+		 * Use a dashicon, or full URL to image.
+		 */
+		'listItemImage' => 'dashicons-editor-quote',
+
+		/*
+		 * Limit this shortcode UI to specific posts. Optional.
+		 */
+		'post_type' => array( 'post' ),
+
+		/*
+		 * Register UI for the "inner content" of the shortcode. Optional.
+		 * If no UI is registered for the inner content, then any inner content
+		 * data present will be backed-up during editing.
+		 */
+		'inner_content' => array(
+			'label'        => esc_html__( 'Quote', 'shortcode-ui-example' ),
+			'description'  => esc_html__( 'Include a statement from someone famous.', 'shortcode-ui-example' ),
+		),
+
+		/*
+		 * Define the UI for attributes of the shortcode. Optional.
+		 *
+		 * See above, to where the the assignment to the $fields variable was made.
+		 */
+		'attrs' => $fields,
+	);
+
+	shortcode_ui_register_for_shortcode( 'shortcake_dev', $shortcode_ui_args );
 }
 
 
