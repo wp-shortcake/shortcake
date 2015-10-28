@@ -52,7 +52,6 @@ class Shortcode_UI_Field_Post_Select {
 	/**
 	 * Output styles and templates used by post select field.
 	 */
-	// public function action_print_media_templates() {
 	public function action_shortcode_ui_loaded_editor() {
 
 		?>
