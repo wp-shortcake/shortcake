@@ -198,6 +198,23 @@ describe( 'Shortcode View Constructor', function(){
 		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
 		var _shortcode = $.extend( true, {}, shortcode );
 		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		ShortcodeViewConstructor.shortcode = {
+			'type' : 'single',
+			'tag' : 'no_custom_attribute',
+			'attrs' : {
+				'named' : {
+					'foo' : 'bar',
+					'bar' : 'banana',
+				},
+				'numeric' : [],
+			},
+		};
+		var ShortcodeViewConstructorWithoutFetch = ShortcodeViewConstructor;
+		ShortcodeViewConstructorWithoutFetch.delayedFetch = function() {
+			return new $.Deferred();
+		}
+		ShortcodeViewConstructor.initialize();
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
 	});
 
 	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){
