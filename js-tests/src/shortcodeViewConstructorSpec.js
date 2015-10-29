@@ -82,6 +82,10 @@ describe( 'Shortcode View Constructor', function(){
 			tag: 'pullquote',
 			content: 'This quote has</p>\n<p>Multiple line breaks two</p>\n<p>Test one',
 			type: 'closed',
+			attrs: {
+				named: {},
+				numeric: [],
+			}
 		};
 		var data = {
 			label: 'Pullquote',
@@ -102,6 +106,7 @@ describe( 'Shortcode View Constructor', function(){
 				},
 			},
 			type: 'single',
+			content: null,
 		};
 		var data = {
 			label: 'Pullquote',
