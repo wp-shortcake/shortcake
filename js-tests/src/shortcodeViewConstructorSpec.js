@@ -23,6 +23,23 @@ describe( 'Shortcode View Constructor', function(){
 		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
 		var _shortcode = $.extend( true, {}, shortcode );
 		expect( _shortcode.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
+		ShortcodeViewConstructor.shortcode = {
+			'type' : 'single',
+			'tag' : 'no_inner_content',
+			'attrs' : {
+				'named' : {
+					'foo' : 'bar',
+				},
+				'numeric' : [],
+			},
+			'content' : 'burrito'
+		};
+		var ShortcodeViewConstructorWithoutFetch = ShortcodeViewConstructor;
+		ShortcodeViewConstructorWithoutFetch.delayedFetch = function() {
+			return new $.Deferred();
+		}
+		ShortcodeViewConstructor.initialize();
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
 	});
 
 	it( 'Persists custom attribute when parsing a shortcode without the attribute defined in UI', function() {
