@@ -55,11 +55,10 @@ var shortcodeViewConstructor = {
 	 * values.
 	 *
 	 * @this {Shortcode}
-	 * @param {Object} options Options
+	 * @param {Object} options Options formatted as wp.shortcode.
 	 */
 	getShortcodeModel: function( options ) {
-		var shortcodeModel,
-			self = this;
+		var shortcodeModel;
 
 		shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.tag } );
 
@@ -67,38 +66,47 @@ var shortcodeViewConstructor = {
 			return;
 		}
 
-		shortcodeModel = shortcodeModel.clone();
+		currentShortcode = shortcodeModel.clone();
 
-		shortcodeModel.get('attrs').each( function( attr ) {
+		var attributes_backup = {};
+		var attributes = options.attrs;
+		for ( var key in attributes.named ) {
 
-			// Verify value exists for attribute.
-			if ( ! ( attr.get('attr') in options.attrs.named ) ) {
-				return;
+			if ( ! attributes.named.hasOwnProperty( key ) ) {
+				continue;
 			}
 
-			var value = options.attrs.named[ attr.get('attr') ];
+			value = attributes.named[ key ];
+			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
 
 			// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
-			value = self.unAutoP( value );
+			value = this.unAutoP( value );
 
-			// Maybe decode value.
-			if ( attr.get('encode') ) {
+			if ( attr && attr.get('encode') ) {
 				value = decodeURIComponent( value );
 			}
 
-			attr.set( 'value', value );
-		} );
-
-		if ( 'content' in options ) {
-			var innerContent = shortcodeModel.get('inner_content');
-			if ( innerContent ) {
-				// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
-				options.content = self.unAutoP( options.content );
-				innerContent.set('value', options.content );
+			if ( attr ) {
+				attr.set( 'value', value );
+			} else {
+				attributes_backup[ key ] = value;
 			}
 		}
 
-		return shortcodeModel;
+		currentShortcode.set( 'attributes_backup', attributes_backup );
+
+		if ( options.content ) {
+			var inner_content = currentShortcode.get( 'inner_content' );
+			// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+			options.content = this.unAutoP( options.content );
+			if ( inner_content ) {
+				inner_content.set( 'value', options.content );
+			} else {
+				currentShortcode.set( 'inner_content_backup', options.content );
+			}
+		}
+
+		return currentShortcode;
 	},
 
 	/**
@@ -205,43 +213,8 @@ var shortcodeViewConstructor = {
 			return;
 		}
 
-		currentShortcode = defaultShortcode.clone();
-
-		var attributes_backup = {};
-		var attributes = wp.shortcode.attrs( matches[3] );
-
-		for ( var key in attributes.named ) {
-
-			if ( ! attributes.named.hasOwnProperty( key ) ) {
-				continue;
-			}
-
-			value = attributes.named[ key ];
-			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
-
-			if ( attr && attr.get('encode') ) {
-				value = decodeURIComponent( value );
-			}
-
-			if ( attr ) {
-				attr.set( 'value', value );
-			} else {
-				attributes_backup[ key ] = value;
-			}
-		}
-
-		currentShortcode.set( 'attributes_backup', attributes_backup );
-
-		if ( matches[5] ) {
-			var inner_content = currentShortcode.get( 'inner_content' );
-			if ( inner_content ) {
-				inner_content.set( 'value', this.unAutoP( matches[5] ) );
-			} else {
-				currentShortcode.set( 'inner_content_backup', this.unAutoP( matches[5] ) );
-			}
-		}
-
-		return currentShortcode;
+		var shortcode = wp.shortcode.fromMatch( matches );
+		return this.getShortcodeModel( shortcode );
 	},
 
  	/**
