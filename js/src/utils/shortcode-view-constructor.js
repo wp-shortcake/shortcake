@@ -79,6 +79,9 @@ var shortcodeViewConstructor = {
 			value = attributes.named[ key ];
 			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
 
+			// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+			value = this.unAutoP( value );
+
 			if ( attr && attr.get('encode') ) {
 				value = decodeURIComponent( value );
 			}
@@ -94,10 +97,12 @@ var shortcodeViewConstructor = {
 
 		if ( options.content ) {
 			var inner_content = currentShortcode.get( 'inner_content' );
+			// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+			options.content = this.unAutoP( options.content );
 			if ( inner_content ) {
-				inner_content.set( 'value', this.unAutoP( options.content ) );
+				inner_content.set( 'value', options.content );
 			} else {
-				currentShortcode.set( 'inner_content_backup', this.unAutoP( options.content ) );
+				currentShortcode.set( 'inner_content_backup', options.content );
 			}
 		}
 
