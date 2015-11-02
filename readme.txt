@@ -68,6 +68,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Bug fix: Persists shortcode attributes and inner content when there isn't UI registered for them. Previously, they would be discarded.
 * Bug fix: Display the description on the post select field.
 * Bug fix: Attribute field change event binds to `input` event rather than `keyup`.
+* [Full release notes](http://fusion.net/story/225765/introducing-shortcake-v0-6-0-cream/)
 
 = 0.5.0 (August 26, 2015) =
 * Attachment field: Made it easier to change the attachment by clicking on the thumbnail; added attachment metadata in the field view.
