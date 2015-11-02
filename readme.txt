@@ -63,7 +63,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Permits HTML in field labels and descriptions.
 * Added Danish translation.
 * Added Italian translation.
-* Added Germain translation.
+* Added German translation.
 * Core integration: Fully supports PHP 5.2.
 * Bug fix: Persists shortcode attributes and inner content when there isn't UI registered for them. Previously, they would be discarded.
 * Bug fix: Display the description on the post select field.
