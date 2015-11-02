@@ -1,5 +1,5 @@
 # Shortcake (Shortcode UI) #
-**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver  
+**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov  
 **Tags:** shortcodes  
 **Requires at least:** 4.1  
 **Tested up to:** 4.4  
@@ -59,7 +59,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ## Changelog ##
 
-### 0.6.0 (???) ###
+### 0.6.0 (November 2, 2015) ###
 * Supports an optional `encode=true` argument for attributes, to allow limited HTML support. Attributes need to be run through `shortcode_atts()` in order to be properly decoded.
 * Defines a `SHORTCODE_UI_DOING_PREVIEW` constant when rendering a shortcode preview, which enables callbacks to serve a different representation of the shortcode in TinyMCE.
 * When an attachment is already selected for a shortcode attribute, opening media library will include it selected.
