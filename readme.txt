@@ -52,11 +52,22 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 == Changelog ==
 
 = 0.6.0 (???) =
-* Core integration: Fully support PHP 5.2.
+* Supports an optional `encode=true` argument for attributes, to allow limited HTML support. Attributes need to be run through `shortcode_atts()` in order to be properly decoded.
 * Defines a `SHORTCODE_UI_DOING_PREVIEW` constant when rendering a shortcode preview, which enables callbacks to serve a different representation of the shortcode in TinyMCE.
+* When an attachment is already selected for a shortcode attribute, opening media library will include it selected.
+* Cleaned up icon vertical alignment in the Insert Post Element UI.
+* Added CSS utility classes to all field HTML. For instance, the attachment field is now wrapped with `shortcode-ui-field-attachment`.
+* Added filters to modify shortcode UI arguments on registration.
+* Cleaned up the example plugin, so it's a much more useful developer reference.
+* Uses core's JavaScript regex for parsing shortcodes, instead of maintaining separate regex.
+* Permits HTML in field labels and descriptions.
 * Added Danish translation.
 * Added Italian translation.
-* When an attachment is already selected for a shortcode attribute, opening media library will include it selected.
+* Added Germain translation.
+* Core integration: Fully supports PHP 5.2.
+* Bug fix: Persists shortcode attributes and inner content when there isn't UI registered for them. Previously, they would be discarded.
+* Bug fix: Display the description on the post select field.
+* Bug fix: Attribute field change event binds to `input` event rather than `keyup`.
 
 = 0.5.0 (August 26, 2015) =
 * Attachment field: Made it easier to change the attachment by clicking on the thumbnail; added attachment metadata in the field view.
