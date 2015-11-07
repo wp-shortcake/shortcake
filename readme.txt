@@ -13,17 +13,17 @@ Shortcake makes using WordPress shortcodes a piece of cake.
 
 Used alongside `add_shortcode`, Shortcake supplies a user-friendly interface for adding a shortcode to a post, and viewing and editing it from within the content editor.
 
-Once you've installed the plugin, you'll need to [register UI for your shortcodes](https://github.com/wp-shortcake/shortcake/wiki/Registering-Shortcode-UI). For inspiration, check out [examples of Shortcake in the wild](https://github.com/wp-shortcode/shortcake/wiki/Shortcode-UI-Examples).
+Once you've installed the plugin, you'll need to [register UI for your shortcodes](https://github.com/wp-shortcake/shortcake/wiki/Registering-Shortcode-UI). For inspiration, check out [examples of Shortcake in the wild](https://github.com/wp-shortcake/shortcake/wiki/Shortcode-UI-Examples).
 
-To report bugs or feature requests, [please use Github issues](https://github.com/wp-shortcode/shortcake/issues).
+To report bugs or feature requests, [please use Github issues](https://github.com/wp-shortcake/shortcake/issues).
 
 == Installation ==
 
 Shortcake can be installed like any other WordPress plugin.
 
-Once you've done so, you'll need to [register the UI for your code](https://github.com/wp-shortcode/shortcake/wiki/Registering-Shortcode-UI).
+Once you've done so, you'll need to [register the UI for your code](https://github.com/wp-shortcake/shortcake/wiki/Registering-Shortcode-UI).
 
-New in 0.4.0 is the ability to [attach javascript functions to event attribute updates](https://github.com/wp-shortcode/shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
+New in 0.4.0 is the ability to [attach javascript functions to event attribute updates](https://github.com/wp-shortcake/shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
 
 == Frequently Asked Questions ==
 
