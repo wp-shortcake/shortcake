@@ -59,6 +59,10 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ## Changelog ##
 
+### 0.6.1 (November 9, 2015) ###
+* Fixes JavaScript TypeError when clicking media frame menu items.
+* Corrects links in readme.
+
 ### 0.6.0 (November 2, 2015) ###
 * Supports an optional `encode=true` argument for attributes, to allow limited HTML support. Attributes need to be run through `shortcode_atts()` in order to be properly decoded.
 * Defines a `SHORTCODE_UI_DOING_PREVIEW` constant when rendering a shortcode preview, which enables callbacks to serve a different representation of the shortcode in TinyMCE.
