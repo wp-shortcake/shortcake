@@ -129,6 +129,19 @@ class Shortcode_UI {
 	 * @return array
 	 */
 	public function get_shortcodes() {
+
+		if ( ! did_action( 'register_shortcode_ui' ) ) {
+
+			/**
+			 * Register shortcode UI for shortcodes.
+			 *
+			 * Can be used to register shortcode UI only when an editor is being enqueued.
+			 *
+			 * @param array $settings Settings array for the ective WP_Editor.
+			 */
+			do_action( 'register_shortcode_ui', array(), '' );
+		}
+
 		/**
 		 * Filter the returned shortcode UI configuration parameters.
 		 *
