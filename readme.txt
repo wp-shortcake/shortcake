@@ -51,6 +51,10 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 == Changelog ==
 
+= 0.6.2 (November 12, 2015) =
+* Bug fix: Listens for "change" event on radio buttons and checkboxes to ensure shortcode attributes are updated.
+* Bug fix: Ensures `register_shortcode_ui` is always run before calling get_shortcodes(). Fixes post select AJAX callback when using `register_shortcode_ui` hook.
+
 = 0.6.1 (November 9, 2015) =
 * Fixes JavaScript TypeError when clicking media frame menu items.
 * Corrects links in readme.
