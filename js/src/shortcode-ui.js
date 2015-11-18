@@ -35,9 +35,8 @@ $(document).ready(function(){
 
 		event.preventDefault();
 
-		// Remove focus from the `.insert-embed` button.
-		// Prevents Opera from showing the outline of the button
-		// above the modal.
+		// Remove focus from the `.shortcake-add-post-element` button.
+		// Prevents Opera from showing the outline of the button above the modal.
 		//
 		// See: https://core.trac.wordpress.org/ticket/22445
 		elem.blur();
