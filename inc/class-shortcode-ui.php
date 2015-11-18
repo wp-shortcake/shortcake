@@ -213,7 +213,7 @@ class Shortcode_UI {
 		$current_post_type = get_post_type();
 		if ( $current_post_type ) {
 			foreach ( $shortcodes as $key => $args ) {
-				if ( ! empty( $args['post_type'] ) && ! in_array( $current_post_type, $args['post_type'] ) ) {
+				if ( ! empty( $args['post_type'] ) && ! in_array( $current_post_type, $args['post_type'], true ) ) {
 					unset( $shortcodes[ $key ] );
 				}
 			}
@@ -279,8 +279,8 @@ class Shortcode_UI {
 	 */
 	public function action_media_buttons( $editor_id ) {
 		printf( '<button type="button" class="button shortcake-add-post-element" data-editor="%s">' .
-					'<span class="wp-media-buttons-icon dashicons dashicons-migrate"></span> %s' .
-				'</button>',
+			'<span class="wp-media-buttons-icon dashicons dashicons-migrate"></span> %s' .
+			'</button>',
 			esc_attr( $editor_id ),
 			esc_html__( 'Add Post Element', 'shortcode-ui' )
 		);
