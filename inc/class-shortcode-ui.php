@@ -212,7 +212,7 @@ class Shortcode_UI {
 		$current_post_type = get_post_type();
 		if ( $current_post_type ) {
 			foreach ( $shortcodes as $key => $args ) {
-				if ( ! empty( $args['post_type'] ) && ! in_array( $current_post_type, $args['post_type'] ) ) {
+				if ( ! empty( $args['post_type'] ) && ! in_array( $current_post_type, $args['post_type'], true ) ) {
 					unset( $shortcodes[ $key ] );
 				}
 			}
