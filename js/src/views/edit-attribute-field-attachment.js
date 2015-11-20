@@ -138,7 +138,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		this.frame.open();
 		if ( this.model.get( 'value' ) ) {
 			var selection = this.frame.state().get('selection');
-			attachment = wp.media.attachment( this.model.get( 'value' ) );
+			var attachment = wp.media.attachment( this.model.get( 'value' ) );
 			attachment.fetch();
 			selection.reset( attachment ? [ attachment ] : [] );
 			this.frame.state().set('selection', selection);
@@ -156,7 +156,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	 *
 	 */
 	_selectAttachment: function(e) {
-		var selection  = this.frame.state().get('selection');
+		var selection  = this.frame.state().get('selection'),
 			attachment = selection.first();
 		if ( attachment.id != this.model.get( 'value' ) ){
 			this.model.set( 'value', null );
