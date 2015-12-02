@@ -199,6 +199,7 @@ var shortcodeViewConstructor = {
 
 		var shortcode_tags = _.map( sui.shortcodes.pluck( 'shortcode_tag' ), this.pregQuote ).join( '|' );
 		var regexp = wp.shortcode.regexp( shortcode_tags );
+		regexp.lastIndex = 0;
 		var matches = regexp.exec( shortcodeString );
 
 		if ( ! matches ) {
