@@ -5,6 +5,7 @@ var $ = require('jquery');
 
 describe( 'Shortcode View Constructor', function(){
 
+
 	it( 'Persists inner_content when parsing a shortcode without inner_content attribute defined', function(){
 		var data = {
 			label: 'Test Label',
@@ -122,6 +123,26 @@ describe( 'Shortcode View Constructor', function(){
 		sui.shortcodes.add( data );
 		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
 		expect( model.get('attrs').first().get('value') ).toEqual( 'This quote has\n\nMultiple line breaks two\n\nTest one' );
+	});
+
+	it( 'Can parse shortcode content idempotently', function() {
+		sui.shortcodes.add({
+			label: 'Test Label',
+			shortcode_tag: 'no_custom_content',
+			attrs: [
+				{
+					attr:        'foo',
+					label:       'Attribute',
+					type:        'text',
+					value:       'test value',
+					placeholder: 'test placeholder',
+				}
+			]
+		});
+    var shortcodeString = '[no_custom_content foo="bar"]';
+		var firstCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
+		var secondCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
+		expect( secondCall ).toBeDefined();
 	});
 
 });
