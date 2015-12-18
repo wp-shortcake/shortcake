@@ -365,7 +365,7 @@ var Fetcher = (function() {
 			return;
 		}
 
-		var request = $.post( ajaxurl + '?action=bulk_do_shortcode', {
+		var request = $.post( (ajaxurl.indexOf('?') == -1) ? ajaxurl + '?action=bulk_do_shortcode' : ajaxurl + '&action=bulk_do_shortcode', {
 				queries: _.pluck( fetcher.queries, 'query' )
 			}
 		);
