@@ -1,101 +1,112 @@
-var Backbone = require('backbone'),
-	insertShortcodeList = require('sui-views/insert-shortcode-list'),
-	EditShortcodeForm = require('sui-views/edit-shortcode-form'),
-	Toolbar = require('sui-views/media-toolbar'),
-	SearchShortcode = require('sui-views/search-shortcode'),
-	sui = require('sui-utils/sui'),
-	$ = require('jquery');
+var sui = require('sui-utils/sui'),
+	wp = require('wp'),
+	$ = require('jquery'),
+	Shortcodes = require('sui-collections/shortcodes'),
+	InsertShortcodeList = require('sui-views/insert-shortcode-list'),
+	EditShortcodeForm = require('sui-views/edit-shortcode-form');
 
-var Shortcode_UI = Backbone.View.extend({
+var insertShortcode = wp.Backbone.View.extend({
+
+	template : wp.template('shortcode-ui'),
+
+	// Available shortcodes collection.
+	shortcodes: [],
+
+	// Currently active shortcode.
+	shortcode:  null,
+
+	state:      'select',
 
 	events: {
-		"click .add-shortcode-list li":      "select",
-		"click .edit-shortcode-form-cancel": "cancelSelect"
+		'click .shortcode-list-item': 'selectShortcode',
+		'click .edit-shortcode-form-cancel': 'clearShortcode',
+		'keyup input[name=shortcode-list-search]': 'searchShortcodeList',
 	},
 
-	initialize: function(options) {
-		this.controller = options.controller.state();
-		//toolbar model looks for controller.state()
-		this.toolbar_controller = options.controller;
-	},
+	initialize : function( options ) {
 
-	createToolbar: function(options) {
-		toolbarOptions = {
-			controller: this.toolbar_controller
-		};
+		if ( 'shortcodes' in options ) {
+			this.shortcodes = options.shortcodes;
+		} else {
+			this.shortcodes = new Shortcodes();
+		}
 
-		this.toolbar = new Toolbar( toolbarOptions );
-
-		this.views.add( this.toolbar );
-
-		this.toolbar.set( 'search', new SearchShortcode({
-			controller:    this.controller,
-			model:         this.controller.props,
-			shortcodeList: this.shortcodeList,
-			priority:   60
-		}).render() );
-
-	},
-
-	render: function() {
-
-		this.$el.html('');
-
-		switch( this.controller.props.get('action') ) {
-			case 'select' :
-				this.renderSelectShortcodeView();
-				break;
-			case 'update' :
-			case 'insert' :
-				this.renderEditShortcodeView();
-				break;
+		if ( 'shortcode' in options ) {
+			this.shortcode = options.shortcode;
 		}
 
 	},
 
-	renderSelectShortcodeView: function() {
-		this.views.unset();
-		this.shortcodeList = new insertShortcodeList( { shortcodes: sui.shortcodes } );
-		this.createToolbar();
-		this.views.add('', this.shortcodeList);
+	prepare: function() {
+		return {
+			shortcode: this.shortcode,
+			shortcodes: this.shortcodes,
+		};
 	},
 
-	renderEditShortcodeView: function() {
-		var shortcode = this.controller.props.get( 'currentShortcode' );
-		var view = new EditShortcodeForm({ model: shortcode });
-		this.$el.append( view.render().el );
+	render: function() {
 
-		if ( this.controller.props.get('action') === 'update' ) {
-			this.$el.find( '.edit-shortcode-form-cancel' ).remove();
+		wp.Backbone.View.prototype.render.apply( this, arguments );
+
+		_.each( this.views.get( '.content' ), function( view ) {
+			view.remove();
+		} );
+
+		if ( this.shortcode ) {
+			this.views.add( '.content', new EditShortcodeForm({ model: this.shortcode }) );
+		} else {
+			this.views.add( '.content', new InsertShortcodeList({ shortcodes: this.shortcodes }) );
 		}
 
 		return this;
 
 	},
 
-	cancelSelect: function( e ) {
-		e.preventDefault();
+	searchShortcodeList: function(e) {
 
-		this.controller.props.set( 'action', 'select' );
-		this.controller.props.set( 'currentShortcode', null );
-		this.render();
-	},
+		var s = e.target.value;
+		var listView = this.views.first( '.content' );
 
-	select: function(e) {
-		this.controller.props.set( 'action', 'insert' );
-		var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
-		var shortcode = sui.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
+		if ( s.length ) {
 
-		if ( ! shortcode ) {
-			return;
+			var pattern = new RegExp( s, "i" );
+
+			var filtered = this.shortcodes.filter( function( model ) {
+				return pattern.test( model.get( "label" ) );
+			});
+
+			listView.refresh( filtered );
+
+		} else {
+
+			listView.refresh( this.shortcodes );
+
 		}
 
-		this.controller.props.set( 'currentShortcode', shortcode.clone() );
+	},
+
+	/**
+	 * Handler for selecting shortcode.
+	 * Set this.shortcode and re-render.
+	 */
+	selectShortcode: function( e ) {
+
+		this.shortcode = sui.shortcodes.findWhere( {
+			shortcode_tag: e.currentTarget.getAttribute( 'data-shortcode' )
+		} ).clone();
 
 		this.render();
-
 	},
+
+	/**
+	 * Handler for cancelling edit shortcode.
+	 * Clear shortcode and re-render.
+	 */
+	clearShortcode: function() {
+		this.shortcode = null;
+		this.render();
+	}
 
 });
 
-module.exports = Shortcode_UI;
+module.exports = insertShortcode;

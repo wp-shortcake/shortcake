@@ -1,11 +1,16 @@
 var wp = require('wp'),
 	$ = require('jquery'),
+	sui = require('sui-utils/sui'),
 	MediaController = require('sui-controllers/media-controller'),
 	Shortcode_UI = require('./shortcode-ui'),
-	Toolbar = require('./media-toolbar');
+	Toolbar = require('./media-toolbar'),
+	SearchShortcode = require('sui-views/search-shortcode'),
+	InsertShortcodeList = require('sui-views/insert-shortcode-list');
 
 var postMediaFrame = wp.media.view.MediaFrame.Post;
 var mediaFrame = postMediaFrame.extend( {
+
+	shortcode_UI: null,
 
 	initialize: function() {
 
@@ -25,15 +30,14 @@ var mediaFrame = postMediaFrame.extend( {
 			content : id + '-content-insert',
 		};
 
-		if ( 'currentShortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
+		if ( 'shortcode' in this.options ) {
+			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.shortcode.attributes.label );
 		}
 
 		this.mediaController = new MediaController( opts );
 
-		if ( 'currentShortcode' in this.options ) {
-			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
-			this.mediaController.props.set( 'action', 'update' );
+		if ( 'shortcode' in this.options ) {
+			this.mediaController.props.set( 'shortcode', arguments[0].shortcode );
 		}
 
 		this.states.add([ this.mediaController ]);
@@ -47,31 +51,41 @@ var mediaFrame = postMediaFrame.extend( {
 
 	events: function() {
 		return _.extend( {}, postMediaFrame.prototype.events, {
-			'click .media-menu-item'    : 'resetMediaController',
+			'click .media-menu-item': 'resetMediaController',
 		} );
 	},
 
 	resetMediaController: function( event ) {
-		if ( this.state() && 'undefined' !== typeof this.state().props && this.state().props.get('currentShortcode') ) {
+		if ( this.state() && 'undefined' !== typeof this.state().props && this.state().props.get('shortcode') ) {
 			this.mediaController.reset();
-			this.contentRender( 'shortcode-ui', 'insert' );
+
 		}
 	},
 
 	contentRender : function( id, tab ) {
-		this.content.set(
-			new Shortcode_UI( {
-				controller: this,
-				className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
-			} )
-		);
+
+		this.shortcode_UI = new Shortcode_UI({
+			shortcodes: sui.shortcodes
+		});
+
+		this.shortcode_UI.$el.addClass( 'clearfix' );
+		this.shortcode_UI.$el.addClass( id + '-content' );
+		this.shortcode_UI.$el.addClass( id + '-content-' + tab );
+
+		this.content.set( this.shortcode_UI );
+
+		// this.content.set(
+		// 	new Shortcode_UI( {
+		// 		controller: this,
+		// 		className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
+		// 	} )
+		// );
 	},
 
-	toolbarRender: function( toolbar ) {},
-
 	toolbarCreate : function( toolbar ) {
+
 		var text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
-		if ( 'currentShortcode' in this.options ) {
+		if ( 'shortcode' in this.options ) {
 			text = shortcodeUIData.strings.media_frame_toolbar_update_label;
 		}
 
@@ -103,7 +117,7 @@ var mediaFrame = postMediaFrame.extend( {
 		// @todo - fix this.
 		// This is a hack.
 		// I just can't work out how to do it properly...
-		if ( view.controller.state().props && view.controller.state().props.get( 'currentShortcode' ) ) {
+		if ( view.controller.state().props && view.controller.state().props.get( 'shortcode' ) ) {
 			window.setTimeout( function() {
 				view.controller.$el.addClass( 'hide-menu' );
 			} );

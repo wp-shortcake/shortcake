@@ -30,37 +30,55 @@ var insertShortcodeList = wp.Backbone.View.extend({
 	/**
 	 * Refresh shortcodes and sub-views.
 	 */
-	refresh: function( shortcodeData ) {
-
-		var options;
+	refresh: function( shortcodes ) {
 
 		// Remove existing views.
-		this.views.get('ul').each( function( view ) {
+		_.each( this.views.get('ul'), function( view ) {
 			view.remove();
 		} );
 
-		if ( shortcodeData instanceof Backbone.Collection ) {
-			this.options.shortcodes = shortcodeData;
+		if ( shortcodes instanceof Backbone.Collection ) {
+			this.options.shortcodes = shortcodes;
 		} else {
-			this.options.shortcodes = new Shortcodes( shortcodeData );
+			this.options.shortcodes = new Shortcodes( shortcodes );
 		}
 
-		this.renderShortcodeListItems( options );
+		this.renderShortcodeListItems();
 
 	},
+
+	// search: function( s ) {
+
+	// 	if ( s.length ) {
+
+	// 		var shortcodes = [];
+	// 		// var shortcodes = _.filter( this.options.shortcodes, function() {
+
+	// 		// } );
+
+	// 		this.renderShortcodeListItems( shortcodes );
+
+	// 	} else {
+
+	// 		this.renderShortcodeListItems();
+
+	// 	}
+
+	// },
 
 	/**
 	 * Add subviews for all shortcodes.
 	 */
-	renderShortcodeListItems: function() {
+	renderShortcodeListItems: function( shortcodes ) {
 
-		console.log( 1, this.options.shortcodes.length );
+		shortcodes = shortcodes || this.options.shortcodes;
 
-		this.options.shortcodes.each( function( shortcode ) {
+		shortcodes.each( function( shortcode ) {
 			this.views.add( 'ul', new insertShortcodeListItem({
 				model : shortcode
 			}));
 		}.bind(this) );
+
 	}
 
 });

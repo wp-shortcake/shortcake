@@ -45,12 +45,10 @@ var MediaController = wp.media.controller.State.extend({
 	initialize: function(){
 
 		this.props = new Backbone.Model({
-			currentShortcode: null,
+			shortcode: null,
 			action: 'select',
 			search: null
 		});
-
-		this.props.on( 'change:action', this.refresh, this );
 
 	},
 
@@ -60,16 +58,8 @@ var MediaController = wp.media.controller.State.extend({
 		}
 	},
 
-	search: function( searchTerm ) {
-		var pattern = new RegExp( searchTerm, "gi" );
-		var filteredModels = sui.shortcodes.filter( function( model ) {
-			return pattern.test( model.get( "label" ) );
-		});
-		return filteredModels;
-	},
-
 	insert: function() {
-		var shortcode = this.props.get('currentShortcode');
+		var shortcode = this.props.get('shortcode');
 		if ( shortcode ) {
 			send_to_editor( shortcode.formatShortcode() );
 			this.reset();
@@ -78,8 +68,7 @@ var MediaController = wp.media.controller.State.extend({
 	},
 
 	reset: function() {
-		this.props.set( 'action', 'select' );
-		this.props.set( 'currentShortcode', null );
+		this.props.set( 'shortcode', null );
 		this.props.set( 'search', null );
 	},
 
@@ -267,7 +256,7 @@ var sui = require('./utils/sui.js'),
 	Shortcodes = require('./collections/shortcodes.js'),
 	shortcodeViewConstructor = require('./utils/shortcode-view-constructor.js'),
 	mediaFrame = require('./views/media-frame.js'),
-	insertShortcode = require('./views/insert-shortcode.js'),
+	ShortcodeUI = require('./views/shortcode-ui.js'),
 	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
@@ -288,32 +277,26 @@ $(document).ready(function(){
 		}
 	} );
 
-	var Shortcode = require('./models/shortcode.js');
-	var insertShortcodeList = require('./views/insert-shortcode-list.js');
+	// Testing.
+	// var $container = $( '<div/>', { style: 'clear: both; overflow: hidden;' } ).prependTo( $('#wpbody-content') );
+	// var ui = new ShortcodeUI({ shortcodes: sui.shortcodes });
+	// $container.append( ui.render().$el );
 
-	var s = new Shortcode({
+	// var $button = $('<button>', { text: 'click', 'class': 'button button-primary btn btn-primary', 'style': 'clear: both;' } );
+	// $button.insertAfter( $container );
 
-	});
+	// $button.click( function() {
 
-	// var $button = $(
-	// 	'<button/>',
-	// 	{
-	// 		'style': 'margin: 20px 0;',
-	// 		'class': 'button button-primary',
-	// 		'text': 'Click Me.'
+	// 	if ( ui.shortcode ) {
+	// 		alert( ui.shortcode.formatShortcode() );
 	// 	}
-	// ).prependTo( $('#wpbody-content') );
 
-	var $container = $( '<div/>' ).prependTo( $('#wpbody-content') );
-
-	var ui = new insertShortcode({ shortcodes: sui.shortcodes });
-
-	$container.append( ui.render().$el );
+	// });
 
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./collections/shortcodes.js":2,"./models/shortcode.js":6,"./utils/shortcode-view-constructor.js":9,"./utils/sui.js":10,"./views/insert-shortcode-list.js":17,"./views/insert-shortcode.js":18,"./views/media-frame.js":19}],8:[function(require,module,exports){
+},{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":9,"./utils/sui.js":10,"./views/media-frame.js":18,"./views/shortcode-ui.js":21}],8:[function(require,module,exports){
 (function (global){
 var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
@@ -1458,37 +1441,55 @@ var insertShortcodeList = wp.Backbone.View.extend({
 	/**
 	 * Refresh shortcodes and sub-views.
 	 */
-	refresh: function( shortcodeData ) {
-
-		var options;
+	refresh: function( shortcodes ) {
 
 		// Remove existing views.
-		this.views.get('ul').each( function( view ) {
+		_.each( this.views.get('ul'), function( view ) {
 			view.remove();
 		} );
 
-		if ( shortcodeData instanceof Backbone.Collection ) {
-			this.options.shortcodes = shortcodeData;
+		if ( shortcodes instanceof Backbone.Collection ) {
+			this.options.shortcodes = shortcodes;
 		} else {
-			this.options.shortcodes = new Shortcodes( shortcodeData );
+			this.options.shortcodes = new Shortcodes( shortcodes );
 		}
 
-		this.renderShortcodeListItems( options );
+		this.renderShortcodeListItems();
 
 	},
+
+	// search: function( s ) {
+
+	// 	if ( s.length ) {
+
+	// 		var shortcodes = [];
+	// 		// var shortcodes = _.filter( this.options.shortcodes, function() {
+
+	// 		// } );
+
+	// 		this.renderShortcodeListItems( shortcodes );
+
+	// 	} else {
+
+	// 		this.renderShortcodeListItems();
+
+	// 	}
+
+	// },
 
 	/**
 	 * Add subviews for all shortcodes.
 	 */
-	renderShortcodeListItems: function() {
+	renderShortcodeListItems: function( shortcodes ) {
 
-		console.log( 1, this.options.shortcodes.length );
+		shortcodes = shortcodes || this.options.shortcodes;
 
-		this.options.shortcodes.each( function( shortcode ) {
+		shortcodes.each( function( shortcode ) {
 			this.views.add( 'ul', new insertShortcodeListItem({
 				model : shortcode
 			}));
 		}.bind(this) );
+
 	}
 
 });
@@ -1498,104 +1499,19 @@ module.exports = insertShortcodeList;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcodes.js":2,"./insert-shortcode-list-item.js":16}],18:[function(require,module,exports){
 (function (global){
-var sui = require('./../utils/sui.js'),
-	Shortcodes = require('./../collections/shortcodes.js'),
-	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
-	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
-	InsertShortcodeList = require('./insert-shortcode-list.js');
-	EditShortcodeForm = require('./edit-shortcode-form.js');
-
-var insertShortcode = wp.Backbone.View.extend({
-
-	shortcodes: [],
-	currentShortcode: {},
-	state: 'select',
-
-	events: {
-		'click .shortcode-list-item': 'editShortcode',
-		'click .edit-shortcode-form-cancel': 'selectShortcode',
-	},
-
-	initialize : function( options ) {
-
-		if ( 'shortcodes' in options ) {
-			this.shortcodes = options.shortcodes;
-		} else {
-			this.shortcodes = new Shortcodes();
-		}
-
-		if ( 'state' in options ) {
-			this.state = options.state;
-		}
-
-	},
-
-	render: function() {
-
-		_.each( this.views.all(), function( view ) {
-			view.remove();
-		} );
-
-		if ( 'edit' === this.state ) {
-			this.views.add( new EditShortcodeForm({ model: this.currentShortcode }) );
-		} else {
-			this.views.add( new InsertShortcodeList({ shortcodes: this.shortcodes }) );
-		}
-
-		return this;
-
-	},
-
-	editShortcode: function( e ) {
-		this.state = 'edit';
-		this.currentShortcode = sui.shortcodes.findWhere( { shortcode_tag: e.currentTarget.getAttribute( 'data-shortcode' ) } ).clone();
-		this.render();
-	},
-
-	selectShortcode: function() {
-		this.state = 'select';
-		this.currentShortcode = null;
-		this.render();
-	}
-
-	// refresh: function() {
-
-	// }
-
-	// var list = new insertShortcodeList( { shortcodes: sui.shortcodes.toJSON() } );
-
-	// list.render().$el.appendTo( $container );
-
-	// $( '.shortcode-list-item', list.$el ).click( function() {
-
-	// 	var shortcode = sui.shortcodes.findWhere( { shortcode_tag: $(this).attr( 'data-shortcode' ) } );
-	// 	var view = new EditShortcodeForm({ model: shortcode });
-	// 	list.remove();
-	// 	$container.append( view.render().el );
-
-	// 	$( '.edit-shortcode-form-cancel' ).click( function() {
-	// 		view.remove();
-	// 		list.$el.appendTo( $container );
-	// 	} );
-
-	// });
-
-
-});
-
-module.exports = insertShortcode;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcodes.js":2,"./../utils/sui.js":10,"./edit-shortcode-form.js":15,"./insert-shortcode-list.js":17}],19:[function(require,module,exports){
-(function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+	sui = require('./../utils/sui.js'),
 	MediaController = require('./../controllers/media-controller.js'),
 	Shortcode_UI = require('./shortcode-ui'),
-	Toolbar = require('./media-toolbar');
+	Toolbar = require('./media-toolbar'),
+	SearchShortcode = require('./search-shortcode.js'),
+	InsertShortcodeList = require('./insert-shortcode-list.js');
 
 var postMediaFrame = wp.media.view.MediaFrame.Post;
 var mediaFrame = postMediaFrame.extend( {
+
+	shortcode_UI: null,
 
 	initialize: function() {
 
@@ -1615,15 +1531,14 @@ var mediaFrame = postMediaFrame.extend( {
 			content : id + '-content-insert',
 		};
 
-		if ( 'currentShortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
+		if ( 'shortcode' in this.options ) {
+			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.shortcode.attributes.label );
 		}
 
 		this.mediaController = new MediaController( opts );
 
-		if ( 'currentShortcode' in this.options ) {
-			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
-			this.mediaController.props.set( 'action', 'update' );
+		if ( 'shortcode' in this.options ) {
+			this.mediaController.props.set( 'shortcode', arguments[0].shortcode );
 		}
 
 		this.states.add([ this.mediaController ]);
@@ -1637,31 +1552,42 @@ var mediaFrame = postMediaFrame.extend( {
 
 	events: function() {
 		return _.extend( {}, postMediaFrame.prototype.events, {
-			'click .media-menu-item'    : 'resetMediaController',
+			'click .media-menu-item': 'resetMediaController',
 		} );
 	},
 
 	resetMediaController: function( event ) {
-		if ( this.state() && 'undefined' !== typeof this.state().props && this.state().props.get('currentShortcode') ) {
+		if ( this.state() && 'undefined' !== typeof this.state().props && this.state().props.get('shortcode') ) {
 			this.mediaController.reset();
 			this.contentRender( 'shortcode-ui', 'insert' );
 		}
 	},
 
 	contentRender : function( id, tab ) {
-		this.content.set(
-			new Shortcode_UI( {
-				controller: this,
-				className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
-			} )
-		);
+		console.log( 'contentRender' );
+
+		this.shortcode_UI = new Shortcode_UI({
+			shortcodes: sui.shortcodes
+		});
+
+		this.shortcode_UI.$el.addClass( 'clearfix' );
+		this.shortcode_UI.$el.addClass( id + '-content' );
+		this.shortcode_UI.$el.addClass( id + '-content-' + tab );
+
+		this.content.set( this.shortcode_UI );
+
+		// this.content.set(
+		// 	new Shortcode_UI( {
+		// 		controller: this,
+		// 		className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
+		// 	} )
+		// );
 	},
 
-	toolbarRender: function( toolbar ) {},
-
 	toolbarCreate : function( toolbar ) {
+
 		var text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
-		if ( 'currentShortcode' in this.options ) {
+		if ( 'shortcode' in this.options ) {
 			text = shortcodeUIData.strings.media_frame_toolbar_update_label;
 		}
 
@@ -1693,7 +1619,7 @@ var mediaFrame = postMediaFrame.extend( {
 		// @todo - fix this.
 		// This is a hack.
 		// I just can't work out how to do it properly...
-		if ( view.controller.state().props && view.controller.state().props.get( 'currentShortcode' ) ) {
+		if ( view.controller.state().props && view.controller.state().props.get( 'shortcode' ) ) {
 			window.setTimeout( function() {
 				view.controller.$el.addClass( 'hide-menu' );
 			} );
@@ -1710,7 +1636,7 @@ var mediaFrame = postMediaFrame.extend( {
 module.exports = mediaFrame;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../controllers/media-controller.js":3,"./media-toolbar":20,"./shortcode-ui":22}],20:[function(require,module,exports){
+},{"./../controllers/media-controller.js":3,"./../utils/sui.js":10,"./insert-shortcode-list.js":17,"./media-toolbar":19,"./search-shortcode.js":20,"./shortcode-ui":21}],19:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 
@@ -1742,19 +1668,20 @@ var Toolbar = wp.media.view.Toolbar.extend({
 module.exports = Toolbar;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 sui = require('./../utils/sui.js');
 
 var SearchShortcode = wp.media.view.Search.extend({
+
 	tagName:   'input',
 	className: 'search',
 	id:        'media-search-input',
-	
+
 	initialize: function( options ) {
-		this.shortcodeList = options.shortcodeList;
-	}, 
+		this.callBack = options.callBack;
+	},
 
 	attributes: {
 		type:        'search',
@@ -1772,16 +1699,19 @@ var SearchShortcode = wp.media.view.Search.extend({
 		this.el.value = this.model.escape('search');
 		return this;
 	},
-	
+
 	refreshShortcodes: function( shortcodeData ) {
 		this.shortcodeList.refresh( shortcodeData );
 	},
 
 	search: function( event ) {
+
+		console.log( event.target.value );
+
 		if ( '' === event.target.value ) {
-			this.refreshShortcodes( sui.shortcodes );
+			// this.refreshShortcodes( sui.shortcodes );
 		} else {
-			this.refreshShortcodes( this.controller.search( event.target.value ) );
+			// this.refreshShortcodes( this.controller.search( event.target.value ) );
 		}
 	}
 });
@@ -1790,109 +1720,120 @@ sui.views.SearchShortcode = SearchShortcode;
 module.exports = SearchShortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10}],22:[function(require,module,exports){
+},{"./../utils/sui.js":10}],21:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
-	insertShortcodeList = require('./insert-shortcode-list.js'),
-	EditShortcodeForm = require('./edit-shortcode-form.js'),
-	Toolbar = require('./media-toolbar.js'),
-	SearchShortcode = require('./search-shortcode.js'),
-	sui = require('./../utils/sui.js'),
-	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+var sui = require('./../utils/sui.js'),
+	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+	Shortcodes = require('./../collections/shortcodes.js'),
+	InsertShortcodeList = require('./insert-shortcode-list.js'),
+	EditShortcodeForm = require('./edit-shortcode-form.js');
 
-var Shortcode_UI = Backbone.View.extend({
+var insertShortcode = wp.Backbone.View.extend({
+
+	template : wp.template('shortcode-ui'),
+
+	// Available shortcodes collection.
+	shortcodes: [],
+
+	// Currently active shortcode.
+	shortcode:  null,
+
+	state:      'select',
 
 	events: {
-		"click .add-shortcode-list li":      "select",
-		"click .edit-shortcode-form-cancel": "cancelSelect"
+		'click .shortcode-list-item': 'selectShortcode',
+		'click .edit-shortcode-form-cancel': 'clearShortcode',
+		'keyup input[name=shortcode-list-search]': 'searchShortcodeList',
 	},
 
-	initialize: function(options) {
-		this.controller = options.controller.state();
-		//toolbar model looks for controller.state()
-		this.toolbar_controller = options.controller;
-	},
+	initialize : function( options ) {
 
-	createToolbar: function(options) {
-		toolbarOptions = {
-			controller: this.toolbar_controller
-		};
+		if ( 'shortcodes' in options ) {
+			this.shortcodes = options.shortcodes;
+		} else {
+			this.shortcodes = new Shortcodes();
+		}
 
-		this.toolbar = new Toolbar( toolbarOptions );
-
-		this.views.add( this.toolbar );
-
-		this.toolbar.set( 'search', new SearchShortcode({
-			controller:    this.controller,
-			model:         this.controller.props,
-			shortcodeList: this.shortcodeList,
-			priority:   60
-		}).render() );
-
-	},
-
-	render: function() {
-
-		this.$el.html('');
-
-		switch( this.controller.props.get('action') ) {
-			case 'select' :
-				this.renderSelectShortcodeView();
-				break;
-			case 'update' :
-			case 'insert' :
-				this.renderEditShortcodeView();
-				break;
+		if ( 'shortcode' in options ) {
+			this.shortcode = options.shortcode;
 		}
 
 	},
 
-	renderSelectShortcodeView: function() {
-		this.views.unset();
-		this.shortcodeList = new insertShortcodeList( { shortcodes: sui.shortcodes } );
-		this.createToolbar();
-		this.views.add('', this.shortcodeList);
+	prepare: function() {
+		return {
+			shortcode: this.shortcode,
+			shortcodes: this.shortcodes,
+		};
 	},
 
-	renderEditShortcodeView: function() {
-		var shortcode = this.controller.props.get( 'currentShortcode' );
-		var view = new EditShortcodeForm({ model: shortcode });
-		this.$el.append( view.render().el );
+	render: function() {
 
-		if ( this.controller.props.get('action') === 'update' ) {
-			this.$el.find( '.edit-shortcode-form-cancel' ).remove();
+		wp.Backbone.View.prototype.render.apply( this, arguments );
+
+		_.each( this.views.get( '.content' ), function( view ) {
+			view.remove();
+		} );
+
+		if ( this.shortcode ) {
+			this.views.add( '.content', new EditShortcodeForm({ model: this.shortcode }) );
+		} else {
+			this.views.add( '.content', new InsertShortcodeList({ shortcodes: this.shortcodes }) );
 		}
 
 		return this;
 
 	},
 
-	cancelSelect: function( e ) {
-		e.preventDefault();
+	searchShortcodeList: function(e) {
 
-		this.controller.props.set( 'action', 'select' );
-		this.controller.props.set( 'currentShortcode', null );
-		this.render();
-	},
+		var s = e.target.value;
+		var listView = this.views.first( '.content' );
 
-	select: function(e) {
-		this.controller.props.set( 'action', 'insert' );
-		var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
-		var shortcode = sui.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
+		if ( s.length ) {
 
-		if ( ! shortcode ) {
-			return;
+			var pattern = new RegExp( s, "i" );
+
+			var filtered = this.shortcodes.filter( function( model ) {
+				return pattern.test( model.get( "label" ) );
+			});
+
+			listView.refresh( filtered );
+
+		} else {
+
+			listView.refresh( this.shortcodes );
+
 		}
 
-		this.controller.props.set( 'currentShortcode', shortcode.clone() );
+	},
+
+	/**
+	 * Handler for selecting shortcode.
+	 * Set this.shortcode and re-render.
+	 */
+	selectShortcode: function( e ) {
+
+		this.shortcode = sui.shortcodes.findWhere( {
+			shortcode_tag: e.currentTarget.getAttribute( 'data-shortcode' )
+		} ).clone();
 
 		this.render();
-
 	},
+
+	/**
+	 * Handler for cancelling edit shortcode.
+	 * Clear shortcode and re-render.
+	 */
+	clearShortcode: function() {
+		this.shortcode = null;
+		this.render();
+	}
 
 });
 
-module.exports = Shortcode_UI;
+module.exports = insertShortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10,"./edit-shortcode-form.js":15,"./insert-shortcode-list.js":17,"./media-toolbar.js":20,"./search-shortcode.js":21}]},{},[7]);
+},{"./../collections/shortcodes.js":2,"./../utils/sui.js":10,"./edit-shortcode-form.js":15,"./insert-shortcode-list.js":17}]},{},[7]);
