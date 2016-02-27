@@ -5,13 +5,17 @@ var Backbone = require('backbone'),
 
 var MediaController = wp.media.controller.State.extend({
 
-	initialize: function(){
+	initialize: function( options ){
 
 		this.props = new Backbone.Model({
 			shortcode: null,
-			action: 'select',
-			search: null
+			search:    null
 		});
+
+		if ( 'shortcode' in options ) {
+			console.log( 'set shortcode', this );
+			this.setShortcode( options.shortcode );
+		}
 
 	},
 
@@ -33,6 +37,14 @@ var MediaController = wp.media.controller.State.extend({
 	reset: function() {
 		this.props.set( 'shortcode', null );
 		this.props.set( 'search', null );
+	},
+
+	setShortcode: function( shortcode ) {
+		this.props.set( 'shortcode', shortcode );
+	},
+
+	getShortcode: function( shortcode ) {
+		return this.props.get( 'shortcode' );
 	},
 
 });

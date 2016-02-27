@@ -37,9 +37,9 @@ var SearchShortcode = wp.media.view.Search.extend({
 		console.log( event.target.value );
 
 		if ( '' === event.target.value ) {
-			// this.refreshShortcodes( sui.shortcodes );
+			this.refreshShortcodes( sui.shortcodes );
 		} else {
-			// this.refreshShortcodes( this.controller.search( event.target.value ) );
+			this.refreshShortcodes( this.controller.search( event.target.value ) );
 		}
 	}
 });

@@ -172,9 +172,9 @@ var shortcodeViewConstructor = {
 		if ( currentShortcode ) {
 
 			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
-				frame : "post",
-				state : 'shortcode-ui',
-				currentShortcode : currentShortcode,
+				frame: "post",
+				state: 'shortcode-ui',
+				shortcode: currentShortcode,
 			});
 
 			wp_media_frame.open();

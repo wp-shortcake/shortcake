@@ -2,7 +2,6 @@ var sui = require('sui-utils/sui'),
 	Shortcodes = require('sui-collections/shortcodes'),
 	shortcodeViewConstructor = require('sui-utils/shortcode-view-constructor'),
 	mediaFrame = require('sui-views/media-frame'),
-	ShortcodeUI = require('sui-views/shortcode-ui'),
 	wp = require('wp'),
 	$ = require('jquery');
 

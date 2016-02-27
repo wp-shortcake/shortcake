@@ -1,4 +1,4 @@
-<script type="text/html" id="tmpl-shortcode-ui">
+<script type="text/html" id="tmpl-ui-toolbar">
 
 	<div class="toolbar toolbar-search">
 		<# if ( data.shortcode ) { #>

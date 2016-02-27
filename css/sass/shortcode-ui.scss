@@ -16,60 +16,72 @@
 
 }
 
-.add-shortcode-list {
-	padding: 0 10px;
+.insert-shortcode-list {
 
-	.shortcode-list-item {
-		margin: 10px;
-		float: left;
-		-webkit-box-shadow: inset 0 0 15px rgba( 0, 0, 0, 0.1 ), inset 0 0 0 1px rgba( 0, 0, 0, 0.1 );
-		box-shadow: inset 0 0 15px rgba( 0, 0, 0, 0.1 ), inset 0 0 0 1px rgba( 0, 0, 0, 0.1 );
-		background: #eee;
-		cursor: pointer;
-		position: relative;
-		text-align: center;
-		width: 150px;
-		height: 150px;
+	.add-shortcode-list {
+		padding: 0 10px;
 
-		.add-shortcode-list-item-icon {
+		.shortcode-list-item {
+			margin: 10px;
+			float: left;
+			-webkit-box-shadow: inset 0 0 15px rgba( 0, 0, 0, 0.1 ), inset 0 0 0 1px rgba( 0, 0, 0, 0.1 );
+			box-shadow: inset 0 0 15px rgba( 0, 0, 0, 0.1 ), inset 0 0 0 1px rgba( 0, 0, 0, 0.1 );
+			background: #eee;
+			cursor: pointer;
 			position: relative;
-			height: 120px;
-			font-size: 64px;
+			text-align: center;
+			width: 150px;
+			height: 150px;
 
-			.dashicons,
-			img {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				font-size: inherit;
-				line-height: inherit;
-				width: auto;
-				height: auto;
-				max-width: 80%;
-				max-height: 80%;
+			.add-shortcode-list-item-icon {
+				position: relative;
+				height: 120px;
+				font-size: 64px;
+
+				.dashicons,
+				img {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					font-size: inherit;
+					line-height: inherit;
+					width: auto;
+					height: auto;
+					max-width: 80%;
+					max-height: 80%;
+				}
+
 			}
 
+			.add-shortcode-list-item-title {
+				box-sizing: border-box;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				margin: 0;
+				line-height: 1.2;
+				padding: 8px;
+				overflow: hidden;
+				max-height: 100%;
+				word-wrap: break-word;
+				text-align: center;
+				font-weight: bold;
+				background: rgba( 255, 255, 255, 0.8 );
+				-webkit-box-shadow: inset 0 0 0 1px rgba( 0, 0, 0, 0.15 );
+				box-shadow: inset 0 0 0 1px rgba( 0, 0, 0, 0.15 );
+			}
 		}
+	}
 
-		.add-shortcode-list-item-title {
-			box-sizing: border-box;
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			margin: 0;
-			line-height: 1.2;
-			padding: 8px;
-			overflow: hidden;
-			max-height: 100%;
-			word-wrap: break-word;
-			text-align: center;
-			font-weight: bold;
-			background: rgba( 255, 255, 255, 0.8 );
-			-webkit-box-shadow: inset 0 0 0 1px rgba( 0, 0, 0, 0.15 );
-			box-shadow: inset 0 0 0 1px rgba( 0, 0, 0, 0.15 );
-		}
+	&.has-toolbar {
+		padding-top: 25px;
+	}
+
+	.media-toolbar .search {
+		float: right;
+		width: 100%;
 	}
 
 }
