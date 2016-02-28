@@ -14,7 +14,12 @@ backbone = require('backbone'),
  * Single edit shortcode content view.
  */
 var EditShortcodeForm = wp.Backbone.View.extend({
+
 	template: wp.template('shortcode-default-edit-form'),
+
+	events: {
+		'click .edit-shortcode-form-cancel': 'cancel',
+	},
 
 	initialize: function() {
 
@@ -74,6 +79,10 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 		}
 
 	},
+
+	cancel: function() {
+		this.trigger( 'shortcode-ui:cancel' );
+	}
 
 });
 

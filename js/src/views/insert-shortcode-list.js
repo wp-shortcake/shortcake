@@ -10,6 +10,10 @@ var insertShortcodeList = wp.Backbone.View.extend({
 	className : 'insert-shortcode-list',
 	template : wp.template('add-shortcode-list'),
 
+	events: {
+		'click .shortcode-list-item': 'selectShortcode',
+	},
+
 	initialize : function( options ) {
 		this.setShortcodes( ( 'shortcodes' in options ) ? options.shortcodes : [] );
 		this.refresh();
@@ -26,6 +30,17 @@ var insertShortcodeList = wp.Backbone.View.extend({
 			this.shortcodes = new Shortcodes( shortcodes );
 		} else {
 			this.shortcodes = new Shortcodes();
+		}
+
+	},
+
+	selectShortcode: function(e) {
+
+		var target    = $( e.currentTarget );
+		var shortcode = this.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
+
+		if ( shortcode ) {
+			this.trigger( 'shortcode-ui:select', shortcode );
 		}
 
 	},

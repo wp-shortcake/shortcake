@@ -5,28 +5,21 @@ var wp = require('wp');
  * to define cusotm refresh method
  */
 var Toolbar = wp.media.view.Toolbar.extend({
-	// initialize : function() {
-	// 	_.defaults(this.options, {
-	// 		requires : false
-	// 	});
-	// 	// Call 'initialize' directly on the parent class.
-	// 	wp.media.view.Toolbar.prototype.initialize.apply(this, arguments);
-	// },
 
-	// refresh : function() {
-	// 	var action = this.controller.state().props.get('action');
+	refresh : function() {
 
-	// 	// console.log( 'action', action );
-	// 	// console.log( this.get('insert') );
+		var action = this.controller.content.mode();
 
-	// 	// if ( this.get('insert') ) {
-	// 		// this.get('insert').model.set( 'disabled', action == 'select' );
-	// 	// }
-	// 	/**
-	// 	 * call 'refresh' directly on the parent class
-	// 	 */
-	// 	wp.media.view.Toolbar.prototype.refresh.apply(this, arguments);
-	// }
+		if ( action ) {
+			this.get('insert').model.set( 'disabled', action !== 'shortcode-ui-content-edit' );
+		}
+
+		/**
+		 * call 'refresh' directly on the parent class
+		 */
+		wp.media.view.Toolbar.prototype.refresh.apply(this, arguments);
+
+	}
 });
 
 module.exports = Toolbar;

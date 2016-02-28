@@ -13,7 +13,6 @@ var MediaController = wp.media.controller.State.extend({
 		});
 
 		if ( 'shortcode' in options ) {
-			console.log( 'set shortcode', this );
 			this.setShortcode( options.shortcode );
 		}
 
