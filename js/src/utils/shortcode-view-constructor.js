@@ -1,7 +1,8 @@
-var sui = require('sui-utils/sui'),
-	fetcher = require('sui-utils/fetcher'),
-	wp = require('wp'),
-	$ = require('jquery');
+var sui     = require( 'sui-utils/sui' ),
+	fetcher = require( 'sui-utils/fetcher' ),
+	Frame   = require( 'sui-views/frame' ),
+	wp      = require( 'wp' ),
+	$       = require( 'jquery' );
 
 /**
  * Generic shortcode MCE view constructor.
@@ -160,24 +161,25 @@ var shortcodeViewConstructor = {
 	 * @param {string} shortcodeString String representation of the shortcode
 	 */
 	edit: function( shortcodeString ) {
-		var currentShortcode;
+
+		var shortcode;
 
 		// Backwards compatability for WP pre-4.2
 		if ( 'object' === typeof( shortcodeString ) ) {
 			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
 		}
 
-		currentShortcode = this.parseShortcodeString( shortcodeString );
+		shortcode = this.parseShortcodeString( shortcodeString );
 
-		if ( currentShortcode ) {
+		if ( shortcode ) {
 
-			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
-				frame: "post",
-				state: 'shortcode-ui',
-				shortcode: currentShortcode,
+			var frame = new Frame({
+				shortcodes : sui.shortcodes,
+				shortcode  : shortcode,
+				title      : 'Editing...',
 			});
 
-			wp_media_frame.open();
+			frame.open();
 
 		}
 

@@ -3,9 +3,11 @@ var Backbone = require('backbone'),
     sui = require('sui-utils/sui'),
     Shortcodes = require('sui-collections/shortcodes');
 
-var MediaController = wp.media.controller.State.extend({
+var FrameController = wp.media.controller.State.extend({
 
 	initialize: function( options ){
+
+		_.bindAll( this, 'refresh', 'insert', 'reset', 'setShortcode', 'getShortcode' );
 
 		this.props = new Backbone.Model({
 			shortcode: null,
@@ -16,6 +18,15 @@ var MediaController = wp.media.controller.State.extend({
 			this.setShortcode( options.shortcode );
 		}
 
+		// Allow setting a custom insertAction method.
+		if ( 'insertAction' in options ) {
+			this.insertAction = options.insertAction;
+		}
+
+	},
+
+	insertAction: function( shortcode ) {
+		send_to_editor( shortcode.formatShortcode() );
 	},
 
 	refresh: function() {
@@ -25,9 +36,11 @@ var MediaController = wp.media.controller.State.extend({
 	},
 
 	insert: function() {
+
 		var shortcode = this.props.get('shortcode');
+
 		if ( shortcode ) {
-			send_to_editor( shortcode.formatShortcode() );
+			this.insertAction( shortcode );
 			this.reset();
 			this.frame.close();
 		}
@@ -48,5 +61,4 @@ var MediaController = wp.media.controller.State.extend({
 
 });
 
-sui.controllers.MediaController = MediaController;
-module.exports = MediaController;
+module.exports = FrameController;

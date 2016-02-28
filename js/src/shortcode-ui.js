@@ -1,16 +1,16 @@
-var sui = require('sui-utils/sui'),
-	Shortcodes = require('sui-collections/shortcodes'),
-	shortcodeViewConstructor = require('sui-utils/shortcode-view-constructor'),
-	mediaFrame = require('sui-views/media-frame'),
-	wp = require('wp'),
-	$ = require('jquery');
+var sui        = require( 'sui-utils/sui' ),
+	Shortcodes = require( 'sui-collections/shortcodes' ),
+	shortcodeViewConstructor = require( 'sui-utils/shortcode-view-constructor' ),
+	Frame      = require( 'sui-views/frame' ),
+	wp         = require( 'wp' ),
+	$          = require( 'jquery' );
 
 $(document).ready(function(){
 
 	// Create collection of shortcode models from data.
 	sui.shortcodes.add( shortcodeUIData.shortcodes );
 
-	wp.media.view.MediaFrame.Post = mediaFrame;
+	// wp.media.view.MediaFrame.Post = mediaFrame;
 
 	// Register a view for each shortcode.
 	sui.shortcodes.each( function( shortcode ) {
@@ -22,20 +22,26 @@ $(document).ready(function(){
 		}
 	} );
 
-	// Testing.
-	// var $container = $( '<div/>', { style: 'clear: both; overflow: hidden;' } ).prependTo( $('#wpbody-content') );
-	// var ui = new ShortcodeUI({ shortcodes: sui.shortcodes });
-	// $container.append( ui.render().$el );
+	var $button, frame;
 
-	// var $button = $('<button>', { text: 'click', 'class': 'button button-primary btn btn-primary', 'style': 'clear: both;' } );
-	// $button.insertAfter( $container );
+	$button = $( '<button/>', { text: 'Add element', 'class': 'button button-shortcode-ui-insert' } );
+	$button.prepend( $( '<span/>', { 'class': 'dashicons-before dashicons-layout' } ) );
+	$button.insertAfter( $( '#insert-media-button' ) );
 
-	// $button.click( function() {
+	$button.click( function(e) {
 
-	// 	if ( ui.shortcode ) {
-	// 		alert( ui.shortcode.formatShortcode() );
-	// 	}
+		e.preventDefault();
 
-	// });
+		if ( ! frame ) {
+			frame = new Frame({
+				shortcodes: sui.shortcodes,
+				title     : shortcodeUIData.strings.media_frame_menu_insert_label,
+			});
+		}
+
+		frame.open();
+
+	} );
+
 
 });

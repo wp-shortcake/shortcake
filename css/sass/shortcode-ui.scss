@@ -16,6 +16,16 @@
 
 }
 
+.button-shortcode-ui-insert span {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	vertical-align: text-top;
+	margin: -2px 7px 0 -3px;
+	left: -2px;
+	color: #82878c;
+}
+
 .insert-shortcode-list {
 
 	.add-shortcode-list {
@@ -75,13 +85,16 @@
 		}
 	}
 
-	&.has-toolbar {
+	&.has-search {
 		padding-top: 25px;
 	}
 
-	.media-toolbar .search {
-		float: right;
+	.search {
+		position: absolute;
+		top: 0px;
+		right: 10px;
 		width: 100%;
+		max-width: 300px;
 	}
 
 }
