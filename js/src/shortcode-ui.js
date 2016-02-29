@@ -1,7 +1,7 @@
 var sui                = require( 'sui-utils/sui' ),
 	Shortcodes         = require( 'sui-collections/shortcodes' ),
 	MceViewConstructor = require( 'sui-utils/shortcode-view-constructor' ),
-	Frame              = require( 'sui-views/frame' ),
+	Frame              = require( 'sui-views/media-frame' ),
 	wp                 = require( 'wp' ),
 	$                  = require( 'jquery' );
 

@@ -1,8 +1,8 @@
 var wp         = require('wp'),
 	$          = require('jquery'),
 	sui        = require('sui-utils/sui'),
-	State      = require('sui-controllers/frame-state'),
-	Toolbar    = require('sui-views/frame-toolbar'),
+	State      = require('sui-controllers/media-controller'),
+	Toolbar    = require('sui-views/media-frame-toolbar'),
 	ListView   = require('sui-views/insert-shortcode-list'),
 	EditView   = require('sui-views/edit-shortcode-form.js'),
 	Frame      = wp.media.view.Frame;

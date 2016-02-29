@@ -1,6 +1,6 @@
 var sui     = require( 'sui-utils/sui' ),
 	fetcher = require( 'sui-utils/fetcher' ),
-	Frame   = require( 'sui-views/frame' ),
+	Frame   = require( 'sui-views/media-frame' ),
 	wp      = require( 'wp' ),
 	$       = require( 'jquery' );
 
