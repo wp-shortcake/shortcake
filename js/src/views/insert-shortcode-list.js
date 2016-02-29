@@ -69,10 +69,11 @@ var insertShortcodeList = wp.Backbone.View.extend({
 
 		if ( s && s.length ) {
 
-			var pattern = new RegExp( s, "i" );
+			var pattern = s.replace( /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&" );
+			var regex = new RegExp( pattern, "i" );
 
 			var filteredShortcodes = this.shortcodes.filter( function( shortcode ) {
-				return pattern.test( shortcode.get( "label" ) );
+				return regex.test( shortcode.get( "label" ) );
 			});
 
 			this.refresh( new Shortcodes( filteredShortcodes ) );
