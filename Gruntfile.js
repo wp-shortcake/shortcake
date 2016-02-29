@@ -143,7 +143,6 @@ module.exports = function( grunt ) {
 						abspath + '/wp-includes/js/jquery/jquery.js',
 						abspath + '/wp-includes/js/underscore.js',
 						abspath + '/wp-includes/js/backbone.js',
-						abspath + '/wp-includes/js/wp-backbone.js',
 						abspath + '/wp-includes/js/wp-util.js',
 						abspath + '/wp-includes/js/shortcode.js',
 						abspath + '/wp-admin/js/editor.js',
