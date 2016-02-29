@@ -4,9 +4,9 @@ module.exports = function( grunt ) {
 	var remapify = require('remapify');
 	var banner   = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
 
-	// Path to WordPress install, relative to this plugin.
-	// Change this if you have a different setup.
-	var abspath  = '/tmp/wordpress';
+	// Path to WordPress install. Either absoloute or relative to this plugin.
+	// Change this by passing --abspath="new/path" as a grunt option.
+	var abspath = grunt.option( "abspath" ) ? grunt.option( "abspath" ) : '/tmp/wordpress';
 
 	// Project configuration
 	grunt.initConfig( {
