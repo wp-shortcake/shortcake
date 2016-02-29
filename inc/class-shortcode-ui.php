@@ -274,7 +274,7 @@ class Shortcode_UI {
 		do_action( 'shortcode_ui_loaded_editor' );
 	}
 
- 	/**
+	/**
 	 * Output an "Add Post Element" button with the media buttons.
 	 */
 	public function action_media_buttons( $editor_id ) {
