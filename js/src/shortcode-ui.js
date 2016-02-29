@@ -17,7 +17,7 @@ $(document).ready(function(){
 		if ( wp.mce.views ) {
 			wp.mce.views.register(
 				shortcode.get('shortcode_tag'),
-				shortcodeViewConstructor
+				MceViewConstructor
 			);
 		}
 	} );
