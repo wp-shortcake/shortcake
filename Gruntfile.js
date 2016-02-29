@@ -2,7 +2,12 @@ module.exports = function( grunt ) {
 
 	'use strict';
 	var remapify = require('remapify');
-	var banner = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
+	var banner   = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
+
+	// Path to WordPress install, relative to this plugin.
+	// Change this if you have a different setup.
+	var abspath  = '../../../';
+
 	// Project configuration
 	grunt.initConfig( {
 
