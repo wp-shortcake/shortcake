@@ -51,6 +51,7 @@ var ShortcodeUiFrame = Frame.extend( {
 		this.on( 'toolbar:create:shortcode-ui-toolbar',        this.createToolbar, this );
 		this.on( 'content:render:shortcode-ui-content-browse', this.renderBrowseMode, this );
 		this.on( 'content:render:shortcode-ui-content-edit',   this.renderEditMode, this );
+		this.on( 'content:render:shortcode-ui-content-update', this.renderEditMode, this );
 
 	},
 
@@ -72,7 +73,7 @@ var ShortcodeUiFrame = Frame.extend( {
 
 		var mode, opts, controller;
 
-		mode = ( 'shortcode' in this.options ) ? 'edit' : 'browse';
+		mode = ( 'shortcode' in this.options ) ? 'update' : 'browse';
 
 		opts = {
 			id             : 'shortcode-ui',
@@ -145,9 +146,13 @@ var ShortcodeUiFrame = Frame.extend( {
 			model: this.state('shortcode-ui').getShortcode()
 		});
 
-		this.content.set( view );
+		this.content.set( view.render() );
 
 		view.on( 'shortcode-ui:cancel', this.reset );
+
+		if ( 'shortcode-ui-content-update' === this.content.mode() ) {
+			$( '.edit-shortcode-form-cancel',view.$el ).hide();
+		}
 
 		this.state().refresh();
 
