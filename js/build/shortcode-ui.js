@@ -301,13 +301,8 @@ $(document).ready(function(){
 		}
 	} );
 
-	// Create the add shortcode media button.
-	$button = $( '<button/>', { text: 'Add element', 'class': 'button button-shortcode-ui-insert' } );
-	$button.prepend( $( '<span/>', { 'class': 'dashicons-before dashicons-layout' } ) );
-	$button.insertAfter( $( '#insert-media-button' ) );
-
 	// On Click, maybe create a Shortcode UI Frame, and open it.
-	$button.click( function(e) {
+	$('.shortcake-add-post-element').click( function(e) {
 
 		e.preventDefault();
 
