@@ -147,8 +147,6 @@ module.exports = function( grunt ) {
 						abspath + '/wp-includes/js/wp-util.js',
 						abspath + '/wp-includes/js/shortcode.js',
 						abspath + '/wp-admin/js/editor.js',
-						abspath + '/wp-includes/js/media-models.js',
-						abspath + '/wp-includes/js/media-views.js',
 						'js-tests/vendor/mock-ajax.js',
 					],
 				}
