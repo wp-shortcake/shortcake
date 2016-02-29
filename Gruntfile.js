@@ -6,7 +6,7 @@ module.exports = function( grunt ) {
 
 	// Path to WordPress install, relative to this plugin.
 	// Change this if you have a different setup.
-	var abspath  = '../../../';
+	var abspath  = '/tmp/wordpress';
 
 	// Project configuration
 	grunt.initConfig( {
@@ -141,8 +141,8 @@ module.exports = function( grunt ) {
 					helpers: 'js-tests/build/helpers.js',
 					vendor: [
 						abspath + '/wp-includes/js/jquery/jquery.js',
-						abspath + '/wp-includes/js/underscore.js',
-						abspath + '/wp-includes/js/backbone.js',
+						abspath + '/wp-includes/js/underscore.min.js',
+						abspath + '/wp-includes/js/backbone.min.js',
 						abspath + '/wp-includes/js/wp-util.js',
 						abspath + '/wp-includes/js/shortcode.js',
 						abspath + '/wp-admin/js/editor.js',
