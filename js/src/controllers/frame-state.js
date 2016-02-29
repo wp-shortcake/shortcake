@@ -1,7 +1,6 @@
-var Backbone = require('backbone'),
-    wp = require('wp'),
-    sui = require('sui-utils/sui'),
-    Shortcodes = require('sui-collections/shortcodes');
+var Backbone   = require('backbone'),
+    wp         = require('wp'),
+    sui        = require('sui-utils/sui');
 
 var FrameState = wp.media.controller.State.extend({
 
@@ -60,5 +59,8 @@ var FrameState = wp.media.controller.State.extend({
 	},
 
 });
+
+// Make this available globally.
+sui.controllers.FrameState = FrameState;
 
 module.exports = FrameState;

@@ -1,13 +1,10 @@
-var Shortcodes = require( 'sui-collections/shortcodes' ),
-	FrameState = require( 'sui-controllers/frame-state' );
+var Shortcodes = require( 'sui-collections/shortcodes' );
 
 window.Shortcode_UI = window.Shortcode_UI || {
-	shortcodes: new Shortcodes(),
-	views: {},
-	controllers: {
-		FrameState: FrameState,
-	},
-	utils: {},
+	shortcodes:  new Shortcodes(),
+	views:       {},
+	controllers: {},
+	utils:       {},
 };
 
 module.exports = window.Shortcode_UI;

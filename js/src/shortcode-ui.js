@@ -1,18 +1,18 @@
-var sui        = require( 'sui-utils/sui' ),
-	Shortcodes = require( 'sui-collections/shortcodes' ),
-	shortcodeViewConstructor = require( 'sui-utils/shortcode-view-constructor' ),
-	Frame      = require( 'sui-views/frame' ),
-	wp         = require( 'wp' ),
-	$          = require( 'jquery' );
+var sui                = require( 'sui-utils/sui' ),
+	Shortcodes         = require( 'sui-collections/shortcodes' ),
+	MceViewConstructor = require( 'sui-utils/shortcode-view-constructor' ),
+	Frame              = require( 'sui-views/frame' ),
+	wp                 = require( 'wp' ),
+	$                  = require( 'jquery' );
 
 $(document).ready(function(){
+
+	var $button, frame;
 
 	// Create collection of shortcode models from data.
 	sui.shortcodes.add( shortcodeUIData.shortcodes );
 
-	// wp.media.view.MediaFrame.Post = mediaFrame;
-
-	// Register a view for each shortcode.
+	// Register an MCE view for each shortcode.
 	sui.shortcodes.each( function( shortcode ) {
 		if ( wp.mce.views ) {
 			wp.mce.views.register(
@@ -22,12 +22,12 @@ $(document).ready(function(){
 		}
 	} );
 
-	var $button, frame;
-
+	// Create the add shortcode media button.
 	$button = $( '<button/>', { text: 'Add element', 'class': 'button button-shortcode-ui-insert' } );
 	$button.prepend( $( '<span/>', { 'class': 'dashicons-before dashicons-layout' } ) );
 	$button.insertAfter( $( '#insert-media-button' ) );
 
+	// On Click, maybe create a Shortcode UI Frame, and open it.
 	$button.click( function(e) {
 
 		e.preventDefault();

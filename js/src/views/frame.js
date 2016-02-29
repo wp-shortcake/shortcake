@@ -1,7 +1,7 @@
 var wp         = require('wp'),
 	$          = require('jquery'),
 	sui        = require('sui-utils/sui'),
-	State      = require('sui-controllers/state'),
+	State      = require('sui-controllers/frame-state'),
 	Toolbar    = require('sui-views/frame-toolbar'),
 	ListView   = require('sui-views/insert-shortcode-list'),
 	EditView   = require('sui-views/edit-shortcode-form.js'),
@@ -65,7 +65,7 @@ var ShortcodeUiFrame = Frame.extend( {
 
 	createStates: function() {
 
-		var mode, opts, controller;
+		var mode, opts, state;
 
 		mode = ( 'shortcode' in this.options ) ? 'update' : 'browse';
 
@@ -86,13 +86,14 @@ var ShortcodeUiFrame = Frame.extend( {
 			);
 		}
 
-		controller = new Controller( opts );
+		state = new State( opts );
+		this.states.add( state );
 
 		if ( 'shortcode' in this.options ) {
-			controller.props.set( 'shortcode', this.options.shortcode );
+			state.props.set( 'shortcode', this.options.shortcode );
 		}
 
-		this.states.add( controller );
+
 
 	},
 
@@ -105,9 +106,6 @@ var ShortcodeUiFrame = Frame.extend( {
 			controller: this,
 			tagName:    'h1'
 		});
-
-		console.log( this.title );
-		// this.title.mode('default');
 	},
 
 	select: function( shortcode ) {

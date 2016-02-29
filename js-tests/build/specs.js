@@ -457,7 +457,7 @@ describe( "MCE View Constructor", function() {
 	it( 'parses shortcode with dashes in name and attribute', function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
-		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).not.toEqual( 'test value 2' );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test value 2' );
 	});
 
 	// https://github.com/fusioneng/Shortcake/issues/171
@@ -507,7 +507,7 @@ describe( "SUI Util", function() {
 
 	it( 'expected properties', function() {
 		expect( sui.shortcodes instanceof Shortcodes ).toEqual( true );
-		expect( sui.views ).toEqual( {} );
+		expect( typeof sui.views ).toEqual( 'object' );
 	});
 
 } );
@@ -549,12 +549,11 @@ module.exports = Shortcodes;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../models/shortcode.js":12}],9:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
-    wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
-    sui = require('./../utils/sui.js'),
-    Shortcodes = require('./../collections/shortcodes.js');
+var Backbone   = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
+    wp         = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+    sui        = require('./../utils/sui.js');
 
-var FrameController = wp.media.controller.State.extend({
+var FrameState = wp.media.controller.State.extend({
 
 	initialize: function( options ){
 
@@ -612,10 +611,13 @@ var FrameController = wp.media.controller.State.extend({
 
 });
 
-module.exports = FrameController;
+// Make this available globally.
+sui.controllers.FrameState = FrameState;
+
+module.exports = FrameState;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcodes.js":8,"./../utils/sui.js":15}],10:[function(require,module,exports){
+},{"./../utils/sui.js":15}],10:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
@@ -1164,21 +1166,18 @@ module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../views/frame.js":22,"./fetcher.js":13,"./sui.js":15}],15:[function(require,module,exports){
-var Shortcodes      = require('./../collections/shortcodes.js'),
-	FrameController = require('./../controllers/frame-controller.js');
+var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {
-	shortcodes: new Shortcodes(),
-	views: {},
-	controllers: {
-		FrameController: FrameController,
-	},
-	utils: {},
+	shortcodes:  new Shortcodes(),
+	views:       {},
+	controllers: {},
+	utils:       {},
 };
 
 module.exports = window.Shortcode_UI;
 
-},{"./../collections/shortcodes.js":8,"./../controllers/frame-controller.js":9}],16:[function(require,module,exports){
+},{"./../collections/shortcodes.js":8}],16:[function(require,module,exports){
 var sui = require('./../utils/sui.js');
 
 var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
@@ -1621,8 +1620,8 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 	 * 2. changing the menu in left column (deactivate)
 	 * 3. @TODO closing the modal.
 	 */
-	var mediaController = sui.controllers.FrameController;
-	sui.controllers.FrameController = mediaController.extend({
+	var mediaController = sui.controllers.FrameState;
+	sui.controllers.FrameState = mediaController.extend({
 
 		refresh: function(){
 			mediaController.prototype.refresh.apply( this, arguments );
@@ -1912,7 +1911,7 @@ module.exports = Toolbar;
 var wp         = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$          = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 	sui        = require('./../utils/sui.js'),
-	Controller = require('./../controllers/frame-controller.js'),
+	State      = require('./../controllers/frame-state.js'),
 	Toolbar    = require('./frame-toolbar.js'),
 	ListView   = require('./insert-shortcode-list.js'),
 	EditView   = require('./edit-shortcode-form.js'),
@@ -1953,12 +1952,6 @@ var ShortcodeUiFrame = Frame.extend( {
 		this.on( 'attach', _.bind( this.views.ready, this.views ), this );
 
 		this.on( 'title:create:default', this.createTitle, this );
-		this.title.mode('default');
-
-		this.on( 'title:render', function( view ) {
-			view.$el.append( '<span class="dashicons dashicons-arrow-down"></span>' );
-		});
-
 		this.on( 'toolbar:create:shortcode-ui-toolbar',        this.createToolbar, this );
 		this.on( 'content:render:shortcode-ui-content-browse', this.renderBrowseMode, this );
 		this.on( 'content:render:shortcode-ui-content-edit',   this.renderEditMode, this );
@@ -1982,7 +1975,7 @@ var ShortcodeUiFrame = Frame.extend( {
 
 	createStates: function() {
 
-		var mode, opts, controller;
+		var mode, opts, state;
 
 		mode = ( 'shortcode' in this.options ) ? 'update' : 'browse';
 
@@ -2003,13 +1996,14 @@ var ShortcodeUiFrame = Frame.extend( {
 			);
 		}
 
-		controller = new Controller( opts );
+		state = new State( opts );
+		this.states.add( state );
 
 		if ( 'shortcode' in this.options ) {
-			controller.props.set( 'shortcode', this.options.shortcode );
+			state.props.set( 'shortcode', this.options.shortcode );
 		}
 
-		this.states.add( controller );
+
 
 	},
 
@@ -2141,7 +2135,7 @@ _.each(['open','close','attach','detach','escape'], function( method ) {
 module.exports = ShortcodeUiFrame;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../controllers/frame-controller.js":9,"./../utils/sui.js":15,"./edit-shortcode-form.js":20,"./frame-toolbar.js":21,"./insert-shortcode-list.js":24}],23:[function(require,module,exports){
+},{"./../controllers/frame-state.js":9,"./../utils/sui.js":15,"./edit-shortcode-form.js":20,"./frame-toolbar.js":21,"./insert-shortcode-list.js":24}],23:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);

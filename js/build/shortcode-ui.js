@@ -35,12 +35,11 @@ module.exports = Shortcodes;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../models/shortcode.js":6}],3:[function(require,module,exports){
 (function (global){
-var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
-    wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
-    sui = require('./../utils/sui.js'),
-    Shortcodes = require('./../collections/shortcodes.js');
+var Backbone   = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
+    wp         = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+    sui        = require('./../utils/sui.js');
 
-var FrameController = wp.media.controller.State.extend({
+var FrameState = wp.media.controller.State.extend({
 
 	initialize: function( options ){
 
@@ -98,10 +97,13 @@ var FrameController = wp.media.controller.State.extend({
 
 });
 
-module.exports = FrameController;
+// Make this available globally.
+sui.controllers.FrameState = FrameState;
+
+module.exports = FrameState;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcodes.js":2,"./../utils/sui.js":10}],4:[function(require,module,exports){
+},{"./../utils/sui.js":10}],4:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
@@ -275,21 +277,21 @@ module.exports = Shortcode;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../collections/shortcode-attributes.js":1,"./inner-content.js":4}],7:[function(require,module,exports){
 (function (global){
-var sui        = require('./utils/sui.js'),
-	Shortcodes = require('./collections/shortcodes.js'),
-	shortcodeViewConstructor = require('./utils/shortcode-view-constructor.js'),
-	Frame      = require('./views/frame.js'),
-	wp         = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
-	$          = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+var sui                = require('./utils/sui.js'),
+	Shortcodes         = require('./collections/shortcodes.js'),
+	MceViewConstructor = require('./utils/shortcode-view-constructor.js'),
+	Frame              = require('./views/frame.js'),
+	wp                 = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+	$                  = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 $(document).ready(function(){
+
+	var $button, frame;
 
 	// Create collection of shortcode models from data.
 	sui.shortcodes.add( shortcodeUIData.shortcodes );
 
-	// wp.media.view.MediaFrame.Post = mediaFrame;
-
-	// Register a view for each shortcode.
+	// Register an MCE view for each shortcode.
 	sui.shortcodes.each( function( shortcode ) {
 		if ( wp.mce.views ) {
 			wp.mce.views.register(
@@ -299,12 +301,12 @@ $(document).ready(function(){
 		}
 	} );
 
-	var $button, frame;
-
+	// Create the add shortcode media button.
 	$button = $( '<button/>', { text: 'Add element', 'class': 'button button-shortcode-ui-insert' } );
 	$button.prepend( $( '<span/>', { 'class': 'dashicons-before dashicons-layout' } ) );
 	$button.insertAfter( $( '#insert-media-button' ) );
 
+	// On Click, maybe create a Shortcode UI Frame, and open it.
 	$button.click( function(e) {
 
 		e.preventDefault();
@@ -701,21 +703,18 @@ module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../views/frame.js":17,"./fetcher.js":8,"./sui.js":10}],10:[function(require,module,exports){
-var Shortcodes      = require('./../collections/shortcodes.js'),
-	FrameController = require('./../controllers/frame-controller.js');
+var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {
-	shortcodes: new Shortcodes(),
-	views: {},
-	controllers: {
-		FrameController: FrameController,
-	},
-	utils: {},
+	shortcodes:  new Shortcodes(),
+	views:       {},
+	controllers: {},
+	utils:       {},
 };
 
 module.exports = window.Shortcode_UI;
 
-},{"./../collections/shortcodes.js":2,"./../controllers/frame-controller.js":3}],11:[function(require,module,exports){
+},{"./../collections/shortcodes.js":2}],11:[function(require,module,exports){
 var sui = require('./../utils/sui.js');
 
 var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
@@ -1158,8 +1157,8 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 	 * 2. changing the menu in left column (deactivate)
 	 * 3. @TODO closing the modal.
 	 */
-	var mediaController = sui.controllers.FrameController;
-	sui.controllers.FrameController = mediaController.extend({
+	var mediaController = sui.controllers.FrameState;
+	sui.controllers.FrameState = mediaController.extend({
 
 		refresh: function(){
 			mediaController.prototype.refresh.apply( this, arguments );
@@ -1449,7 +1448,7 @@ module.exports = Toolbar;
 var wp         = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$          = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 	sui        = require('./../utils/sui.js'),
-	Controller = require('./../controllers/frame-controller.js'),
+	State      = require('./../controllers/frame-state.js'),
 	Toolbar    = require('./frame-toolbar.js'),
 	ListView   = require('./insert-shortcode-list.js'),
 	EditView   = require('./edit-shortcode-form.js'),
@@ -1490,12 +1489,6 @@ var ShortcodeUiFrame = Frame.extend( {
 		this.on( 'attach', _.bind( this.views.ready, this.views ), this );
 
 		this.on( 'title:create:default', this.createTitle, this );
-		this.title.mode('default');
-
-		this.on( 'title:render', function( view ) {
-			view.$el.append( '<span class="dashicons dashicons-arrow-down"></span>' );
-		});
-
 		this.on( 'toolbar:create:shortcode-ui-toolbar',        this.createToolbar, this );
 		this.on( 'content:render:shortcode-ui-content-browse', this.renderBrowseMode, this );
 		this.on( 'content:render:shortcode-ui-content-edit',   this.renderEditMode, this );
@@ -1519,7 +1512,7 @@ var ShortcodeUiFrame = Frame.extend( {
 
 	createStates: function() {
 
-		var mode, opts, controller;
+		var mode, opts, state;
 
 		mode = ( 'shortcode' in this.options ) ? 'update' : 'browse';
 
@@ -1540,13 +1533,14 @@ var ShortcodeUiFrame = Frame.extend( {
 			);
 		}
 
-		controller = new Controller( opts );
+		state = new State( opts );
+		this.states.add( state );
 
 		if ( 'shortcode' in this.options ) {
-			controller.props.set( 'shortcode', this.options.shortcode );
+			state.props.set( 'shortcode', this.options.shortcode );
 		}
 
-		this.states.add( controller );
+
 
 	},
 
@@ -1678,7 +1672,7 @@ _.each(['open','close','attach','detach','escape'], function( method ) {
 module.exports = ShortcodeUiFrame;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../controllers/frame-controller.js":3,"./../utils/sui.js":10,"./edit-shortcode-form.js":15,"./frame-toolbar.js":16,"./insert-shortcode-list.js":19}],18:[function(require,module,exports){
+},{"./../controllers/frame-state.js":3,"./../utils/sui.js":10,"./edit-shortcode-form.js":15,"./frame-toolbar.js":16,"./insert-shortcode-list.js":19}],18:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
