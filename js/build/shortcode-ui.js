@@ -1485,7 +1485,7 @@ var ShortcodeUiFrame = Frame.extend( {
 			this.modal.content( this );
 		}
 
-		this.addStates();
+		this.createStates();
 
 		this.on( 'attach', _.bind( this.views.ready, this.views ), this );
 
@@ -1517,7 +1517,7 @@ var ShortcodeUiFrame = Frame.extend( {
 
 	},
 
-	addStates: function() {
+	createStates: function() {
 
 		var mode, opts, controller;
 

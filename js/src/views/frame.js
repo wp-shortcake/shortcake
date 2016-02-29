@@ -1,7 +1,7 @@
 var wp         = require('wp'),
 	$          = require('jquery'),
 	sui        = require('sui-utils/sui'),
-	Controller = require('sui-controllers/frame-controller'),
+	State      = require('sui-controllers/state'),
 	Toolbar    = require('sui-views/frame-toolbar'),
 	ListView   = require('sui-views/insert-shortcode-list'),
 	EditView   = require('sui-views/edit-shortcode-form.js'),
@@ -37,17 +37,11 @@ var ShortcodeUiFrame = Frame.extend( {
 			this.modal.content( this );
 		}
 
-		this.addStates();
+		this.createStates();
 
 		this.on( 'attach', _.bind( this.views.ready, this.views ), this );
 
 		this.on( 'title:create:default', this.createTitle, this );
-		this.title.mode('default');
-
-		this.on( 'title:render', function( view ) {
-			view.$el.append( '<span class="dashicons dashicons-arrow-down"></span>' );
-		});
-
 		this.on( 'toolbar:create:shortcode-ui-toolbar',        this.createToolbar, this );
 		this.on( 'content:render:shortcode-ui-content-browse', this.renderBrowseMode, this );
 		this.on( 'content:render:shortcode-ui-content-edit',   this.renderEditMode, this );
@@ -69,7 +63,7 @@ var ShortcodeUiFrame = Frame.extend( {
 
 	},
 
-	addStates: function() {
+	createStates: function() {
 
 		var mode, opts, controller;
 
@@ -111,6 +105,9 @@ var ShortcodeUiFrame = Frame.extend( {
 			controller: this,
 			tagName:    'h1'
 		});
+
+		console.log( this.title );
+		// this.title.mode('default');
 	},
 
 	select: function( shortcode ) {

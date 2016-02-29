@@ -172,8 +172,8 @@
 	 * 2. changing the menu in left column (deactivate)
 	 * 3. @TODO closing the modal.
 	 */
-	var mediaController = sui.controllers.FrameController;
-	sui.controllers.FrameController = mediaController.extend({
+	var mediaController = sui.controllers.FrameState;
+	sui.controllers.FrameState = mediaController.extend({
 
 		refresh: function(){
 			mediaController.prototype.refresh.apply( this, arguments );

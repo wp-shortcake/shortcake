@@ -3,7 +3,7 @@ var Backbone = require('backbone'),
     sui = require('sui-utils/sui'),
     Shortcodes = require('sui-collections/shortcodes');
 
-var FrameController = wp.media.controller.State.extend({
+var FrameState = wp.media.controller.State.extend({
 
 	initialize: function( options ){
 
@@ -61,4 +61,4 @@ var FrameController = wp.media.controller.State.extend({
 
 });
 
-module.exports = FrameController;
+module.exports = FrameState;
