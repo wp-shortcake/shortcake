@@ -116,7 +116,7 @@ var shortcodeViewConstructor = {
 	 */
 	delayedFetch: function() {
 		return fetcher.queueToFetch({
-			post_id: $( '#post_ID' ).val(),
+			post_id:   $( '#post_ID' ).val(),
 			shortcode: this.shortcodeModel.formatShortcode(),
 		});
 	},

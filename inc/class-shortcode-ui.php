@@ -75,7 +75,7 @@ class Shortcode_UI {
 	public function action_rest_api_init() {
 
 		register_rest_route( 'shortcode-ui/v1', 'preview', array(
-			'methods'  => 'POST',
+			'methods'  => 'GET',
 			'callback' => array( $this, 'handle_shortcode_preview' ),
 			'args' => array(
 				'query'  => array(
@@ -85,7 +85,7 @@ class Shortcode_UI {
 		) );
 
 		register_rest_route( 'shortcode-ui/v1', 'preview/bulk', array(
-			'methods'  => 'POST',
+			'methods'  => 'GET',
 			'callback' => array( $this, 'handle_shortcode_preview_bulk' ),
 			'args' => array(
 				'queries'  => array(

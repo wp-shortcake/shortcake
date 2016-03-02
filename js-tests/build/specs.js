@@ -733,7 +733,7 @@ var Fetcher = (function() {
 			return;
 		}
 
-		var request = $.post( shortcodeUIData.urls.bulkPreview, {
+		var request = $.get( shortcodeUIData.urls.bulkPreview, {
 				_wpnonce: shortcodeUIData.nonces.wp_rest,
 				queries: _.pluck( fetcher.queries, 'query' )
 			}
@@ -888,7 +888,7 @@ var shortcodeViewConstructor = {
 	 */
 	delayedFetch: function() {
 		return fetcher.queueToFetch({
-			post_id: $( '#post_ID' ).val(),
+			post_id:   $( '#post_ID' ).val(),
 			shortcode: this.shortcodeModel.formatShortcode(),
 		});
 	},
