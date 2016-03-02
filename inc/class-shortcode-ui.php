@@ -273,8 +273,8 @@ class Shortcode_UI {
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
 			),
 			'urls'       => array(
-				'preview'     => home_url( '/wp-json/shortcode-ui/v1/preview' ),
-				'bulkPreview' => home_url( '/wp-json/shortcode-ui/v1/preview/bulk' ),
+				'preview'     => rest_url( '/shortcode-ui/v1/preview' ),
+				'bulkPreview' => rest_url( '/shortcode-ui/v1/preview/bulk' ),
 			),
 		) );
 
