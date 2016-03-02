@@ -76,8 +76,8 @@ class Shortcode_UI {
 		register_rest_route( 'shortcode-ui/v1', 'preview', array(
 			'methods'  => 'GET',
 			'callback' => array( $this, 'handle_shortcode_preview' ),
-			'args' => array(
-				'query'  => array(
+			'args'     => array(
+				'query' => array(
 					'sanitize_callback' => array( $this, 'sanitize_rest_arg_arg_query' ),
 				),
 			)
@@ -86,8 +86,8 @@ class Shortcode_UI {
 		register_rest_route( 'shortcode-ui/v1', 'preview/bulk', array(
 			'methods'  => 'GET',
 			'callback' => array( $this, 'handle_shortcode_preview_bulk' ),
-			'args' => array(
-				'queries'  => array(
+			'args'     => array(
+				'queries' => array(
 					'sanitize_callback' => array( $this, 'sanitize_rest_arg_arg_queries' ),
 				),
 			),
@@ -397,7 +397,7 @@ class Shortcode_UI {
 	 * Get a preview for a single shortcode to render in MCE preview.
 	 */
 	public function handle_shortcode_preview( WP_REST_Request $request ) {
-		return $this->get_shortcode_preview( $request->get_param('query') );
+		return $this->get_shortcode_preview( $request->get_param( 'query' ) );
 	}
 
 	/**
@@ -405,7 +405,7 @@ class Shortcode_UI {
 	 */
 	public function handle_shortcode_preview_bulk( WP_REST_Request $request ) {
 
-		$queries   = $request->get_param('queries');
+		$queries   = $request->get_param( 'queries' );
 		$responses = array();
 
 		if ( is_array( $queries ) ) {
