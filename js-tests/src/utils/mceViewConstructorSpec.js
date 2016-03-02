@@ -73,65 +73,6 @@ describe( "MCE View Constructor", function() {
 
 	} );
 
-	describe( "Fetch preview HTML", function() {
-
-		beforeEach(function() {
-			jasmine.Ajax.install();
-		});
-
-		afterEach(function() {
-			jasmine.Ajax.uninstall();
-		});
-
-		var constructor = jQuery.extend( true, {
-			render: function( force ) {},
-		}, MceViewConstructor );
-
-		// Mock shortcode model data.
-		constructor.shortcodeModel = jQuery.extend( true, {}, sui.shortcodes.first() );
-
-		it( 'Fetches data success', function(){
-
-			spyOn( wp.ajax, "post" ).and.callThrough();
-			spyOn( constructor, "render" );
-
-			constructor.fetch();
-
-			expect( constructor.fetching ).toEqual( true );
-			expect( constructor.content ).toEqual( undefined );
-			expect( wp.ajax.post ).toHaveBeenCalled();
-			expect( constructor.render ).not.toHaveBeenCalled();
-
-			jasmine.Ajax.requests.mostRecent().respondWith( {
-				'status': 200,
-				'responseText': '{"success":true,"data":"test preview response body"}'
-			} );
-
-			expect( constructor.fetching ).toEqual( undefined );
-			expect( constructor.content ).toEqual( 'test preview response body' );
-			expect( constructor.render ).toHaveBeenCalled();
-
-		});
-
-		it( 'Handles errors when fetching data', function() {
-
-			spyOn( constructor, "render" );
-
-			constructor.fetch();
-
-			jasmine.Ajax.requests.mostRecent().respondWith( {
-				'status': 500,
-				'responseText': '{"success":false}'
-			});
-
-			expect( constructor.fetching ).toEqual( undefined );
-			expect( constructor.content ).toContain( 'shortcake-error' );
-			expect( constructor.render ).toHaveBeenCalled();
-
-		} );
-
-	} );
-
 	it( 'parses simple shortcode', function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test_shortcode attr="test value"]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );

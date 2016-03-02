@@ -68,7 +68,32 @@ class Shortcode_UI {
 		add_action( 'admin_enqueue_scripts',     array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',         array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'wp_ajax_bulk_do_shortcode', array( $this, 'handle_ajax_bulk_do_shortcode' ) );
+		add_action( 'rest_api_init',             array( $this, 'action_rest_api_init' ) );
 		add_filter( 'wp_editor_settings',        array( $this, 'filter_wp_editor_settings' ), 10, 2 );
+	}
+
+	public function action_rest_api_init() {
+
+		register_rest_route( 'shortcode-ui/v1', 'preview', array(
+			'methods'  => 'POST',
+			'callback' => array( $this, 'handle_shortcode_preview' ),
+			'args' => array(
+				'query'  => array(
+					'sanitize_callback' => array( $this, 'sanitize_rest_arg_arg_query' ),
+				),
+			)
+		) );
+
+		register_rest_route( 'shortcode-ui/v1', 'preview/bulk', array(
+			'methods'  => 'POST',
+			'callback' => array( $this, 'handle_shortcode_preview_bulk' ),
+			'args' => array(
+				'queries'  => array(
+					'sanitize_callback' => array( $this, 'sanitize_rest_arg_arg_queries' ),
+				),
+			),
+		) );
+
 	}
 
 	/**
@@ -244,8 +269,12 @@ class Shortcode_UI {
 				'insert_content_label'              => __( 'Insert Content', 'shortcode-ui' ),
 			),
 			'nonces'     => array(
-				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
+				'wp_rest'        => wp_create_nonce( 'wp_rest' ),
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
+			),
+			'urls'       => array(
+				'preview'     => home_url( '/wp-json/shortcode-ui/v1/preview' ),
+				'bulkPreview' => home_url( '/wp-json/shortcode-ui/v1/preview/bulk' ),
 			),
 		) );
 
@@ -336,7 +365,7 @@ class Shortcode_UI {
 		}
 
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return esc_html__( "Something's rotten in the state of Denmark", 'shortcode-ui' );
+			return $shortcode;
 		}
 
 		if ( ! empty( $post_id ) ) {
@@ -366,38 +395,63 @@ class Shortcode_UI {
 	}
 
 	/**
+	 * Get a preview for a single shortcode to render in MCE preview.
+	 */
+	public function handle_shortcode_preview( WP_REST_Request $request ) {
+		return $this->get_shortcode_preview( $request->get_param('query') );
+	}
+
+	/**
 	 * Get a bunch of shortcodes to render in MCE preview.
 	 */
-	public function handle_ajax_bulk_do_shortcode() {
+	public function handle_shortcode_preview_bulk( WP_REST_Request $request ) {
 
-		if ( is_array( $_POST['queries'] ) ) {
+		$queries   = $request->get_param('queries');
+		$responses = array();
 
-			$responses = array();
-
-			foreach ( $_POST['queries'] as $posted_query ) {
-
-				// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
-				if ( ! empty( $posted_query['shortcode'] ) ) {
-					$shortcode = stripslashes( $posted_query['shortcode'] );
-				} else {
-					$shortcode = null;
-				}
-				if ( isset( $posted_query['post_id'] ) ) {
-					$post_id = intval( $posted_query['post_id'] );
-				} else {
-					$post_id = null;
-				}
-
+		if ( is_array( $queries ) ) {
+			foreach ( $queries as $posted_query ) {
 				$responses[ $posted_query['counter'] ] = array(
-					'query' => $posted_query,
-					'response' => $this->render_shortcode_for_preview( $shortcode, $post_id ),
+					'query'    => $posted_query,
+					'response' => $this->render_shortcode_for_preview( $posted_query['shortcode'], $posted_query['post_id'] ),
 				);
 			}
-
-			wp_send_json_success( $responses );
-			exit;
 		}
 
+		return array_filter( $responses );
+
+	}
+
+	public function sanitize_rest_arg_arg_query( $dirty_args ) {
+
+		$clean_args = array(
+			'shortcode' => null,
+			'post_id'   => null,
+		);
+
+		// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
+		if ( ! empty( $dirty_args['shortcode'] ) ) {
+			$clean_args['shortcode'] = stripslashes( $dirty_args['shortcode'] );
+		}
+
+		if ( isset( $dirty_args['post_id'] ) ) {
+			$clean_args['post_id'] = intval( $dirty_args['post_id'] );
+		}
+
+		if ( isset( $dirty_args['nonce'] ) ) {
+			$clean_args['nonce'] = sanitize_text_field( $dirty_args['nonce'] );
+		}
+
+		if ( isset( $dirty_args['counter'] ) ) {
+			$clean_args['counter'] = intval( $dirty_args['counter'] );
+		}
+
+		return $clean_args;
+
+	}
+
+	public function sanitize_rest_arg_arg_queries( $arg ) {
+		return array_map( array( $this, 'sanitize_rest_arg_arg_query' ), (array) $arg );
 	}
 
 	/**

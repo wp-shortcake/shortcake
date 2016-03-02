@@ -365,13 +365,16 @@ var Fetcher = (function() {
 			return;
 		}
 
-		var request = $.post( ajaxurl + '?action=bulk_do_shortcode', {
+		var request = $.post( shortcodeUIData.urls.bulkPreview, {
+				_wpnonce: shortcodeUIData.nonces.wp_rest,
 				queries: _.pluck( fetcher.queries, 'query' )
 			}
 		);
 
-		request.done( function( response ) {
-			_.each( response.data, function( result, index ) {
+		request.done( function( responses ) {
+
+			_.each( responses, function( result, index ) {
+
 				var matchedQuery = _.findWhere( fetcher.queries, {
 					counter: parseInt( index ),
 				});
@@ -380,7 +383,9 @@ var Fetcher = (function() {
 					fetcher.queries = _.without( fetcher.queries, matchedQuery );
 					matchedQuery.promise.resolve( result );
 				}
+
 			} );
+
 		} );
 	};
 
@@ -517,40 +522,7 @@ var shortcodeViewConstructor = {
 		return fetcher.queueToFetch({
 			post_id: $( '#post_ID' ).val(),
 			shortcode: this.shortcodeModel.formatShortcode(),
-			nonce: shortcodeUIData.nonces.preview,
 		});
-	},
-
-	/**
-	 * Fetch a preview of a single shortcode.
-	 *
-	 * Async. Sets this.content and calls this.render.
-	 *
-	 * @return undefined
-	 */
-	fetch: function() {
-		var self = this;
-
-		if ( ! this.fetching ) {
-			this.fetching = true;
-
-			wp.ajax.post( 'do_shortcode', {
-				post_id: $( '#post_ID' ).val(),
-				shortcode: this.shortcodeModel.formatShortcode(),
-				nonce: shortcodeUIData.nonces.preview,
-			}).done( function( response ) {
-				if ( '' === response ) {
-					self.content = '<span class="shortcake-notice shortcake-empty">' + self.shortcodeModel.formatShortcode() + '</span>';
-				} else {
-					self.content = response;
-				}
-			}).fail( function() {
-				self.content = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-			} ).always( function() {
-				delete self.fetching;
-				self.render( null, true );
-			} );
-		}
 	},
 
 	/**

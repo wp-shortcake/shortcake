@@ -81,13 +81,16 @@ var Fetcher = (function() {
 			return;
 		}
 
-		var request = $.post( ajaxurl + '?action=bulk_do_shortcode', {
+		var request = $.post( shortcodeUIData.urls.bulkPreview, {
+				_wpnonce: shortcodeUIData.nonces.wp_rest,
 				queries: _.pluck( fetcher.queries, 'query' )
 			}
 		);
 
-		request.done( function( response ) {
-			_.each( response.data, function( result, index ) {
+		request.done( function( responses ) {
+
+			_.each( responses, function( result, index ) {
+
 				var matchedQuery = _.findWhere( fetcher.queries, {
 					counter: parseInt( index ),
 				});
@@ -96,7 +99,9 @@ var Fetcher = (function() {
 					fetcher.queries = _.without( fetcher.queries, matchedQuery );
 					matchedQuery.promise.resolve( result );
 				}
+
 			} );
+
 		} );
 	};
 
