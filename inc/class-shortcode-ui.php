@@ -80,7 +80,7 @@ class Shortcode_UI {
 				'query' => array(
 					'sanitize_callback' => array( $this, 'sanitize_rest_arg_arg_query' ),
 				),
-			)
+			),
 		) );
 
 		register_rest_route( 'shortcode-ui/v1', 'preview/bulk', array(
