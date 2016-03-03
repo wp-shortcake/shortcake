@@ -377,9 +377,11 @@ class Shortcode_UI {
 			'args'                => array(
 				'shortcode' => array(
 					'sanitize_callback' => array( $this, 'rest_sanitize_shortcode' ),
+					'required'          => true,
 				),
 				'post_id' => array(
 					'sanitize_callback' => array( $this, 'rest_sanitize_post_id' ),
+					'required'          => true,
 				),
 			),
 		) );
@@ -408,7 +410,16 @@ class Shortcode_UI {
 	 * @return boolean
 	 */
 	public function rest_preview_permission_callback( WP_REST_Request $request ) {
-		return current_user_can( 'edit_post', $request->get_param( 'post_id' ) );
+
+		if ( empty( $request->get_param( 'post_id' ) ) ) {
+			return new WP_Error( 'rest_no_post_id', __( 'No Post ID.' ) );
+		}
+
+		if ( ! current_user_can( 'edit_post', $request->get_param( 'post_id' ) ) ) {
+			return new WP_Error( 'rest_no_edit_post_cap', __( 'You do not have permission to edit this Post.' ) );
+		}
+
+		return true;
 	}
 
 	/**
