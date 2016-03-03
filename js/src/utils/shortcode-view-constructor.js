@@ -28,8 +28,8 @@ var shortcodeViewConstructor = {
 		this.shortcodeModel = this.getShortcodeModel( this.shortcode );
 		this.fetching = this.delayedFetch();
 
-		this.fetching.done( function( queryResponse ) {
-			var response = queryResponse.response;
+		this.fetching.done( function( response ) {
+
 			if ( '' === response ) {
 				var span = $('<span />').addClass('shortcake-notice shortcake-empty').text( self.shortcodeModel.formatShortcode() );
 				var wrapper = $('<div />').html( span );
@@ -115,10 +115,7 @@ var shortcodeViewConstructor = {
 	 * @return {Promise}
 	 */
 	delayedFetch: function() {
-		return fetcher.queueToFetch({
-			post_id:   $( '#post_ID' ).val(),
-			shortcode: this.shortcodeModel.formatShortcode(),
-		});
+		return fetcher.queueToFetch( this.shortcodeModel.formatShortcode() );
 	},
 
 	/**
