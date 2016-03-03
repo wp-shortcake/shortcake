@@ -9,9 +9,9 @@ module.exports = function( grunt ) {
 	var abspath;
 
 	if ( grunt.option( "abspath" ) ) {
-		abspath = grunt.option( "abspath" ) :
+		abspath = grunt.option( "abspath" );
 	} else if ( 'WP_DEVELOP_DIR' in process.env ) {
-		abspath = process.env.WP_DEVELOP_DIR
+		abspath = process.env.WP_DEVELOP_DIR;
 	} else {
 		abspath = '/tmp/wordpress';
 	}
