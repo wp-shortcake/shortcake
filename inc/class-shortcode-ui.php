@@ -411,11 +411,13 @@ class Shortcode_UI {
 	 */
 	public function rest_preview_permission_callback( WP_REST_Request $request ) {
 
-		if ( empty( $request->get_param( 'post_id' ) ) ) {
+		$post_id = $request->get_param( 'post_id' );
+
+		if ( empty( $post_id ) ) {
 			return new WP_Error( 'rest_no_post_id', __( 'No Post ID.' ) );
 		}
 
-		if ( ! current_user_can( 'edit_post', $request->get_param( 'post_id' ) ) ) {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return new WP_Error( 'rest_no_edit_post_cap', __( 'You do not have permission to edit this Post.' ) );
 		}
 
