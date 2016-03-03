@@ -308,8 +308,9 @@ $(document).ready(function(){
 
 		if ( ! frame ) {
 			frame = new Frame({
-				shortcodes: sui.shortcodes,
-				title     : shortcodeUIData.strings.media_frame_menu_insert_label,
+				shortcodes  : sui.shortcodes,
+				title       : shortcodeUIData.strings.media_frame_menu_insert_label,
+				updateTitle : shortcodeUIData.strings.media_frame_menu_update_label,
 			});
 		}
 
@@ -614,9 +615,10 @@ var shortcodeViewConstructor = {
 		if ( shortcode ) {
 
 			var frame = new Frame({
-				shortcodes : sui.shortcodes,
-				shortcode  : shortcode,
-				title      : 'Editing...',
+				shortcodes  : sui.shortcodes,
+				shortcode   : shortcode,
+				title       : shortcodeUIData.strings.media_frame_menu_insert_label,
+				updateTitle : shortcodeUIData.strings.media_frame_menu_update_label,
 			});
 
 			frame.open();
@@ -1593,8 +1595,8 @@ var ShortcodeUiFrame = Frame.extend( {
 		this.options = _.defaults( this.options, {
 			state:          'shortcode-ui',
 			modal:          true,
-			title:          'Insert',
-			updateTitle:    'Update',
+			title:          '',
+			updateTitle:    '',
 			shortcodes:     [],
 			insertCallback: null,
 		} );
@@ -1651,10 +1653,8 @@ var ShortcodeUiFrame = Frame.extend( {
 		};
 
 		if ( 'shortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace(
-				/%s/,
-				this.options.shortcode.attributes.label
-			);
+			console.log( this.options );
+			opts.title = this.options.updateTitle.replace( /%s/, this.options.shortcode.attributes.label );
 		}
 
 		state = new State( opts );

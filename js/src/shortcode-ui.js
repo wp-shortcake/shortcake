@@ -29,8 +29,9 @@ $(document).ready(function(){
 
 		if ( ! frame ) {
 			frame = new Frame({
-				shortcodes: sui.shortcodes,
-				title     : shortcodeUIData.strings.media_frame_menu_insert_label,
+				shortcodes  : sui.shortcodes,
+				title       : shortcodeUIData.strings.media_frame_menu_insert_label,
+				updateTitle : shortcodeUIData.strings.media_frame_menu_update_label,
 			});
 		}
 

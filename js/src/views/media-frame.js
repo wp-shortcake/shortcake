@@ -22,8 +22,8 @@ var ShortcodeUiFrame = Frame.extend( {
 		this.options = _.defaults( this.options, {
 			state:          'shortcode-ui',
 			modal:          true,
-			title:          'Insert',
-			updateTitle:    'Update',
+			title:          '',
+			updateTitle:    '',
 			shortcodes:     [],
 			insertCallback: null,
 		} );
@@ -80,10 +80,8 @@ var ShortcodeUiFrame = Frame.extend( {
 		};
 
 		if ( 'shortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace(
-				/%s/,
-				this.options.shortcode.attributes.label
-			);
+			console.log( this.options );
+			opts.title = this.options.updateTitle.replace( /%s/, this.options.shortcode.attributes.label );
 		}
 
 		state = new State( opts );

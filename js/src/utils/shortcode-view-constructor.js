@@ -174,9 +174,10 @@ var shortcodeViewConstructor = {
 		if ( shortcode ) {
 
 			var frame = new Frame({
-				shortcodes : sui.shortcodes,
-				shortcode  : shortcode,
-				title      : 'Editing...',
+				shortcodes  : sui.shortcodes,
+				shortcode   : shortcode,
+				title       : shortcodeUIData.strings.media_frame_menu_insert_label,
+				updateTitle : shortcodeUIData.strings.media_frame_menu_update_label,
 			});
 
 			frame.open();
