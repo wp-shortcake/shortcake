@@ -6,7 +6,15 @@ module.exports = function( grunt ) {
 
 	// Path to WordPress install. Either absoloute or relative to this plugin.
 	// Change this by passing --abspath="new/path" as a grunt option.
-	var abspath = grunt.option( "abspath" ) ? grunt.option( "abspath" ) : '/tmp/wordpress';
+	var abspath;
+
+	if ( grunt.option( "abspath" ) ) {
+		abspath = grunt.option( "abspath" ) :
+	} else if ( 'WP_DEVELOP_DIR' in process.env ) {
+		abspath = process.env.WP_DEVELOP_DIR
+	} else {
+		abspath = '/tmp/wordpress';
+	}
 
 	// Project configuration
 	grunt.initConfig( {
