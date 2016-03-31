@@ -2,7 +2,20 @@ module.exports = function( grunt ) {
 
 	'use strict';
 	var remapify = require('remapify');
-	var banner = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
+	var banner   = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
+
+	// Path to WordPress install. Either absoloute or relative to this plugin.
+	// Change this by passing --abspath="new/path" as a grunt option.
+	var abspath;
+
+	if ( grunt.option( "abspath" ) ) {
+		abspath = grunt.option( "abspath" );
+	} else if ( 'WP_DEVELOP_DIR' in process.env ) {
+		abspath = process.env.WP_DEVELOP_DIR;
+	} else {
+		abspath = '/tmp/wordpress';
+	}
+
 	// Project configuration
 	grunt.initConfig( {
 
@@ -135,12 +148,14 @@ module.exports = function( grunt ) {
 					specs: 'js-tests/build/specs.js',
 					helpers: 'js-tests/build/helpers.js',
 					vendor: [
-						'js-tests/vendor/jquery.js',
-						'js-tests/vendor/underscore.js',
-						'js-tests/vendor/backbone.js',
-						'js-tests/vendor/wp-shortcode.js',
-						'js-tests/vendor/wp-util.js',
-						'js-tests/vendor/wp-editors.js',
+						abspath + '/wp-includes/js/jquery/jquery.js',
+						abspath + '/wp-includes/js/underscore.min.js',
+						abspath + '/wp-includes/js/backbone.min.js',
+						abspath + '/wp-includes/js/wp-util.js',
+						abspath + '/wp-includes/js/shortcode.js',
+						abspath + '/wp-admin/js/editor.js',
+						abspath + '/wp-includes/js/media-models.js',
+						abspath + '/wp-includes/js/media-views.js',
 						'js-tests/vendor/mock-ajax.js',
 					],
 				}
@@ -196,7 +211,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
-	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine', 'jshint' ] );
+	grunt.registerTask( 'scripts', [ 'browserify', 'jshint' ] );
 	grunt.registerTask( 'styles', [ 'sass', 'postcss' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );

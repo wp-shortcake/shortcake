@@ -34,14 +34,19 @@ Shortcode = Backbone.Model.extend({
 	 * Handles converting the attribute collection to JSON.
 	 */
 	toJSON: function( options ) {
+
 		options = Backbone.Model.prototype.toJSON.call(this, options);
+
 		if ( options.attrs && ( options.attrs instanceof ShortcodeAttributes ) ) {
 			options.attrs = options.attrs.toJSON();
 		}
+
 		if ( options.inner_content && ( options.inner_content instanceof InnerContent ) ) {
 			options.inner_content = options.inner_content.toJSON();
 		}
+
 		return options;
+
 	},
 
 	/**
@@ -49,12 +54,17 @@ Shortcode = Backbone.Model.extend({
 	 * Make sure we don't clone a reference to attributes.
 	 */
 	clone: function() {
+
 		var clone = Backbone.Model.prototype.clone.call( this );
+
 		clone.set( 'attrs', clone.get( 'attrs' ).clone() );
+
 		if ( clone.get( 'inner_content' ) ) {
 			clone.set( 'inner_content', clone.get( 'inner_content' ).clone() );
 		}
+
 		return clone;
+
 	},
 
 	/**
@@ -109,6 +119,8 @@ Shortcode = Backbone.Model.extend({
 		return template;
 
 	},
+
+
 });
 
 module.exports = Shortcode;

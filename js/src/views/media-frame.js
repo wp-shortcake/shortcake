@@ -1,120 +1,223 @@
-var wp = require('wp'),
-	$ = require('jquery'),
-	MediaController = require('sui-controllers/media-controller'),
-	Shortcode_UI = require('./shortcode-ui'),
-	Toolbar = require('./media-toolbar');
+var wp         = require('wp'),
+	$          = require('jquery'),
+	sui        = require('sui-utils/sui'),
+	State      = require('sui-controllers/media-controller'),
+	Toolbar    = require('sui-views/media-frame-toolbar'),
+	ListView   = require('sui-views/insert-shortcode-list'),
+	EditView   = require('sui-views/edit-shortcode-form.js'),
+	Frame      = wp.media.view.Frame;
 
-var postMediaFrame = wp.media.view.MediaFrame.Post;
-var mediaFrame = postMediaFrame.extend( {
+var ShortcodeUiFrame = Frame.extend( {
+
+	className: 'media-frame',
+	regions:   [ 'title', 'content', 'toolbar' ],
+	template:  wp.template('media-frame'),
 
 	initialize: function() {
 
-		postMediaFrame.prototype.initialize.apply( this, arguments );
+		Frame.prototype.initialize.apply( this, arguments );
 
-		var id = 'shortcode-ui';
+		_.bindAll( this, 'select', 'reset' );
 
-		var opts = {
-			id      : id,
-			search  : true,
-			router  : false,
-			toolbar : id + '-toolbar',
-			menu    : 'default',
-			title   : shortcodeUIData.strings.media_frame_menu_insert_label,
-			tabs    : [ 'insert' ],
-			priority:  66,
-			content : id + '-content-insert',
+		this.options = _.defaults( this.options, {
+			state:          'shortcode-ui',
+			modal:          true,
+			title:          '',
+			updateTitle:    '',
+			shortcodes:     [],
+			insertCallback: null,
+		} );
+
+		// Initialize modal container view.
+		if ( this.options.modal ) {
+			this.modal = new wp.media.view.Modal({
+				controller: this,
+				title:      this.options.title
+			});
+			this.modal.content( this );
+		}
+
+		this.createStates();
+
+		this.on( 'attach', _.bind( this.views.ready, this.views ), this );
+
+		this.on( 'title:create:default', this.createTitle, this );
+		this.on( 'toolbar:create:shortcode-ui-toolbar',        this.createToolbar, this );
+		this.on( 'content:render:shortcode-ui-content-browse', this.renderBrowseMode, this );
+		this.on( 'content:render:shortcode-ui-content-edit',   this.renderEditMode, this );
+		this.on( 'content:render:shortcode-ui-content-update', this.renderEditMode, this );
+
+	},
+
+	/**
+	 * @returns {wp.media.view.ShortcodeUiFrame} Returns itself to allow chaining
+	 */
+	render: function() {
+
+		// Activate the default state if no active state exists.
+		if ( ! this.state() && this.options.state ) {
+			this.setState( this.options.state );
+		}
+
+		return Frame.prototype.render.apply( this, arguments );
+
+	},
+
+	createStates: function() {
+
+		var mode, opts, state;
+
+		mode = ( 'shortcode' in this.options ) ? 'update' : 'browse';
+
+		opts = {
+			id             : 'shortcode-ui',
+			toolbar        : 'shortcode-ui-toolbar',
+			content        : 'shortcode-ui-content-' + mode,
+			menu           : false,
+			search         : true,
+			router         : false,
+			title          : this.options.title,
 		};
 
-		if ( 'currentShortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
+		if ( 'shortcode' in this.options ) {
+			console.log( this.options );
+			opts.title = this.options.updateTitle.replace( /%s/, this.options.shortcode.attributes.label );
 		}
 
-		this.mediaController = new MediaController( opts );
+		state = new State( opts );
+		this.states.add( state );
 
-		if ( 'currentShortcode' in this.options ) {
-			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
-			this.mediaController.props.set( 'action', 'update' );
+		if ( 'shortcode' in this.options ) {
+			state.props.set( 'shortcode', this.options.shortcode );
 		}
 
-		this.states.add([ this.mediaController ]);
 
-		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
-		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
-		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
-		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
 	},
 
-	events: function() {
-		return _.extend( {}, postMediaFrame.prototype.events, {
-			'click .media-menu-item'    : 'resetMediaController',
-		} );
+	/**
+	 * @param {Object} title
+	 * @this wp.media.controller.Region
+	 */
+	createTitle: function( title ) {
+		title.view = new wp.media.View({
+			controller: this,
+			tagName:    'h1'
+		});
 	},
 
-	resetMediaController: function( event ) {
-		if ( this.state() && 'undefined' !== typeof this.state().props && this.state().props.get('currentShortcode') ) {
-			this.mediaController.reset();
-			this.contentRender( 'shortcode-ui', 'insert' );
+	select: function( shortcode ) {
+		this.state().setShortcode( shortcode.clone() );
+		this.content.mode( 'shortcode-ui-content-edit' );
+	},
+
+	reset: function() {
+		this.state('shortcode-ui').reset();
+		this.content.mode( 'shortcode-ui-content-browse' );
+	},
+
+	renderBrowseMode : function( contentRegion ) {
+
+		var view = new ListView({
+			shortcodes: this.options.shortcodes
+		});
+
+		this.content.set( view.render() );
+
+		$( '.media-menu-item', this.$el ).click( this.reset );
+		view.on( 'shortcode-ui:select', this.select );
+
+		this.renderSearch( view );
+
+		this.state().refresh();
+
+	},
+
+	renderEditMode : function( id, tab ) {
+
+		var view = new EditView({
+			model: this.state('shortcode-ui').getShortcode()
+		});
+
+		this.content.set( view.render() );
+
+		view.on( 'shortcode-ui:cancel', this.reset );
+
+		if ( 'shortcode-ui-content-update' === this.content.mode() ) {
+			$( '.edit-shortcode-form-cancel',view.$el ).hide();
 		}
+
+		this.state().refresh();
+
 	},
 
-	contentRender : function( id, tab ) {
-		this.content.set(
-			new Shortcode_UI( {
-				controller: this,
-				className:  'clearfix ' + id + '-content ' + id + '-content-' + tab
-			} )
-		);
-	},
+	createToolbar : function( toolbar ) {
 
-	toolbarRender: function( toolbar ) {},
+		var text;
 
-	toolbarCreate : function( toolbar ) {
-		var text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
-		if ( 'currentShortcode' in this.options ) {
+		if ( 'shortcode' in this.options ) {
 			text = shortcodeUIData.strings.media_frame_toolbar_update_label;
+		} else {
+			text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
 		}
 
-		toolbar.view = new  Toolbar( {
+		toolbar.view = new Toolbar( {
 			controller : this,
 			items: {
 				insert: {
-					text: text,
-					style: 'primary',
+					text:     text,
+					style:    'primary',
 					priority: 80,
 					requires: false,
-					click: this.insertAction,
+					click:    function() {
+						this.controller.state().insert();
+					},
+					disabled: true,
 				}
 			}
 		} );
-	},
-
-	renderShortcodeUIMenu: function( view ) {
-
-		// Add a menu separator link.
-		view.set({
-			'shortcode-ui-separator': new wp.media.View({
-				className: 'separator',
-				priority: 65
-			})
-		});
-
-		// Hide menu if editing.
-		// @todo - fix this.
-		// This is a hack.
-		// I just can't work out how to do it properly...
-		if ( view.controller.state().props && view.controller.state().props.get( 'currentShortcode' ) ) {
-			window.setTimeout( function() {
-				view.controller.$el.addClass( 'hide-menu' );
-			} );
-		}
 
 	},
 
-	insertAction: function() {
-		this.controller.state().insert();
+	/**
+	 * Render Search Toolbar.
+	 *
+	 * Pass in the parent view.
+	 */
+	renderSearch: function( parentView ) {
+
+		var state, listView;
+
+		state = this.state( 'shortcode-ui' );
+
+		parentView.views.add( new wp.media.view.Search( {
+			controller:    state,
+			model:         state.props,
+		} ) );
+
+		listView = this.content.get();
+		listView.$el.addClass( 'has-search' );
+
+		// Listen for change in search query, and call search method on listView.
+		state.props.on( 'change:search', function() {
+			listView.search( state.props.get('search' ) );
+		}.bind(this) );
+
 	},
 
 } );
 
-module.exports = mediaFrame;
+// Map some of the modal's methods to the frame.
+_.each(['open','close','attach','detach','escape'], function( method ) {
+	/**
+	 * @returns {wp.media.view.ShortcodeUiFrame} Returns itself to allow chaining
+	 */
+	ShortcodeUiFrame.prototype[ method ] = function() {
+		if ( this.modal ) {
+			this.modal[ method ].apply( this.modal, arguments );
+		}
+		return this;
+	};
+});
+
+module.exports = ShortcodeUiFrame;

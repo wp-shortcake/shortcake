@@ -1,7 +1,8 @@
-var sui = require('sui-utils/sui'),
-	fetcher = require('sui-utils/fetcher'),
-	wp = require('wp'),
-	$ = require('jquery');
+var sui     = require( 'sui-utils/sui' ),
+	fetcher = require( 'sui-utils/fetcher' ),
+	Frame   = require( 'sui-views/media-frame' ),
+	wp      = require( 'wp' ),
+	$       = require( 'jquery' );
 
 /**
  * Generic shortcode MCE view constructor.
@@ -160,24 +161,26 @@ var shortcodeViewConstructor = {
 	 * @param {string} shortcodeString String representation of the shortcode
 	 */
 	edit: function( shortcodeString ) {
-		var currentShortcode;
+
+		var shortcode;
 
 		// Backwards compatability for WP pre-4.2
 		if ( 'object' === typeof( shortcodeString ) ) {
 			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
 		}
 
-		currentShortcode = this.parseShortcodeString( shortcodeString );
+		shortcode = this.parseShortcodeString( shortcodeString );
 
-		if ( currentShortcode ) {
+		if ( shortcode ) {
 
-			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
-				frame : "post",
-				state : 'shortcode-ui',
-				currentShortcode : currentShortcode,
+			var frame = new Frame({
+				shortcodes  : sui.shortcodes,
+				shortcode   : shortcode,
+				title       : shortcodeUIData.strings.media_frame_menu_insert_label,
+				updateTitle : shortcodeUIData.strings.media_frame_menu_update_label,
 			});
 
-			wp_media_frame.open();
+			frame.open();
 
 		}
 
@@ -246,124 +249,10 @@ var shortcodeViewConstructor = {
 	 * @return {string}
 	 */
 	pregQuote: function( str, delimiter ) {
-		return String(str)
-			.replace(
-				new RegExp( '[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + ( delimiter || '' ) + '-]', 'g' ),
-				'\\$&' );
+		var regexp = new RegExp( '[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + ( delimiter || '' ) + '-]', 'g' );
+		return String( str ).replace( regexp, '\\$&' );
 	},
 
-	// Backwards compatability for Pre WP 4.2.
-	View: {
-
-		overlay: true,
-
-		initialize: function( options ) {
-			this.shortcode = this.getShortcode( options );
-			this.fetch();
-		},
-
-		getShortcode: function( options ) {
-
-			var shortcodeModel, shortcode;
-
-			shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
-
-			if (!shortcodeModel) {
-				return;
-			}
-
-			shortcode = shortcodeModel.clone();
-
-			shortcode.get('attrs').each(
-					function(attr) {
-
-						if (attr.get('attr') in options.shortcode.attrs.named) {
-							attr.set('value',
-									options.shortcode.attrs.named[attr
-											.get('attr')]);
-						}
-
-					});
-
-			if ('content' in options.shortcode) {
-				var inner_content = shortcode.get('inner_content');
-				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content);
-				}
-			}
-
-			return shortcode;
-
-		},
-
-		fetch : function() {
-
-			var self = this;
-
-			if ( ! this.parsed ) {
-
-				wp.ajax.post( 'do_shortcode', {
-					post_id: $( '#post_ID' ).val(),
-					shortcode: this.shortcode.formatShortcode(),
-					nonce: shortcodeUIData.nonces.preview,
-				}).done( function( response ) {
-					if ( response.indexOf( '<script' ) !== -1 ) {
-						self.setIframes( self.getEditorStyles(), response );
-					} else {
-						self.parsed = response;
-						self.render( true );
-					}
-				}).fail( function() {
-					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-					self.render( true );
-				} );
-
-			}
-
-		},
-
-		/**
-		 * Render the shortcode
-		 *
-		 * To ensure consistent rendering - this makes an ajax request to the
-		 * admin and displays.
-		 *
-		 * @return string html
-		 */
-		getHtml : function() {
-			return this.parsed;
-		},
-
-		/**
-		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
-		 *
-		 * @method getEditorStyles
-		 * @returns {Array}
-		 */
-		getEditorStyles: function() {
-
-			var styles = '';
-
-			this.getNodes( function ( editor, node, content ) {
-				var dom = editor.dom,
-					bodyClasses = editor.getBody().className || '',
-					iframe, iframeDoc, i, resize;
-
-				tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
-					if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
-						link.href.indexOf( 'skins/wordpress/wp-content.css' ) === -1 ) {
-
-						styles += dom.getOuterHTML( link ) + '\n';
-					}
-
-				});
-
-			} );
-
-			return styles;
-		},
-
-	},
 };
 
 module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;

@@ -1,20 +1,31 @@
-var Backbone = require('backbone'),
-    wp = require('wp'),
-    sui = require('sui-utils/sui'),
-    Shortcodes = require('sui-collections/shortcodes');
+var Backbone   = require('backbone'),
+    wp         = require('wp'),
+    sui        = require('sui-utils/sui');
 
-var MediaController = wp.media.controller.State.extend({
+var FrameState = wp.media.controller.State.extend({
 
-	initialize: function(){
+	initialize: function( options ){
+
+		_.bindAll( this, 'refresh', 'insert', 'reset', 'setShortcode', 'getShortcode' );
 
 		this.props = new Backbone.Model({
-			currentShortcode: null,
-			action: 'select',
-			search: null
+			shortcode: null,
+			search:    null
 		});
 
-		this.props.on( 'change:action', this.refresh, this );
+		if ( 'shortcode' in options ) {
+			this.setShortcode( options.shortcode );
+		}
 
+		// Allow setting a custom insertAction method.
+		if ( 'insertAction' in options ) {
+			this.insertAction = options.insertAction;
+		}
+
+	},
+
+	insertAction: function( shortcode ) {
+		send_to_editor( shortcode.formatShortcode() );
 	},
 
 	refresh: function() {
@@ -23,30 +34,33 @@ var MediaController = wp.media.controller.State.extend({
 		}
 	},
 
-	search: function( searchTerm ) {
-		var pattern = new RegExp( searchTerm, "gi" );
-		var filteredModels = sui.shortcodes.filter( function( model ) {
-			return pattern.test( model.get( "label" ) );
-		});
-		return filteredModels;
-	},
-
 	insert: function() {
-		var shortcode = this.props.get('currentShortcode');
+
+		var shortcode = this.props.get('shortcode');
+
 		if ( shortcode ) {
-			send_to_editor( shortcode.formatShortcode() );
+			this.insertAction( shortcode );
 			this.reset();
 			this.frame.close();
 		}
 	},
 
 	reset: function() {
-		this.props.set( 'action', 'select' );
-		this.props.set( 'currentShortcode', null );
+		this.props.set( 'shortcode', null );
 		this.props.set( 'search', null );
+	},
+
+	setShortcode: function( shortcode ) {
+		this.props.set( 'shortcode', shortcode );
+	},
+
+	getShortcode: function( shortcode ) {
+		return this.props.get( 'shortcode' );
 	},
 
 });
 
-sui.controllers.MediaController = MediaController;
-module.exports = MediaController;
+// Make this available globally.
+sui.controllers.FrameState = FrameState;
+
+module.exports = FrameState;
