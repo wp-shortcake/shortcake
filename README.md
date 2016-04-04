@@ -31,6 +31,13 @@ New in 0.4.0 is the ability to [attach javascript functions to event attribute u
 
 Shortcake doesn't support custom key=>value pairs as shortcode attributes because it isn't a great user experience.
 
+## Running tests ##
+
+We have test coverage for PHP using PHPunit, and JavaScript using Jasmine.
+
+*Running tests locally*
+
+Jasmine tests can be run using `grunt test`. Note that the JavaScript tests need access to a WordPress installation as the code depends on some core JS files. It will pick up your WP_DEVELOP_DIR environment variable as used by PHPunit, or you can pass use the `abspath` option to pass the manually like so `grunt test --abspath=/path/to/wp-install`. Note - it only needs access to the files, and not a fully functional site.
 
 ## Screenshots ##
 
@@ -161,4 +168,3 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Re-labeled the UI around “Post Elements”, which is more descriptive than “Content Items.”
 * Many bug fixes.
 * [Full release notes](http://next.fusion.net/2014/12/23/shortcake-v0-1-0-live-previews-fieldmanager-integration/).
-
