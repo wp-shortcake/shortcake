@@ -42,6 +42,16 @@ var editAttributeField = Backbone.View.extend( {
 
 		data.meta = _meta.join( ' ' );
 
+		// Backwards compatability for non-array options.
+		// These were bad because objects don't have an order.
+		if ( ! Array.isArray( data.options ) ) {
+			var _options = [];
+			_.each( Object.keys( data.options ), function( key ) {
+				_options.push( { value: key, label: data.options[ key ] } );
+			} );
+			data.options = _options;
+		}
+
 		this.$el.html( this.template( data ) );
 		this.triggerCallbacks();
 
