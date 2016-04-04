@@ -26,6 +26,7 @@ var MediaController = wp.media.controller.State.extend({
 	search: function( searchTerm ) {
 		var pattern = new RegExp( searchTerm, "gi" );
 		var filteredModels = sui.shortcodes.filter( function( model ) {
+			pattern.lastIndex = 0;
 			return pattern.test( model.get( "label" ) );
 		});
 		return filteredModels;
