@@ -1,6 +1,5 @@
 var Backbone = require('backbone'),
 	insertShortcodeList = require('sui-views/insert-shortcode-list'),
-	ShortcodePreview = require('sui-views/shortcode-preview'),
 	EditShortcodeForm = require('sui-views/edit-shortcode-form'),
 	Toolbar = require('sui-views/media-toolbar'),
 	SearchShortcode = require('sui-views/search-shortcode'),
