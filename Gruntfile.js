@@ -199,6 +199,12 @@ module.exports = function( grunt ) {
 		}, //makepot
 	} );
 
+	grunt.registerTask( 'checkTestEnv', function() {
+		if ( ! grunt.file.exists( abspath ) ) {
+			grunt.fail.fatal( 'WordPress test install not found. See readme for more information.' );
+		}
+	});
+
 	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( 'grunt-postcss' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
@@ -212,6 +218,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'scripts', [ 'browserify', 'jshint' ] );
 	grunt.registerTask( 'styles', [ 'sass', 'postcss' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
+	grunt.registerTask( 'test', [ 'checkTestEnv', 'jasmine' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
 
