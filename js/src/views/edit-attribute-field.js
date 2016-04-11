@@ -44,12 +44,19 @@ var editAttributeField = Backbone.View.extend( {
 
 		// Backwards compatability for non-array options.
 		// These were bad because objects don't have an order.
-		if ( ! Array.isArray( data.options ) ) {
+		if ( 'options' in data && ! Array.isArray( data.options ) ) {
 			var _options = [];
 			_.each( Object.keys( data.options ), function( key ) {
 				_options.push( { value: key, label: data.options[ key ] } );
 			} );
 			data.options = _options;
+		} else if ( 'options' in data && Array.isArray( data.options ) ) {
+			data.options = data.options.map( function( option ) {
+				if ( 'object' !== typeof option ) {
+					option = { value: option, label: option };
+				}
+				return option;
+			} );
 		}
 
 		this.$el.html( this.template( data ) );
