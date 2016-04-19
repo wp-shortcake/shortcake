@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-04-20 02:04+0900\n"
+"PO-Revision-Date: 2016-04-20 05:55+0900\n"
 "Language-Team: hideokamoto <kokkoku214@gmail.com>\n"
 "X-Generator: Poedit 1.7.5\n"
 "X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c\n"
@@ -34,11 +34,11 @@ msgstr "引用元"
 
 #: inc/class-shortcode-ui.php:109
 msgid "Inner Content"
-msgstr "コンテンツの内部"
+msgstr "内部コンテンツ"
 
 #: inc/class-shortcode-ui.php:220 inc/class-shortcode-ui.php:221
 msgid "Insert Post Element"
-msgstr "投稿に要素を追加"
+msgstr "投稿要素を追加"
 
 #: inc/class-shortcode-ui.php:222
 msgid "%s Details"
@@ -66,7 +66,7 @@ msgstr "検索"
 
 #: inc/class-shortcode-ui.php:228
 msgid "Insert Content"
-msgstr "投稿に要素を追加"
+msgstr "コンテンツを追加"
 
 #: inc/class-shortcode-ui.php:323
 msgid "Something's rotten in the state of Denmark"
@@ -95,7 +95,7 @@ msgstr "Shortcake (Shortcode UI)"
 
 #. Description of the plugin/theme
 msgid "User Interface for adding shortcodes."
-msgstr "ショートコードを作成するための UI を提供するプラグインです。"
+msgstr "ショートコード作成の UI を提供するプラグインです。"
 
 #. Author of the plugin/theme
 msgid "Fusion Engineering and community"
