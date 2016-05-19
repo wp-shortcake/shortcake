@@ -168,11 +168,11 @@ class Shortcode_UI_Field_Term_Select {
 			wp_send_json_error();
 		}
 
-		$response['found_terms'] = absint( $num_results );
+		$response['found_terms']    = absint( $num_results );
 		$response['terms_per_page'] = 10;
 
 		if ( isset( $page ) ) {
-			$args['page'] = $page;
+			$args['page']   = $page;
 			$args['offset'] = ( $page - 1 ) * $response['terms_per_page'];
 		}
 
