@@ -115,11 +115,11 @@ class Shortcode_UI_Field_Term_Select {
 		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
 		$response            = array( 'terms' => array(), 'found_terms' => 0, 'terms_per_page' => 10, 'page' => $page );
 
-		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
-
 		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_term_select' ) ) {
 			wp_send_json_error( $response );
 		}
+
+		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 
 		// Shortcode not found.
 		if ( ! isset( $shortcodes[ $requested_shortcode ] ) ) {
