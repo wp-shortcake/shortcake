@@ -60,7 +60,7 @@ function shortcode_ui_load_textdomain() {
 	$path = dirname( __FILE__ ) . '/languages';
 	// Load the textdomain according to the plugin first
 	$mofile = $domain . '-' . $locale . '.mo';
-	if ( $loaded = load_textdomain( $domain, $path . '/'. $mofile ) ) {
+	if ( $loaded = load_textdomain( $domain, $path . '/' . $mofile ) ) {
 		return;
 	}
 
