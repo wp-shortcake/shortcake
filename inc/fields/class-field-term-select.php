@@ -100,7 +100,8 @@ class Shortcode_UI_Field_Term_Select {
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
-		$response            = array( 'terms' => array(), 'found_terms' => 0, 'terms_per_page' => 10 );
+		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
+		$response            = array( 'terms' => array(), 'found_terms' => 0, 'terms_per_page' => 10, 'page' => $page );
 
 		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 
@@ -148,9 +149,9 @@ class Shortcode_UI_Field_Term_Select {
 		$response['found_terms'] = absint( $num_results );
 		$response['terms_per_page'] = 10;
 
-		if ( isset( $_GET['page'] ) ) {
-			$args['offset'] =  absint( $_GET['page'] * 10 );
-			$response['page'] = absint( $_GET['page'] );
+		if ( isset( $page ) ) {
+			$args['page'] = $page;
+			$args['offset'] = ( $page - 1 ) * $response['terms_per_page'];
 		}
 
 		$results = get_terms( $args );
