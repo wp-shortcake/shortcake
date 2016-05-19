@@ -1297,21 +1297,22 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 					dataType: 'json',
 					quietMillis: 250,
 					data: function (term, page) {
-						ajaxData.s    = term;
+						ajaxData.s = term;
 						ajaxData.page = page;
 						return ajaxData;
 					},
-					results: function ( response, page ) {
+					results: function ( response,  page ) {
 
 						if ( ! response.success ) {
 							return { results: {}, more: false };
 						}
 
 						// Cache data for quicker rendering later.
-						termSelectCache = $.extend( termSelectCache, response.data.posts );
+						termSelectCache = $.extend( termSelectCache, response.data.terms );
+						
+						var more = ( page * response.data.page ) < response.data.found_terms; // whether or not there are more results available
 
-						var more = ( page * response.data.posts_per_page ) < response.data.found_posts; // whether or not there are more results available
-						return { results: response.data.posts, more: more };
+						return { results: response.data.terms, more: more };
 
 					},
 				},
@@ -1323,22 +1324,22 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 				 */
 				initSelection: function(element, callback) {
 
-					var ids, parsedData = [], cached;
+					var term_ids, parsedData = [], cached;
 
 					// Convert stored value to array of IDs (int).
-					ids = $(element)
+					term_ids = $(element)
 						.val()
 						.split(',')
 						.map( function (str) { return str.trim(); } )
 						.map( function (str) { return parseInt( str ); } );
 
-					if ( ids.length < 1 ) {
+					if ( term_ids.length < 1 ) {
 						return;
 					}
 
 					// Check if there is already cached data.
-					for ( var i = 0; i < ids.length; i++ ) {
-						cached = _.find( termSelectCache, _.matches( { id: ids[i] } ) );
+					for ( var i = 0; i < term_ids.length; i++ ) {
+						cached = _.find( termSelectCache, _.matches( { term_id: term_ids[i] } ) );
 						if ( cached ) {
 							parsedData.push( cached );
 						}
@@ -1350,7 +1351,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 						return;
 					}
 
-					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
+					var uncachedIds = _.difference( term_ids, _.pluck( parsedData, 'term_id' ) );
 
 					if ( ! uncachedIds.length ) {
 
@@ -1368,21 +1369,21 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 								return { results: {}, more: false };
 							}
 
-							termSelectCache = $.extend( termSelectCache, response.data.posts );
+							termSelectCache = $.extend( termSelectCache, response.data.terms );
 
 							// If not multi-select, expects single object, not array of objects.
 							if ( ! self.model.get( 'multiple' ) ) {
-								callback( response.data.posts[0] );
+								callback( response.data.terms[0] );
 								return;
 							}
 
 							// Append new data to cached data.
 							// Sort by original order.
 							parsedData = parsedData
-								.concat( response.data.posts )
+								.concat( response.data.terms )
 								.sort(function (a, b) {
-									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
-									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
+									if ( term_ids.indexOf( a.term_id ) > term_ids.indexOf( b.term_id ) ) return 1;
+									if ( term_ids.indexOf( a.term_id ) < term_ids.indexOf( b.term_id ) ) return -1;
 									return 0;
 								});
 

@@ -100,7 +100,7 @@ class Shortcode_UI_Field_Term_Select {
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
-		$response            = array();
+		$response            = array( 'terms' => array(), 'found_terms' => 0, 'terms_per_page' => 10 );
 
 		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 
@@ -115,37 +115,51 @@ class Shortcode_UI_Field_Term_Select {
 
 		$shortcode = $shortcodes[ $requested_shortcode ];
 
-		$taxonomy = sanitize_key( $_GET['tax'] );
+		$taxonomy_type = get_taxonomy( 'post_tag' );
 
-		$tax = get_taxonomy( 'post_tag' );
-		if ( ! $tax ) {
+		if ( ! $taxonomy_type ) {
 			wp_die( 0 );
 		}
 
-		if ( ! current_user_can( $tax->cap->assign_terms ) ) {
+		if ( ! current_user_can( $taxonomy_type->cap->assign_terms ) ) {
 			wp_die( -1 );
 		}
 
 		$s = wp_unslash( $_GET['s'] );
 
-		$comma = _x( ',', 'tag delimiter' );
-		if ( ',' !== $comma )
-			$s = str_replace( $comma, ',', $s );
-		if ( false !== strpos( $s, ',' ) ) {
-			$s = explode( ',', $s );
-			$s = $s[count( $s ) - 1];
+		if ( empty( $s ) ) {
+			wp_send_json_error();
 		}
-		$s = trim( $s );
 
-		$term_search_min_chars = (int) apply_filters( 'term_search_min_chars', 2, $tax, $s );
+		$term_search_min_chars = (int) apply_filters( 'term_search_min_chars', 2, $taxonomy_type, $s );
 		
 		if ( ( $term_search_min_chars == 0 ) || ( strlen( $s ) < $term_search_min_chars ) ){
 			wp_die();
 		}
 
-		$results = get_terms( $taxonomy, array( 'name__like' => $s, 'fields' => 'names', 'hide_empty' => false ) );
+		$args = array( 'name__like' => $s, 'fields' => 'all', 'hide_empty' => false, 'number' => 10 );
 
-		wp_send_json_success( $results );
+		$num_results = wp_count_terms( null, $args );
+
+		if ( empty( $num_results ) ) {
+			wp_send_json_error();
+		}
+
+		$response['found_terms'] = absint( $num_results );
+		$response['terms_per_page'] = 10;
+
+		if ( isset( $_GET['page'] ) ) {
+			$args['offset'] =  absint( $_GET['page'] * 10 );
+			$response['page'] = absint( $_GET['page'] );
+		}
+
+		$results = get_terms( $args );
+
+		foreach ( $results as $result ) {
+			array_push( $response['terms'], array( 'id' => $result->term_id, 'text' => html_entity_decode( $result->name ) ) );
+		}
+
+		wp_send_json_success( $response );
 
 	}
 
