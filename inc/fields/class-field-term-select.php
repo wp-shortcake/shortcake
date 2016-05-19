@@ -15,6 +15,10 @@ class Shortcode_UI_Field_Term_Select {
 		),
 	);
 
+	/**
+	 * Setup the instance.
+	 * @return Shortcode_UI_Field_Term_Select
+	 */
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
@@ -23,30 +27,38 @@ class Shortcode_UI_Field_Term_Select {
 		return self::$instance;
 	}
 
+	/**
+	 * Add the required actions and filters.
+	 */
 	private function setup_actions() {
-
 		add_filter( 'shortcode_ui_fields',             array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'enqueue_shortcode_ui',            array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_term_field', array( $this, 'action_wp_ajax_shortcode_ui_term_field' ) );
 		add_action( 'shortcode_ui_loaded_editor',      array( $this, 'action_shortcode_ui_loaded_editor' ) );
-
 	}
 
+	/**
+	 * Add our field to the shortcode fields.
+	 * @param $fields
+	 *
+	 * @return array
+	 */
 	public function filter_shortcode_ui_fields( $fields ) {
 		return array_merge( $fields, $this->fields );
 	}
 
+	/**
+	 * Add Select2 for our UI.
+	 */
 	public function action_enqueue_shortcode_ui() {
-
 		$plugin_dir = dirname( dirname( __FILE__ ) );
 
-		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ) , array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
+		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ), array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
 		wp_enqueue_style( 'select2', plugins_url( 'lib/select2/select2.css', $plugin_dir ), null, '3.5.2' );
 
 		wp_localize_script( 'shortcode-ui', 'shortcodeUiTermFieldData', array(
 			'nonce' => wp_create_nonce( 'shortcode_ui_field_term_select' ),
 		) );
-
 	}
 
 	/**
