@@ -137,6 +137,9 @@ class Shortcode_UI_Field_Term_Select {
 			}
 		}
 
+		/**
+		 * If the user hasn't specified a taxonomy then set it to null.
+		 */
 		if ( empty( $taxonomy_type ) ) {
 			$taxonomy_type = null;
 		}
