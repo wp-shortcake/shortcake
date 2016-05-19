@@ -183,7 +183,6 @@ class Shortcode_UI_Field_Term_Select {
 		}
 
 		wp_send_json_success( $response );
-
 	}
 
 }
