@@ -116,13 +116,17 @@ class Shortcode_UI_Field_Term_Select {
 
 		$shortcode = $shortcodes[ $requested_shortcode ];
 
-		$taxonomy_type = get_taxonomy( 'post_tag' );
-
-		if ( ! $taxonomy_type ) {
-			wp_die( 0 );
+		foreach ( $shortcode['attrs'] as $attr ) {
+			if ( $attr['attr'] === $requested_attr && isset( $attr['taxonomy'] ) ) {
+				$taxonomy_type = $attr['taxonomy'];
+			}
 		}
 
-		if ( ! current_user_can( $taxonomy_type->cap->assign_terms ) ) {
+		if ( empty( $taxonomy_type ) ) {
+			$taxonomy_type = null;
+		}
+
+		if ( $taxonomy_type && ! current_user_can( $taxonomy_type->cap->assign_terms ) ) {
 			wp_die( -1 );
 		}
 
@@ -140,7 +144,7 @@ class Shortcode_UI_Field_Term_Select {
 
 		$args = array( 'name__like' => $s, 'fields' => 'all', 'hide_empty' => false, 'number' => 10 );
 
-		$num_results = wp_count_terms( null, $args );
+		$num_results = wp_count_terms( $taxonomy_type, $args );
 
 		if ( empty( $num_results ) ) {
 			wp_send_json_error();
