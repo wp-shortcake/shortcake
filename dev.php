@@ -187,6 +187,13 @@ function shortcode_ui_dev_advanced_example() {
 			'multiple' => true,
 		),
 		array(
+			'label'    => esc_html__( 'Select Term', 'shortcode-ui-example' ),
+			'attr'     => 'term',
+			'type'     => 'term_select',
+			'taxonomy' => 'post_tag',
+			'multiple' => true,
+		),
+		array(
 			'label'  => esc_html__( 'Background Color', 'shortcode-ui-example' ),
 			'attr'   => 'background-color',
 			'type'   => 'color',
