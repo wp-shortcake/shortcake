@@ -128,6 +128,9 @@ class Shortcode_UI_Field_Term_Select {
 
 		$shortcode = $shortcodes[ $requested_shortcode ];
 
+		/**
+		 * Check to see if the taxonomy has been set.
+		 */
 		foreach ( $shortcode['attrs'] as $attr ) {
 			if ( $attr['attr'] === $requested_attr && isset( $attr['taxonomy'] ) ) {
 				$taxonomy_type = $attr['taxonomy'];
