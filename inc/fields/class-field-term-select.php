@@ -135,7 +135,6 @@ class Shortcode_UI_Field_Term_Select {
 			}
 		}
 
-
 		// If the user hasn't specified a taxonomy then set it to null.
 		if ( empty( $taxonomy_type ) ) {
 			$taxonomy_type = null;
@@ -152,7 +151,7 @@ class Shortcode_UI_Field_Term_Select {
 		}
 
 		$term_search_min_chars = (int) apply_filters( 'term_search_min_chars', 2, $taxonomy_type, $s );
-		
+
 		if ( ( 0 === $term_search_min_chars ) || ( strlen( $s ) < $term_search_min_chars ) ) {
 			wp_die();
 		}
