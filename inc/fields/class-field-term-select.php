@@ -140,7 +140,7 @@ class Shortcode_UI_Field_Term_Select {
 			$taxonomy_type = null;
 		}
 
-		if ( $taxonomy_type && ! current_user_can( $taxonomy_type->cap->assign_terms ) ) {
+		if ( $taxonomy_type ) {
 			wp_die( -1 );
 		}
 
