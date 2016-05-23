@@ -144,7 +144,7 @@ class Shortcode_UI_Field_Term_Select {
 			wp_die( -1 );
 		}
 
-		$s = wp_unslash( $_GET['s'] );
+		$s = sanitize_text_field( $_GET['s'] );
 
 		if ( empty( $s ) ) {
 			wp_send_json_error();
