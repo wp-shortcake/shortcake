@@ -116,7 +116,7 @@ function shortcode_ui_dev_minimal_example() {
 	shortcode_ui_register_for_shortcode(
 		'shortcake-no-attributes', // Shortcode tag this UI is for.
 		array(                     // Shortcode UI args.
-		                           'label' => esc_html__( 'Shortcake With No Attributes', 'shortcode-ui-example' ),
+			'label' => __( 'Shortcake With No Attributes', 'shortcode-ui-example' ),
 		)
 	);
 }
@@ -156,7 +156,7 @@ function shortcode_ui_dev_advanced_example() {
 	 */
 	$fields = array(
 		array(
-			'label'       => esc_html__( 'Attachment', 'shortcode-ui-example' ),
+			'label'       => __( 'Attachment', 'shortcode-ui-example' ),
 			'attr'        => 'attachment',
 			'type'        => 'attachment',
 			/*
@@ -166,49 +166,49 @@ function shortcode_ui_dev_advanced_example() {
 			 * 'frameTitle'  - Title for the modal UI once the library is open.
 			 */
 			'libraryType' => array( 'image' ),
-			'addButton'   => esc_html__( 'Select Image', 'shortcode-ui-example' ),
-			'frameTitle'  => esc_html__( 'Select Image', 'shortcode-ui-example' ),
+			'addButton'   => __( 'Select Image', 'shortcode-ui-example' ),
+			'frameTitle'  => __( 'Select Image', 'shortcode-ui-example' ),
 		),
 		array(
-			'label'  => esc_html__( 'Citation Source', 'shortcode-ui-example' ),
+			'label'  => __( 'Citation Source', 'shortcode-ui-example' ),
 			'attr'   => 'source',
 			'type'   => 'text',
 			'encode' => true,
 			'meta'   => array(
-				'placeholder' => esc_html__( 'Test placeholder', 'shortcode-ui-example' ),
+				'placeholder' => __( 'Test placeholder', 'shortcode-ui-example' ),
 				'data-test'   => 1,
 			),
 		),
 		array(
-			'label'    => esc_html__( 'Select Page', 'shortcode-ui-example' ),
+			'label'    => __( 'Select Page', 'shortcode-ui-example' ),
 			'attr'     => 'page',
 			'type'     => 'post_select',
 			'query'    => array( 'post_type' => 'page' ),
 			'multiple' => true,
 		),
 		array(
-			'label'  => esc_html__( 'Background Color', 'shortcode-ui-example' ),
+			'label'  => __( 'Background Color', 'shortcode-ui-example' ),
 			'attr'   => 'background-color',
 			'type'   => 'color',
 			'encode' => true,
 			'meta'   => array(
-				'placeholder' => esc_html__( 'Hex color code', 'shortcode-ui-example' ),
+				'placeholder' => __( 'Hex color code', 'shortcode-ui-example' ),
 			),
 		),
 		array(
-			'label'       => esc_html__( 'Alignment', 'shortcode-ui-example' ),
-			'description' => esc_html__( 'Whether the quotation should be displayed as pull-left, pull-right, or neither.', 'shortcode-ui-example' ),
+			'label'       => __( 'Alignment', 'shortcode-ui-example' ),
+			'description' => __( 'Whether the quotation should be displayed as pull-left, pull-right, or neither.', 'shortcode-ui-example' ),
 			'attr'        => 'alignment',
 			'type'        => 'select',
 			'options'     => array(
-				''      => esc_html__( 'None', 'shortcode-ui-example' ),
-				'left'  => esc_html__( 'Pull Left', 'shortcode-ui-example' ),
-				'right' => esc_html__( 'Pull Right', 'shortcode-ui-example' ),
+				''      => __( 'None', 'shortcode-ui-example' ),
+				'left'  => __( 'Pull Left', 'shortcode-ui-example' ),
+				'right' => __( 'Pull Right', 'shortcode-ui-example' ),
 			),
 		),
 		array(
-			'label'       => esc_html__( 'Year', 'shortcode-ui-example' ),
-			'description' => esc_html__( 'Optional. The year the quotation is from.', 'shortcode-ui-example' ),
+			'label'       => __( 'Year', 'shortcode-ui-example' ),
+			'description' => __( 'Optional. The year the quotation is from.', 'shortcode-ui-example' ),
 			'attr'        => 'year',
 			'type'        => 'number',
 			'meta'        => array(
@@ -227,7 +227,7 @@ function shortcode_ui_dev_advanced_example() {
 		/*
 		 * How the shortcode should be labeled in the UI. Required argument.
 		 */
-		'label' => esc_html__( 'Shortcake Dev', 'shortcode-ui-example' ),
+		'label' => __( 'Shortcake Dev', 'shortcode-ui-example' ),
 
 		/*
 		 * Include an icon with your shortcode. Optional.
@@ -246,8 +246,8 @@ function shortcode_ui_dev_advanced_example() {
 		 * data present will be backed-up during editing.
 		 */
 		'inner_content' => array(
-			'label'        => esc_html__( 'Quote', 'shortcode-ui-example' ),
-			'description'  => esc_html__( 'Include a statement from someone famous.', 'shortcode-ui-example' ),
+			'label'       => __( 'Quote', 'shortcode-ui-example' ),
+			'description' => __( 'Include a statement from someone famous.', 'shortcode-ui-example' ),
 		),
 
 		/*
@@ -286,8 +286,8 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 	<section class="pullquote" style="padding: 20px; background: rgba(0, 0, 0, 0.1);">
 		<p style="margin:0; padding: 0;">
 			<b><?php esc_html_e( 'Content:', 'shortcode-ui-example' ); ?></b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
-			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr[ 'source' ] ); ?></br>
-			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr[ 'attachment' ], array( 50, 50 ) ) ); ?></br>
+			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr['source'] ); ?></br>
+			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ) ); ?></br>
 		</p>
 	</section>
 	<?php
