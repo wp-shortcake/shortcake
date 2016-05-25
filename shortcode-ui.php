@@ -19,13 +19,14 @@
  * GNU General Public License for more details.
  */
 
-define( 'SHORTCODE_UI_VERSION', '0.7.0-alpha' );
+define( 'SHORTCODE_UI_VERSION', '0.7.1-alpha' );
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-field-attachment.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-field-color.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-field-post-select.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-field-term-select.php';
 
 add_action( 'init', 'shortcode_ui_load_textdomain' );
 
@@ -42,6 +43,7 @@ function shortcode_ui_init() {
 	$attachment_field = Shortcake_Field_Attachment::get_instance();
 	$color_field      = Shortcake_Field_Color::get_instance();
 	$post_field       = Shortcode_UI_Field_Post_Select::get_instance();
+	$term_field       = Shortcode_UI_Field_Term_Select::get_instance();
 }
 
 /**

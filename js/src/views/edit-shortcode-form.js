@@ -7,6 +7,7 @@ backbone = require('backbone'),
 	// but bundled here for simplicity to save an HTTP request.
 	editAttributeFieldAttachment = require( 'sui-views/edit-attribute-field-attachment' ),
 	editAttributeFieldPostSelect = require( 'sui-views/edit-attribute-field-post-select' ),
+	editAttributeFieldTermSelect = require( 'sui-views/edit-attribute-field-term-select' ),
 	editAttributeFieldColor = require( 'sui-views/edit-attribute-field-color' );
 
 
