@@ -113,6 +113,7 @@ class Shortcode_UI_Field_Term_Select {
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
+		$search              = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$response            = array( 'terms' => array(), 'found_terms' => 0, 'terms_per_page' => 10, 'page' => $page );
 
 		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_term_select' ) ) {
@@ -135,20 +136,28 @@ class Shortcode_UI_Field_Term_Select {
 			}
 		}
 
-		// If the user hasn't specified a taxonomy then set it to null.
+		// If the user hasn't specified a taxonomy then set it to post_tag.
 		if ( empty( $taxonomy_type ) ) {
-			$taxonomy_type = null;
+			$taxonomy_type = array( 'post_tag' );
 		}
 
-		$s = sanitize_text_field( $_GET['s'] );
+		$args['taxonomy']   = $taxonomy_type;
+		$args['fields']     = 'all';
+		$args['hide_empty'] = false;
+		$args['number']     = 10;
 
-		$term_search_min_chars = (int) apply_filters( 'term_search_min_chars', 2, $taxonomy_type, $s );
+		if ( ! empty( $_GET['tag__in'] ) ) {
+			$term__in = is_array( $_GET[ 'tag__in' ] ) ? $_GET[ 'tag__in' ] : explode( ',', $_GET[ 'tag__in' ] );
+			$args['number'] = count( $term__in );
+			$args['include'] = array_map( 'intval', $term__in );
+			$args['orderby']  = 'tag__in';
+		}
 
-		if ( ( 0 === $term_search_min_chars ) || ( strlen( $s ) < $term_search_min_chars ) ) {
-			// If there isn't a search or it's less than the minimum characters start with the first 10 post_tags.
-			$args = array( 'taxonomy' => $taxonomy_type, 'fields' => 'all', 'hide_empty' => false, 'number' => 10 );
-		} else {
-			$args = array( 'taxonomy' => $taxonomy_type, 'name__like' => $s, 'fields' => 'all', 'hide_empty' => false, 'number' => 10 );
+		$term_search_min_chars = (int) apply_filters( 'term_search_min_chars', 2, $taxonomy_type, $search );
+
+		if ( ( 0 !== $term_search_min_chars ) || ( strlen( $search ) > $term_search_min_chars ) ) {
+			$args['name__like'] = $search;
+			$response['terms_per_page'] = 10;
 		}
 
 		$num_results = wp_count_terms( $taxonomy_type, $args );
@@ -157,8 +166,7 @@ class Shortcode_UI_Field_Term_Select {
 			wp_send_json_error();
 		}
 
-		$response['found_terms']    = absint( $num_results );
-		$response['terms_per_page'] = 10;
+		$response['found_terms'] = absint( $num_results );
 
 		if ( isset( $page ) ) {
 			$args['page']   = $page;
