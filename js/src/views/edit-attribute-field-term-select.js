@@ -77,22 +77,22 @@
 				 */
 				initSelection: function(element, callback) {
 
-					var term_ids, parsedData = [], cached;
+					var ids, parsedData = [], cached;
 
 					// Convert stored value to array of IDs (int).
-					term_ids = $(element)
+					ids = $(element)
 						.val()
 						.split(',')
 						.map( function (str) { return str.trim(); } )
 						.map( function (str) { return parseInt( str ); } );
 
-					if ( term_ids.length < 1 ) {
+					if ( ids.length < 1 ) {
 						return;
 					}
 
 					// Check if there is already cached data.
-					for ( var i = 0; i < term_ids.length; i++ ) {
-						cached = _.find( termSelectCache, _.matches( { term_id: term_ids[i] } ) );
+					for ( var i = 0; i < ids.length; i++ ) {
+						cached = _.find( termSelectCache, _.matches( { id: ids[i] } ) );
 						if ( cached ) {
 							parsedData.push( cached );
 						}
@@ -104,7 +104,7 @@
 						return;
 					}
 
-					var uncachedIds = _.difference( term_ids, _.pluck( parsedData, 'term_id' ) );
+					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
 
 					if ( ! uncachedIds.length ) {
 
@@ -114,7 +114,7 @@
 
 						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
 						initAjaxData.action   = 'shortcode_ui_term_field';
-						initAjaxData.post__in = uncachedIds;
+						initAjaxData.tag__in = uncachedIds;
 
 						$.get( ajaxurl, initAjaxData ).done( function( response ) {
 
@@ -135,8 +135,8 @@
 							parsedData = parsedData
 								.concat( response.data.terms )
 								.sort(function (a, b) {
-									if ( term_ids.indexOf( a.term_id ) > term_ids.indexOf( b.term_id ) ) return 1;
-									if ( term_ids.indexOf( a.term_id ) < term_ids.indexOf( b.term_id ) ) return -1;
+									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
+									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
 									return 0;
 								});
 
