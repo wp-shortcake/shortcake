@@ -147,7 +147,7 @@ class Shortcode_UI_Field_Term_Select {
 		$args['number']     = 10;
 
 		if ( ! empty( $_GET['tag__in'] ) ) {
-			$term__in = is_array( $_GET[ 'tag__in' ] ) ? $_GET[ 'tag__in' ] : explode( ',', $_GET[ 'tag__in' ] );
+			$term__in = is_array( $_GET['tag__in'] ) ? $_GET['tag__in'] : explode( ',', $_GET['tag__in'] );
 			$args['number'] = count( $term__in );
 			$args['include'] = array_map( 'intval', $term__in );
 			$args['orderby']  = 'tag__in';
