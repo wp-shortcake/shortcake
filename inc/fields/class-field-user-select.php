@@ -130,7 +130,11 @@ class Shortcode_UI_Field_User_Select {
 			wp_send_json_error( $response );
 		}
 
-		$shortcode  = $shortcodes[ $requested_shortcode ];
+		$shortcode = $shortcodes[ $requested_shortcode ];
+
+		// Defaults user query args.
+		$query_args['search_columns'] = array( 'ID', 'user_login', 'user_nicename', 'user_email' );
+		$query_args['number']         = 10;
 
 		// Supports WP_User_Query query args.
 		foreach ( $shortcode['attrs'] as $attr ) {
@@ -138,9 +142,6 @@ class Shortcode_UI_Field_User_Select {
 				$query_args = $attr['query'];
 			}
 		}
-
-		// Hardcoded user query args.
-		$query_args['search_columns'] = array( 'ID', 'user_login', 'user_nicename', 'user_email' );
 
 		if ( isset( $_GET['page'] ) ) {
 			$query_args['paged'] = sanitize_text_field( $_GET['page'] );
