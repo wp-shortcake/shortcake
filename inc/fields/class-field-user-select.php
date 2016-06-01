@@ -136,6 +136,12 @@ class Shortcode_UI_Field_User_Select {
 		$query_args['search_columns'] = array( 'ID', 'user_login', 'user_nicename', 'user_email' );
 		$query_args['number']         = 10;
 
+		// Include selected users.
+		if ( isset( $_GET['include'] ) ) {
+			$query_args['include'] = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
+			$query_args['include'] = array_map( 'absint', $query_args['include'] );
+		}
+
 		// Supports WP_User_Query query args.
 		foreach ( $shortcode['attrs'] as $attr ) {
 			if ( $attr['attr'] === $requested_attr && isset( $attr['query'] ) ) {

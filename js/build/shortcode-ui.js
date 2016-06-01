@@ -1558,7 +1558,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
 						initAjaxData.action   = 'shortcode_ui_user_field';
-						initAjaxData.post__in = uncachedIds;
+						initAjaxData.include  = uncachedIds;
 
 						$.get( ajaxurl, initAjaxData ).done( function( response ) {
 
