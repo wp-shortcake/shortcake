@@ -194,8 +194,8 @@ function shortcode_ui_dev_advanced_example() {
 			'multiple' => true,
 		),
 		array(
-			'label'  => esc_html__( 'Background Color', 'shortcode-ui-example' ),
-			'attr'   => 'background-color',
+			'label'  => esc_html__( 'Color', 'shortcode-ui-example' ),
+			'attr'   => 'color',
 			'type'   => 'color',
 			'encode' => true,
 			'meta'   => array(
@@ -281,20 +281,74 @@ function shortcode_ui_dev_advanced_example() {
  * It renders the shortcode based on supplied attributes.
  */
 function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
+
 	$attr = shortcode_atts( array(
 		'source'     => '',
 		'attachment' => 0,
-		'page'       => null,
+		'page'       => '',
+		'term'       => '',
+		'color'      => '',
+		'alignment'  => '',
+		'year'       => '',
 	), $attr, $shortcode_tag );
+
+	// Make some sense of the data.
+
+	$attr['page'] = array_map(
+		function( $post_id ) {
+			return get_the_title( $post_id );
+		},
+		array_filter( array_map( 'absint', explode( ',', $attr['page'] ) ) )
+	);
+
+	$attr['term'] = array_map(
+		function( $term_id ) {
+			$data = get_term( $term_id, 'category' );
+			return $data->name;
+		},
+		array_filter( array_map( 'absint', explode( ',', $attr['term'] ) ) )
+	);
+
+	$attr['color'] = urldecode( $attr['color'] );
 
 	// Shortcode callbacks must return content, hence, output buffering here.
 	ob_start();
 	?>
 	<section class="pullquote" style="padding: 20px; background: rgba(0, 0, 0, 0.1);">
 		<p style="margin:0; padding: 0;">
+
+			<?php if ( ! empty( $content ) ) : ?>
 			<b><?php esc_html_e( 'Content:', 'shortcode-ui-example' ); ?></b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['source'] ) ) : ?>
 			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr[ 'source' ] ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['attachment'] ) ) : ?>
 			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr[ 'attachment' ], array( 50, 50 ) ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['page'] ) ) : ?>
+				<b><?php esc_html_e( 'Pages:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['page'] ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['term'] ) ) : ?>
+				<b><?php esc_html_e( 'Terms:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['term'] ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['color'] ) ) : ?>
+				<b><?php esc_html_e( 'Color:', 'shortcode-ui-example' ); ?></b> <span style="display: inline-block; width: 1.5em; height: 1.5em; vertical-align: bottom; background-color: <?php echo esc_html( $attr['color'] ); ?>"></span></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['alignment'] ) ) : ?>
+				<b><?php esc_html_e( 'Alignment:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( $attr['alignment'] ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['year'] ) ) : ?>
+				<b><?php esc_html_e( 'Year:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( $attr['year'] ); ?></br>
+			<?php endif; ?>
+
 		</p>
 	</section>
 	<?php
