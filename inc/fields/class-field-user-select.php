@@ -148,7 +148,7 @@ class Shortcode_UI_Field_User_Select {
 		}
 
 		if ( ! empty( $_GET['s'] ) ) {
-			$query_args['search'] = sanitize_text_field( $_GET['s'] );
+			$query_args['search'] = '*' . sanitize_text_field( $_GET['s'] ) . '*';
 		}
 
 		$query = new WP_User_Query( $query_args );
