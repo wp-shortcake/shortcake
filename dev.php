@@ -322,11 +322,11 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['source'] ) ) : ?>
-			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr[ 'source' ] ); ?></br>
+			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr['source'] ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['attachment'] ) ) : ?>
-			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr[ 'attachment' ], array( 50, 50 ) ) ); ?></br>
+			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ) ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['page'] ) ) : ?>
