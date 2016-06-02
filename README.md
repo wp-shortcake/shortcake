@@ -1,9 +1,9 @@
 # Shortcake (Shortcode UI) #
-**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov, bronsonquick  
+**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov, bronsonquick, dashaluna
 **Tags:** shortcodes  
 **Requires at least:** 4.1  
 **Tested up to:** 4.4  
-**Stable tag:** 0.6.3
+**Stable tag:** 0.6.4
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -59,6 +59,9 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ## Changelog ##
 
+
+### 0.6.4 (June 1, 2016) ###
+* Introduced a `user_select` input type for user selection.
 
 ### 0.6.3 (May 19, 2016) ###
 * Introduced a `term_select` input type for taxonomy selection.

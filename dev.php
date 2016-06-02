@@ -194,6 +194,12 @@ function shortcode_ui_dev_advanced_example() {
 			'multiple' => true,
 		),
 		array(
+			'label'    => __( 'User Select', 'shortcode-ui-example' ),
+			'attr'     => 'users',
+			'type'     => 'user_select',
+			'multiple' => true,
+		),
+		array(
 			'label'  => esc_html__( 'Background Color', 'shortcode-ui-example' ),
 			'attr'   => 'background-color',
 			'type'   => 'color',
@@ -285,8 +291,16 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 		'source'     => '',
 		'attachment' => 0,
 		'page'       => null,
+		'users'      => '',
 	), $attr, $shortcode_tag );
 
+	$attr['users'] = array_map(
+		function( $user_id ) {
+			$data = get_userdata( $user_id );
+			return $data->display_name;
+		},
+		array_filter( array_map( 'absint', explode( ',', $attr['users'] ) ) )
+	);
 	// Shortcode callbacks must return content, hence, output buffering here.
 	ob_start();
 	?>
@@ -295,6 +309,9 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 			<b><?php esc_html_e( 'Content:', 'shortcode-ui-example' ); ?></b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
 			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr[ 'source' ] ); ?></br>
 			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr[ 'attachment' ], array( 50, 50 ) ) ); ?></br>
+			<?php if ( ! empty( $attr['users'] ) ) : ?>
+				<b><?php esc_html_e( 'Users:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['users'] ) ); ?></br>
+			<?php endif; ?>
 		</p>
 	</section>
 	<?php
