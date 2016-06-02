@@ -1,11 +1,11 @@
 # Shortcake (Shortcode UI) #
 **Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov, bronsonquick, dashaluna
-**Tags:** shortcodes  
-**Requires at least:** 4.1  
-**Tested up to:** 4.4  
-**Stable tag:** 0.6.4
-**License:** GPLv2 or later  
-**License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
+**Tags:** shortcodes
+**Requires at least:** 4.1
+**Tested up to:** 4.4
+**Stable tag:** 0.6.3
+**License:** GPLv2 or later
+**License URI:** http://www.gnu.org/licenses/gpl-2.0.html
 
 Shortcake makes using WordPress shortcodes a piece of cake.
 
