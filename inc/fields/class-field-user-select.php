@@ -115,10 +115,15 @@ class Shortcode_UI_Field_User_Select {
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( wp_unslash( $_GET['shortcode'] ) ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( wp_unslash( $_GET['attr'] ) ) : null;
-		$include             = isset( $_GET['include'] ) ? sanitize_text_field( wp_unslash( $_GET['include'] ) ) : null;
 		$page                = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : null;
 		$search_str          = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : null;
 		$response            = array( 'users' => array(), 'found_users' => 0, 'users_per_page' => 0 );
+
+		if ( isset( $_GET['include'] ) ) {
+			// Make sure include is always an array & sanitize its values.
+			$include = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
+			$include = array_map( 'absint', stripslashes_deep( $include ) );
+		}
 
 		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_user_select' ) ) {
 			wp_send_json_error( $response );
@@ -137,10 +142,9 @@ class Shortcode_UI_Field_User_Select {
 		$query_args['search_columns'] = array( 'ID', 'user_login', 'user_nicename', 'user_email' );
 		$query_args['number']         = 10;
 
-		// Include selected users.
+		// Include selected users to be displayed.
 		if ( $include ) {
-			$query_args['include'] = is_array( $include ) ? $include : explode( ',', $include );
-			$query_args['include'] = array_map( 'absint', $query_args['include'] );
+			$query_args['include'] = $include;
 		}
 
 		// Supports WP_User_Query query args.
