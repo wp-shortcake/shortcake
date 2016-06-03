@@ -114,9 +114,12 @@ class Shortcode_UI_Field_User_Select {
 	 */
 	public function action_wp_ajax_shortcode_ui_user_field() {
 
-		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
-		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
-		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
+		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : null;
+		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( wp_unslash( $_GET['shortcode'] ) ) : null;
+		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( wp_unslash( $_GET['attr'] ) ) : null;
+		$include             = isset( $_GET['include'] ) ? sanitize_text_field( wp_unslash( $_GET['include'] ) ) : null;
+		$page                = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : null;
+		$search_str          = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : null;
 		$response            = array( 'users' => array(), 'found_users' => 0, 'users_per_page' => 0 );
 
 		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_user_select' ) ) {
@@ -137,8 +140,8 @@ class Shortcode_UI_Field_User_Select {
 		$query_args['number']         = 10;
 
 		// Include selected users.
-		if ( isset( $_GET['include'] ) ) {
-			$query_args['include'] = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
+		if ( $include ) {
+			$query_args['include'] = is_array( $include ) ? $include : explode( ',', $include );
 			$query_args['include'] = array_map( 'absint', $query_args['include'] );
 		}
 
@@ -149,12 +152,12 @@ class Shortcode_UI_Field_User_Select {
 			}
 		}
 
-		if ( isset( $_GET['page'] ) ) {
-			$query_args['paged'] = sanitize_text_field( $_GET['page'] );
+		if ( $page ) {
+			$query_args['paged'] = $page;
 		}
 
-		if ( ! empty( $_GET['s'] ) ) {
-			$query_args['search'] = '*' . sanitize_text_field( $_GET['s'] ) . '*';
+		if ( $search_str ) {
+			$query_args['search'] = '*' . $search_str . '*';
 		}
 
 		$query = new WP_User_Query( $query_args );
