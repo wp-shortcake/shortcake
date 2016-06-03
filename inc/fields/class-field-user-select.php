@@ -57,10 +57,8 @@ class Shortcode_UI_Field_User_Select {
 	 */
 	public function action_enqueue_shortcode_ui() {
 
-		$plugin_dir = dirname( dirname( __FILE__ ) );
-
-		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ), array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
-		wp_enqueue_style( 'select2', plugins_url( 'lib/select2/select2.css', $plugin_dir ), null, '3.5.2' );
+		wp_enqueue_script( 'select2' );
+		wp_enqueue_style( 'select2' );
 
 		wp_localize_script( 'shortcode-ui', 'shortcodeUiUserFieldData', array(
 			'nonce' => wp_create_nonce( 'shortcode_ui_field_user_select' ),
