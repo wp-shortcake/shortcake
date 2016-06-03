@@ -119,6 +119,7 @@ class Shortcode_UI_Field_User_Select {
 		$search_str          = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : null;
 		$response            = array( 'users' => array(), 'found_users' => 0, 'users_per_page' => 0 );
 
+		$include = null;
 		if ( isset( $_GET['include'] ) ) {
 			// Make sure include is always an array & sanitize its values.
 			$include = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
