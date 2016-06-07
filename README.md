@@ -37,7 +37,7 @@ We have test coverage for PHP using PHPunit, and JavaScript using Jasmine.
 
 *Running tests locally*
 
-Jasmine tests can be run using `grunt test`. Note that the JavaScript tests need access to a WordPress installation as the code depends on some core JS files. It will pick up your WP_DEVELOP_DIR environment variable as used by PHPunit, or you can pass use the `abspath` option to pass the manually like so `grunt test --abspath=/path/to/wp-install`. Note - it only needs access to the files, and not a fully functional site.
+Jasmine tests can be run using `grunt jasmine` and are also run as part of the `grunt scripts` task. To update the core WordPress files used by the Jasmine test suite, run `grunt updateJasmineCoreScripts --abspath="/path/to/wordpress-install"`.
 
 ## Screenshots ##
 

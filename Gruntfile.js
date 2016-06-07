@@ -4,6 +4,16 @@ module.exports = function( grunt ) {
 	var remapify = require('remapify');
 	var banner   = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
 
+	// Scripts from WP Core required by Jasmine tests.
+	var jasmineCoreScripts = [
+		'wp-includes/js/jquery/jquery.js',
+		'wp-includes/js/underscore.min.js',
+		'wp-includes/js/backbone.min.js',
+		'wp-includes/js/wp-util.js',
+		'wp-includes/js/shortcode.js',
+		'wp-admin/js/editor.js',
+	];
+
 	// Project configuration
 	grunt.initConfig( {
 
@@ -136,14 +146,10 @@ module.exports = function( grunt ) {
 					specs: 'js-tests/build/specs.js',
 					helpers: 'js-tests/build/helpers.js',
 					vendor: [
-						'js-tests/vendor/wp-includes/js/jquery/jquery.js',
-						'js-tests/vendor/wp-includes/js/underscore.min.js',
-						'js-tests/vendor/wp-includes/js/backbone.min.js',
-						'js-tests/vendor/wp-includes/js/wp-util.js',
-						'js-tests/vendor/wp-includes/js/shortcode.js',
-						'js-tests/vendor/wp-admin/js/editor.js',
-						'js-tests/vendor/mock-ajax.js',
-					],
+						'js-tests/vendor/mock-ajax.js'
+					].concat( jasmineCoreScripts.map( function( script ) {
+						return 'js-tests/vendor/' + script
+					} ) ),
 				}
 			}
 		},
@@ -202,23 +208,14 @@ module.exports = function( grunt ) {
 			grunt.fail.fatal( 'WordPress test install not found. See readme for more information. Currently looking here: ' + abspath );
 		}
 
-		var scripts = [
-			'wp-includes/js/jquery/jquery.js',
-			'wp-includes/js/underscore.min.js',
-			'wp-includes/js/backbone.min.js',
-			'wp-includes/js/wp-util.js',
-			'wp-includes/js/shortcode.js',
-			'wp-admin/js/editor.js',
-		]
-
-		for ( var i = 0; i < scripts.length; i++ ) {
-			if ( grunt.file.exists( abspath + '/' + scripts[ i ] ) ) {
+		for ( var i = 0; i < jasmineCoreScripts.length; i++ ) {
+			if ( grunt.file.exists( abspath + '/' + jasmineCoreScripts[ i ] ) ) {
 				grunt.file.copy(
-					abspath + '/' + scripts[ i ] ,
-					'js-tests/vendor/' + scripts[ i ]
+					abspath + '/' + jasmineCoreScripts[ i ] ,
+					'js-tests/vendor/' + jasmineCoreScripts[ i ]
 				);
 			} else {
-				grunt.log.error( 'File not found: ' + abspath + '/' + scripts[i] );
+				grunt.log.error( 'File not found: ' + abspath + '/' + jasmineCoreScripts[i] );
 			}
 		}
 
@@ -234,10 +231,9 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 
-	grunt.registerTask( 'scripts', [ 'browserify', 'jshint' ] );
+	grunt.registerTask( 'scripts', [ 'browserify', 'jasmine', 'jshint' ] );
 	grunt.registerTask( 'styles', [ 'sass', 'postcss' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
-	grunt.registerTask( 'test', [ 'jasmine' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
 
