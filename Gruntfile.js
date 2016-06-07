@@ -202,7 +202,7 @@ module.exports = function( grunt ) {
 	} );
 
 	grunt.registerTask( 'checkTestEnv', function() {
-		if ( ! grunt.file.exists( abspath ) ) {
+		if ( ! grunt.file.exists( abspath + '/wp-includes' ) ) {
 			grunt.fail.fatal( 'WordPress test install not found. See readme for more information.' );
 		}
 	});
