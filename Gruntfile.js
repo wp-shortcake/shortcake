@@ -205,7 +205,7 @@ module.exports = function( grunt ) {
 		var abspath = grunt.option( "abspath" );
 
 		if ( ! grunt.file.exists( abspath + '/wp-includes' ) ) {
-			grunt.fail.fatal( 'WordPress test install not found. See readme for more information. Currently looking here: ' + abspath );
+			grunt.fail.fatal( 'WordPress install not found. Currently looking here: ' + abspath );
 		}
 
 		for ( var i = 0; i < jasmineCoreScripts.length; i++ ) {
