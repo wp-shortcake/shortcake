@@ -194,6 +194,12 @@ function shortcode_ui_dev_advanced_example() {
 			'multiple' => true,
 		),
 		array(
+			'label'    => __( 'User Select', 'shortcode-ui-example' ),
+			'attr'     => 'users',
+			'type'     => 'user_select',
+			'multiple' => true,
+		),
+		array(
 			'label'  => esc_html__( 'Color', 'shortcode-ui-example' ),
 			'attr'   => 'color',
 			'type'   => 'color',
@@ -287,12 +293,11 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 		'attachment' => 0,
 		'page'       => '',
 		'term'       => '',
+		'users'      => '',
 		'color'      => '',
 		'alignment'  => '',
 		'year'       => '',
 	), $attr, $shortcode_tag );
-
-	// Make some sense of the data.
 
 	$attr['page'] = array_map(
 		function( $post_id ) {
@@ -303,10 +308,18 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 
 	$attr['term'] = array_map(
 		function( $term_id ) {
-			$data = get_term( $term_id, 'category' );
+			$data = get_term( $term_id, 'post_tag' );
 			return $data->name;
 		},
 		array_filter( array_map( 'absint', explode( ',', $attr['term'] ) ) )
+	);
+
+	$attr['users'] = array_map(
+		function( $user_id ) {
+			$data = get_userdata( $user_id );
+			return $data->display_name;
+		},
+		array_filter( array_map( 'absint', explode( ',', $attr['users'] ) ) )
 	);
 
 	$attr['color'] = urldecode( $attr['color'] );
@@ -335,6 +348,10 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 
 			<?php if ( ! empty( $attr['term'] ) ) : ?>
 				<b><?php esc_html_e( 'Terms:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['term'] ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['users'] ) ) : ?>
+				<b><?php esc_html_e( 'Users:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['users'] ) ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['color'] ) ) : ?>

@@ -8,7 +8,8 @@ backbone = require('backbone'),
 	editAttributeFieldAttachment = require( 'sui-views/edit-attribute-field-attachment' ),
 	editAttributeFieldPostSelect = require( 'sui-views/edit-attribute-field-post-select' ),
 	editAttributeFieldTermSelect = require( 'sui-views/edit-attribute-field-term-select' ),
-	editAttributeFieldColor = require( 'sui-views/edit-attribute-field-color' );
+	editAttributeFieldUserSelect = require( 'sui-views/edit-attribute-field-user-select' ),
+	editAttributeFieldColor      = require( 'sui-views/edit-attribute-field-color' );
 
 
 /**
