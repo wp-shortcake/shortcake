@@ -18,10 +18,6 @@ module.exports = function( grunt ) {
 		abspath = '/tmp/wordpress';
 	}
 
-	if ( ! grunt.file.exists( abspath + '/wp-includes' ) ) {
-		grunt.log.error( 'Warning: \'wp-includes\' directory not found. In order to run Jasmine tests, pass the location of a WordPress installation using --abspath, defining location of WP_CORE_DIR or WP_DEVELOP_DIR, or installing WordPress to /tmp/wordpress.' );
-	}
-
 	// Project configuration
 	grunt.initConfig( {
 
