@@ -4,20 +4,6 @@ module.exports = function( grunt ) {
 	var remapify = require('remapify');
 	var banner   = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
 
-	// Path to WordPress install. Either absoloute or relative to this plugin.
-	// Change this by passing --abspath="new/path" as a grunt option.
-	var abspath;
-
-	if ( grunt.option( "abspath" ) ) {
-		abspath = grunt.option( "abspath" );
-	} else if ( 'WP_CORE_DIR' in process.env ) {
-		abspath = process.env.WP_CORE_DIR;
-	} else if ( 'WP_DEVELOP_DIR' in process.env ) {
-		abspath = process.env.WP_DEVELOP_DIR + '/src';
-	} else {
-		abspath = '/tmp/wordpress';
-	}
-
 	// Project configuration
 	grunt.initConfig( {
 
@@ -150,12 +136,12 @@ module.exports = function( grunt ) {
 					specs: 'js-tests/build/specs.js',
 					helpers: 'js-tests/build/helpers.js',
 					vendor: [
-						abspath + '/wp-includes/js/jquery/jquery.js',
-						abspath + '/wp-includes/js/underscore.min.js',
-						abspath + '/wp-includes/js/backbone.min.js',
-						abspath + '/wp-includes/js/wp-util.js',
-						abspath + '/wp-includes/js/shortcode.js',
-						abspath + '/wp-admin/js/editor.js',
+						'js-tests/vendor/wp-includes/js/jquery/jquery.js',
+						'js-tests/vendor/wp-includes/js/underscore.min.js',
+						'js-tests/vendor/wp-includes/js/backbone.min.js',
+						'js-tests/vendor/wp-includes/js/wp-util.js',
+						'js-tests/vendor/wp-includes/js/shortcode.js',
+						'js-tests/vendor/wp-admin/js/editor.js',
 						'js-tests/vendor/mock-ajax.js',
 					],
 				}
@@ -201,10 +187,41 @@ module.exports = function( grunt ) {
 		}, //makepot
 	} );
 
-	grunt.registerTask( 'checkTestEnv', function() {
+	/**
+	 * Helper task to keep all the scripts from WordPress core that are required by the Jasmine tests up to date.
+	 *
+	 * Note the list of scripts needs to be kept up to date.
+	 *
+	 * Pass the location of your WordPress installation using --abspath.
+	 */
+	grunt.registerTask( 'updateJasmineCoreScripts', function() {
+
+		var abspath = grunt.option( "abspath" );
+
 		if ( ! grunt.file.exists( abspath + '/wp-includes' ) ) {
 			grunt.fail.fatal( 'WordPress test install not found. See readme for more information. Currently looking here: ' + abspath );
 		}
+
+		var scripts = [
+			'wp-includes/js/jquery/jquery.js',
+			'wp-includes/js/underscore.min.js',
+			'wp-includes/js/backbone.min.js',
+			'wp-includes/js/wp-util.js',
+			'wp-includes/js/shortcode.js',
+			'wp-admin/js/editor.js',
+		]
+
+		for ( var i = 0; i < scripts.length; i++ ) {
+			if ( grunt.file.exists( abspath + '/' + scripts[ i ] ) ) {
+				grunt.file.copy(
+					abspath + '/' + scripts[ i ] ,
+					'js-tests/vendor/' + scripts[ i ]
+				);
+			} else {
+				grunt.log.error( 'File not found: ' + abspath + '/' + scripts[i] );
+			}
+		}
+
 	});
 
 	grunt.loadNpmTasks( 'grunt-sass' );
@@ -220,7 +237,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'scripts', [ 'browserify', 'jshint' ] );
 	grunt.registerTask( 'styles', [ 'sass', 'postcss' ] );
 	grunt.registerTask( 'default', [ 'scripts', 'styles' ] );
-	grunt.registerTask( 'test', [ 'checkTestEnv', 'jasmine' ] );
+	grunt.registerTask( 'test', [ 'jasmine' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown']);
 
