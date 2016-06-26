@@ -42,21 +42,9 @@ var editAttributeField = Backbone.View.extend( {
 
 		data.meta = _meta.join( ' ' );
 
-		// Backwards compatability for non-array options.
-		// These were bad because objects don't have an order.
-		if ( 'options' in data && ! Array.isArray( data.options ) ) {
-			var _options = [];
-			_.each( Object.keys( data.options ), function( key ) {
-				_options.push( { value: key, label: data.options[ key ] } );
-			} );
-			data.options = _options;
-		} else if ( 'options' in data && Array.isArray( data.options ) ) {
-			data.options = data.options.map( function( option ) {
-				if ( 'object' !== typeof option ) {
-					option = { value: option, label: option };
-				}
-				return option;
-			} );
+		// Ensure options are formatted correctly.
+		if ( 'options' in data ) {
+			data.options = this.parseOptions( data.options );
 		}
 
 		this.$el.html( this.template( data ) );
@@ -129,6 +117,33 @@ var editAttributeField = Backbone.View.extend( {
 		 *           Reference to the shortcode model which this attribute belongs to.
 		 */
 		wp.shortcake.hooks.doAction( hookName, changed, collection, shortcode );
+
+	},
+
+	/**
+	 * Parse Options to ensure they use the correct format.
+	 *
+	 * Backwards compatability for non-array options.
+	 * Using objects was sub-optimal because properties don't have an order.
+	 */
+	parseOptions: function( options ) {
+
+		if ( ! Array.isArray( options ) ) {
+			var _options = [];
+			_.each( Object.keys( options ), function( key ) {
+				_options.push( { value: key, label: options[ key ] } );
+			} );
+			options = _options;
+		} else {
+			options = options.map( function( option ) {
+				if ( 'object' !== typeof option ) {
+					option = { value: option, label: option };
+				}
+				return option;
+			} );
+		}
+
+		return options;
 
 	}
 
