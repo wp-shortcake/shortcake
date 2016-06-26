@@ -215,7 +215,7 @@ describe( 'Shortcode View Constructor', function(){
 		sui.shortcodes.add( data );
 		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
 		var _shortcode = $.extend( true, {}, shortcode );
-		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"/]' );
 		ShortcodeViewConstructor.shortcode = {
 			'type' : 'single',
 			'tag' : 'no_custom_attribute',
@@ -232,7 +232,7 @@ describe( 'Shortcode View Constructor', function(){
 			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
-		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"/]' );
 	});
 
 	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){
@@ -307,9 +307,9 @@ describe( 'Shortcode View Constructor', function(){
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../../js/src/models/shortcode":11,"../../js/src/utils/shortcode-view-constructor":13,"../../js/src/utils/sui":14}],5:[function(require,module,exports){
 (function (global){
-var Shortcode = require('sui-models/shortcode');
-var MceViewConstructor = require('sui-utils/shortcode-view-constructor');
-var sui = require('sui-utils/sui');
+var Shortcode = require('./../../../js/src/models/shortcode.js');
+var MceViewConstructor = require('./../../../js/src/utils/shortcode-view-constructor.js');
+var sui = require('./../../../js/src/utils/sui.js');
 var jQuery = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 
@@ -495,9 +495,9 @@ describe( "MCE View Constructor", function() {
 } );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"sui-models/shortcode":11,"sui-utils/shortcode-view-constructor":13,"sui-utils/sui":14}],6:[function(require,module,exports){
-var Shortcodes = require('sui-collections/shortcodes');
-var sui = require('sui-utils/sui');
+},{"./../../../js/src/models/shortcode.js":11,"./../../../js/src/utils/shortcode-view-constructor.js":13,"./../../../js/src/utils/sui.js":14}],6:[function(require,module,exports){
+var Shortcodes = require('./../../../js/src/collections/shortcodes.js');
+var sui = require('./../../../js/src/utils/sui.js');
 
 describe( "SUI Util", function() {
 
@@ -512,10 +512,10 @@ describe( "SUI Util", function() {
 
 } );
 
-},{"sui-collections/shortcodes":8,"sui-utils/sui":14}],7:[function(require,module,exports){
+},{"./../../../js/src/collections/shortcodes.js":8,"./../../../js/src/utils/sui.js":14}],7:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
-var ShortcodeAttribute = require('sui-models/shortcode-attribute');
+var ShortcodeAttribute = require('./../models/shortcode-attribute.js');
 
 /**
  * Shortcode Attributes collection.
@@ -534,10 +534,10 @@ var ShortcodeAttributes = Backbone.Collection.extend({
 module.exports = ShortcodeAttributes;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"sui-models/shortcode-attribute":10}],8:[function(require,module,exports){
+},{"./../models/shortcode-attribute.js":10}],8:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
-var Shortcode = require('sui-models/shortcode');
+var Shortcode = require('./../models/shortcode.js');
 
 // Shortcode Collection
 var Shortcodes = Backbone.Collection.extend({
@@ -547,7 +547,7 @@ var Shortcodes = Backbone.Collection.extend({
 module.exports = Shortcodes;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"sui-models/shortcode":11}],9:[function(require,module,exports){
+},{"./../models/shortcode.js":11}],9:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
@@ -592,8 +592,8 @@ module.exports = ShortcodeAttribute;
 },{}],11:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
-var ShortcodeAttributes = require('sui-collections/shortcode-attributes');
-var InnerContent = require('sui-models/inner-content');
+var ShortcodeAttributes = require('./../collections/shortcode-attributes.js');
+var InnerContent = require('./inner-content.js');
 var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 Shortcode = Backbone.Model.extend({
@@ -686,13 +686,16 @@ Shortcode = Backbone.Model.extend({
 		}
 
 		if ( attrs.length > 0 ) {
-			template = "[{{ shortcode }} {{ attributes }}]";
+			template = "[{{ shortcode }} {{ attributes }}";
 		} else {
-			template = "[{{ shortcode }}]";
+			template = "[{{ shortcode }}";
 		}
 
 		if ( content && content.length > 0 ) {
-			template += "{{ content }}[/{{ shortcode }}]";
+			template += "]{{ content }}[/{{ shortcode }}]";
+		} else {
+			// add closing slash to shortcodes without content
+			template += "/]";
 		}
 
 		template = template.replace( /{{ shortcode }}/g, this.get('shortcode_tag') );
@@ -707,7 +710,7 @@ Shortcode = Backbone.Model.extend({
 module.exports = Shortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"sui-collections/shortcode-attributes":7,"sui-models/inner-content":9}],12:[function(require,module,exports){
+},{"./../collections/shortcode-attributes.js":7,"./inner-content.js":9}],12:[function(require,module,exports){
 (function (global){
 var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
@@ -824,8 +827,8 @@ module.exports = Fetcher;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],13:[function(require,module,exports){
 (function (global){
-var sui = require('sui-utils/sui'),
-	fetcher = require('sui-utils/fetcher'),
+var sui = require('./sui.js'),
+	fetcher = require('./fetcher.js'),
 	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
@@ -1195,8 +1198,8 @@ var shortcodeViewConstructor = {
 module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"sui-utils/fetcher":12,"sui-utils/sui":14}],14:[function(require,module,exports){
-var Shortcodes = require('sui-collections/shortcodes');
+},{"./fetcher.js":12,"./sui.js":14}],14:[function(require,module,exports){
+var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {
 	shortcodes: new Shortcodes(),
@@ -1207,4 +1210,4 @@ window.Shortcode_UI = window.Shortcode_UI || {
 
 module.exports = window.Shortcode_UI;
 
-},{"sui-collections/shortcodes":8}]},{},[1,2,3,4,5,6]);
+},{"./../collections/shortcodes.js":8}]},{},[1,2,3,4,5,6]);
