@@ -157,11 +157,11 @@ describe( "Shortcode Model", function() {
 (function (global){
 var Shortcode = require('../../js/src/models/shortcode');
 var ShortcodeViewConstructor = require('../../js/src/utils/shortcode-view-constructor');
+var EditAttributeField = require('../../js/src/views/edit-attribute-field');
 var sui = require('../../js/src/utils/sui');
 var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 describe( 'Shortcode View Constructor', function(){
-
 
 	it( 'Persists inner_content when parsing a shortcode without inner_content attribute defined', function(){
 		var data = {
@@ -302,10 +302,53 @@ describe( 'Shortcode View Constructor', function(){
 		expect( secondCall ).toBeDefined();
 	});
 
+
+	it( 'Select field can maintain order of options.', function() {
+
+		var shortcode = new Shortcode({
+			label: 'Test',
+			shortcode_tag: 'test',
+			attrs: [
+				// Legacy option format
+				{
+					attr:        'foo',
+					label:       'Foo',
+					type:        'select',
+					options:     { x: '1', z: '2', y: '3' },
+				},
+				// New array of object format
+				{
+					attr:        'foo',
+					label:       'Foo',
+					type:        'select',
+					options:     [
+						{ value: 'x', label: '1' },
+						{ value: 'z', label: '2' },
+						{ value: 'y', label: '3' },
+					]
+				}
+			]
+		});
+
+		var view = new EditAttributeField( { model: shortcode } );
+		var opt1 = view.parseOptions( shortcode.get('attrs').at(0).get('options') );
+		var opt2 = view.parseOptions( shortcode.get('attrs').at(1).get('options') );
+
+		expect( Array.isArray( opt1 ) ).toBe( true );
+		expect( Array.isArray( opt2 ) ).toBe( true );
+		expect( opt1[1].value ).toEqual( 'z' );
+		expect( opt1[1].label ).toEqual( '2' );
+		expect( opt2[1].value ).toEqual( 'z' );
+		expect( opt2[1].label ).toEqual( '2' );
+
+	});
+
+
+
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../js/src/models/shortcode":11,"../../js/src/utils/shortcode-view-constructor":13,"../../js/src/utils/sui":14}],5:[function(require,module,exports){
+},{"../../js/src/models/shortcode":11,"../../js/src/utils/shortcode-view-constructor":13,"../../js/src/utils/sui":14,"../../js/src/views/edit-attribute-field":15}],5:[function(require,module,exports){
 (function (global){
 var Shortcode = require('./../../../js/src/models/shortcode.js');
 var MceViewConstructor = require('./../../../js/src/utils/shortcode-view-constructor.js');
@@ -989,14 +1032,8 @@ var shortcodeViewConstructor = {
 	 * @param {string} shortcodeString String representation of the shortcode
 	 */
 	edit: function( shortcodeString ) {
-		var currentShortcode;
 
-		// Backwards compatability for WP pre-4.2
-		if ( 'object' === typeof( shortcodeString ) ) {
-			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
-		}
-
-		currentShortcode = this.parseShortcodeString( shortcodeString );
+		var currentShortcode = this.parseShortcodeString( shortcodeString );
 
 		if ( currentShortcode ) {
 
@@ -1081,118 +1118,6 @@ var shortcodeViewConstructor = {
 				'\\$&' );
 	},
 
-	// Backwards compatability for Pre WP 4.2.
-	View: {
-
-		overlay: true,
-
-		initialize: function( options ) {
-			this.shortcode = this.getShortcode( options );
-			this.fetch();
-		},
-
-		getShortcode: function( options ) {
-
-			var shortcodeModel, shortcode;
-
-			shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
-
-			if (!shortcodeModel) {
-				return;
-			}
-
-			shortcode = shortcodeModel.clone();
-
-			shortcode.get('attrs').each(
-					function(attr) {
-
-						if (attr.get('attr') in options.shortcode.attrs.named) {
-							attr.set('value',
-									options.shortcode.attrs.named[attr
-											.get('attr')]);
-						}
-
-					});
-
-			if ('content' in options.shortcode) {
-				var inner_content = shortcode.get('inner_content');
-				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content);
-				}
-			}
-
-			return shortcode;
-
-		},
-
-		fetch : function() {
-
-			var self = this;
-
-			if ( ! this.parsed ) {
-
-				wp.ajax.post( 'do_shortcode', {
-					post_id: $( '#post_ID' ).val(),
-					shortcode: this.shortcode.formatShortcode(),
-					nonce: shortcodeUIData.nonces.preview,
-				}).done( function( response ) {
-					if ( response.indexOf( '<script' ) !== -1 ) {
-						self.setIframes( self.getEditorStyles(), response );
-					} else {
-						self.parsed = response;
-						self.render( true );
-					}
-				}).fail( function() {
-					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-					self.render( true );
-				} );
-
-			}
-
-		},
-
-		/**
-		 * Render the shortcode
-		 *
-		 * To ensure consistent rendering - this makes an ajax request to the
-		 * admin and displays.
-		 *
-		 * @return string html
-		 */
-		getHtml : function() {
-			return this.parsed;
-		},
-
-		/**
-		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
-		 *
-		 * @method getEditorStyles
-		 * @returns {Array}
-		 */
-		getEditorStyles: function() {
-
-			var styles = '';
-
-			this.getNodes( function ( editor, node, content ) {
-				var dom = editor.dom,
-					bodyClasses = editor.getBody().className || '',
-					iframe, iframeDoc, i, resize;
-
-				tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
-					if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
-						link.href.indexOf( 'skins/wordpress/wp-content.css' ) === -1 ) {
-
-						styles += dom.getOuterHTML( link ) + '\n';
-					}
-
-				});
-
-			} );
-
-			return styles;
-		},
-
-	},
 };
 
 module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
@@ -1210,4 +1135,179 @@ window.Shortcode_UI = window.Shortcode_UI || {
 
 module.exports = window.Shortcode_UI;
 
-},{"./../collections/shortcodes.js":8}]},{},[1,2,3,4,5,6]);
+},{"./../collections/shortcodes.js":8}],15:[function(require,module,exports){
+(function (global){
+var Backbone     = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
+	sui          = require('./../utils/sui.js'),
+	$            = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+
+var editAttributeField = Backbone.View.extend( {
+
+	tagName: "div",
+
+	events: {
+		'input  input':                  'inputChanged',
+		'input  textarea':               'inputChanged',
+		'change select':                 'inputChanged',
+		'change input[type="radio"]':    'inputChanged',
+		'change input[type="checkbox"]': 'inputChanged'
+	},
+
+	render: function() {
+
+		var data = jQuery.extend( {
+			id: 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid,
+		}, this.model.toJSON() );
+
+		// Convert meta JSON to attribute string.
+		var _meta = [];
+		for ( var key in data.meta ) {
+
+			// Boolean attributes can only require attribute key, not value.
+			if ( 'boolean' === typeof( data.meta[ key ] ) ) {
+
+				// Only set truthy boolean attributes.
+				if ( data.meta[ key ] ) {
+					_meta.push( _.escape( key ) );
+				}
+
+			} else {
+
+				_meta.push( _.escape( key ) + '="' + _.escape( data.meta[ key ] ) + '"' );
+
+			}
+
+		}
+
+		data.meta = _meta.join( ' ' );
+
+		// Ensure options are formatted correctly.
+		if ( 'options' in data ) {
+			data.options = this.parseOptions( data.options );
+		}
+
+		this.$el.html( this.template( data ) );
+		this.triggerCallbacks();
+
+		return this;
+	},
+
+	/**
+	 * Input Changed Update Callback.
+	 *
+	 * If the input field that has changed is for content or a valid attribute,
+	 * then it should update the model. If a callback function is registered
+	 * for this attribute, it should be called as well.
+	 */
+	inputChanged: function( e ) {
+
+		var $el;
+
+		if ( this.model.get( 'attr' ) ) {
+			$el = this.$el.find( '[name="' + this.model.get( 'attr' ) + '"]' );
+		} else {
+			$el = this.$el.find( '[name="inner_content"]' );
+		}
+
+		if ( 'radio' === this.model.attributes.type ) {
+			this.setValue( $el.filter(':checked').first().val() );
+		} else if ( 'checkbox' === this.model.attributes.type ) {
+			this.setValue( $el.is( ':checked' ) );
+		}  else if ( 'range' === this.model.attributes.type ) {
+			var rangeId =  '#' + e.target.id + '_indicator';
+			var rangeValue = e.target.value;
+			document.querySelector( rangeId ).value = rangeValue;
+			this.setValue( $el.val() );
+		} else {
+			this.setValue( $el.val() );
+		}
+
+		this.triggerCallbacks();
+	},
+
+	getValue: function() {
+		return this.model.get( 'value' );
+	},
+
+	setValue: function( val ) {
+		this.model.set( 'value', val );
+	},
+
+	triggerCallbacks: function() {
+
+		var shortcodeName = this.shortcode.attributes.shortcode_tag,
+			attributeName = this.model.get( 'attr' ),
+			hookName      = [ shortcodeName, attributeName ].join( '.' ),
+			changed       = this.model.changed,
+			collection    = _.flatten( _.values( this.views.parent.views._views ) ),
+			shortcode     = this.shortcode;
+
+		/*
+		 * Action run when an attribute value changes on a shortcode
+		 *
+		 * Called as `{shortcodeName}.{attributeName}`.
+		 *
+		 * @param changed (object)
+		 *           The update, ie. { "changed": "newValue" }
+		 * @param viewModels (array)
+		 *           The collections of views (editAttributeFields)
+		 *                         which make up this shortcode UI form
+		 * @param shortcode (object)
+		 *           Reference to the shortcode model which this attribute belongs to.
+		 */
+		wp.shortcake.hooks.doAction( hookName, changed, collection, shortcode );
+
+	},
+
+	/**
+	 * Parse Options to ensure they use the correct format.
+	 *
+	 * Backwards compatability for non-array options.
+	 * Using objects was sub-optimal because properties don't have an order.
+	 */
+	parseOptions: function( options ) {
+
+		if ( ! Array.isArray( options ) ) {
+			var _options = [];
+			_.each( Object.keys( options ), function( key ) {
+				_options.push( { value: key, label: options[ key ] } );
+			} );
+			options = _options;
+		} else {
+			options = options.map( function( option ) {
+				if ( 'object' !== typeof option ) {
+					option = { value: option, label: option };
+				}
+				return option;
+			} );
+		}
+
+		return options;
+
+	}
+
+}, {
+
+	/**
+	 * Get an attribute field from a shortcode by name.
+	 *
+	 * Usage: `sui.views.editAttributeField.getField( collection, 'title')`
+	 *
+	 * @param array collection of editAttributeFields
+	 * @param string attribute name
+	 * @return editAttributeField The view corresponding to the matching field
+	 */
+	getField: function( collection, attr ) {
+		return _.find( collection,
+			function( viewModel ) {
+				return attr === viewModel.model.get('attr');
+			}
+		);
+	}
+});
+
+sui.views.editAttributeField = editAttributeField;
+module.exports = editAttributeField;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./../utils/sui.js":14}]},{},[1,2,3,4,5,6]);
