@@ -1,11 +1,11 @@
 # Shortcake (Shortcode UI) #
-**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov, bronsonquick, dashaluna
-**Tags:** shortcodes
-**Requires at least:** 4.1
-**Tested up to:** 4.4
-**Stable tag:** 0.6.3
-**License:** GPLv2 or later
-**License URI:** http://www.gnu.org/licenses/gpl-2.0.html
+**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov  
+**Tags:** shortcodes  
+**Requires at least:** 4.3  
+**Tested up to:** 4.4  
+**Stable tag:** 0.6.2  
+**License:** GPLv2 or later  
+**License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
 Shortcake makes using WordPress shortcodes a piece of cake.
 
@@ -65,13 +65,6 @@ We've removed the compatibility shim for the `placeholder` attribute argument. Y
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 
 ## Changelog ##
-
-
-### 0.6.4 (June 1, 2016) ###
-* Introduced a `user_select` input type for user selection.
-
-### 0.6.3 (May 19, 2016) ###
-* Introduced a `term_select` input type for taxonomy selection.
 
 ### 0.6.2 (November 12, 2015) ###
 * Bug fix: Listens for "change" event on radio buttons and checkboxes to ensure shortcode attributes are updated.
