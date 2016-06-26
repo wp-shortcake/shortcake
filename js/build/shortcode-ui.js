@@ -962,6 +962,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		e.preventDefault();
 
 		this.model.set( 'value', null );
+		this.triggerCallbacks();
 
 		this.$container.toggleClass( 'has-attachment', false );
 		this.$container.find( '.thumbnail' ).remove();
