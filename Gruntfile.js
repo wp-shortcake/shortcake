@@ -2,7 +2,18 @@ module.exports = function( grunt ) {
 
 	'use strict';
 	var remapify = require('remapify');
-	var banner = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
+	var banner   = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
+
+	// Scripts from WP Core required by Jasmine tests.
+	var jasmineCoreScripts = [
+		'wp-includes/js/jquery/jquery.js',
+		'wp-includes/js/underscore.min.js',
+		'wp-includes/js/backbone.min.js',
+		'wp-includes/js/wp-util.js',
+		'wp-includes/js/shortcode.js',
+		'wp-admin/js/editor.js',
+	];
+
 	// Project configuration
 	grunt.initConfig( {
 
@@ -135,14 +146,10 @@ module.exports = function( grunt ) {
 					specs: 'js-tests/build/specs.js',
 					helpers: 'js-tests/build/helpers.js',
 					vendor: [
-						'js-tests/vendor/jquery.js',
-						'js-tests/vendor/underscore.js',
-						'js-tests/vendor/backbone.js',
-						'js-tests/vendor/wp-shortcode.js',
-						'js-tests/vendor/wp-util.js',
-						'js-tests/vendor/wp-editors.js',
-						'js-tests/vendor/mock-ajax.js',
-					],
+						'js-tests/vendor/mock-ajax.js'
+					].concat( jasmineCoreScripts.map( function( script ) {
+						return 'js-tests/vendor/' + script
+					} ) ),
 				}
 			}
 		},
@@ -185,6 +192,34 @@ module.exports = function( grunt ) {
 			}
 		}, //makepot
 	} );
+
+	/**
+	 * Helper task to keep all the scripts from WordPress core that are required by the Jasmine tests up to date.
+	 *
+	 * Note the list of scripts needs to be kept up to date.
+	 *
+	 * Pass the location of your WordPress installation using --abspath.
+	 */
+	grunt.registerTask( 'updateJasmineCoreScripts', function() {
+
+		var abspath = grunt.option( "abspath" );
+
+		if ( ! grunt.file.exists( abspath + '/wp-includes' ) ) {
+			grunt.fail.fatal( 'WordPress install not found. Currently looking here: ' + abspath );
+		}
+
+		for ( var i = 0; i < jasmineCoreScripts.length; i++ ) {
+			if ( grunt.file.exists( abspath + '/' + jasmineCoreScripts[ i ] ) ) {
+				grunt.file.copy(
+					abspath + '/' + jasmineCoreScripts[ i ] ,
+					'js-tests/vendor/' + jasmineCoreScripts[ i ]
+				);
+			} else {
+				grunt.log.error( 'File not found: ' + abspath + '/' + jasmineCoreScripts[i] );
+			}
+		}
+
+	});
 
 	grunt.loadNpmTasks( 'grunt-sass' );
 	grunt.loadNpmTasks( 'grunt-postcss' );

@@ -229,13 +229,16 @@ Shortcode = Backbone.Model.extend({
 		}
 
 		if ( attrs.length > 0 ) {
-			template = "[{{ shortcode }} {{ attributes }}]";
+			template = "[{{ shortcode }} {{ attributes }}";
 		} else {
-			template = "[{{ shortcode }}]";
+			template = "[{{ shortcode }}";
 		}
 
 		if ( content && content.length > 0 ) {
-			template += "{{ content }}[/{{ shortcode }}]";
+			template += "]{{ content }}[/{{ shortcode }}]";
+		} else {
+			// add closing slash to shortcodes without content
+			template += "/]";
 		}
 
 		template = template.replace( /{{ shortcode }}/g, this.get('shortcode_tag') );
@@ -281,7 +284,7 @@ $(document).ready(function(){
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":9,"./utils/sui.js":10,"./views/media-frame.js":18}],8:[function(require,module,exports){
+},{"./collections/shortcodes.js":2,"./utils/shortcode-view-constructor.js":9,"./utils/sui.js":10,"./views/media-frame.js":20}],8:[function(require,module,exports){
 (function (global){
 var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
@@ -959,6 +962,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		e.preventDefault();
 
 		this.model.set( 'value', null );
+		this.triggerCallbacks();
 
 		this.$container.toggleClass( 'has-attachment', false );
 		this.$container.find( '.thumbnail' ).remove();
@@ -1049,7 +1053,7 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10,"./edit-attribute-field.js":14}],13:[function(require,module,exports){
+},{"./../utils/sui.js":10,"./edit-attribute-field.js":16}],13:[function(require,module,exports){
 ( function( $ ) {
 
 	var sui = window.Shortcode_UI;
@@ -1246,6 +1250,399 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 } )( jQuery );
 
 },{}],14:[function(require,module,exports){
+( function( $ ) {
+
+	var sui = window.Shortcode_UI;
+
+	// Cached Data.
+	var termSelectCache = {};
+
+	sui.views.editAttributeFieldTermSelect = sui.views.editAttributeField.extend( {
+
+		events: {
+			'change .shortcode-ui-term-select': 'inputChanged',
+		},
+
+		inputChanged: function(e) {
+			this.setValue( e.val );
+			this.triggerCallbacks();
+		},
+
+		render: function() {
+
+			var self = this,
+			    defaults = { multiple: false };
+
+			for ( var arg in defaults ) {
+				if ( ! this.model.get( arg ) ) {
+					this.model.set( arg, defaults[ arg ] );
+				}
+			}
+
+			var data = this.model.toJSON();
+			data.id = 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid;
+
+			this.$el.html( this.template( data ) );
+
+			var ajaxData = {
+				action    : 'shortcode_ui_term_field',
+				nonce     : shortcodeUiTermFieldData.nonce,
+				shortcode : this.shortcode.get( 'shortcode_tag'),
+				attr      : this.model.get( 'attr' )
+			};
+
+			var $field = this.$el.find( '.shortcode-ui-term-select' );
+
+			$field.select2({
+
+				placeholder: "Search",
+				multiple: this.model.get( 'multiple' ),
+				ajax: {
+					url: ajaxurl,
+					dataType: 'json',
+					quietMillis: 250,
+					data: function (term, page) {
+						ajaxData.s = term;
+						ajaxData.page = page;
+						return ajaxData;
+					},
+					results: function ( response,  page ) {
+
+						if ( ! response.success ) {
+							return { results: {}, more: false };
+						}
+
+						// Cache data for quicker rendering later.
+						termSelectCache = $.extend( termSelectCache, response.data.terms );
+						
+						var more = ( page * response.data.page ) < response.data.found_terms; // whether or not there are more results available
+
+						return { results: response.data.terms, more: more };
+
+					},
+				},
+
+				/**
+				 * Initialize Callback
+				 * Used to set render the initial value.
+				 * Has to make a request to get the title for the current ID.
+				 */
+				initSelection: function(element, callback) {
+
+					var ids, parsedData = [], cached;
+
+					// Convert stored value to array of IDs (int).
+					ids = $(element)
+						.val()
+						.split(',')
+						.map( function (str) { return str.trim(); } )
+						.map( function (str) { return parseInt( str ); } );
+
+					if ( ids.length < 1 ) {
+						return;
+					}
+
+					// Check if there is already cached data.
+					for ( var i = 0; i < ids.length; i++ ) {
+						cached = _.find( termSelectCache, _.matches( { id: ids[i] } ) );
+						if ( cached ) {
+							parsedData.push( cached );
+						}
+					}
+
+					// If not multiple - return single value if we have one.
+					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
+						callback( parsedData[0] );
+						return;
+					}
+
+					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
+
+					if ( ! uncachedIds.length ) {
+
+						callback( parsedData );
+
+					} else {
+
+						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
+						initAjaxData.action   = 'shortcode_ui_term_field';
+						initAjaxData.tag__in = uncachedIds;
+
+						$.get( ajaxurl, initAjaxData ).done( function( response ) {
+
+							if ( ! response.success ) {
+								return { results: {}, more: false };
+							}
+
+							termSelectCache = $.extend( termSelectCache, response.data.terms );
+
+							// If not multi-select, expects single object, not array of objects.
+							if ( ! self.model.get( 'multiple' ) ) {
+								callback( response.data.terms[0] );
+								return;
+							}
+
+							// Append new data to cached data.
+							// Sort by original order.
+							parsedData = parsedData
+								.concat( response.data.terms )
+								.sort(function (a, b) {
+									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
+									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
+									return 0;
+								});
+
+							callback( parsedData );
+							return;
+
+						} );
+
+					}
+
+				},
+
+			} );
+
+			// Make multiple values sortable.
+			if ( this.model.get( 'multiple' ) ) {
+				$field.select2('container').find('ul.select2-choices').sortable({
+	    			containment: 'parent',
+	    			start: function() { $('.shortcode-ui-term-select').select2('onSortStart'); },
+	    			update: function() { $('.shortcode-ui-term-select').select2('onSortEnd'); }
+				});
+			}
+
+			return this;
+
+		}
+
+	} );
+
+	/**
+	 * Extending SUI Media Controller to hide Select2 UI Drop-Down when menu
+	 * changes in Meida modal
+	 * 1. going back/forth between different shortcakes (refresh)
+	 * 2. changing the menu in left column (deactivate)
+	 * 3. @TODO closing the modal.
+	 */
+	var mediaController = sui.controllers.MediaController;
+	sui.controllers.MediaController = mediaController.extend({
+
+		refresh: function(){
+			mediaController.prototype.refresh.apply( this, arguments );
+			this.destroySelect2UI();
+		},
+
+		//doesn't need to call parent as it already an "abstract" method in parent to provide callback
+		deactivate: function() {
+			this.destroySelect2UI();
+		},
+
+		destroySelect2UI: function() {
+			$('.shortcode-ui-term-select.select2-container').select2( "close" );
+		}
+
+	});
+
+} )( jQuery );
+
+},{}],15:[function(require,module,exports){
+( function( $ ) {
+
+	var sui = window.Shortcode_UI;
+
+	// Cached Data.
+	var userSelectCache = {};
+
+	sui.views.editAttributeFieldUserSelect = sui.views.editAttributeField.extend( {
+
+		events: {
+			'change .shortcode-ui-user-select': 'inputChanged',
+		},
+
+		inputChanged: function(e) {
+			this.setValue( e.val );
+			this.triggerCallbacks();
+		},
+
+		render: function() {
+
+			var self = this,
+			    defaults = { multiple: false };
+
+			for ( var arg in defaults ) {
+				if ( ! this.model.get( arg ) ) {
+					this.model.set( arg, defaults[ arg ] );
+				}
+			}
+
+			var data = this.model.toJSON();
+			data.id = 'shortcode-ui-' + this.model.get( 'attr' ) + '-' + this.model.cid;
+
+			this.$el.html( this.template( data ) );
+
+			var ajaxData = {
+				action    : 'shortcode_ui_user_field',
+				nonce     : shortcodeUiUserFieldData.nonce,
+				shortcode : this.shortcode.get( 'shortcode_tag'),
+				attr      : this.model.get( 'attr' )
+			};
+
+			var $field = this.$el.find( '.shortcode-ui-user-select' );
+
+			$field.select2({
+
+				placeholder: "Search",
+				multiple: this.model.get( 'multiple' ),
+				ajax: {
+					url: ajaxurl,
+					dataType: 'json',
+					quietMillis: 250,
+					data: function (term, page) {
+						ajaxData.s    = term;
+						ajaxData.page = page;
+						return ajaxData;
+					},
+					results: function ( response, page ) {
+
+						if ( ! response.success ) {
+							return { results: {}, more: false };
+						}
+
+						// Cache data for quicker rendering later.
+						userSelectCache = $.extend( userSelectCache, response.data.users );
+
+						var more = ( page * response.data.users_per_page ) < response.data.found_users; // whether or not there are more results available
+						return { results: response.data.users, more: more };
+
+					},
+				},
+
+				/**
+				 * Initialize Callback
+				 * Used to set render the initial value.
+				 * Has to make a request to get the title for the current ID.
+				 */
+				initSelection: function(element, callback) {
+
+					var ids, parsedData = [], cached;
+
+					// Convert stored value to array of IDs (int).
+					ids = $(element)
+						.val()
+						.split(',')
+						.map( function (str) { return str.trim(); } )
+						.map( function (str) { return parseInt( str ); } );
+
+					if ( ids.length < 1 ) {
+						return;
+					}
+
+					// Check if there is already cached data.
+					for ( var i = 0; i < ids.length; i++ ) {
+						cached = _.find( userSelectCache, _.matches( { id: ids[i] } ) );
+						if ( cached ) {
+							parsedData.push( cached );
+						}
+					}
+
+					// If not multiple - return single value if we have one.
+					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
+						callback( parsedData[0] );
+						return;
+					}
+
+					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
+
+					if ( ! uncachedIds.length ) {
+
+						callback( parsedData );
+
+					} else {
+
+						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
+						initAjaxData.action   = 'shortcode_ui_user_field';
+						initAjaxData.include  = uncachedIds;
+
+						$.get( ajaxurl, initAjaxData ).done( function( response ) {
+
+							if ( ! response.success ) {
+								return { results: {}, more: false };
+							}
+
+							userSelectCache = $.extend( userSelectCache, response.data.users );
+
+							// If not multi-select, expects single object, not array of objects.
+							if ( ! self.model.get( 'multiple' ) ) {
+								callback( response.data.users[0] );
+								return;
+							}
+
+							// Append new data to cached data.
+							// Sort by original order.
+							parsedData = parsedData
+								.concat( response.data.users )
+								.sort(function (a, b) {
+									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
+									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
+									return 0;
+								});
+
+							callback( parsedData );
+							return;
+
+						} );
+
+					}
+
+				},
+
+			} );
+
+			// Make multiple values sortable.
+			if ( this.model.get( 'multiple' ) ) {
+				$field.select2('container').find('ul.select2-choices').sortable({
+	    			containment: 'parent',
+	    			start: function() { $('.shortcode-ui-user-select').select2('onSortStart'); },
+	    			update: function() { $('.shortcode-ui-user-select').select2('onSortEnd'); }
+				});
+			}
+
+			return this;
+
+		}
+
+	} );
+
+	/**
+	 * Extending SUI Media Controller to hide Select2 UI Drop-Down when menu
+	 * changes in Meida modal
+	 * 1. going back/forth between different shortcakes (refresh)
+	 * 2. changing the menu in left column (deactivate)
+	 * 3. @TODO closing the modal.
+	 */
+	var mediaController = sui.controllers.MediaController;
+	sui.controllers.MediaController = mediaController.extend({
+
+		refresh: function(){
+			mediaController.prototype.refresh.apply( this, arguments );
+			this.destroySelect2UI();
+		},
+
+		//doesn't need to call parent as it already an "abstract" method in parent to provide callback
+		deactivate: function() {
+			this.destroySelect2UI();
+		},
+
+		destroySelect2UI: function() {
+			$('.shortcode-ui-user-select.select2-container').select2( "close" );
+		}
+
+	});
+
+} )( jQuery );
+
+},{}],16:[function(require,module,exports){
 (function (global){
 var Backbone     = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	sui          = require('./../utils/sui.js'),
@@ -1405,7 +1802,7 @@ sui.views.editAttributeField = editAttributeField;
 module.exports = editAttributeField;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10}],15:[function(require,module,exports){
+},{"./../utils/sui.js":10}],17:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 sui = require('./../utils/sui.js'),
@@ -1416,7 +1813,9 @@ backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !
 	// but bundled here for simplicity to save an HTTP request.
 	editAttributeFieldAttachment = require('./edit-attribute-field-attachment.js'),
 	editAttributeFieldPostSelect = require('./edit-attribute-field-post-select.js'),
-	editAttributeFieldColor = require('./edit-attribute-field-color.js');
+	editAttributeFieldTermSelect = require('./edit-attribute-field-term-select.js'),
+	editAttributeFieldUserSelect = require('./edit-attribute-field-user-select.js'),
+	editAttributeFieldColor      = require('./edit-attribute-field-color.js');
 
 
 /**
@@ -1489,7 +1888,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 module.exports = EditShortcodeForm;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10,"./edit-attribute-field-attachment.js":11,"./edit-attribute-field-color.js":12,"./edit-attribute-field-post-select.js":13,"./edit-attribute-field.js":14}],16:[function(require,module,exports){
+},{"./../utils/sui.js":10,"./edit-attribute-field-attachment.js":11,"./edit-attribute-field-color.js":12,"./edit-attribute-field-post-select.js":13,"./edit-attribute-field-term-select.js":14,"./edit-attribute-field-user-select.js":15,"./edit-attribute-field.js":16}],18:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
@@ -1523,7 +1922,7 @@ var insertShortcodeListItem = wp.Backbone.View.extend({
 module.exports = insertShortcodeListItem;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
@@ -1570,7 +1969,7 @@ var insertShortcodeList = wp.Backbone.View.extend({
 module.exports = insertShortcodeList;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcodes.js":2,"./insert-shortcode-list-item.js":16}],18:[function(require,module,exports){
+},{"./../collections/shortcodes.js":2,"./insert-shortcode-list-item.js":18}],20:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
 	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
@@ -1694,7 +2093,7 @@ var mediaFrame = postMediaFrame.extend( {
 module.exports = mediaFrame;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../controllers/media-controller.js":3,"./media-toolbar":19,"./shortcode-ui":21}],19:[function(require,module,exports){
+},{"./../controllers/media-controller.js":3,"./media-toolbar":21,"./shortcode-ui":23}],21:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 
@@ -1726,7 +2125,7 @@ var Toolbar = wp.media.view.Toolbar.extend({
 module.exports = Toolbar;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (global){
 var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null);
 sui = require('./../utils/sui.js');
@@ -1774,7 +2173,7 @@ sui.views.SearchShortcode = SearchShortcode;
 module.exports = SearchShortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10}],21:[function(require,module,exports){
+},{"./../utils/sui.js":10}],23:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	insertShortcodeList = require('./insert-shortcode-list.js'),
@@ -1879,4 +2278,4 @@ var Shortcode_UI = Backbone.View.extend({
 module.exports = Shortcode_UI;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":10,"./edit-shortcode-form.js":15,"./insert-shortcode-list.js":17,"./media-toolbar.js":19,"./search-shortcode.js":20}]},{},[7]);
+},{"./../utils/sui.js":10,"./edit-shortcode-form.js":17,"./insert-shortcode-list.js":19,"./media-toolbar.js":21,"./search-shortcode.js":22}]},{},[7]);
