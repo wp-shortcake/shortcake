@@ -195,6 +195,9 @@ class Shortcode_UI {
 	 */
 	public function action_admin_enqueue_scripts( $editor_supports ) {
 		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
+
+		wp_register_script( 'select2', trailingslashit( $this->plugin_url ) . 'lib/select2/select2.min.js', array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
+		wp_register_style( 'select2', trailingslashit( $this->plugin_url ) . 'lib/select2/select2.css', null, '3.5.2' );
 	}
 
 	/**
@@ -225,7 +228,7 @@ class Shortcode_UI {
 		usort( $shortcodes, array( $this, 'compare_shortcodes_by_label' ) );
 
 		// Load minified version of wp-js-hooks if not debugging.
-		$wp_js_hooks_file = 'wp-js-hooks' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '' ) . '.js';
+		$wp_js_hooks_file = 'wp-js-hooks' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' ) . '.js';
 
 		wp_enqueue_script( 'shortcode-ui-js-hooks', $this->plugin_url . 'lib/wp-js-hooks/' . $wp_js_hooks_file, array(), '2015-03-19' );
 		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/build/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view', 'shortcode-ui-js-hooks' ), $this->plugin_version );
