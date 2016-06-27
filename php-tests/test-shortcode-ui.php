@@ -2,6 +2,14 @@
 
 class Test_Shortcode_UI extends WP_UnitTestCase {
 
+	public function setUp() {
+		add_shortcode( 'test', array( $this, 'return_foo' ) );
+	}
+
+	public function return_foo() {
+		return 'foo';
+	}
+
 	public function test_plugin_loaded() {
 		$this->assertTrue( function_exists( 'shortcode_ui_register_for_shortcode' ) );
 	}
@@ -68,8 +76,6 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 
 	public function test_rest_preview_permission_callback() {
 
-		add_shortcode( 'test', function() { return 'foo'; } );
-
 		$instance    = Shortcode_UI::get_instance();
 		$author_id   = self::factory()->user->create( array( 'role' => 'author' ) );
 		$author_id_2 = self::factory()->user->create( array( 'role' => 'author' ) );
@@ -106,7 +112,7 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 			array(
 				'counter'   => 'foo',
 				'shortcode' => '\foo',
-			)
+			),
 		) );
 
 		$this->assertEquals( count( $queries ), 1 );
@@ -128,8 +134,6 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 
 	public function test_rest_preview_callback() {
 
-		add_shortcode( 'test', function() { return 'foo'; } );
-
 		$author_id = self::factory()->user->create( array( 'role' => 'author' ) );
 		$post_id   = self::factory()->post->create( array( 'post_author' => $author_id ) );
 
@@ -149,8 +153,6 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 
 	public function test_rest_preview_bulk_callback() {
 
-		add_shortcode( 'test', function() { return 'foo'; } );
-
 		$author_id = self::factory()->user->create( array( 'role' => 'author' ) );
 		$post_id   = self::factory()->post->create( array( 'post_author' => $author_id ) );
 
@@ -160,7 +162,7 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 			array(
 				'counter'   => 1,
 				'shortcode' => '[test]',
-			)
+			),
 		);
 
 		$rest_request = new WP_REST_Request( 'GET', 'shortcode-ui/v1/preview/bulk' );
