@@ -83,7 +83,7 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 
 		wp_set_current_user( $author_id );
 
-		$rest_request = new WP_REST_Request( 'GET', 'shortcode-ui/v1/preview', [ 'post_id' => $post_id ] );
+		$rest_request = new WP_REST_Request( 'GET', 'shortcode-ui/v1/preview' );
 
 		$permission = $instance->rest_preview_permission_callback( $rest_request );
 
