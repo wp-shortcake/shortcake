@@ -112,7 +112,17 @@ var mediaFrame = postMediaFrame.extend( {
 	},
 
 	insertAction: function() {
+		/* Trigger render_destroy */
+		/*
+		 * Action run before the shortcode overlay is destroyed.
+		 *
+		 * Called as `shortcode-ui.render_destroy`.
+		 */
+		var hookName = 'shortcode-ui.render_destroy';
+		wp.shortcake.hooks.doAction( hookName );
+
 		this.controller.state().insert();
+
 	},
 
 } );

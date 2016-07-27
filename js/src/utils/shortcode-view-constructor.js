@@ -173,6 +173,15 @@ var shortcodeViewConstructor = {
 
 			wp_media_frame.open();
 
+			/* Trigger render_edit */
+			/*
+			 * Action run after an edit shortcode overlay is rendered.
+			 *
+			 * Called as `shortcode-ui.render_edit`.
+			 */
+			var hookName = 'shortcode-ui.render_edit';
+			wp.shortcake.hooks.doAction( hookName );
+
 		}
 
 	},

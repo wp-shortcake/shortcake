@@ -94,6 +94,15 @@ var Shortcode_UI = Backbone.View.extend({
 
 		this.render();
 
+		/* Trigger render_new */
+		/*
+		 * Action run after a new shortcode overlay is rendered.
+		 *
+		 * Called as `shortcode-ui.render_new`.
+		 */
+		var hookName = 'shortcode-ui.render_new';
+		wp.shortcake.hooks.doAction( hookName );
+
 	},
 
 });
