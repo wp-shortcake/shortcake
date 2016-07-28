@@ -100,12 +100,12 @@ var Shortcode_UI = Backbone.View.extend({
 		 *
 		 * Called as `shortcode-ui.render_new`.
 		 *
-		 * @param shortcode (object)
+		 * @param shortcodeModel (object)
 		 *           Reference to the shortcode model used in this overlay.
 		 */
 		var hookName = 'shortcode-ui.render_new';
-		var shortcode = this.controller.props.attributes.currentShortcode;
-		wp.shortcake.hooks.doAction( hookName, shortcode );
+		var shortcodeModel = this.controller.props.get( 'currentShortcode' );
+		wp.shortcake.hooks.doAction( hookName, shortcodeModel );
 
 	},
 

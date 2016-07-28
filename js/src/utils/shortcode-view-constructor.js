@@ -179,12 +179,12 @@ var shortcodeViewConstructor = {
 			 *
 			 * Called as `shortcode-ui.render_edit`.
 			 *
-			 * @param shortcode (object)
+			 * @param shortcodeModel (object)
 			 *           Reference to the shortcode model used in this overlay.
 			 */
 			var hookName = 'shortcode-ui.render_edit';
-			var shortcode = this.shortcodeModel;
-			wp.shortcake.hooks.doAction( hookName, shortcode );
+			var shortcodeModel = this.shortcodeModel;
+			wp.shortcake.hooks.doAction( hookName, shortcodeModel );
 
 		}
 
