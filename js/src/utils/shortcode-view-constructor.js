@@ -178,9 +178,13 @@ var shortcodeViewConstructor = {
 			 * Action run after an edit shortcode overlay is rendered.
 			 *
 			 * Called as `shortcode-ui.render_edit`.
+			 *
+			 * @param shortcode (object)
+			 *           Reference to the shortcode model used in this overlay.
 			 */
 			var hookName = 'shortcode-ui.render_edit';
-			wp.shortcake.hooks.doAction( hookName );
+			var shortcode = this.shortcodeModel;
+			wp.shortcake.hooks.doAction( hookName, shortcode );
 
 		}
 
