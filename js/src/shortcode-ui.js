@@ -41,6 +41,7 @@ $(document).ready(function(){
 		// See: https://core.trac.wordpress.org/ticket/22445
 		elem.blur();
 
+		wp.media.editor.remove( editor );
 		wp.media.editor.open( editor, options );
 	} );
 
