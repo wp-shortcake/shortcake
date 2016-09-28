@@ -12,12 +12,17 @@ var insertShortcodeListItem = wp.Backbone.View.extend({
 
 	render : function() {
 
-		var data = this.model.toJSON();
+		var data = this.model.toJSON(),
+			fakeEl;
 		this.$el.attr('data-shortcode', data.shortcode_tag);
 
-		if (('listItemImage' in data) && 0 === data.listItemImage.indexOf('dashicons-')) {
-			var fakeEl = $('<div />').addClass( 'dashicons' ).addClass( data.listItemImage );
-			data.listItemImage = $('<div />').append( fakeEl ).html();
+		if ( 'listItemImage' in data ) {
+			if ( 0 === data.listItemImage.indexOf('dashicons-') ) {
+				fakeEl = $('<div />').addClass('dashicons').addClass(data.listItemImage);
+			} else {
+				fakeEl = $('<img src="' + data.listItemImage + '" />').addClass(data.listItemImage);
+			}
+			data.listItemImage = $('<div />').append(fakeEl).html();
 		}
 
 		this.$el.html(this.template(data));
