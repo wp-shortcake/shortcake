@@ -20,7 +20,7 @@ var insertShortcodeListItem = wp.Backbone.View.extend({
 			if ( 0 === data.listItemImage.indexOf('dashicons-') ) {
 				fakeEl = $('<div />').addClass('dashicons').addClass(data.listItemImage);
 			} else {
-				fakeEl = $('<img src="' + data.listItemImage + '" />').addClass(data.listItemImage);
+				fakeEl = $('<img src="' + data.listItemImage + '" />');
 			}
 			data.listItemImage = $('<div />').append(fakeEl).html();
 		}
