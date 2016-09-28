@@ -1,7 +1,7 @@
 === Shortcake (Shortcode UI) ===
 Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov
 Tags: shortcodes
-Requires at least: 4.1
+Requires at least: 4.3
 Tested up to: 4.4
 Stable tag: 0.6.2
 License: GPLv2 or later
