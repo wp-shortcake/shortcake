@@ -484,7 +484,8 @@ var shortcodeViewConstructor = {
 			value = this.unAutoP( value );
 
 			if ( attr && attr.get('encode') ) {
-				value = decodeURIComponent( value.replace( "%", "&#37;" ) );
+				value = decodeURIComponent( value );
+				value = value.replace( "&#37;", "%" );
 			}
 
 			if ( attr ) {
