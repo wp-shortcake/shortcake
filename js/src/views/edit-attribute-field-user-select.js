@@ -12,7 +12,14 @@
 		},
 
 		inputChanged: function(e) {
-			this.setValue( e.val );
+			var _selected = $( e.currentTarget ).val();
+
+			// Store multiple selections as comma-delimited list
+			if ( 'object' === typeof _selected ) {
+				_selected = _selected.join( ',' );
+			}
+
+			this.setValue( _selected );
 			this.triggerCallbacks();
 		},
 
