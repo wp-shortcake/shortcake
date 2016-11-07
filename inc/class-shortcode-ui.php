@@ -67,7 +67,7 @@ class Shortcode_UI {
 	private function setup_actions() {
 		add_action( 'admin_enqueue_scripts',     array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',         array( $this, 'action_wp_enqueue_editor' ) );
-		add_action( 'wp_ajax_bulk_do_shortcode', array( $this, 'handle_ajax_bulk_do_shortcode' ) );
+		add_action( 'rest_api_init',             array( $this, 'action_rest_api_init' ) );
 		add_filter( 'wp_editor_settings',        array( $this, 'filter_wp_editor_settings' ), 10, 2 );
 	}
 
@@ -247,8 +247,12 @@ class Shortcode_UI {
 				'insert_content_label'              => __( 'Insert Content', 'shortcode-ui' ),
 			),
 			'nonces'     => array(
-				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
+				'wp_rest'        => wp_create_nonce( 'wp_rest' ),
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
+			),
+			'urls'       => array(
+				'preview'     => rest_url( '/shortcode-ui/v1/preview' ),
+				'bulkPreview' => rest_url( '/shortcode-ui/v1/preview/bulk' ),
 			),
 		) );
 
@@ -338,10 +342,6 @@ class Shortcode_UI {
 			define( 'SHORTCODE_UI_DOING_PREVIEW', true );
 		}
 
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
-			return esc_html__( "Something's rotten in the state of Denmark", 'shortcode-ui' );
-		}
-
 		if ( ! empty( $post_id ) ) {
 			// @codingStandardsIgnoreStart
 			global $post;
@@ -369,37 +369,148 @@ class Shortcode_UI {
 	}
 
 	/**
-	 * Get a bunch of shortcodes to render in MCE preview.
+	 * Register rest api endpoints.
 	 */
-	public function handle_ajax_bulk_do_shortcode() {
+	public function action_rest_api_init() {
 
-		if ( is_array( $_POST['queries'] ) ) {
+		register_rest_route( 'shortcode-ui/v1', 'preview', array(
+			'methods'             => 'GET',
+			'callback'            => array( $this, 'rest_preview_callback' ),
+			'permission_callback' => array( $this, 'rest_preview_permission_callback' ),
+			'args'                => array(
+				'shortcode' => array(
+					'sanitize_callback' => array( $this, 'rest_sanitize_shortcode' ),
+					'required'          => true,
+				),
+				'post_id' => array(
+					'sanitize_callback' => array( $this, 'rest_sanitize_post_id' ),
+					'required'          => true,
+				),
+			),
+		) );
 
-			$responses = array();
+		register_rest_route( 'shortcode-ui/v1', 'preview/bulk', array(
+			'methods'             => 'GET',
+			'callback'            => array( $this, 'rest_preview_bulk_callback' ),
+			'permission_callback' => array( $this, 'rest_preview_permission_callback' ),
+			'args'                => array(
+				'queries' => array(
+					'sanitize_callback' => array( $this, 'rest_sanitize_queries' ),
+					'validate_callback' => array( $this, 'rest_validate_queries' ),
+				),
+				'post_id' => array(
+					'sanitize_callback' => array( $this, 'rest_sanitize_post_id' ),
+				),
+			),
+		) );
 
-			foreach ( $_POST['queries'] as $posted_query ) {
+	}
 
-				// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
-				if ( ! empty( $posted_query['shortcode'] ) ) {
-					$shortcode = stripslashes( $posted_query['shortcode'] );
-				} else {
-					$shortcode = null;
-				}
-				if ( isset( $posted_query['post_id'] ) ) {
-					$post_id = intval( $posted_query['post_id'] );
-				} else {
-					$post_id = null;
-				}
+	/**
+	 * Permission check for getting a shortcode preview.
+	 *
+	 * @param WP_REST_Request $request
+	 * @return boolean
+	 */
+	public function rest_preview_permission_callback( WP_REST_Request $request ) {
 
-				$responses[ $posted_query['counter'] ] = array(
-					'query' => $posted_query,
-					'response' => $this->render_shortcode_for_preview( $shortcode, $post_id ),
-				);
-			}
+		$post_id = $request->get_param( 'post_id' );
 
-			wp_send_json_success( $responses );
-			exit;
+		if ( empty( $post_id ) ) {
+			return new WP_Error( 'rest_no_post_id', __( 'No Post ID.' ) );
 		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return new WP_Error( 'rest_no_edit_post_cap', __( 'You do not have permission to edit this Post.' ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Sanitize collection of shortcode queries.
+	 *
+	 * Used for bulk requests.
+	 *
+	 * @param array $queries Queries
+	 * @return string Queries
+	 */
+	public function rest_sanitize_queries( $queries ) {
+		$clean_queries = array();
+		foreach ( $queries as $query ) {
+			$clean_queries[] = array(
+				'counter'   => absint( $query['counter'] ),
+				'shortcode' => $this->rest_sanitize_shortcode( $query['shortcode'] ),
+			);
+		}
+		return $clean_queries;
+	}
+
+	/**
+	 * Validate collection of shortcodes.
+	 *
+	 * Used for bulk requests.
+	 *
+	 * @param array $queries Queries
+	 * @return boolean
+	 */
+	public function rest_validate_queries( $shortcodes ) {
+		return is_array( $shortcodes );
+	}
+
+	/**
+	 * Sanitize rest request shortcode arg.
+	 *
+	 * @param string $shortcode Shortcode
+	 * @return string Shortcode
+	 */
+	public function rest_sanitize_shortcode( $shortcode ) {
+		return stripslashes( $shortcode );
+	}
+
+	/**
+	 * Sanitize Post ID.
+	 *
+	 * @param mixed $shortcode Post Id
+	 * @return int Post Id
+	 */
+	public function rest_sanitize_post_id( $post_id ) {
+		return absint( $post_id );
+	}
+
+	/**
+	 * Get a preview for a single shortcode to render in MCE preview.
+	 */
+	public function rest_preview_callback( WP_REST_Request $request ) {
+
+		$shortcode = $request->get_param( 'shortcode' );
+		$post_id   = $request->get_param( 'post_id' );
+
+		return array(
+			'shortcode' => $shortcode,
+			'post_id'   => $post_id,
+			'preview'   => $this->render_shortcode_for_preview( $shortcode, $post_id ),
+		);
+	}
+
+	/**
+	 * Get a bunch of shortcodes previews to render in MCE preview.
+	 */
+	public function rest_preview_bulk_callback( WP_REST_Request $request ) {
+
+		$previews = array();
+		$post_id  = $request->get_param( 'post_id' );
+
+		foreach ( $request->get_param( 'queries' ) as $query ) {
+			$previews[] = array(
+				'shortcode' => $query['shortcode'],
+				'post_id'   => $post_id,
+				'counter'   => $query['counter'],
+				'preview'   => $this->render_shortcode_for_preview( $query['shortcode'], $post_id ),
+			);
+		}
+
+		return array_filter( $previews );
 
 	}
 

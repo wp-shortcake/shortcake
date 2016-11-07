@@ -47,15 +47,13 @@ var Fetcher = (function() {
 	 * }
 	 * @return {Deferred}
 	 */
-	this.queueToFetch = function( query ) {
+	this.queueToFetch = function( shortcode ) {
 		var fetchPromise = new $.Deferred();
-
-		query.counter = ++fetcher.counter;
 
 		fetcher.queries.push({
 			promise: fetchPromise,
-			query: query,
-			counter: query.counter
+			shortcode: shortcode,
+			counter: ++fetcher.counter
 		});
 
 		if ( ! fetcher.timeout ) {
@@ -81,22 +79,30 @@ var Fetcher = (function() {
 			return;
 		}
 
-		var request = $.post( ajaxurl + '?action=bulk_do_shortcode', {
-				queries: _.pluck( fetcher.queries, 'query' )
+		var request = $.get( shortcodeUIData.urls.bulkPreview, {
+				_wpnonce: shortcodeUIData.nonces.wp_rest,
+				post_id:    $( '#post_ID' ).val(),
+				queries: _.map( fetcher.queries, function( query ) {
+					return { shortcode: query.shortcode, counter: query.counter };
+				} )
 			}
 		);
 
-		request.done( function( response ) {
-			_.each( response.data, function( result, index ) {
+		request.done( function( responses ) {
+
+			_.each( responses, function( result ) {
+
 				var matchedQuery = _.findWhere( fetcher.queries, {
-					counter: parseInt( index ),
+					counter: result.counter,
 				});
 
 				if ( matchedQuery ) {
 					fetcher.queries = _.without( fetcher.queries, matchedQuery );
-					matchedQuery.promise.resolve( result );
+					matchedQuery.promise.resolve( result.preview );
 				}
+
 			} );
+
 		} );
 	};
 
