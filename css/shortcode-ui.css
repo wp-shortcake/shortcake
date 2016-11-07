@@ -203,4 +203,7 @@
     margin-left: -60px; }
   100% {
     margin-left: 60px; } }
+
+.select2-container {
+  z-index: 160000; }
 /*# sourceMappingURL=shortcode-ui.css.map */

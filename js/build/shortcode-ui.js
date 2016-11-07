@@ -995,109 +995,51 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 				placeholder: "Search",
 				multiple: this.model.get( 'multiple' ),
+
 				ajax: {
 					url: ajaxurl,
 					dataType: 'json',
-					quietMillis: 250,
-					data: function (term, page) {
-						ajaxData.s    = term;
-						ajaxData.page = page;
-						return ajaxData;
+					delay: 250,
+					data: function (params) {
+						return $.extend( {
+							s: params.term, // search term
+							page: params.page
+						}, ajaxData );
 					},
-					results: function ( response, page ) {
-
-						if ( ! response.success ) {
-							return { results: {}, more: false };
-						}
-
-						// Cache data for quicker rendering later.
-						postSelectCache = $.extend( postSelectCache, response.data.posts );
-
-						var more = ( page * response.data.posts_per_page ) < response.data.found_posts; // whether or not there are more results available
-						return { results: response.data.posts, more: more };
-
-					},
-				},
-
-				/**
-				 * Initialize Callback
-				 * Used to set render the initial value.
-				 * Has to make a request to get the title for the current ID.
-				 */
-				initSelection: function(element, callback) {
-
-					var ids, parsedData = [], cached;
-
-					// Convert stored value to array of IDs (int).
-					ids = $(element)
-						.val()
-						.split(',')
-						.map( function (str) { return str.trim(); } )
-						.map( function (str) { return parseInt( str ); } );
-
-					if ( ids.length < 1 ) {
-						return;
-					}
-
-					// Check if there is already cached data.
-					for ( var i = 0; i < ids.length; i++ ) {
-						cached = _.find( postSelectCache, _.matches( { id: ids[i] } ) );
-						if ( cached ) {
-							parsedData.push( cached );
-						}
-					}
-
-					// If not multiple - return single value if we have one.
-					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
-						callback( parsedData[0] );
-						return;
-					}
-
-					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
-
-					if ( ! uncachedIds.length ) {
-
-						callback( parsedData );
-
-					} else {
-
-						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
-						initAjaxData.action   = 'shortcode_ui_post_field';
-						initAjaxData.post__in = uncachedIds;
-
-						$.get( ajaxurl, initAjaxData ).done( function( response ) {
-
-							if ( ! response.success ) {
-								return { results: {}, more: false };
-							}
-
-							postSelectCache = $.extend( postSelectCache, response.data.posts );
-
-							// If not multi-select, expects single object, not array of objects.
-							if ( ! self.model.get( 'multiple' ) ) {
-								callback( response.data.posts[0] );
-								return;
-							}
-
-							// Append new data to cached data.
-							// Sort by original order.
-							parsedData = parsedData
-								.concat( response.data.posts )
-								.sort(function (a, b) {
-									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
-									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
-									return 0;
-								});
-
-							callback( parsedData );
+					processResults: function (response, params) {
+						if ( ! response.success || 'undefined' === typeof response.data ) {
 							return;
+						}
 
-						} );
+						var data = response.data;
 
+						params.page = params.page || 1;
+
+						return {
+							results: data.posts,
+							pagination: {
+								more: ( params.page * data.posts_per_page ) < data.found_posts
+							}
+						};
+					},
+					cache: true
+				},
+				escapeMarkup: function( markup ) { return markup; },
+				minimumInputLength: 1,
+				templateResult: function( post ) {
+					if ( post.loading ) {
+						return post.text;
 					}
 
-				},
+					var markup = '<div class="clearfix select2-result-selectable">' +
+						post.text +
+					'</div>';
 
+					return markup;
+				},
+				templateSelection: function( post, container ) {
+					return post.text;
+				}
 			} );
 
 			// Make multiple values sortable.
@@ -1191,109 +1133,47 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 				placeholder: "Search",
 				multiple: this.model.get( 'multiple' ),
+
 				ajax: {
 					url: ajaxurl,
 					dataType: 'json',
-					quietMillis: 250,
-					data: function (term, page) {
-						ajaxData.s = term;
-						ajaxData.page = page;
-						return ajaxData;
+					delay: 250,
+					data: function (params) {
+						return $.extend( {
+							s: params.term, // search term
+							page: params.page
+						}, ajaxData );
 					},
-					results: function ( response,  page ) {
-
-						if ( ! response.success ) {
-							return { results: {}, more: false };
-						}
-
-						// Cache data for quicker rendering later.
-						termSelectCache = $.extend( termSelectCache, response.data.terms );
-						
-						var more = ( page * response.data.page ) < response.data.found_terms; // whether or not there are more results available
-
-						return { results: response.data.terms, more: more };
-
-					},
-				},
-
-				/**
-				 * Initialize Callback
-				 * Used to set render the initial value.
-				 * Has to make a request to get the title for the current ID.
-				 */
-				initSelection: function(element, callback) {
-
-					var ids, parsedData = [], cached;
-
-					// Convert stored value to array of IDs (int).
-					ids = $(element)
-						.val()
-						.split(',')
-						.map( function (str) { return str.trim(); } )
-						.map( function (str) { return parseInt( str ); } );
-
-					if ( ids.length < 1 ) {
-						return;
-					}
-
-					// Check if there is already cached data.
-					for ( var i = 0; i < ids.length; i++ ) {
-						cached = _.find( termSelectCache, _.matches( { id: ids[i] } ) );
-						if ( cached ) {
-							parsedData.push( cached );
-						}
-					}
-
-					// If not multiple - return single value if we have one.
-					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
-						callback( parsedData[0] );
-						return;
-					}
-
-					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
-
-					if ( ! uncachedIds.length ) {
-
-						callback( parsedData );
-
-					} else {
-
-						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
-						initAjaxData.action   = 'shortcode_ui_term_field';
-						initAjaxData.tag__in = uncachedIds;
-
-						$.get( ajaxurl, initAjaxData ).done( function( response ) {
-
-							if ( ! response.success ) {
-								return { results: {}, more: false };
-							}
-
-							termSelectCache = $.extend( termSelectCache, response.data.terms );
-
-							// If not multi-select, expects single object, not array of objects.
-							if ( ! self.model.get( 'multiple' ) ) {
-								callback( response.data.terms[0] );
-								return;
-							}
-
-							// Append new data to cached data.
-							// Sort by original order.
-							parsedData = parsedData
-								.concat( response.data.terms )
-								.sort(function (a, b) {
-									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
-									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
-									return 0;
-								});
-
-							callback( parsedData );
+					processResults: function (response, params) {
+						if ( ! response.success || 'undefined' === typeof response.data ) {
 							return;
+						}
 
-						} );
+						var data = response.data;
 
-					}
+						params.page = params.page || 1;
 
+						return {
+							results: data.posts,
+							pagination: {
+								more: ( params.page * data.posts_per_page ) < data.found_posts
+							}
+						};
+					},
+					cache: true
 				},
+				escapeMarkup: function( markup ) { return markup; },
+				minimumInputLength: 1,
+				templateResult: function( term ) {
+					var markup = '<div class="clearfix select2-result-selectable">' +
+						term.text +
+					'</div>';
+
+					return markup;
+				},
+				templateSelection: function( post ) {
+					return post.text;
+				}
 
 			} );
 
@@ -1388,109 +1268,51 @@ sui.views.editAttributeFieldColor = editAttributeField.extend({
 
 				placeholder: "Search",
 				multiple: this.model.get( 'multiple' ),
+
 				ajax: {
 					url: ajaxurl,
 					dataType: 'json',
-					quietMillis: 250,
-					data: function (term, page) {
-						ajaxData.s    = term;
-						ajaxData.page = page;
-						return ajaxData;
+					delay: 250,
+					data: function (params) {
+						return $.extend( {
+							s: params.term, // search term
+							page: params.page
+						}, ajaxData );
 					},
-					results: function ( response, page ) {
-
-						if ( ! response.success ) {
-							return { results: {}, more: false };
-						}
-
-						// Cache data for quicker rendering later.
-						userSelectCache = $.extend( userSelectCache, response.data.users );
-
-						var more = ( page * response.data.users_per_page ) < response.data.found_users; // whether or not there are more results available
-						return { results: response.data.users, more: more };
-
-					},
-				},
-
-				/**
-				 * Initialize Callback
-				 * Used to set render the initial value.
-				 * Has to make a request to get the title for the current ID.
-				 */
-				initSelection: function(element, callback) {
-
-					var ids, parsedData = [], cached;
-
-					// Convert stored value to array of IDs (int).
-					ids = $(element)
-						.val()
-						.split(',')
-						.map( function (str) { return str.trim(); } )
-						.map( function (str) { return parseInt( str ); } );
-
-					if ( ids.length < 1 ) {
-						return;
-					}
-
-					// Check if there is already cached data.
-					for ( var i = 0; i < ids.length; i++ ) {
-						cached = _.find( userSelectCache, _.matches( { id: ids[i] } ) );
-						if ( cached ) {
-							parsedData.push( cached );
-						}
-					}
-
-					// If not multiple - return single value if we have one.
-					if ( parsedData.length && ! self.model.get( 'multiple' ) ) {
-						callback( parsedData[0] );
-						return;
-					}
-
-					var uncachedIds = _.difference( ids, _.pluck( parsedData, 'id' ) );
-
-					if ( ! uncachedIds.length ) {
-
-						callback( parsedData );
-
-					} else {
-
-						var initAjaxData      = jQuery.extend( true, {}, ajaxData );
-						initAjaxData.action   = 'shortcode_ui_user_field';
-						initAjaxData.include  = uncachedIds;
-
-						$.get( ajaxurl, initAjaxData ).done( function( response ) {
-
-							if ( ! response.success ) {
-								return { results: {}, more: false };
-							}
-
-							userSelectCache = $.extend( userSelectCache, response.data.users );
-
-							// If not multi-select, expects single object, not array of objects.
-							if ( ! self.model.get( 'multiple' ) ) {
-								callback( response.data.users[0] );
-								return;
-							}
-
-							// Append new data to cached data.
-							// Sort by original order.
-							parsedData = parsedData
-								.concat( response.data.users )
-								.sort(function (a, b) {
-									if ( ids.indexOf( a.id ) > ids.indexOf( b.id ) ) return 1;
-									if ( ids.indexOf( a.id ) < ids.indexOf( b.id ) ) return -1;
-									return 0;
-								});
-
-							callback( parsedData );
+					processResults: function (response, params) {
+						if ( ! response.success || 'undefined' === typeof response.data ) {
 							return;
+						}
 
-						} );
+						var data = response.data;
 
+						params.page = params.page || 1;
+
+						return {
+							results: data.posts,
+							pagination: {
+								more: ( params.page * data.posts_per_page ) < data.found_posts
+							}
+						};
+					},
+					cache: true
+				},
+				escapeMarkup: function( markup ) { return markup; },
+				minimumInputLength: 1,
+				templateResult: function( user ) {
+					if ( user.loading ) {
+						return user.text;
 					}
 
-				},
+					var markup = '<div class="clearfix select2-result-selectable">' +
+						user.text +
+					'</div>';
 
+					return markup;
+				},
+				templateSelection: function( user, container ) {
+					return user.text;
+				}
 			} );
 
 			// Make multiple values sortable.
