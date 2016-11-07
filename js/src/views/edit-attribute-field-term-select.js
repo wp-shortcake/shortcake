@@ -66,9 +66,9 @@
 						params.page = params.page || 1;
 
 						return {
-							results: data.posts,
+							results: data.terms,
 							pagination: {
-								more: ( params.page * data.posts_per_page ) < data.found_posts
+								more: ( params.page * data.terms_per_page ) < data.found_terms
 							}
 						};
 					},
@@ -83,23 +83,33 @@
 
 					return markup;
 				},
-				templateSelection: function( post ) {
-					return post.text;
+				templateSelection: function( term ) {
+					return term.text;
 				}
 
 			} );
 
 			// Make multiple values sortable.
 			if ( this.model.get( 'multiple' ) ) {
-				$field.select2('container').find('ul.select2-choices').sortable({
-	    			containment: 'parent',
-	    			start: function() { $('.shortcode-ui-term-select').select2('onSortStart'); },
-	    			update: function() { $('.shortcode-ui-term-select').select2('onSortEnd'); }
+				$field.next('.select2-container').first('ul.select2-selection__rendered').sortable({
+					placeholder : 'ui-state-highlight',
+					forcePlaceholderSize: true,
+					items       : 'li:not(.select2-search__field)',
+					tolerance   : 'pointer',
+	    			start: function() { $('.shortcode-ui-post-select').select2('onSortStart'); },
+	    			update: function() { $('.shortcode-ui-post-select').select2('onSortEnd'); },
+					stop: function() {
+						$($(ul).find('.select2-selection__choice').get().reverse()).each(function() {
+							var id = $(this).data('data').id;
+							var option = $field.find('option[value="' + id + '"]')[0];
+							$field.prepend(option);
+						});
+						// callback(); -- update model with sorted values
+					}
 				});
 			}
 
 			return this;
-
 		}
 
 	} );
