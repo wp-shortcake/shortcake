@@ -5,6 +5,7 @@ var $ = require('jquery');
 
 describe( 'Shortcode View Constructor', function(){
 
+
 	it( 'Persists inner_content when parsing a shortcode without inner_content attribute defined', function(){
 		var data = {
 			label: 'Test Label',
@@ -57,7 +58,7 @@ describe( 'Shortcode View Constructor', function(){
 		sui.shortcodes.add( data );
 		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
 		var _shortcode = $.extend( true, {}, shortcode );
-		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"/]' );
 		ShortcodeViewConstructor.shortcode = {
 			'type' : 'single',
 			'tag' : 'no_custom_attribute',
@@ -74,7 +75,7 @@ describe( 'Shortcode View Constructor', function(){
 			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
-		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"/]' );
 	});
 
 	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){
@@ -122,6 +123,26 @@ describe( 'Shortcode View Constructor', function(){
 		sui.shortcodes.add( data );
 		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
 		expect( model.get('attrs').first().get('value') ).toEqual( 'This quote has\n\nMultiple line breaks two\n\nTest one' );
+	});
+
+	it( 'Can parse shortcode content idempotently', function() {
+		sui.shortcodes.add({
+			label: 'Test Label',
+			shortcode_tag: 'no_custom_content',
+			attrs: [
+				{
+					attr:        'foo',
+					label:       'Attribute',
+					type:        'text',
+					value:       'test value',
+					placeholder: 'test placeholder',
+				}
+			]
+		});
+    var shortcodeString = '[no_custom_content foo="bar"]';
+		var firstCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
+		var secondCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
+		expect( secondCall ).toBeDefined();
 	});
 
 });

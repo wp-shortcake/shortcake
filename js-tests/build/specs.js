@@ -119,11 +119,11 @@ describe( "Shortcode Model", function() {
 
 		// Test without content.
 		_shortcode.get('inner_content').unset( 'value' );
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"/]' );
 
 		// Test without attributes
 		_shortcode.get( 'attrs' ).first().unset( 'value' );
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode/]' );
 
 	});
 
@@ -145,7 +145,7 @@ describe( "Shortcode Model", function() {
 		});
 
 		formatted = shortcode_encoded_attribute.formatShortcode();
-		expected  = '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E"]';
+		expected  = '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E"/]';
 		expect( formatted ).toEqual( expected );
 
 	});
@@ -161,6 +161,7 @@ var sui = require('../../js/src/utils/sui');
 var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 
 describe( 'Shortcode View Constructor', function(){
+
 
 	it( 'Persists inner_content when parsing a shortcode without inner_content attribute defined', function(){
 		var data = {
@@ -214,7 +215,7 @@ describe( 'Shortcode View Constructor', function(){
 		sui.shortcodes.add( data );
 		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
 		var _shortcode = $.extend( true, {}, shortcode );
-		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"/]' );
 		ShortcodeViewConstructor.shortcode = {
 			'type' : 'single',
 			'tag' : 'no_custom_attribute',
@@ -231,7 +232,7 @@ describe( 'Shortcode View Constructor', function(){
 			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
-		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"/]' );
 	});
 
 	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){
@@ -279,6 +280,26 @@ describe( 'Shortcode View Constructor', function(){
 		sui.shortcodes.add( data );
 		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
 		expect( model.get('attrs').first().get('value') ).toEqual( 'This quote has\n\nMultiple line breaks two\n\nTest one' );
+	});
+
+	it( 'Can parse shortcode content idempotently', function() {
+		sui.shortcodes.add({
+			label: 'Test Label',
+			shortcode_tag: 'no_custom_content',
+			attrs: [
+				{
+					attr:        'foo',
+					label:       'Attribute',
+					type:        'text',
+					value:       'test value',
+					placeholder: 'test placeholder',
+				}
+			]
+		});
+    var shortcodeString = '[no_custom_content foo="bar"]';
+		var firstCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
+		var secondCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
+		expect( secondCall ).toBeDefined();
 	});
 
 });
@@ -436,7 +457,7 @@ describe( "MCE View Constructor", function() {
 	it( 'parses shortcode with dashes in name and attribute', function() {
 		var shortcode = MceViewConstructor.parseShortcodeString( '[test-shortcode test-attr="test value 2"]');
 		expect( shortcode instanceof Shortcode ).toEqual( true );
-		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).not.toEqual( 'test value 2' );
+		expect( shortcode.get( 'attrs' ).findWhere( { attr: 'test-attr' }).get('value') ).toEqual( 'test value 2' );
 	});
 
 	// https://github.com/fusioneng/Shortcake/issues/171
@@ -665,13 +686,16 @@ Shortcode = Backbone.Model.extend({
 		}
 
 		if ( attrs.length > 0 ) {
-			template = "[{{ shortcode }} {{ attributes }}]";
+			template = "[{{ shortcode }} {{ attributes }}";
 		} else {
-			template = "[{{ shortcode }}]";
+			template = "[{{ shortcode }}";
 		}
 
 		if ( content && content.length > 0 ) {
-			template += "{{ content }}[/{{ shortcode }}]";
+			template += "]{{ content }}[/{{ shortcode }}]";
+		} else {
+			// add closing slash to shortcodes without content
+			template += "/]";
 		}
 
 		template = template.replace( /{{ shortcode }}/g, this.get('shortcode_tag') );
@@ -965,14 +989,8 @@ var shortcodeViewConstructor = {
 	 * @param {string} shortcodeString String representation of the shortcode
 	 */
 	edit: function( shortcodeString ) {
-		var currentShortcode;
 
-		// Backwards compatability for WP pre-4.2
-		if ( 'object' === typeof( shortcodeString ) ) {
-			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
-		}
-
-		currentShortcode = this.parseShortcodeString( shortcodeString );
+		var currentShortcode = this.parseShortcodeString( shortcodeString );
 
 		if ( currentShortcode ) {
 
@@ -983,6 +1001,19 @@ var shortcodeViewConstructor = {
 			});
 
 			wp_media_frame.open();
+
+			/* Trigger render_edit */
+			/*
+			 * Action run after an edit shortcode overlay is rendered.
+			 *
+			 * Called as `shortcode-ui.render_edit`.
+			 *
+			 * @param shortcodeModel (object)
+			 *           Reference to the shortcode model used in this overlay.
+			 */
+			var hookName = 'shortcode-ui.render_edit';
+			var shortcodeModel = this.shortcodeModel;
+			wp.shortcake.hooks.doAction( hookName, shortcodeModel );
 
 		}
 
@@ -1004,6 +1035,7 @@ var shortcodeViewConstructor = {
 
 		var shortcode_tags = _.map( sui.shortcodes.pluck( 'shortcode_tag' ), this.pregQuote ).join( '|' );
 		var regexp = wp.shortcode.regexp( shortcode_tags );
+		regexp.lastIndex = 0;
 		var matches = regexp.exec( shortcodeString );
 
 		if ( ! matches ) {
@@ -1056,118 +1088,6 @@ var shortcodeViewConstructor = {
 				'\\$&' );
 	},
 
-	// Backwards compatability for Pre WP 4.2.
-	View: {
-
-		overlay: true,
-
-		initialize: function( options ) {
-			this.shortcode = this.getShortcode( options );
-			this.fetch();
-		},
-
-		getShortcode: function( options ) {
-
-			var shortcodeModel, shortcode;
-
-			shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
-
-			if (!shortcodeModel) {
-				return;
-			}
-
-			shortcode = shortcodeModel.clone();
-
-			shortcode.get('attrs').each(
-					function(attr) {
-
-						if (attr.get('attr') in options.shortcode.attrs.named) {
-							attr.set('value',
-									options.shortcode.attrs.named[attr
-											.get('attr')]);
-						}
-
-					});
-
-			if ('content' in options.shortcode) {
-				var inner_content = shortcode.get('inner_content');
-				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content);
-				}
-			}
-
-			return shortcode;
-
-		},
-
-		fetch : function() {
-
-			var self = this;
-
-			if ( ! this.parsed ) {
-
-				wp.ajax.post( 'do_shortcode', {
-					post_id: $( '#post_ID' ).val(),
-					shortcode: this.shortcode.formatShortcode(),
-					nonce: shortcodeUIData.nonces.preview,
-				}).done( function( response ) {
-					if ( response.indexOf( '<script' ) !== -1 ) {
-						self.setIframes( self.getEditorStyles(), response );
-					} else {
-						self.parsed = response;
-						self.render( true );
-					}
-				}).fail( function() {
-					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-					self.render( true );
-				} );
-
-			}
-
-		},
-
-		/**
-		 * Render the shortcode
-		 *
-		 * To ensure consistent rendering - this makes an ajax request to the
-		 * admin and displays.
-		 *
-		 * @return string html
-		 */
-		getHtml : function() {
-			return this.parsed;
-		},
-
-		/**
-		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
-		 *
-		 * @method getEditorStyles
-		 * @returns {Array}
-		 */
-		getEditorStyles: function() {
-
-			var styles = '';
-
-			this.getNodes( function ( editor, node, content ) {
-				var dom = editor.dom,
-					bodyClasses = editor.getBody().className || '',
-					iframe, iframeDoc, i, resize;
-
-				tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
-					if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
-						link.href.indexOf( 'skins/wordpress/wp-content.css' ) === -1 ) {
-
-						styles += dom.getOuterHTML( link ) + '\n';
-					}
-
-				});
-
-			} );
-
-			return styles;
-		},
-
-	},
 };
 
 module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;

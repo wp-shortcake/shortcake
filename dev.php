@@ -187,8 +187,21 @@ function shortcode_ui_dev_advanced_example() {
 			'multiple' => true,
 		),
 		array(
-			'label'  => esc_html__( 'Background Color', 'shortcode-ui-example' ),
-			'attr'   => 'background-color',
+			'label'    => __( 'Select Term', 'shortcode-ui-example' ),
+			'attr'     => 'term',
+			'type'     => 'term_select',
+			'taxonomy' => 'post_tag',
+			'multiple' => true,
+		),
+		array(
+			'label'    => __( 'User Select', 'shortcode-ui-example' ),
+			'attr'     => 'users',
+			'type'     => 'user_select',
+			'multiple' => true,
+		),
+		array(
+			'label'  => esc_html__( 'Color', 'shortcode-ui-example' ),
+			'attr'   => 'color',
 			'type'   => 'color',
 			'encode' => true,
 			'meta'   => array(
@@ -231,7 +244,7 @@ function shortcode_ui_dev_advanced_example() {
 
 		/*
 		 * Include an icon with your shortcode. Optional.
-		 * Use a dashicon, or full URL to image.
+		 * Use a dashicon, or full HTML (e.g. <img src="/path/to/your/icon" />).
 		 */
 		'listItemImage' => 'dashicons-editor-quote',
 
@@ -274,20 +287,85 @@ function shortcode_ui_dev_advanced_example() {
  * It renders the shortcode based on supplied attributes.
  */
 function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
+
 	$attr = shortcode_atts( array(
 		'source'     => '',
 		'attachment' => 0,
-		'page'       => null,
+		'page'       => '',
+		'term'       => '',
+		'users'      => '',
+		'color'      => '',
+		'alignment'  => '',
+		'year'       => '',
 	), $attr, $shortcode_tag );
+
+	$attr['page'] = array_map(
+		function( $post_id ) {
+			return get_the_title( $post_id );
+		},
+		array_filter( array_map( 'absint', explode( ',', $attr['page'] ) ) )
+	);
+
+	$attr['term'] = array_map(
+		function( $term_id ) {
+			$data = get_term( $term_id, 'post_tag' );
+			return $data->name;
+		},
+		array_filter( array_map( 'absint', explode( ',', $attr['term'] ) ) )
+	);
+
+	$attr['users'] = array_map(
+		function( $user_id ) {
+			$data = get_userdata( $user_id );
+			return $data->display_name;
+		},
+		array_filter( array_map( 'absint', explode( ',', $attr['users'] ) ) )
+	);
+
+	$attr['color'] = urldecode( $attr['color'] );
 
 	// Shortcode callbacks must return content, hence, output buffering here.
 	ob_start();
 	?>
 	<section class="pullquote" style="padding: 20px; background: rgba(0, 0, 0, 0.1);">
 		<p style="margin:0; padding: 0;">
+
+			<?php if ( ! empty( $content ) ) : ?>
 			<b><?php esc_html_e( 'Content:', 'shortcode-ui-example' ); ?></b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
-			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr[ 'source' ] ); ?></br>
-			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr[ 'attachment' ], array( 50, 50 ) ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['source'] ) ) : ?>
+			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr['source'] ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['attachment'] ) ) : ?>
+			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['page'] ) ) : ?>
+				<b><?php esc_html_e( 'Pages:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['page'] ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['term'] ) ) : ?>
+				<b><?php esc_html_e( 'Terms:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['term'] ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['users'] ) ) : ?>
+				<b><?php esc_html_e( 'Users:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['users'] ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['color'] ) ) : ?>
+				<b><?php esc_html_e( 'Color:', 'shortcode-ui-example' ); ?></b> <span style="display: inline-block; width: 1.5em; height: 1.5em; vertical-align: bottom; background-color: <?php echo esc_html( $attr['color'] ); ?>"></span></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['alignment'] ) ) : ?>
+				<b><?php esc_html_e( 'Alignment:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( $attr['alignment'] ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['year'] ) ) : ?>
+				<b><?php esc_html_e( 'Year:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( $attr['year'] ); ?></br>
+			<?php endif; ?>
+
 		</p>
 	</section>
 	<?php
