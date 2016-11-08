@@ -50,7 +50,15 @@
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<select name="{{ data.attr }}" id="{{ data.id }}" {{{ data.meta }}}>
 			<# _.each( data.options, function( label, value ) { #>
-				<option value="{{ value }}" <# if ( value == data.value ){ print('selected'); } #>>{{ label }}</option>
+				<# if ( typeof label == 'object') { #>
+					<optgroup label="{{value}}">
+						<# _.each( label, function( optLabel, optValue ) { #>
+							<option value="{{ optValue }}" <# if ( optValue == data.value ){ print('selected'); } #>>{{ optLabel }}</option>
+						<# }); #>
+					</optgroup>
+				<# } else { #>
+					<option value="{{ value }}" <# if ( value == data.value ){ print('selected'); } #>>{{ label }}</option>
+				<# } #>
 			<# }); #>
 		</select>
 		<# if ( typeof data.description == 'string' && data.description.length ) { #>
