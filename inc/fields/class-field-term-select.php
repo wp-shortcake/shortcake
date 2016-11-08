@@ -88,7 +88,7 @@ class Shortcode_UI_Field_Term_Select {
 			<div class="field-block shortcode-ui-field-term-select shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.id }}">{{{ data.label }}}</label>
 				<input type="text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="shortcode-ui-term-select" />
-				<# if ( typeof data.description == 'string' ) { #>
+				<# if ( typeof data.description == 'string' && data.description.length ) { #>
 					<p class="description">{{{ data.description }}}</p>
 				<# } #>
 			</div>

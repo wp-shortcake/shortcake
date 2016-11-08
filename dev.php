@@ -244,7 +244,7 @@ function shortcode_ui_dev_advanced_example() {
 
 		/*
 		 * Include an icon with your shortcode. Optional.
-		 * Use a dashicon, or full URL to image.
+		 * Use a dashicon, or full HTML (e.g. <img src="/path/to/your/icon" />).
 		 */
 		'listItemImage' => 'dashicons-editor-quote',
 

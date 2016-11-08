@@ -46,15 +46,15 @@ class Test_Shortcode_UI extends WP_UnitTestCase {
 			'inner_content'       => array(
 				'label'           => '<script>gotcha()</script>',
 				'description'     => '<iframe src="baddomain.com"></iframe>',
-				),
+			),
 			'attrs'               => array(
 				array(
 					'attr'        => 'bar',
 					'label'       => '<strong>gotcha()</strong>',
 					'description' => '<script>banana()</script>',
-					),
 				),
-			) );
+			),
+		) );
 		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 		$this->assertEquals( 'gotcha()', $shortcodes['foo']['inner_content']['label'] );
 		$this->assertEmpty( $shortcodes['foo']['inner_content']['description'] );

@@ -211,7 +211,7 @@ Shortcode = Backbone.Model.extend({
 
 			// Encode textareas incase HTML
 			if ( attr.get( 'encode' ) ) {
-				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ) ) ), { silent: true } );
+				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ).replace( "%", "&#37;" ) ) ), { silent: true } );
 			}
 
 			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
@@ -485,6 +485,7 @@ var shortcodeViewConstructor = {
 
 			if ( attr && attr.get('encode') ) {
 				value = decodeURIComponent( value );
+				value = value.replace( "&#37;", "%" );
 			}
 
 			if ( attr ) {
@@ -573,6 +574,19 @@ var shortcodeViewConstructor = {
 			});
 
 			wp_media_frame.open();
+
+			/* Trigger render_edit */
+			/*
+			 * Action run after an edit shortcode overlay is rendered.
+			 *
+			 * Called as `shortcode-ui.render_edit`.
+			 *
+			 * @param shortcodeModel (object)
+			 *           Reference to the shortcode model used in this overlay.
+			 */
+			var hookName = 'shortcode-ui.render_edit';
+			var shortcodeModel = this.shortcodeModel;
+			wp.shortcake.hooks.doAction( hookName, shortcodeModel );
 
 		}
 
@@ -1980,7 +1994,21 @@ var mediaFrame = postMediaFrame.extend( {
 	},
 
 	insertAction: function() {
+		/* Trigger render_destroy */
+		/*
+		 * Action run before the shortcode overlay is destroyed.
+		 *
+		 * Called as `shortcode-ui.render_destroy`.
+		 *
+		 * @param shortcodeModel (object)
+		 *           Reference to the shortcode model used in this overlay.
+		 */
+		var hookName = 'shortcode-ui.render_destroy';
+		var shortcodeModel = this.controller.state().props.get( 'currentShortcode' );
+		wp.shortcake.hooks.doAction( hookName, shortcodeModel );
+
 		this.controller.state().insert();
+
 	},
 
 } );
@@ -2165,6 +2193,19 @@ var Shortcode_UI = Backbone.View.extend({
 		this.controller.props.set( 'currentShortcode', shortcode.clone() );
 
 		this.render();
+
+		/* Trigger render_new */
+		/*
+		 * Action run after a new shortcode overlay is rendered.
+		 *
+		 * Called as `shortcode-ui.render_new`.
+		 *
+		 * @param shortcodeModel (object)
+		 *           Reference to the shortcode model used in this overlay.
+		 */
+		var hookName = 'shortcode-ui.render_new';
+		var shortcodeModel = this.controller.props.get( 'currentShortcode' );
+		wp.shortcake.hooks.doAction( hookName, shortcodeModel );
 
 	},
 
