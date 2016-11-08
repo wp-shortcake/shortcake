@@ -214,9 +214,16 @@ function shortcode_ui_dev_advanced_example() {
 			'attr'        => 'alignment',
 			'type'        => 'select',
 			'options'     => array(
-				''      => esc_html__( 'None', 'shortcode-ui-example' ),
-				'left'  => esc_html__( 'Pull Left', 'shortcode-ui-example' ),
-				'right' => esc_html__( 'Pull Right', 'shortcode-ui-example' ),
+				array( 'value' => '', 'label' => esc_html__( 'None', 'shortcode-ui-example' ) ),
+				array( 'value' => 'left', 'label' => esc_html__( 'Pull Left', 'shortcode-ui-example' ) ),
+				array( 'value' => 'right', 'label' => esc_html__( 'Pull Right', 'shortcode-ui-example' ) ),
+				array(
+					'label' => 'Test Optgroup',
+					'options' => array(
+						array( 'value' => 'left-2', 'label' => esc_html__( 'Pull Left', 'shortcode-ui-example' ) ),
+						array( 'value' => 'right-2', 'label' => esc_html__( 'Pull Right', 'shortcode-ui-example' ) ),
+					)
+				),
 			),
 		),
 		array(
