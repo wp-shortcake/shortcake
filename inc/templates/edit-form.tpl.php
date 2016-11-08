@@ -19,7 +19,7 @@
 	<div class="field-block shortcode-ui-field-text shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<input type="text" class="regular-text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" {{{ data.meta }}}/>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -29,7 +29,7 @@
 	<div class="field-block shortcode-ui-field-url shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<input type="url" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="code" {{{ data.meta }}}/>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -39,7 +39,7 @@
 	<div class="field-block shortcode-ui-field-textarea shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<textarea name="{{ data.attr }}" id="{{ data.id }}" {{{ data.meta }}}>{{ data.value }}</textarea>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -49,11 +49,21 @@
 	<div class="field-block shortcode-ui-field-select shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<select name="{{ data.attr }}" id="{{ data.id }}" {{{ data.meta }}}>
-			<# _.each( data.options, function( label, value ) { #>
-				<option value="{{ value }}" <# if ( value == data.value ){ print('selected'); } #>>{{ label }}</option>
+			<# _.each( data.options, function( option ) { #>
+
+				<# if ( 'options' in option && 'label' in option ) { #>
+					<optgroup label="{{ option.label }}">
+						<# _.each( option.options, function( optgroupOption ) { #>
+							<option value="{{ optgroupOption.value }}" <# if ( optgroupOption.value === data.value ){ print('selected'); } #>>{{ optgroupOption.label }}</option>
+						<# }); #>
+					</optgroup>
+				<# } else { #>
+					<option value="{{ option.value }}" <# if ( option.value === data.value ){ print('selected'); } #>>{{ option.label }}</option>
+				<# } #>
+
 			<# }); #>
 		</select>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -68,7 +78,7 @@
 				{{ label }}
 			</label>
 		<# }); #>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -80,7 +90,7 @@
 			<input type="checkbox" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" <# if ( 'true' == data.value ){ print('checked'); } #>>
 			{{{ data.label }}}
 		</label>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -90,7 +100,7 @@
 	<div class="field-block shortcode-ui-field-email shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<input type="email" class="regular-text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" {{{ data.meta }}}/>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -100,7 +110,7 @@
 	<div class="field-block shortcode-ui-field-number shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<input type="number" class="regular-text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" {{{ data.meta }}}/>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -110,7 +120,7 @@
 	<div class="field-block shortcode-ui-field-hidden shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<input type="hidden" name="{{ data.attr }}" id="{{ data.id }}" value="true" {{{ data.meta }}}/>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -120,7 +130,7 @@
 	<div class="field-block shortcode-ui-field-date shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<input type="date" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" {{{ data.meta }}}/>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -130,7 +140,7 @@
 	<div class="field-block shortcode-ui-content shortcode-ui-attribute-{{ data.attr }}">
 		<label for="inner_content">{{{ data.label }}}</label>
 		<textarea id="inner_content" name="inner_content" class="content-edit" {{{ data.meta }}}>{{ data.value }}</textarea>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>
@@ -143,7 +153,7 @@
 			<input type="range" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value}}" {{{ data.meta }}} />
 			<output class="range" for="{{ data.id }}" id="{{ data.id }}_indicator">{{ data.value }}</output>
 		</div>
-		<# if ( typeof data.description == 'string' ) { #>
+		<# if ( typeof data.description == 'string' && data.description.length ) { #>
 			<p class="description">{{{ data.description }}}</p>
 		<# } #>
 	</div>

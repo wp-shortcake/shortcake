@@ -7,9 +7,11 @@ var editAttributeField = Backbone.View.extend( {
 	tagName: "div",
 
 	events: {
-		'input  input':    'inputChanged',
-		'input  textarea': 'inputChanged',
-		'change select':   'inputChanged',
+		'input  input':                  'inputChanged',
+		'input  textarea':               'inputChanged',
+		'change select':                 'inputChanged',
+		'change input[type="radio"]':    'inputChanged',
+		'change input[type="checkbox"]': 'inputChanged'
 	},
 
 	render: function() {
@@ -39,6 +41,11 @@ var editAttributeField = Backbone.View.extend( {
 		}
 
 		data.meta = _meta.join( ' ' );
+
+		// Ensure options are formatted correctly.
+		if ( 'options' in data ) {
+			data.options = this.parseOptions( data.options );
+		}
 
 		this.$el.html( this.template( data ) );
 		this.triggerCallbacks();
@@ -110,6 +117,33 @@ var editAttributeField = Backbone.View.extend( {
 		 *           Reference to the shortcode model which this attribute belongs to.
 		 */
 		wp.shortcake.hooks.doAction( hookName, changed, collection, shortcode );
+
+	},
+
+	/**
+	 * Parse Options to ensure they use the correct format.
+	 *
+	 * Backwards compatability for non-array options.
+	 * Using objects was sub-optimal because properties don't have an order.
+	 */
+	parseOptions: function( options ) {
+
+		if ( ! Array.isArray( options ) ) {
+			var _options = [];
+			_.each( Object.keys( options ), function( key ) {
+				_options.push( { value: key, label: options[ key ] } );
+			} );
+			options = _options;
+		} else {
+			options = options.map( function( option ) {
+				if ( 'object' !== typeof option ) {
+					option = { value: option, label: option };
+				}
+				return option;
+			} );
+		}
+
+		return options;
 
 	}
 

@@ -1,5 +1,6 @@
 var Shortcode = require('../../js/src/models/shortcode');
 var ShortcodeViewConstructor = require('../../js/src/utils/shortcode-view-constructor');
+var EditAttributeField = require('../../js/src/views/edit-attribute-field');
 var sui = require('../../js/src/utils/sui');
 var $ = require('jquery');
 
@@ -57,7 +58,7 @@ describe( 'Shortcode View Constructor', function(){
 		sui.shortcodes.add( data );
 		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
 		var _shortcode = $.extend( true, {}, shortcode );
-		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"/]' );
 		ShortcodeViewConstructor.shortcode = {
 			'type' : 'single',
 			'tag' : 'no_custom_attribute',
@@ -74,7 +75,7 @@ describe( 'Shortcode View Constructor', function(){
 			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
-		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"]' );
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana"/]' );
 	});
 
 	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){
@@ -123,5 +124,68 @@ describe( 'Shortcode View Constructor', function(){
 		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
 		expect( model.get('attrs').first().get('value') ).toEqual( 'This quote has\n\nMultiple line breaks two\n\nTest one' );
 	});
+
+	it( 'Can parse shortcode content idempotently', function() {
+		sui.shortcodes.add({
+			label: 'Test Label',
+			shortcode_tag: 'no_custom_content',
+			attrs: [
+				{
+					attr:        'foo',
+					label:       'Attribute',
+					type:        'text',
+					value:       'test value',
+					placeholder: 'test placeholder',
+				}
+			]
+		});
+    var shortcodeString = '[no_custom_content foo="bar"]';
+		var firstCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
+		var secondCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
+		expect( secondCall ).toBeDefined();
+	});
+
+
+	it( 'Select field can maintain order of options.', function() {
+
+		var shortcode = new Shortcode({
+			label: 'Test',
+			shortcode_tag: 'test',
+			attrs: [
+				// Legacy option format
+				{
+					attr:        'foo',
+					label:       'Foo',
+					type:        'select',
+					options:     { x: '1', z: '2', y: '3' },
+				},
+				// New array of object format
+				{
+					attr:        'foo',
+					label:       'Foo',
+					type:        'select',
+					options:     [
+						{ value: 'x', label: '1' },
+						{ value: 'z', label: '2' },
+						{ value: 'y', label: '3' },
+					]
+				}
+			]
+		});
+
+		var view = new EditAttributeField( { model: shortcode } );
+		var opt1 = view.parseOptions( shortcode.get('attrs').at(0).get('options') );
+		var opt2 = view.parseOptions( shortcode.get('attrs').at(1).get('options') );
+
+		expect( Array.isArray( opt1 ) ).toBe( true );
+		expect( Array.isArray( opt2 ) ).toBe( true );
+		expect( opt1[1].value ).toEqual( 'z' );
+		expect( opt1[1].label ).toEqual( '2' );
+		expect( opt2[1].value ).toEqual( 'z' );
+		expect( opt2[1].label ).toEqual( '2' );
+
+	});
+
+
 
 });

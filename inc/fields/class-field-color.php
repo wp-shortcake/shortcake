@@ -112,7 +112,7 @@ class Shortcake_Field_Color {
 			<div class="field-block shortcode-ui-field-color shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.attr }}">{{{ data.label }}}</label>
 				<input type="text" name="{{ data.attr }}" id="{{ data.attr }}" value="{{ data.value }}" data-default-color="{{ data.value }}" {{{ data.meta }}}/>
-				<# if ( typeof data.description == 'string' ) { #>
+				<# if ( typeof data.description == 'string' && data.description.length ) { #>
 					<p class="description">{{{ data.description }}}</p>
 				<# } #>
 			</div>

@@ -1,0 +1,100 @@
+# Copyright (C) 2015 Fusion Engineering and community
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Shortcake (Shortcode UI) 0.5.0-alpha\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/shortcode-ui\n"
+"POT-Creation-Date: 2015-09-09 22:06+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-11-02 23:45+0200\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.6.8\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
+"_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
+"esc_html_x:1,2c\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ..\n"
+"X-Textdomain-Support: yes\n"
+"Last-Translator: Sinan İŞLER <sinan@sinanisler.com>\n"
+"Language: da_DK\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: inc/class-shortcode-ui.php:109
+msgid "Inner Content"
+msgstr "İç İçerik"
+
+#: inc/class-shortcode-ui.php:200 inc/class-shortcode-ui.php:201
+msgid "Insert Post Element"
+msgstr "Yazı Nesnesi Ekle"
+
+#: inc/class-shortcode-ui.php:202
+msgid "%s Details"
+msgstr "%s detaylar"
+
+#: inc/class-shortcode-ui.php:203
+msgid "Insert Element"
+msgstr "Nesne Ekle"
+
+#: inc/class-shortcode-ui.php:204
+msgid "Update"
+msgstr "Güncelle"
+
+#: inc/class-shortcode-ui.php:205
+msgid "There are no attributes to configure for this Post Element."
+msgstr "Yazı Elementini güncelemek için bir ayar bulunmuyor."
+
+#: inc/class-shortcode-ui.php:206
+msgid "Edit"
+msgstr "Düzenle"
+
+#: inc/class-shortcode-ui.php:207
+msgid "Failed to load preview"
+msgstr "Ön izleme yükleme hata verdi"
+
+#: inc/class-shortcode-ui.php:208
+msgid "Search"
+msgstr "Ara"
+
+#: inc/class-shortcode-ui.php:209
+msgid "Insert Content"
+msgstr "İçerik Ekle"
+
+#: inc/class-shortcode-ui.php:312
+msgid "Something's rotten in the state of Denmark"
+msgstr "Danimarkada yapılmış güzel birşey"
+
+#: inc/fields/class-field-attachment.php:79
+#: inc/fields/class-field-attachment.php:80
+msgid "Select Attachment"
+msgstr "Ek Seç"
+
+#: inc/fields/class-field-attachment.php:104
+msgid "Thumbnail Details"
+msgstr "Küçük Resim Detayları"
+
+#: inc/fields/class-field-attachment.php:109
+msgid "Edit Attachment"
+msgstr "Ek'i Düzenle"
+
+#: inc/templates/edit-form.tpl.php:3
+msgid "Back to list"
+msgstr "Listeye dön"
+
+#. Plugin Name of the plugin/theme
+msgid "Shortcake (Shortcode UI)"
+msgstr "Shortcake (Shortcode UI)"
+
+#. Description of the plugin/theme
+msgid "User Interface for adding shortcodes."
+msgstr "Kısa kodlar eklemek için Kullanıcı Arayüzü"
+
+#. Author of the plugin/theme
+msgid "Fusion Engineering and community"
+msgstr "Fusion Engineering and community"
+
+#. Author URI of the plugin/theme
+msgid "http://next.fusion.net/tag/shortcode-ui/"
+msgstr "http://next.fusion.net/tag/shortcode-ui/"

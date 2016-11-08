@@ -9,6 +9,7 @@ describe( "SUI Util", function() {
 
 	it( 'expected properties', function() {
 		expect( sui.shortcodes instanceof Shortcodes ).toEqual( true );
+		expect( typeof sui.views === 'object' ).toBe( true );
 		expect( sui.views.editAttributeField ).not.toBe( undefined );
 	});
 

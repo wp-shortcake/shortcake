@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Shortcake (Shortcode UI) 0.6.0-alpha\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shortcode-ui\n"
+"POT-Creation-Date: 2015-10-09 18:13:32+00:00\n"
+"PO-Revision-Date: Tue Nov 03 2015 13:23:59 GMT+0100 (CET)\n"
+"Last-Translator: Administratör <alexander.berthelsen@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Swedish\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Loco - https://localise.biz/\n"
+"X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
+"__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
+"esc_attr__:1;esc_html__:1;esc_attr_e:1;esc_html_e:1;esc_attr_x:1,2c;"
+"esc_html_x:1,2c;comments_number_link:2,3;t:1;st:1;trans:1;transChoice:1,2\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+"X-Loco-Target-Locale: sv_SE"
+
+#: dev.php:75
+msgid "Attachment"
+msgstr "Bilaga"
+
+#: dev.php:79 dev.php:80
+msgid "Select Image"
+msgstr "Välj bild"
+
+#: dev.php:83
+msgid "Citation Source"
+msgstr "Källa"
+
+#: inc/class-shortcode-ui.php:109
+msgid "Inner Content"
+msgstr "Inre innehåll"
+
+#: inc/class-shortcode-ui.php:220 inc/class-shortcode-ui.php:221
+msgid "Insert Post Element"
+msgstr "Lägg till postelement"
+
+#: inc/class-shortcode-ui.php:222
+#, c-format
+msgid "%s Details"
+msgstr "%s detaljer"
+
+#: inc/class-shortcode-ui.php:223
+msgid "Insert Element"
+msgstr "Lägg till element"
+
+#: inc/class-shortcode-ui.php:224
+msgid "Update"
+msgstr "Uppdatera"
+
+#: inc/class-shortcode-ui.php:225
+msgid "There are no attributes to configure for this Post Element."
+msgstr "Det finns inga attribut att konfigurera för detta element."
+
+#: inc/class-shortcode-ui.php:226
+msgid "Failed to load preview"
+msgstr "Misslyckades att ladda förhandsgranskning"
+
+#: inc/class-shortcode-ui.php:227
+msgid "Search"
+msgstr "Sök"
+
+#: inc/class-shortcode-ui.php:228
+msgid "Insert Content"
+msgstr "Lägg till innehåll"
+
+#: inc/class-shortcode-ui.php:323
+msgid "Something's rotten in the state of Denmark"
+msgstr "Det är någonting ruttet i den danska staten."
+
+#: inc/fields/class-field-attachment.php:79
+#: inc/fields/class-field-attachment.php:80
+msgid "Select Attachment"
+msgstr "Välj bilaga"
+
+#: inc/fields/class-field-attachment.php:104
+msgid "Thumbnail Details"
+msgstr "Detaljer för tumnagel"
+
+#: inc/fields/class-field-attachment.php:109
+msgid "Edit Attachment"
+msgstr "Redigera bilaga"
+
+#: inc/templates/edit-form.tpl.php:3
+msgid "Back to list"
+msgstr "Tillbaka till listan"
+
+#. Plugin Name of the plugin/theme
+msgid "Shortcake (Shortcode UI)"
+msgstr "Shortcake (Shortcode UI)"
+
+#. Description of the plugin/theme
+msgid "User Interface for adding shortcodes."
+msgstr "Användargränssnitt för att lägga till shortcodes."
+
+#. Author of the plugin/theme
+msgid "Fusion Engineering and community"
+msgstr "Fusion Engineering and community"
+
+#. Author URI of the plugin/theme
+msgid "http://next.fusion.net/tag/shortcode-ui/"
+msgstr "http://next.fusion.net/tag/shortcode-ui/"
