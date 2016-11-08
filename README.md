@@ -1,9 +1,9 @@
 # Shortcake (Shortcode UI) #
-**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver  
+**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov  
 **Tags:** shortcodes  
-**Requires at least:** 4.1  
-**Tested up to:** 4.3  
-**Stable tag:** 0.5.0  
+**Requires at least:** 4.3  
+**Tested up to:** 4.4  
+**Stable tag:** 0.6.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -13,17 +13,17 @@ Shortcake makes using WordPress shortcodes a piece of cake.
 
 Used alongside `add_shortcode`, Shortcake supplies a user-friendly interface for adding a shortcode to a post, and viewing and editing it from within the content editor.
 
-Once you've installed the plugin, you'll need to [register UI for your shortcodes](https://github.com/fusioneng/Shortcake/wiki/Registering-Shortcode-UI). For inspiration, check out [examples of Shortcake in the wild](https://github.com/fusioneng/Shortcake/wiki/Shortcode-UI-Examples).
+Once you've installed the plugin, you'll need to [register UI for your shortcodes](https://github.com/wp-shortcake/shortcake/wiki/Registering-Shortcode-UI). For inspiration, check out [examples of Shortcake in the wild](https://github.com/wp-shortcake/shortcake/wiki/Shortcode-UI-Examples).
 
-To report bugs or feature requests, [please use Github issues](https://github.com/fusioneng/Shortcake/issues).
+To report bugs or feature requests, [please use Github issues](https://github.com/wp-shortcake/shortcake/issues).
 
 ## Installation ##
 
 Shortcake can be installed like any other WordPress plugin.
 
-Once you've done so, you'll need to [register the UI for your code](https://github.com/fusioneng/Shortcake/wiki/Registering-Shortcode-UI).
+Once you've done so, you'll need to [register the UI for your code](https://github.com/wp-shortcake/shortcake/wiki/Registering-Shortcode-UI).
 
-New in 0.4.0 is the ability to [attach javascript functions to event attribute updates](https://github.com/fusioneng/Shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
+New in 0.4.0 is the ability to [attach javascript functions to event attribute updates](https://github.com/wp-shortcake/shortcake/wiki/Event-Attribute-Callbacks). Action hooks can be used to dynamically show or hide a field based on the value of another, or to implement custom validation rules.
 
 ## Frequently Asked Questions ##
 
@@ -31,6 +31,13 @@ New in 0.4.0 is the ability to [attach javascript functions to event attribute u
 
 Shortcake doesn't support custom key=>value pairs as shortcode attributes because it isn't a great user experience.
 
+## Running tests ##
+
+We have test coverage for PHP using PHPunit, and JavaScript using Jasmine.
+
+*Running tests locally*
+
+Jasmine tests can be run using `grunt jasmine` and are also run as part of the `grunt scripts` task. To update the core WordPress files used by the Jasmine test suite, run `grunt updateJasmineCoreScripts --abspath="/path/to/wordpress-install"`.
 
 ## Screenshots ##
 
@@ -59,12 +66,32 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ## Changelog ##
 
-### 0.6.0 (???) ###
-* Core integration: Fully support PHP 5.2.
+### 0.6.2 (November 12, 2015) ###
+* Bug fix: Listens for "change" event on radio buttons and checkboxes to ensure shortcode attributes are updated.
+* Bug fix: Ensures `register_shortcode_ui` is always run before calling get_shortcodes(). Fixes post select AJAX callback when using `register_shortcode_ui` hook.
+
+### 0.6.1 (November 9, 2015) ###
+* Fixes JavaScript TypeError when clicking media frame menu items.
+* Corrects links in readme.
+
+### 0.6.0 (November 2, 2015) ###
+* Supports an optional `encode=true` argument for attributes, to allow limited HTML support. Attributes need to be run through `shortcode_atts()` in order to be properly decoded.
 * Defines a `SHORTCODE_UI_DOING_PREVIEW` constant when rendering a shortcode preview, which enables callbacks to serve a different representation of the shortcode in TinyMCE.
+* When an attachment is already selected for a shortcode attribute, opening media library will include it selected.
+* Cleaned up icon vertical alignment in the Insert Post Element UI.
+* Added CSS utility classes to all field HTML. For instance, the attachment field is now wrapped with `shortcode-ui-field-attachment`.
+* Added filters to modify shortcode UI arguments on registration.
+* Cleaned up the example plugin, so it's a much more useful developer reference.
+* Uses core's JavaScript regex for parsing shortcodes, instead of maintaining separate regex.
+* Permits HTML in field labels and descriptions.
 * Added Danish translation.
 * Added Italian translation.
-* When an attachment is already selected for a shortcode attribute, opening media library will include it selected.
+* Added German translation.
+* Core integration: Fully supports PHP 5.2.
+* Bug fix: Persists shortcode attributes and inner content when there isn't UI registered for them. Previously, they would be discarded.
+* Bug fix: Display the description on the post select field.
+* Bug fix: Attribute field change event binds to `input` event rather than `keyup`.
+* [Full release notes](http://fusion.net/story/225765/introducing-shortcake-v0-6-0-cream/)
 
 ### 0.5.0 (August 26, 2015) ###
 * Attachment field: Made it easier to change the attachment by clicking on the thumbnail; added attachment metadata in the field view.
@@ -141,4 +168,3 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Re-labeled the UI around “Post Elements”, which is more descriptive than “Content Items.”
 * Many bug fixes.
 * [Full release notes](http://next.fusion.net/2014/12/23/shortcake-v0-1-0-live-previews-fieldmanager-integration/).
-

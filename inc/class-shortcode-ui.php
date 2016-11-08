@@ -129,6 +129,19 @@ class Shortcode_UI {
 	 * @return array
 	 */
 	public function get_shortcodes() {
+
+		if ( ! did_action( 'register_shortcode_ui' ) ) {
+
+			/**
+			 * Register shortcode UI for shortcodes.
+			 *
+			 * Can be used to register shortcode UI only when an editor is being enqueued.
+			 *
+			 * @param array $settings Settings array for the ective WP_Editor.
+			 */
+			do_action( 'register_shortcode_ui', array(), '' );
+		}
+
 		/**
 		 * Filter the returned shortcode UI configuration parameters.
 		 *
@@ -182,6 +195,9 @@ class Shortcode_UI {
 	 */
 	public function action_admin_enqueue_scripts( $editor_supports ) {
 		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
+
+		wp_register_script( 'select2', trailingslashit( $this->plugin_url ) . 'lib/select2/select2.min.js', array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
+		wp_register_style( 'select2', trailingslashit( $this->plugin_url ) . 'lib/select2/select2.css', null, '3.5.2' );
 	}
 
 	/**
@@ -199,7 +215,7 @@ class Shortcode_UI {
 		$current_post_type = get_post_type();
 		if ( $current_post_type ) {
 			foreach ( $shortcodes as $key => $args ) {
-				if ( ! empty( $args['post_type'] ) && ! in_array( $current_post_type, $args['post_type'] ) ) {
+				if ( ! empty( $args['post_type'] ) && ! in_array( $current_post_type, $args['post_type'], true ) ) {
 					unset( $shortcodes[ $key ] );
 				}
 			}
@@ -212,7 +228,7 @@ class Shortcode_UI {
 		usort( $shortcodes, array( $this, 'compare_shortcodes_by_label' ) );
 
 		// Load minified version of wp-js-hooks if not debugging.
-		$wp_js_hooks_file = 'wp-js-hooks' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '' ) . '.js';
+		$wp_js_hooks_file = 'wp-js-hooks' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' ) . '.js';
 
 		wp_enqueue_script( 'shortcode-ui-js-hooks', $this->plugin_url . 'lib/wp-js-hooks/' . $wp_js_hooks_file, array(), '2015-03-19' );
 		wp_enqueue_script( 'shortcode-ui', $this->plugin_url . 'js/build/shortcode-ui.js', array( 'jquery', 'backbone', 'mce-view', 'shortcode-ui-js-hooks' ), $this->plugin_version );

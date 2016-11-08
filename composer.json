@@ -11,6 +11,7 @@
         }
     ],
     "require-dev": {
+        "squizlabs/php_codesniffer": "2.x-dev",
         "wp-coding-standards/wpcs": "dev-develop"
     },
     "scripts": {

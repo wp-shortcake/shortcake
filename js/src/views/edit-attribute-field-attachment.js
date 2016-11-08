@@ -70,6 +70,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	updateValue: function() {
 		var value = this.currentSelection.pluck( 'id' );
 		this.setValue( value );
+		this.triggerCallbacks();
 	},
 
 	render: function() {

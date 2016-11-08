@@ -38,10 +38,8 @@ class Shortcode_UI_Field_Post_Select {
 
 	public function action_enqueue_shortcode_ui() {
 
-		$plugin_dir = dirname( dirname( __FILE__ ) );
-
-		wp_enqueue_script( 'select2', plugins_url( 'lib/select2/select2.min.js', $plugin_dir ) , array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
-		wp_enqueue_style( 'select2', plugins_url( 'lib/select2/select2.css', $plugin_dir ), null, '3.5.2' );
+		wp_enqueue_script( 'select2' );
+		wp_enqueue_style( 'select2' );
 
 		wp_localize_script( 'shortcode-ui', 'shortcodeUiPostFieldData', array(
 			'nonce' => wp_create_nonce( 'shortcode_ui_field_post_select' ),
@@ -52,7 +50,6 @@ class Shortcode_UI_Field_Post_Select {
 	/**
 	 * Output styles and templates used by post select field.
 	 */
-	// public function action_print_media_templates() {
 	public function action_shortcode_ui_loaded_editor() {
 
 		?>
@@ -78,7 +75,7 @@ class Shortcode_UI_Field_Post_Select {
 			<div class="field-block shortcode-ui-field-post-select shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.id }}">{{{ data.label }}}</label>
 				<input type="text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="shortcode-ui-post-select" />
-				<# if ( typeof data.description == 'string' ) { #>
+				<# if ( typeof data.description == 'string' && data.description.length ) { #>
 					<p class="description">{{{ data.description }}}</p>
 				<# } #>
 			</div>

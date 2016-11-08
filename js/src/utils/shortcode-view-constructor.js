@@ -55,7 +55,7 @@ var shortcodeViewConstructor = {
 	 * values.
 	 *
 	 * @this {Shortcode}
-	 * @param {Object} options Options
+	 * @param {Object} options Options formatted as wp.shortcode.
 	 */
 	getShortcodeModel: function( options ) {
 		var shortcodeModel;
@@ -66,33 +66,48 @@ var shortcodeViewConstructor = {
 			return;
 		}
 
-		shortcodeModel = shortcodeModel.clone();
+		currentShortcode = shortcodeModel.clone();
 
-		shortcodeModel.get('attrs').each( function( attr ) {
+		var attributes_backup = {};
+		var attributes = options.attrs;
+		for ( var key in attributes.named ) {
 
-			// Verify value exists for attribute.
-			if ( ! ( attr.get('attr') in options.attrs.named ) ) {
-				return;
+			if ( ! attributes.named.hasOwnProperty( key ) ) {
+				continue;
 			}
 
-			var value = options.attrs.named[ attr.get('attr') ];
+			value = attributes.named[ key ];
+			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
 
-			// Maybe decode value.
-			if ( attr.get('encode') ) {
+			// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+			value = this.unAutoP( value );
+
+			if ( attr && attr.get('encode') ) {
 				value = decodeURIComponent( value );
+				value = value.replace( "&#37;", "%" );
 			}
 
-			attr.set( 'value', value );
-		} );
-
-		if ( 'content' in options ) {
-			var innerContent = shortcodeModel.get('inner_content');
-			if ( innerContent ) {
-				innerContent.set('value', options.content);
+			if ( attr ) {
+				attr.set( 'value', value );
+			} else {
+				attributes_backup[ key ] = value;
 			}
 		}
 
-		return shortcodeModel;
+		currentShortcode.set( 'attributes_backup', attributes_backup );
+
+		if ( options.content ) {
+			var inner_content = currentShortcode.get( 'inner_content' );
+			// Reverse the effects of wpautop: https://core.trac.wordpress.org/ticket/34329
+			options.content = this.unAutoP( options.content );
+			if ( inner_content ) {
+				inner_content.set( 'value', options.content );
+			} else {
+				currentShortcode.set( 'inner_content_backup', options.content );
+			}
+		}
+
+		return currentShortcode;
 	},
 
 	/**
@@ -146,14 +161,8 @@ var shortcodeViewConstructor = {
 	 * @param {string} shortcodeString String representation of the shortcode
 	 */
 	edit: function( shortcodeString ) {
-		var currentShortcode;
 
-		// Backwards compatability for WP pre-4.2
-		if ( 'object' === typeof( shortcodeString ) ) {
-			shortcodeString = decodeURIComponent( $(shortcodeString).attr('data-wpview-text') );
-		}
-
-		currentShortcode = this.parseShortcodeString( shortcodeString );
+		var currentShortcode = this.parseShortcodeString( shortcodeString );
 
 		if ( currentShortcode ) {
 
@@ -164,6 +173,19 @@ var shortcodeViewConstructor = {
 			});
 
 			wp_media_frame.open();
+
+			/* Trigger render_edit */
+			/*
+			 * Action run after an edit shortcode overlay is rendered.
+			 *
+			 * Called as `shortcode-ui.render_edit`.
+			 *
+			 * @param shortcodeModel (object)
+			 *           Reference to the shortcode model used in this overlay.
+			 */
+			var hookName = 'shortcode-ui.render_edit';
+			var shortcodeModel = this.shortcodeModel;
+			wp.shortcake.hooks.doAction( hookName, shortcodeModel );
 
 		}
 
@@ -185,6 +207,7 @@ var shortcodeViewConstructor = {
 
 		var shortcode_tags = _.map( sui.shortcodes.pluck( 'shortcode_tag' ), this.pregQuote ).join( '|' );
 		var regexp = wp.shortcode.regexp( shortcode_tags );
+		regexp.lastIndex = 0;
 		var matches = regexp.exec( shortcodeString );
 
 		if ( ! matches ) {
@@ -199,43 +222,8 @@ var shortcodeViewConstructor = {
 			return;
 		}
 
-		currentShortcode = defaultShortcode.clone();
-
-		var attributes_backup = {};
-		var attributes = wp.shortcode.attrs( matches[3] );
-
-		for ( var key in attributes.named ) {
-
-			if ( ! attributes.named.hasOwnProperty( key ) ) {
-				continue;
-			}
-
-			value = attributes.named[ key ];
-			attr  = currentShortcode.get( 'attrs' ).findWhere({ attr: key });
-
-			if ( attr && attr.get('encode') ) {
-				value = decodeURIComponent( value );
-			}
-
-			if ( attr ) {
-				attr.set( 'value', value );
-			} else {
-				attributes_backup[ key ] = value;
-			}
-		}
-
-		currentShortcode.set( 'attributes_backup', attributes_backup );
-
-		if ( matches[5] ) {
-			var inner_content = currentShortcode.get( 'inner_content' );
-			if ( inner_content ) {
-				inner_content.set( 'value', this.unAutoP( matches[5] ) );
-			} else {
-				currentShortcode.set( 'inner_content_backup', this.unAutoP( matches[5] ) );
-			}
-		}
-
-		return currentShortcode;
+		var shortcode = wp.shortcode.fromMatch( matches );
+		return this.getShortcodeModel( shortcode );
 	},
 
  	/**
@@ -272,118 +260,6 @@ var shortcodeViewConstructor = {
 				'\\$&' );
 	},
 
-	// Backwards compatability for Pre WP 4.2.
-	View: {
-
-		overlay: true,
-
-		initialize: function( options ) {
-			this.shortcode = this.getShortcode( options );
-			this.fetch();
-		},
-
-		getShortcode: function( options ) {
-
-			var shortcodeModel, shortcode;
-
-			shortcodeModel = sui.shortcodes.findWhere( { shortcode_tag: options.shortcode.tag } );
-
-			if (!shortcodeModel) {
-				return;
-			}
-
-			shortcode = shortcodeModel.clone();
-
-			shortcode.get('attrs').each(
-					function(attr) {
-
-						if (attr.get('attr') in options.shortcode.attrs.named) {
-							attr.set('value',
-									options.shortcode.attrs.named[attr
-											.get('attr')]);
-						}
-
-					});
-
-			if ('content' in options.shortcode) {
-				var inner_content = shortcode.get('inner_content');
-				if ( inner_content ) {
-					inner_content.set('value', options.shortcode.content);
-				}
-			}
-
-			return shortcode;
-
-		},
-
-		fetch : function() {
-
-			var self = this;
-
-			if ( ! this.parsed ) {
-
-				wp.ajax.post( 'do_shortcode', {
-					post_id: $( '#post_ID' ).val(),
-					shortcode: this.shortcode.formatShortcode(),
-					nonce: shortcodeUIData.nonces.preview,
-				}).done( function( response ) {
-					if ( response.indexOf( '<script' ) !== -1 ) {
-						self.setIframes( self.getEditorStyles(), response );
-					} else {
-						self.parsed = response;
-						self.render( true );
-					}
-				}).fail( function() {
-					self.parsed = '<span class="shortcake-error">' + shortcodeUIData.strings.mce_view_error + '</span>';
-					self.render( true );
-				} );
-
-			}
-
-		},
-
-		/**
-		 * Render the shortcode
-		 *
-		 * To ensure consistent rendering - this makes an ajax request to the
-		 * admin and displays.
-		 *
-		 * @return string html
-		 */
-		getHtml : function() {
-			return this.parsed;
-		},
-
-		/**
-		 * Returns an array of <link> tags for stylesheets applied to the TinyMCE editor.
-		 *
-		 * @method getEditorStyles
-		 * @returns {Array}
-		 */
-		getEditorStyles: function() {
-
-			var styles = '';
-
-			this.getNodes( function ( editor, node, content ) {
-				var dom = editor.dom,
-					bodyClasses = editor.getBody().className || '',
-					iframe, iframeDoc, i, resize;
-
-				tinymce.each( dom.$( 'link[rel="stylesheet"]', editor.getDoc().head ), function( link ) {
-					if ( link.href && link.href.indexOf( 'skins/lightgray/content.min.css' ) === -1 &&
-						link.href.indexOf( 'skins/wordpress/wp-content.css' ) === -1 ) {
-
-						styles += dom.getOuterHTML( link ) + '\n';
-					}
-
-				});
-
-			} );
-
-			return styles;
-		},
-
-	},
 };
 
-module.exports = shortcodeViewConstructor;
+module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
