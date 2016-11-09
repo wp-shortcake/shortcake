@@ -19,7 +19,7 @@
 				_selected = _selected.join( ',' );
 			}
 
-			this.setValue( e.val );
+			this.setValue( String( _selected ) );
 			this.triggerCallbacks();
 		},
 
