@@ -54,23 +54,6 @@ class Shortcode_UI_Field_Post_Select {
 
 		?>
 
-		<style>
-
-			.edit-shortcode-form .select2-container {
-				min-width: 300px;
-			}
-
-			.edit-shortcode-form .select2-container a {
-				transition: none;
-				-webkit-transition: none;
-			}
-
-			.wp-admin .select2-drop {
-				z-index: 160001;
-			}
-
-		</style>
-
 		<script type="text/html" id="tmpl-shortcode-ui-field-post-select">
 			<div class="field-block shortcode-ui-field-post-select shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.id }}">{{{ data.label }}}</label>

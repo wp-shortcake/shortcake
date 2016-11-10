@@ -204,6 +204,16 @@
   100% {
     margin-left: 60px; } }
 
+.edit-shortcode-form .select2-container {
+  min-width: 300px; }
+
+.edit-shortcode-form .select2-container a {
+  transition: none;
+  -webkit-transition: none; }
+
+.edit-shortcode-form .select2-drop {
+  z-index: 160001; }
+
 .select2-container {
   z-index: 160000; }
 /*# sourceMappingURL=shortcode-ui.css.map */
