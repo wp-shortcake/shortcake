@@ -49,8 +49,8 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 			$.get( ajaxurl, $.extend( request, this.ajaxData ),
 				function( response ) {
 					_.each( response.data.items, function( item ) {
-						var _option = $('<option>');
-						_option.attr( 'value', item.id )
+						$('<option>')
+							.attr( 'value', item.id )
 							.text( item.text )
 							.prop( 'selected', 'selected' )
 							.appendTo( $field );
