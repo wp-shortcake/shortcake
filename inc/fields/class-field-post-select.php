@@ -98,7 +98,7 @@ class Shortcode_UI_Field_Post_Select {
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
-		$response            = array( 'posts' => array(), 'found_posts' => 0, 'posts_per_page' => 0 );
+		$response            = array( 'items' => array(), 'found_items' => 0, 'items_per_page' => 0 );
 
 		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 
@@ -136,8 +136,8 @@ class Shortcode_UI_Field_Post_Select {
 			$query_args['s'] = sanitize_text_field( $_GET['s'] );
 		}
 
-		if ( ! empty( $_GET['post__in'] ) ) {
-			$post__in = is_array( $_GET['post__in'] ) ? $_GET['post__in'] : explode( ',', $_GET['post__in'] );
+		if ( ! empty( $_GET['include'] ) ) {
+			$post__in = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
 			$query_args['post__in'] = array_map( 'intval', $post__in );
 			$query_args['orderby']  = 'post__in';
 			$query_args['ignore_sticky_posts'] = true;
@@ -146,11 +146,11 @@ class Shortcode_UI_Field_Post_Select {
 		$query = new WP_Query( $query_args );
 
 		foreach ( $query->posts as $post_id ) {
-			array_push( $response['posts'], array( 'id' => $post_id, 'text' => html_entity_decode( get_the_title( $post_id ) ) ) );
+			array_push( $response['items'], array( 'id' => $post_id, 'text' => html_entity_decode( get_the_title( $post_id ) ) ) );
 		}
 
-		$response['found_posts']    = $query->found_posts;
-		$response['posts_per_page'] = $query->query_vars['posts_per_page'];
+		$response['found_items']    = $query->found_posts;
+		$response['items_per_page'] = $query->query_vars['posts_per_page'];
 
 		wp_send_json_success( $response );
 

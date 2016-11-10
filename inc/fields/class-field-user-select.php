@@ -118,7 +118,7 @@ class Shortcode_UI_Field_User_Select {
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( wp_unslash( $_GET['attr'] ) ) : null;
 		$page                = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : null;
 		$search_str          = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : null;
-		$response            = array( 'users' => array(), 'found_users' => 0, 'users_per_page' => 0 );
+		$response            = array( 'items' => array(), 'found_items' => 0, 'items_per_page' => 0 );
 
 		$include = null;
 		if ( isset( $_GET['include'] ) ) {
@@ -168,14 +168,14 @@ class Shortcode_UI_Field_User_Select {
 		$query = new WP_User_Query( $query_args );
 
 		foreach ( $query->get_results() as $user ) {
-			array_push( $response['users'], array(
+			array_push( $response['items'], array(
 				'id'   => $user->ID,
 				'text' => html_entity_decode( $user->display_name ),
 			) );
 		}
 
-		$response['found_users']    = $query->get_total();
-		$response['users_per_page'] = $query->query_vars['number'];
+		$response['found_items']    = $query->get_total();
+		$response['items_per_page'] = $query->query_vars['number'];
 
 		wp_send_json_success( $response );
 	}

@@ -115,7 +115,7 @@ class Shortcode_UI_Field_Term_Select {
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
 		$search              = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
-		$response            = array( 'terms' => array(), 'found_terms' => 0, 'terms_per_page' => 10, 'page' => $page );
+		$response            = array( 'items' => array(), 'found_items' => 0, 'items_per_page' => 10, 'page' => $page );
 
 		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_term_select' ) ) {
 			wp_send_json_error( $response );
@@ -147,8 +147,8 @@ class Shortcode_UI_Field_Term_Select {
 		$args['hide_empty'] = false;
 		$args['number']     = 10;
 
-		if ( ! empty( $_GET['tag__in'] ) ) {
-			$term__in = is_array( $_GET['tag__in'] ) ? $_GET['tag__in'] : explode( ',', $_GET['tag__in'] );
+		if ( ! empty( $_GET['include'] ) ) {
+			$term__in = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
 			$args['number'] = count( $term__in );
 			$args['include'] = array_map( 'intval', $term__in );
 			$args['orderby']  = 'tag__in';
@@ -167,17 +167,17 @@ class Shortcode_UI_Field_Term_Select {
 			wp_send_json_error();
 		}
 
-		$response['found_terms'] = absint( $num_results );
+		$response['found_items'] = absint( $num_results );
 
 		if ( isset( $page ) ) {
 			$args['page']   = $page;
-			$args['offset'] = ( $page - 1 ) * $response['terms_per_page'];
+			$args['offset'] = ( $page - 1 ) * $response['items_per_page'];
 		}
 
 		$results = get_terms( $args );
 
 		foreach ( $results as $result ) {
-			array_push( $response['terms'], array( 'id' => $result->term_id, 'text' => html_entity_decode( $result->name ) ) );
+			array_push( $response['items'], array( 'id' => $result->term_id, 'text' => html_entity_decode( $result->name ) ) );
 		}
 
 		wp_send_json_success( $response );
