@@ -37,6 +37,7 @@ class Shortcode_UI_Field_User_Select {
 		add_filter( 'shortcode_ui_fields',             array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'enqueue_shortcode_ui',            array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_user_field', array( $this, 'action_wp_ajax_shortcode_ui_user_field' ) );
+		add_action( 'wp_ajax_shortcode_ui_user_field_preselect', array( $this, 'action_wp_ajax_shortcode_ui_user_field_preselect' ) );
 		add_action( 'shortcode_ui_loaded_editor',      array( $this, 'action_shortcode_ui_loaded_editor' ) );
 	}
 
@@ -146,6 +147,7 @@ class Shortcode_UI_Field_User_Select {
 		// Include selected users to be displayed.
 		if ( $include ) {
 			$query_args['include'] = $include;
+			$query_args['orderby'] = 'include';
 		}
 
 		// Supports WP_User_Query query args.
@@ -177,4 +179,5 @@ class Shortcode_UI_Field_User_Select {
 
 		wp_send_json_success( $response );
 	}
+
 }

@@ -48,8 +48,24 @@
 
 			var $field = this.$el.find( '.shortcode-ui-post-select' );
 
-			$field.select2({
+			// Load values to be preselected before initializing field
+			var _preselected = String( this.getValue() ).split(',');
+			if ( _preselected.length ) {
+				$.get( ajaxurl,
+					$.extend({ post__in: _preselected }, ajaxData ),
+					function( response ) {
+						_.each( response.data.posts, function( post ) {
+							var _option = $('<option>');
+							_option.attr( 'value', post.id )
+								.text( post.text )
+								.prop( 'selected', 'selected' )
+								.appendTo( $field );
+						} );
+					}
+				);
+			}
 
+			var $fieldSelect2 = $field.select2({
 				placeholder: "Search",
 				multiple: this.model.get( 'multiple' ),
 
@@ -100,20 +116,19 @@
 			} );
 
 			if ( this.model.get( 'multiple' ) ) {
-				$field.next('.select2-container').first('ul.select2-selection__rendered').sortable({
+				var ul = $field.next('.select2-container').first('ul.select2-selection__rendered');
+				ul.sortable({
 					placeholder : 'ui-state-highlight',
 					forcePlaceholderSize: true,
 					items       : 'li:not(.select2-search__field)',
 					tolerance   : 'pointer',
-	    			start: function() { $('.shortcode-ui-post-select').select2('onSortStart'); },
-	    			update: function() { $('.shortcode-ui-post-select').select2('onSortEnd'); },
 					stop: function() {
-						$($(ul).find('.select2-selection__choice').get().reverse()).each(function() {
+						$( $(ul).find('.select2-selection__choice').get().reverse() ).each(function() {
 							var id = $(this).data('data').id;
 							var option = $field.find('option[value="' + id + '"]')[0];
 							$field.prepend(option);
 						});
-						// callback(); -- update model with sorted values
+						$field.trigger( 'change' );
 					}
 				});
 			}
@@ -144,7 +159,7 @@
 		},
 
 		destroySelect2UI: function() {
-			$('.shortcode-ui-post-select.select2-container').select2( "close" );
+			$fieldSelect2.select2( 'close' );
 		}
 
 	});
