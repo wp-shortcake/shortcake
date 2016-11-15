@@ -81,13 +81,12 @@ var Fetcher = (function() {
 			return;
 		}
 
-		var request = $.post( ajaxurl + '?action=bulk_do_shortcode', {
-				queries: _.pluck( fetcher.queries, 'query' )
-			}
-		);
+		var request = wp.ajax.post( 'bulk_do_shortcode', {
+			queries: _.pluck( fetcher.queries, 'query' )
+		});
 
-		request.done( function( response ) {
-			_.each( response.data, function( result, index ) {
+		request.done( function( responseData ) {
+			_.each( responseData, function( result, index ) {
 				var matchedQuery = _.findWhere( fetcher.queries, {
 					counter: parseInt( index ),
 				});
