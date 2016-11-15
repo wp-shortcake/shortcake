@@ -121,7 +121,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 				},
 				processResults: function (response, params) {
 					if ( ! response.success || 'undefined' === typeof response.data ) {
-						return;
+						return { results: [] };
 					}
 					var data = response.data;
 					params.page = params.page || 1;
