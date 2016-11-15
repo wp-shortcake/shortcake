@@ -21,7 +21,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 		var _selected = $( e.currentTarget ).val();
 
 		// Store multiple selections as comma-delimited list
-		if ( 'object' === typeof _selected ) {
+		if ( Array.isArray( _selected ) ) {
 			_selected = _selected.join( ',' );
 		}
 
@@ -121,7 +121,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 				},
 				processResults: function (response, params) {
 					if ( ! response.success || 'undefined' === typeof response.data ) {
-						return;
+						return { results: [] };
 					}
 					var data = response.data;
 					params.page = params.page || 1;
