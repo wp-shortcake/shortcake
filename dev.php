@@ -170,6 +170,16 @@ function shortcode_ui_dev_advanced_example() {
 			'frameTitle'  => esc_html__( 'Select Image', 'shortcode-ui-example' ),
 		),
 		array(
+			'label'       => 'Gallery',
+			'attr'        => 'gallery',
+			'description' => esc_html__( 'You can select multiple images.' ),
+			'type'        => 'attachment',
+			'libraryType' => array( 'image' ),
+			'multiple'    => true,
+			'addButton'   => 'Select Images',
+			'frameTitle'  => 'Select Images',
+		),
+		array(
 			'label'  => esc_html__( 'Citation Source', 'shortcode-ui-example' ),
 			'attr'   => 'source',
 			'type'   => 'text',
@@ -298,6 +308,7 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 	$attr = shortcode_atts( array(
 		'source'     => '',
 		'attachment' => 0,
+		'gallery'    => '',
 		'page'       => '',
 		'term'       => '',
 		'users'      => '',
@@ -347,6 +358,14 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 
 			<?php if ( ! empty( $attr['attachment'] ) ) : ?>
 			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ) ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['gallery'] ) ) : ?>
+				<b><?php esc_html_e( 'Gallery:', 'shortcode-ui-example' ); ?></b>
+				<?php foreach ( explode( ',', $attr['gallery'] ) as $attachment ) : ?>
+					 <?php echo wp_kses_post( wp_get_attachment_image( $attachment, array( 50, 50 ) ) ); ?>
+				<?php endforeach; ?>
+				<br />
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['page'] ) ) : ?>
