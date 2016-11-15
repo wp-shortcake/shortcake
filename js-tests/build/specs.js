@@ -27,7 +27,7 @@ describe( "Shortcode Inner Content Model", function() {
 
 } );
 
-},{"../../js/src/models/inner-content":9}],2:[function(require,module,exports){
+},{"../../js/src/models/inner-content":10}],2:[function(require,module,exports){
 var ShortcodeAttribute = require('../../js/src/models/shortcode-attribute');
 
 describe( "Shortcode Attribute Model", function() {
@@ -53,7 +53,7 @@ describe( "Shortcode Attribute Model", function() {
 
 } );
 
-},{"../../js/src/models/shortcode-attribute":10}],3:[function(require,module,exports){
+},{"../../js/src/models/shortcode-attribute":11}],3:[function(require,module,exports){
 (function (global){
 var Shortcode = require('../../js/src/models/shortcode');
 var InnerContent = require('../../js/src/models/inner-content');
@@ -153,7 +153,7 @@ describe( "Shortcode Model", function() {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../js/src/collections/shortcode-attributes":7,"../../js/src/models/inner-content":9,"../../js/src/models/shortcode":11,"../../js/src/models/shortcode-attribute":10}],4:[function(require,module,exports){
+},{"../../js/src/collections/shortcode-attributes":8,"../../js/src/models/inner-content":10,"../../js/src/models/shortcode":12,"../../js/src/models/shortcode-attribute":11}],4:[function(require,module,exports){
 (function (global){
 var Shortcode = require('../../js/src/models/shortcode');
 var ShortcodeViewConstructor = require('../../js/src/utils/shortcode-view-constructor');
@@ -348,7 +348,7 @@ describe( 'Shortcode View Constructor', function(){
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../js/src/models/shortcode":11,"../../js/src/utils/shortcode-view-constructor":13,"../../js/src/utils/sui":14,"../../js/src/views/edit-attribute-field":15}],5:[function(require,module,exports){
+},{"../../js/src/models/shortcode":12,"../../js/src/utils/shortcode-view-constructor":14,"../../js/src/utils/sui":15,"../../js/src/views/edit-attribute-field":16}],5:[function(require,module,exports){
 (function (global){
 var Shortcode = require('./../../../js/src/models/shortcode.js');
 var MceViewConstructor = require('./../../../js/src/utils/shortcode-view-constructor.js');
@@ -538,7 +538,7 @@ describe( "MCE View Constructor", function() {
 } );
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../../../js/src/models/shortcode.js":11,"./../../../js/src/utils/shortcode-view-constructor.js":13,"./../../../js/src/utils/sui.js":14}],6:[function(require,module,exports){
+},{"./../../../js/src/models/shortcode.js":12,"./../../../js/src/utils/shortcode-view-constructor.js":14,"./../../../js/src/utils/sui.js":15}],6:[function(require,module,exports){
 var Shortcodes = require('./../../../js/src/collections/shortcodes.js');
 var sui = require('./../../../js/src/utils/sui.js');
 
@@ -551,11 +551,71 @@ describe( "SUI Util", function() {
 	it( 'expected properties', function() {
 		expect( sui.shortcodes instanceof Shortcodes ).toEqual( true );
 		expect( typeof sui.views === 'object' ).toBe( true );
+		expect( sui.views.editAttributeField ).not.toBe( undefined );
 	});
 
 } );
 
-},{"./../../../js/src/collections/shortcodes.js":8,"./../../../js/src/utils/sui.js":14}],7:[function(require,module,exports){
+},{"./../../../js/src/collections/shortcodes.js":9,"./../../../js/src/utils/sui.js":15}],7:[function(require,module,exports){
+(function (global){
+var Shortcode = require('../../../js/src/models/shortcode');
+var ShortcodeAttribute = require('../../../js/src/models/shortcode-attribute');
+var EditAttributeField = require('../../../js/src/views/edit-attribute-field');
+var sui = require('../../../js/src/utils/sui');
+var hooks = require('../../../lib/wp-js-hooks/wp-js-hooks.js');
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
+
+describe( 'Edit Attribute Field', function(){
+	var editAttributeFieldView, shortcodeAttributeModel, attrData, shortcodeModel, shortcodeData, templateFunc;
+
+	shortcodeData = {
+		label: 'Test Label',
+		shortcode_tag: 'test_shortcode',
+		attrs: [
+			{
+				attr:        'attr',
+				label:       'Attribute',
+				type:        'text',
+				value:       'test value',
+				placeholder: 'test placeholder'
+			}
+		],
+		inner_content: {
+			value: 'test content',
+		},
+	};
+
+	shortcodeModel = new Shortcode( shortcodeData );
+
+	shortcodeAttributeModel = new ShortcodeAttribute(
+		shortcodeModel.get('attrs').models[0].attributes
+	);
+
+	editAttributeFieldView = new EditAttributeField({ model: shortcodeAttributeModel });
+	editAttributeFieldView.shortcode = shortcodeModel;
+	editAttributeFieldView.template = function( data ) {};
+
+	it( 'should set data and trigger callbacks on initial render', function(){
+		spyOn( editAttributeFieldView, 'triggerCallbacks' );
+		spyOn( editAttributeFieldView, 'template' );
+
+		editAttributeFieldView.render();
+		expect( editAttributeFieldView.triggerCallbacks ).toHaveBeenCalled();
+		expect( editAttributeFieldView.template ).toHaveBeenCalled();
+	});
+
+	xit( 'triggers callbacks with expected values', function(){
+		wp.shortcake.hooks.addAction( 'test_shortcode.attr1', 'attr1RenderCallback' );
+		window.attr1RenderCallback = function(){};
+
+		spyOn( window, 'attr1RenderCallback' );
+	});
+
+});
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../../js/src/models/shortcode":12,"../../../js/src/models/shortcode-attribute":11,"../../../js/src/utils/sui":15,"../../../js/src/views/edit-attribute-field":16,"../../../lib/wp-js-hooks/wp-js-hooks.js":17}],8:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var ShortcodeAttribute = require('./../models/shortcode-attribute.js');
@@ -577,7 +637,7 @@ var ShortcodeAttributes = Backbone.Collection.extend({
 module.exports = ShortcodeAttributes;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../models/shortcode-attribute.js":10}],8:[function(require,module,exports){
+},{"./../models/shortcode-attribute.js":11}],9:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var Shortcode = require('./../models/shortcode.js');
@@ -590,7 +650,7 @@ var Shortcodes = Backbone.Collection.extend({
 module.exports = Shortcodes;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../models/shortcode.js":11}],9:[function(require,module,exports){
+},{"./../models/shortcode.js":12}],10:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
@@ -609,7 +669,7 @@ var InnerContent = Backbone.Model.extend({
 module.exports = InnerContent;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 
@@ -632,7 +692,7 @@ var ShortcodeAttribute = Backbone.Model.extend({
 module.exports = ShortcodeAttribute;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null);
 var ShortcodeAttributes = require('./../collections/shortcode-attributes.js');
@@ -753,7 +813,7 @@ Shortcode = Backbone.Model.extend({
 module.exports = Shortcode;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../collections/shortcode-attributes.js":7,"./inner-content.js":9}],12:[function(require,module,exports){
+},{"./../collections/shortcode-attributes.js":8,"./inner-content.js":10}],13:[function(require,module,exports){
 (function (global){
 var $ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null);
 var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
@@ -868,7 +928,7 @@ var Fetcher = (function() {
 module.exports = Fetcher;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (global){
 var sui = require('./sui.js'),
 	fetcher = require('./fetcher.js'),
@@ -1137,7 +1197,7 @@ var shortcodeViewConstructor = {
 module.exports = sui.utils.shortcodeViewConstructor = shortcodeViewConstructor;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./fetcher.js":12,"./sui.js":14}],14:[function(require,module,exports){
+},{"./fetcher.js":13,"./sui.js":15}],15:[function(require,module,exports){
 var Shortcodes = require('./../collections/shortcodes.js');
 
 window.Shortcode_UI = window.Shortcode_UI || {
@@ -1149,7 +1209,7 @@ window.Shortcode_UI = window.Shortcode_UI || {
 
 module.exports = window.Shortcode_UI;
 
-},{"./../collections/shortcodes.js":8}],15:[function(require,module,exports){
+},{"./../collections/shortcodes.js":9}],16:[function(require,module,exports){
 (function (global){
 var Backbone     = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
 	sui          = require('./../utils/sui.js'),
@@ -1324,4 +1384,270 @@ sui.views.editAttributeField = editAttributeField;
 module.exports = editAttributeField;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./../utils/sui.js":14}]},{},[1,2,3,4,5,6]);
+},{"./../utils/sui.js":15}],17:[function(require,module,exports){
+/**
+ * This code is taken from @carldanley's WP-JS-Hooks library:
+ * https://github.com/carldanley/WP-JS-Hooks
+ *
+ * This is a basic event manager based on the one proposed for WordPress core
+ * in https://core.trac.wordpress.org/attachment/ticket/21170.
+ *
+ * Modifications for this plugin: The EventManager methods are all namespaced
+ * to `wp.shortcake.hooks` to avoid collisions with the proposed system of
+ * hooks for core, which are intended to be adopted at `wp.hooks`.  However, we
+ * plan to keep basic feature parity and interoperability with the proposed JS
+ * hooks and filters system for core, with the end goal of using the same API
+ * as what is finally decided on there.
+ */
+
+( function( window, undefined ) {
+	'use strict';
+
+	/**
+	 * Handles managing all events for whatever you plug it into. Priorities for hooks are based on lowest to highest in
+	 * that, lowest priority hooks are fired first.
+	 */
+	var EventManager = function() {
+		var slice = Array.prototype.slice;
+
+		/**
+		 * Maintain a reference to the object scope so our public methods never get confusing.
+		 */
+		var MethodsAvailable = {
+			removeFilter : removeFilter,
+			applyFilters : applyFilters,
+			addFilter : addFilter,
+			removeAction : removeAction,
+			doAction : doAction,
+			addAction : addAction
+		};
+
+		/**
+		 * Contains the hooks that get registered with this EventManager. The array for storage utilizes a "flat"
+		 * object literal such that looking up the hook utilizes the native object literal hash.
+		 */
+		var STORAGE = {
+			actions : {},
+			filters : {}
+		};
+
+		/**
+		 * Adds an action to the event manager.
+		 *
+		 * @param action Must contain namespace.identifier
+		 * @param callback Must be a valid callback function before this action is added
+		 * @param [priority=10] Used to control when the function is executed in relation to other callbacks bound to the same hook
+		 * @param [context] Supply a value to be used for this
+		 */
+		function addAction( action, callback, priority, context ) {
+			if( typeof action === 'string' && typeof callback === 'function' ) {
+				priority = parseInt( ( priority || 10 ), 10 );
+				_addHook( 'actions', action, callback, priority, context );
+			}
+
+			return MethodsAvailable;
+		}
+
+		/**
+		 * Performs an action if it exists. You can pass as many arguments as you want to this function; the only rule is
+		 * that the first argument must always be the action.
+		 */
+		function doAction( /* action, arg1, arg2, ... */ ) {
+			var args = slice.call( arguments );
+			var action = args.shift();
+
+			if( typeof action === 'string' ) {
+				_runHook( 'actions', action, args );
+			}
+
+			return MethodsAvailable;
+		}
+
+		/**
+		 * Removes the specified action if it contains a namespace.identifier & exists.
+		 *
+		 * @param action The action to remove
+		 * @param [callback] Callback function to remove
+		 */
+		function removeAction( action, callback ) {
+			if( typeof action === 'string' ) {
+				_removeHook( 'actions', action, callback );
+			}
+
+			return MethodsAvailable;
+		}
+
+		/**
+		 * Adds a filter to the event manager.
+		 *
+		 * @param filter Must contain namespace.identifier
+		 * @param callback Must be a valid callback function before this action is added
+		 * @param [priority=10] Used to control when the function is executed in relation to other callbacks bound to the same hook
+		 * @param [context] Supply a value to be used for this
+		 */
+		function addFilter( filter, callback, priority, context ) {
+			if( typeof filter === 'string' && typeof callback === 'function' ) {
+				priority = parseInt( ( priority || 10 ), 10 );
+				_addHook( 'filters', filter, callback, priority, context );
+			}
+
+			return MethodsAvailable;
+		}
+
+		/**
+		 * Performs a filter if it exists. You should only ever pass 1 argument to be filtered. The only rule is that
+		 * the first argument must always be the filter.
+		 */
+		function applyFilters( /* filter, filtered arg, arg2, ... */ ) {
+			var args = slice.call( arguments );
+			var filter = args.shift();
+
+			if( typeof filter === 'string' ) {
+				return _runHook( 'filters', filter, args );
+			}
+
+			return MethodsAvailable;
+		}
+
+		/**
+		 * Removes the specified filter if it contains a namespace.identifier & exists.
+		 *
+		 * @param filter The action to remove
+		 * @param [callback] Callback function to remove
+		 */
+		function removeFilter( filter, callback ) {
+			if( typeof filter === 'string') {
+				_removeHook( 'filters', filter, callback );
+			}
+
+			return MethodsAvailable;
+		}
+
+		/**
+		 * Removes the specified hook by resetting the value of it.
+		 *
+		 * @param type Type of hook, either 'actions' or 'filters'
+		 * @param hook The hook (namespace.identifier) to remove
+		 * @private
+		 */
+		function _removeHook( type, hook, callback, context ) {
+			var handlers, handler, i;
+
+			if ( !STORAGE[ type ][ hook ] ) {
+				return;
+			}
+			if ( !callback ) {
+				STORAGE[ type ][ hook ] = [];
+			} else {
+				handlers = STORAGE[ type ][ hook ];
+				if ( !context ) {
+					for ( i = handlers.length; i--; ) {
+						if ( handlers[i].callback === callback ) {
+							handlers.splice( i, 1 );
+						}
+					}
+				}
+				else {
+					for ( i = handlers.length; i--; ) {
+						handler = handlers[i];
+						if ( handler.callback === callback && handler.context === context) {
+							handlers.splice( i, 1 );
+						}
+					}
+				}
+			}
+		}
+
+		/**
+		 * Adds the hook to the appropriate storage container
+		 *
+		 * @param type 'actions' or 'filters'
+		 * @param hook The hook (namespace.identifier) to add to our event manager
+		 * @param callback The function that will be called when the hook is executed.
+		 * @param priority The priority of this hook. Must be an integer.
+		 * @param [context] A value to be used for this
+		 * @private
+		 */
+		function _addHook( type, hook, callback, priority, context ) {
+			var hookObject = {
+				callback : callback,
+				priority : priority,
+				context : context
+			};
+
+			// Utilize 'prop itself' : http://jsperf.com/hasownproperty-vs-in-vs-undefined/19
+			var hooks = STORAGE[ type ][ hook ];
+			if( hooks ) {
+				hooks.push( hookObject );
+				hooks = _hookInsertSort( hooks );
+			}
+			else {
+				hooks = [ hookObject ];
+			}
+
+			STORAGE[ type ][ hook ] = hooks;
+		}
+
+		/**
+		 * Use an insert sort for keeping our hooks organized based on priority. This function is ridiculously faster
+		 * than bubble sort, etc: http://jsperf.com/javascript-sort
+		 *
+		 * @param hooks The custom array containing all of the appropriate hooks to perform an insert sort on.
+		 * @private
+		 */
+		function _hookInsertSort( hooks ) {
+			var tmpHook, j, prevHook;
+			for( var i = 1, len = hooks.length; i < len; i++ ) {
+				tmpHook = hooks[ i ];
+				j = i;
+				while( ( prevHook = hooks[ j - 1 ] ) &&  prevHook.priority > tmpHook.priority ) {
+					hooks[ j ] = hooks[ j - 1 ];
+					--j;
+				}
+				hooks[ j ] = tmpHook;
+			}
+
+			return hooks;
+		}
+
+		/**
+		 * Runs the specified hook. If it is an action, the value is not modified but if it is a filter, it is.
+		 *
+		 * @param type 'actions' or 'filters'
+		 * @param hook The hook ( namespace.identifier ) to be ran.
+		 * @param args Arguments to pass to the action/filter. If it's a filter, args is actually a single parameter.
+		 * @private
+		 */
+		function _runHook( type, hook, args ) {
+			var handlers = STORAGE[ type ][ hook ], i, len;
+
+			if ( !handlers ) {
+				return (type === 'filters') ? args[0] : false;
+			}
+
+			len = handlers.length;
+			if ( type === 'filters' ) {
+				for ( i = 0; i < len; i++ ) {
+					args[ 0 ] = handlers[ i ].callback.apply( handlers[ i ].context, args );
+				}
+			} else {
+				for ( i = 0; i < len; i++ ) {
+					handlers[ i ].callback.apply( handlers[ i ].context, args );
+				}
+			}
+
+			return ( type === 'filters' ) ? args[ 0 ] : true;
+		}
+
+		// return all of the publicly available methods
+		return MethodsAvailable;
+
+	};
+
+	window.wp = window.wp || {};
+	window.wp.shortcake = window.wp.shortcake || {};
+	window.wp.shortcake.hooks = new EventManager();
+
+} )( window );
+
+},{}]},{},[1,2,3,4,5,6,7]);
