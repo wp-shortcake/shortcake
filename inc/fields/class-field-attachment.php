@@ -106,10 +106,16 @@ class Shortcake_Field_Attachment {
 
 					<button class="button button-small remove" data-id="{{ data.id }}">×</button>
 
-					<# if ( data.type === 'image' && data.sizes ) { #>
+					<# if ( data.type === 'image' && data.sizes && data.sizes.thumbnail ) { #>
 						<div class="thumbnail">
 							<div class="centered">
-								<img src="{{ data.sizes.thumbnail.url }}" alt="" style="width: {{ data.sizes.thumbnail.width }}px; height: {{ data.sizes.thumbnail.height }}px;" />
+								<img src="{{ data.sizes.thumbnail.url }}" alt="" width="{{ data.sizes.thumbnail.width }}" height="{{ data.sizes.thumbnail.height }}" />
+							</div>
+						</div>
+					<# } else if ( data.type === 'image' && ( ! data.sizes || ! data.sizes.thumbnail ) ) { #>
+						<div class="thumbnail">
+							<div class="centered">
+								<img src="{{ data.url }}" alt="" width="{{ data.width }}" height="{{ data.height }}" />
 							</div>
 						</div>
 					<# } else if ( data.type !== 'image' ) { #>
