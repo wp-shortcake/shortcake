@@ -1,10 +1,10 @@
 var Shortcode = require('../../js/src/models/shortcode');
 var ShortcodeViewConstructor = require('../../js/src/utils/shortcode-view-constructor');
+var EditAttributeField = require('../../js/src/views/edit-attribute-field');
 var sui = require('../../js/src/utils/sui');
 var $ = require('jquery');
 
 describe( 'Shortcode View Constructor', function(){
-
 
 	it( 'Persists inner_content when parsing a shortcode without inner_content attribute defined', function(){
 		var data = {
@@ -144,5 +144,48 @@ describe( 'Shortcode View Constructor', function(){
 		var secondCall = ShortcodeViewConstructor.parseShortcodeString( shortcodeString );
 		expect( secondCall ).toBeDefined();
 	});
+
+
+	it( 'Select field can maintain order of options.', function() {
+
+		var shortcode = new Shortcode({
+			label: 'Test',
+			shortcode_tag: 'test',
+			attrs: [
+				// Legacy option format
+				{
+					attr:        'foo',
+					label:       'Foo',
+					type:        'select',
+					options:     { x: '1', z: '2', y: '3' },
+				},
+				// New array of object format
+				{
+					attr:        'foo',
+					label:       'Foo',
+					type:        'select',
+					options:     [
+						{ value: 'x', label: '1' },
+						{ value: 'z', label: '2' },
+						{ value: 'y', label: '3' },
+					]
+				}
+			]
+		});
+
+		var view = new EditAttributeField( { model: shortcode } );
+		var opt1 = view.parseOptions( shortcode.get('attrs').at(0).get('options') );
+		var opt2 = view.parseOptions( shortcode.get('attrs').at(1).get('options') );
+
+		expect( Array.isArray( opt1 ) ).toBe( true );
+		expect( Array.isArray( opt2 ) ).toBe( true );
+		expect( opt1[1].value ).toEqual( 'z' );
+		expect( opt1[1].label ).toEqual( '2' );
+		expect( opt2[1].value ).toEqual( 'z' );
+		expect( opt2[1].label ).toEqual( '2' );
+
+	});
+
+
 
 });

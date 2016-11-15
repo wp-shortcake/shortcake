@@ -49,8 +49,18 @@
 	<div class="field-block shortcode-ui-field-select shortcode-ui-attribute-{{ data.attr }}">
 		<label for="{{ data.id }}">{{{ data.label }}}</label>
 		<select name="{{ data.attr }}" id="{{ data.id }}" {{{ data.meta }}}>
-			<# _.each( data.options, function( label, value ) { #>
-				<option value="{{ value }}" <# if ( value == data.value ){ print('selected'); } #>>{{ label }}</option>
+			<# _.each( data.options, function( option ) { #>
+
+				<# if ( 'options' in option && 'label' in option ) { #>
+					<optgroup label="{{ option.label }}">
+						<# _.each( option.options, function( optgroupOption ) { #>
+							<option value="{{ optgroupOption.value }}" <# if ( optgroupOption.value === data.value ){ print('selected'); } #>>{{ optgroupOption.label }}</option>
+						<# }); #>
+					</optgroup>
+				<# } else { #>
+					<option value="{{ option.value }}" <# if ( option.value === data.value ){ print('selected'); } #>>{{ option.label }}</option>
+				<# } #>
+
 			<# }); #>
 		</select>
 		<# if ( typeof data.description == 'string' && data.description.length ) { #>

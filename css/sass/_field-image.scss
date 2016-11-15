@@ -1,110 +1,111 @@
-.edit-shortcode-form .shortcake-attachment-preview {
+.edit-shortcode-form {
 
-	width: 150px;
-	height: 150px;
-	margin: 0 10px 10px 0;
-	line-height: 150px;
-	text-align: center;
-	padding: 0;
-
-	&:before {
-		display: none;
-	}
-
-	.thumbnail:hover:after { 
-		background: rgba(0,0,0,0.1);
-		transition: all .3s linear;
-	 }
-
-	&:not( .has-attachment ) {
-		border: 2px dashed #DDD;
-		border-radius: 2px;
-		background: transparent;
-		box-shadow: none;
-	}
-
-	.button.add {
-		vertical-align: middle;
-		z-index: 1;
-	}
-
-	.button.remove {
-
-		z-index: 1;
-		display: none;
-		position: absolute;
-		top: 5px;
-		right: 5px;
-		border: 1px solid #aaa;
-		box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.15 );
-		text-indent: 100%;
-		whitespace: nowrap;
-		width: 24px;
-		height: 24px;
-		padding: 0;
-		overflow:hidden;
-
-		&:after {
-			content: "\00d7";
-			position: absolute;
-			top: -1px;
-			left: 5px;
-			font-size: 22px;
-			text-indent: 0;
-		}
-	}
-
-	.loading-indicator,
-	&.loading .button.add {
-		display: none;
-	}
-
-	&.loading .loading-indicator {
+	.button.shortcake-attachment-select {
 		display: block;
-		position: relative;
-		width: 100%;
-		height: 100%;
+		clear: both;
+		margin-bottom: 15px;
 	}
 
-	.loading-indicator {
-		.dashicons {
-			font-size: 80px;
-			height: 100px;
-			line-height: 100px;
-			width: 100%;
-			text-align: center;
-			vertical-align: middle;
-		}
-		.attachment-preview-loading {
-			width: 60px;
-			height: 5px;
-			overflow: hidden;
-			background-color: transparent;
-			margin: -30px auto 0;
-
-			ins {
-				background-color: #464646;
-				margin: 0 0 0 -60px;
-				width: 60px;
-				height: 5px;
-				display: block;
-				-webkit-animation: attachment-preview-loading 1.3s infinite 1s linear;
-				animation: attachment-preview-loading 1.3s infinite 1s linear;
-			}
-		}
+	.shortcake-attachment-preview {
+		float: left;
+		margin: 0 20px 20px 0;
+		width: 150px;
 	}
 
-	.filename {
-		line-height: 1.4em
+	.shortcode-ui-field-attachment .description {
+		margin: 10px 0;
 	}
 
-	&.has-attachment  {
-		.button.add {
+	.shortcake-attachment-preview-container {
+
+		width: 150px !important;
+		height: 150px !important;
+		margin: 0 10px 10px 0;
+		line-height: 150px;
+		text-align: center;
+		padding: 0;
+
+		&:before {
 			display: none;
 		}
+
 		.button.remove {
+
+			z-index: 1;
 			display: block;
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			border: 1px solid #aaa;
+			box-shadow: 0 1px 3px rgba( 0, 0, 0, 0.15 );
+			text-indent: 100%;
+			whitespace: nowrap;
+			width: 24px;
+			height: 24px;
+			padding: 0;
+			overflow:hidden;
+
+			&:after {
+				content: "\00d7";
+				position: absolute;
+				top: -1px;
+				left: 5px;
+				font-size: 22px;
+				text-indent: 0;
+			}
 		}
+
+		.thumbnail img {
+			max-width: 100%;
+			max-height: 100%;
+			width: auto;
+			height: auto;
+		}
+
+		.loading-indicator,
+		&.loading .button.add {
+			display: none;
+		}
+
+		&.loading .loading-indicator {
+			display: block;
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		.loading-indicator {
+			.dashicons {
+				font-size: 80px;
+				height: 100px;
+				line-height: 100px;
+				width: 100%;
+				text-align: center;
+				vertical-align: middle;
+			}
+			.attachment-preview-loading {
+				width: 60px;
+				height: 5px;
+				overflow: hidden;
+				background-color: transparent;
+				margin: -30px auto 0;
+
+				ins {
+					background-color: #464646;
+					margin: 0 0 0 -60px;
+					width: 60px;
+					height: 5px;
+					display: block;
+					-webkit-animation: attachment-preview-loading 1.3s infinite 1s linear;
+					animation: attachment-preview-loading 1.3s infinite 1s linear;
+				}
+			}
+		}
+
+		.filename {
+			line-height: 1.4em
+		}
+
 	}
 
 }
