@@ -214,12 +214,7 @@
 .edit-shortcode-form .select2-drop {
   z-index: 160001; }
 
-.select2-container {
-  z-index: 160000;
-  max-width: 300px; }
-
-.edit-shortcode-form .select2 li,
-.select2-results li {
+.edit-shortcode-form .select2 li {
   margin: 0; }
 
 .edit-shortcode-form .select2-selection__rendered {
@@ -239,4 +234,11 @@
 .edit-shortcode-form .select2-container--default.select2-container--focus .select2-selection--multiple {
   border-color: #5b9dd9;
   box-shadow: 0 0 2px rgba(30, 140, 190, 0.8); }
+
+.select2-container {
+  z-index: 160000;
+  max-width: 300px; }
+
+.select2-results li {
+  margin: 0; }
 /*# sourceMappingURL=shortcode-ui.css.map */
