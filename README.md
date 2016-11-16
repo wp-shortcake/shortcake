@@ -1,5 +1,5 @@
 # Shortcake (Shortcode UI) #
-**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov  
+**Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov, bronsonquick, dashaluna, mehigh, sc0ttkclark, kraftner, pravdomil  
 **Tags:** shortcodes  
 **Requires at least:** 4.5  
 **Tested up to:** 4.7  
