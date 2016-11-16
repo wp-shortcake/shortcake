@@ -37,6 +37,7 @@ class Shortcode_UI_Field_User_Select {
 		add_filter( 'shortcode_ui_fields',             array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'enqueue_shortcode_ui',            array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_user_field', array( $this, 'action_wp_ajax_shortcode_ui_user_field' ) );
+		add_action( 'wp_ajax_shortcode_ui_user_field_preselect', array( $this, 'action_wp_ajax_shortcode_ui_user_field_preselect' ) );
 		add_action( 'shortcode_ui_loaded_editor',      array( $this, 'action_shortcode_ui_loaded_editor' ) );
 	}
 
@@ -71,27 +72,10 @@ class Shortcode_UI_Field_User_Select {
 	public function action_shortcode_ui_loaded_editor() {
 		?>
 
-		<style>
-
-			.edit-shortcode-form .select2-container {
-				min-width: 300px;
-			}
-
-			.edit-shortcode-form .select2-container a {
-				transition: none;
-				-webkit-transition: none;
-			}
-
-			.wp-admin .select2-drop {
-				z-index: 160001;
-			}
-
-		</style>
-
 		<script type="text/html" id="tmpl-shortcode-ui-field-user-select">
 			<div class="field-block shortcode-ui-field-user-select shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.id }}">{{{ data.label }}}</label>
-				<input type="text" name="{{ data.attr }}" id="{{ data.id }}" value="{{ data.value }}" class="shortcode-ui-user-select" />
+				<select name="{{ data.attr }}" id="{{ data.id }}" class="shortcode-ui-user-select"></select>
 				<# if ( typeof data.description == 'string' && data.description.length ) { #>
 					<p class="description">{{{ data.description }}}</p>
 				<# } #>
@@ -117,7 +101,7 @@ class Shortcode_UI_Field_User_Select {
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( wp_unslash( $_GET['attr'] ) ) : null;
 		$page                = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : null;
 		$search_str          = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : null;
-		$response            = array( 'users' => array(), 'found_users' => 0, 'users_per_page' => 0 );
+		$response            = array( 'items' => array(), 'found_items' => 0, 'items_per_page' => 0 );
 
 		$include = null;
 		if ( isset( $_GET['include'] ) ) {
@@ -146,6 +130,7 @@ class Shortcode_UI_Field_User_Select {
 		// Include selected users to be displayed.
 		if ( $include ) {
 			$query_args['include'] = $include;
+			$query_args['orderby'] = 'include';
 		}
 
 		// Supports WP_User_Query query args.
@@ -166,15 +151,16 @@ class Shortcode_UI_Field_User_Select {
 		$query = new WP_User_Query( $query_args );
 
 		foreach ( $query->get_results() as $user ) {
-			array_push( $response['users'], array(
+			array_push( $response['items'], array(
 				'id'   => $user->ID,
 				'text' => html_entity_decode( $user->display_name ),
 			) );
 		}
 
-		$response['found_users']    = $query->get_total();
-		$response['users_per_page'] = $query->query_vars['number'];
+		$response['found_items']    = $query->get_total();
+		$response['items_per_page'] = $query->query_vars['number'];
 
 		wp_send_json_success( $response );
 	}
+
 }

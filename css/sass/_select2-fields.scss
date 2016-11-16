@@ -1,0 +1,50 @@
+.edit-shortcode-form {
+	.select2-container {
+		min-width: 300px;
+	}
+
+	.select2-container a {
+		transition: none;
+		-webkit-transition: none;
+	}
+
+	.select2-drop {
+		z-index: 160001;
+	}
+
+	.select2 li {
+		margin: 0;
+	}
+
+	.select2-selection__rendered {
+		vertical-align: top;
+	}
+
+	.select2-container .select2-search--inline .select2-search__field {
+		margin-top: 7px;
+	}
+
+	.select2-container--default .select2-selection--multiple {
+		border-radius: 0;
+		border-color: #ddd;
+		box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
+		background-color: #fff;
+		color: #333;
+		outline: none;
+	}
+
+	.select2-container--default.select2-container--focus .select2-selection--multiple {
+		border-color: #5b9dd9;
+		box-shadow: 0 0 2px rgba(30,140,190,.8);
+	}
+
+}
+
+.select2-container {
+	z-index: 160000; // Make sure Select2 UI is visible above media modal
+	max-width: 300px;
+}
+
+.select2-results li {
+	margin: 0;
+}

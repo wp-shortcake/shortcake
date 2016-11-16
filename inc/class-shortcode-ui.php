@@ -197,8 +197,16 @@ class Shortcode_UI {
 	public function action_admin_enqueue_scripts( $editor_supports ) {
 		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
 
-		wp_register_script( 'select2', trailingslashit( $this->plugin_url ) . 'lib/select2/select2.min.js', array( 'jquery', 'jquery-ui-sortable' ), '3.5.2' );
-		wp_register_style( 'select2', trailingslashit( $this->plugin_url ) . 'lib/select2/select2.css', null, '3.5.2' );
+		$min = '';
+
+		wp_register_script( 'select2',
+			trailingslashit( $this->plugin_url ) . "lib/select2/js/select2{$min}.js",
+			array( 'jquery', 'jquery-ui-sortable' ), '4.0.3'
+		);
+		wp_register_style( 'select2',
+			trailingslashit( $this->plugin_url ) . 'lib/select2/css/select2.css',
+			null, '4.0.3'
+		);
 	}
 
 	/**
