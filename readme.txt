@@ -3,7 +3,7 @@ Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapple
 Tags: shortcodes
 Requires at least: 4.3
 Tested up to: 4.4
-Stable tag: 0.6.2
+Stable tag: 0.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,13 @@ New in 0.4.0 is the ability to [attach javascript functions to event attribute u
 
 Shortcake doesn't support custom key=>value pairs as shortcode attributes because it isn't a great user experience.
 
+== Running tests ==
+
+We have test coverage for PHP using PHPunit, and JavaScript using Jasmine.
+
+= Running tests locally =
+
+Jasmine tests can be run using `grunt jasmine` and are also run as part of the `grunt scripts` task. To update the core WordPress files used by the Jasmine test suite, run `grunt updateJasmineCoreScripts --abspath="/path/to/wordpress-install"`.
 
 == Screenshots ==
 
@@ -50,6 +57,27 @@ We've removed the compatibility shim for the `placeholder` attribute argument. Y
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 
 == Changelog ==
+
+= 0.7.0 (November 18, 2016) =
+* Adds "Add post element" button to media buttons - one click to open the shortcode list, rather than clicking "Add media" button and then finding "insert post element" in the menu.
+* Added "Term Select" field type.
+* Added "User Select" field type.
+* Added new hooks that fire on rendering/editing/closing a shortcode, which can be used for field types which require custom javascript initialization or cleanup.
+* Select fields: add full support for multiple select fields.
+* Select fields: support custom ordering of options.
+* Select fields: support grouping option in `<optgroup>`s by passing them as a nested array.
+* Attachment fields: support multiple selection.
+* Attachment fields: support SVG images (if svg uploads are enabled by a plugin or theme).
+* Bug fix: Handle percent signs when decoding fields with `encode=true` specified.
+* Bug fix: fix issue where it takes two clicks on a shortcode in editor to bring up the Edit Shortcode modal.
+* Bug fix: fix issue when searching for shortcodes by name where if multiple shortcodes start with the search string, only the first is returned.
+* Bug fix: only output a description field on an attribute if it's not empty.
+* Compatability: Remove shims for handling the media modal in WP 4.1 and 4.2.
+* Compatability: Upgrade Select2 library to 4.0.3 to avoid conflicts with other plugins which use the latest version of Select2.
+* Added Turkish translation.
+* Added Finnish translation.
+* Added Swedish translation.
+* Added Hungarian translation.
 
 = 0.6.2 (November 12, 2015) =
 * Bug fix: Listens for "change" event on radio buttons and checkboxes to ensure shortcode attributes are updated.
