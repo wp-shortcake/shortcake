@@ -72,10 +72,10 @@
 <script type="text/html" id="tmpl-shortcode-ui-field-radio">
 	<div class="field-block shortcode-ui-field-radio shortcode-ui-attribute-{{ data.attr }}">
 		<label>{{{ data.label }}}</label>
-		<# _.each( data.options, function( label, value ) { #>
+		<# _.each( data.options, function( option ) { #>
 			<label>
-				<input type="radio" name="{{ data.attr }}" value="{{ value }}" <# if ( value == data.value ) { print('checked'); } #> />
-				{{ label }}
+				<input type="radio" name="{{ data.attr }}" value="{{ option.value }}" <# if ( option.value == data.value ) { print('checked'); } #> />
+				{{ option.label }}
 			</label>
 		<# }); #>
 		<# if ( typeof data.description == 'string' && data.description.length ) { #>
