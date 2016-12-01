@@ -213,7 +213,7 @@ function shortcode_ui_dev_advanced_example() {
 			'label'  => esc_html__( 'Color', 'shortcode-ui-example' ),
 			'attr'   => 'color',
 			'type'   => 'color',
-			'encode' => true,
+			'encode' => false,
 			'meta'   => array(
 				'placeholder' => esc_html__( 'Hex color code', 'shortcode-ui-example' ),
 			),
