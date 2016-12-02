@@ -238,7 +238,7 @@ Shortcode = Backbone.Model.extend({
 			template += "]{{ content }}[/{{ shortcode }}]";
 		} else {
 			// add closing slash to shortcodes without content
-			template += "/]";
+			template += " /]";
 		}
 
 		template = template.replace( /{{ shortcode }}/g, this.get('shortcode_tag') );
