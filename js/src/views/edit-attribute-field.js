@@ -48,6 +48,14 @@ var editAttributeField = Backbone.View.extend( {
 		}
 
 		this.$el.html( this.template( data ) );
+
+		if ( 'select' === data.type && '' === this.model.get( 'value' ) ) {
+			var firstVisibleOption = _.first( data.options );
+			if ( 'undefined' !== typeof firstVisibleOption.value ) {
+				this.setValue( firstVisibleOption.value );
+			}
+		}
+
 		this.triggerCallbacks();
 
 		return this;
