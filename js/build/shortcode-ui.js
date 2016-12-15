@@ -1153,8 +1153,6 @@ var editAttributeField = Backbone.View.extend( {
 			}
 		}
 
-		this.$el.html( this.template( data ) );
-
 		this.triggerCallbacks();
 
 		return this;
