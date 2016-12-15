@@ -49,6 +49,7 @@ var editAttributeField = Backbone.View.extend( {
 
 		this.$el.html( this.template( data ) );
 
+		// Ensure default value for select field.
 		if ( 'select' === data.type && '' === this.model.get( 'value' ) ) {
 			var firstVisibleOption = _.first( data.options );
 			if ( 'undefined' !== typeof firstVisibleOption.value ) {
