@@ -47,16 +47,16 @@ var editAttributeField = Backbone.View.extend( {
 			data.options = this.parseOptions( data.options );
 		}
 
-		this.$el.html( this.template( data ) );
-
 		// Ensure default value for select field.
-		if ( 'select' === data.type && '' === this.model.get( 'value' ) ) {
+		if ( 'select' === data.type && '' === this.model.get( 'value' ) && ! _.findWhere( data.options, { value: '' } ) ) {
 			var firstVisibleOption = _.first( data.options );
 			if ( 'undefined' !== typeof firstVisibleOption.value ) {
 				this.setValue( firstVisibleOption.value );
+				data.value = firstVisibleOption.value;
 			}
 		}
 
+		this.$el.html( this.template( data ) );
 		this.triggerCallbacks();
 
 		return this;
