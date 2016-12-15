@@ -647,24 +647,6 @@ describe( 'Edit Attribute Field', function(){
 			selectFieldView.render();
 			expect( selectFieldModel.get( 'value' ) ).toBe( 'two' );
 		});
-
-		/*
-		selectFieldAttribute.options[''] = 'no value';
-		shortcodeData.attrs = [ selectFieldAttribute ];
-		shortcodeModel = new Shortcode( shortcodeData );
-
-		selectFieldModel = new ShortcodeAttribute(
-			shortcodeModel.get('attrs').models[0].attributes
-		);
-		selectFieldView = new EditAttributeField({ model: selectFieldModel });
-		selectFieldView.shortcode = shortcodeModel;
-
-		it( 'should allow an empty value, even when not the first option', function() {
-			selectFieldView.render();
-			expect( selectFieldModel.get( 'value' ) ).toBe( 'two' );
-
-		});
-		*/
 	});
 
 	describe( 'Select field with null attribute', function() {
