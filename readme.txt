@@ -3,7 +3,7 @@ Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapple
 Tags: shortcodes
 Requires at least: 4.5
 Tested up to: 4.7
-Stable tag: 0.7.0
+Stable tag: 0.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,11 @@ We've removed the compatibility shim for the `placeholder` attribute argument. Y
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 
 == Changelog ==
+
+= 0.7.1 (December 16, 2016) =
+* Change shortcode formatting to add a space before the self-closing trailing slash.
+* Bug fix: Set an initial value on select fields (previously, no value would be set for a select field unless the user interacts with the field).
+* Compatability: Uses "full" version of select2.js 4.0.3 to prevent plugin conflicts with other plugins which expect the full version to be enqueued.
 
 = 0.7.0 (November 18, 2016) =
 * Adds "Add post element" button to media buttons - one click to open the shortcode list, rather than clicking "Add media" button and then finding "insert post element" in the menu.

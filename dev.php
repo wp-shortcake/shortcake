@@ -65,7 +65,7 @@ function shortcode_ui_dev_example_notices() {
 	if ( current_user_can( 'activate_plugins' ) ) {
 		?>
 		<div class="error message">
-			<p><?php esc_html_e( 'Shortcode UI plugin must be active for Shortcode UI Example plugin to function.', 'shortcode-ui-example' ); ?></p>
+			<p><?php esc_html_e( 'Shortcode UI plugin must be active for Shortcode UI Example plugin to function.', 'shortcode-ui-example', 'shortcode-ui' ); ?></p>
 		</div>
 		<?php
 	}
@@ -116,7 +116,7 @@ function shortcode_ui_dev_minimal_example() {
 	shortcode_ui_register_for_shortcode(
 		'shortcake-no-attributes', // Shortcode tag this UI is for.
 		array(                     // Shortcode UI args.
-		                           'label' => esc_html__( 'Shortcake With No Attributes', 'shortcode-ui-example' ),
+		                           'label' => esc_html__( 'Shortcake With No Attributes', 'shortcode-ui-example', 'shortcode-ui' ),
 		)
 	);
 }
@@ -156,7 +156,7 @@ function shortcode_ui_dev_advanced_example() {
 	 */
 	$fields = array(
 		array(
-			'label'       => esc_html__( 'Attachment', 'shortcode-ui-example' ),
+			'label'       => esc_html__( 'Attachment', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'        => 'attachment',
 			'type'        => 'attachment',
 			/*
@@ -166,13 +166,13 @@ function shortcode_ui_dev_advanced_example() {
 			 * 'frameTitle'  - Title for the modal UI once the library is open.
 			 */
 			'libraryType' => array( 'image' ),
-			'addButton'   => esc_html__( 'Select Image', 'shortcode-ui-example' ),
-			'frameTitle'  => esc_html__( 'Select Image', 'shortcode-ui-example' ),
+			'addButton'   => esc_html__( 'Select Image', 'shortcode-ui-example', 'shortcode-ui' ),
+			'frameTitle'  => esc_html__( 'Select Image', 'shortcode-ui-example', 'shortcode-ui' ),
 		),
 		array(
 			'label'       => 'Gallery',
 			'attr'        => 'gallery',
-			'description' => esc_html__( 'You can select multiple images.' ),
+			'description' => esc_html__( 'You can select multiple images.', 'shortcode-ui' ),
 			'type'        => 'attachment',
 			'libraryType' => array( 'image' ),
 			'multiple'    => true,
@@ -180,65 +180,65 @@ function shortcode_ui_dev_advanced_example() {
 			'frameTitle'  => 'Select Images',
 		),
 		array(
-			'label'  => esc_html__( 'Citation Source', 'shortcode-ui-example' ),
+			'label'  => esc_html__( 'Citation Source', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'   => 'source',
 			'type'   => 'text',
 			'encode' => true,
 			'meta'   => array(
-				'placeholder' => esc_html__( 'Test placeholder', 'shortcode-ui-example' ),
+				'placeholder' => esc_html__( 'Test placeholder', 'shortcode-ui-example', 'shortcode-ui' ),
 				'data-test'   => 1,
 			),
 		),
 		array(
-			'label'    => esc_html__( 'Select Page', 'shortcode-ui-example' ),
+			'label'    => esc_html__( 'Select Page', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'     => 'page',
 			'type'     => 'post_select',
 			'query'    => array( 'post_type' => 'page' ),
 			'multiple' => true,
 		),
 		array(
-			'label'    => __( 'Select Term', 'shortcode-ui-example' ),
+			'label'    => __( 'Select Term', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'     => 'term',
 			'type'     => 'term_select',
 			'taxonomy' => 'post_tag',
 			'multiple' => true,
 		),
 		array(
-			'label'    => __( 'User Select', 'shortcode-ui-example' ),
+			'label'    => __( 'User Select', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'     => 'users',
 			'type'     => 'user_select',
 			'multiple' => true,
 		),
 		array(
-			'label'  => esc_html__( 'Color', 'shortcode-ui-example' ),
+			'label'  => esc_html__( 'Color', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'   => 'color',
 			'type'   => 'color',
 			'encode' => false,
 			'meta'   => array(
-				'placeholder' => esc_html__( 'Hex color code', 'shortcode-ui-example' ),
+				'placeholder' => esc_html__( 'Hex color code', 'shortcode-ui-example', 'shortcode-ui' ),
 			),
 		),
 		array(
-			'label'       => esc_html__( 'Alignment', 'shortcode-ui-example' ),
-			'description' => esc_html__( 'Whether the quotation should be displayed as pull-left, pull-right, or neither.', 'shortcode-ui-example' ),
+			'label'       => esc_html__( 'Alignment', 'shortcode-ui-example', 'shortcode-ui' ),
+			'description' => esc_html__( 'Whether the quotation should be displayed as pull-left, pull-right, or neither.', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'        => 'alignment',
 			'type'        => 'select',
 			'options'     => array(
-				array( 'value' => '', 'label' => esc_html__( 'None', 'shortcode-ui-example' ) ),
-				array( 'value' => 'left', 'label' => esc_html__( 'Pull Left', 'shortcode-ui-example' ) ),
-				array( 'value' => 'right', 'label' => esc_html__( 'Pull Right', 'shortcode-ui-example' ) ),
+				array( 'value' => '', 'label' => esc_html__( 'None', 'shortcode-ui-example', 'shortcode-ui' ) ),
+				array( 'value' => 'left', 'label' => esc_html__( 'Pull Left', 'shortcode-ui-example', 'shortcode-ui' ) ),
+				array( 'value' => 'right', 'label' => esc_html__( 'Pull Right', 'shortcode-ui-example', 'shortcode-ui' ) ),
 				array(
 					'label' => 'Test Optgroup',
 					'options' => array(
-						array( 'value' => 'left-2', 'label' => esc_html__( 'Pull Left', 'shortcode-ui-example' ) ),
-						array( 'value' => 'right-2', 'label' => esc_html__( 'Pull Right', 'shortcode-ui-example' ) ),
+						array( 'value' => 'left-2', 'label' => esc_html__( 'Pull Left', 'shortcode-ui-example', 'shortcode-ui' ) ),
+						array( 'value' => 'right-2', 'label' => esc_html__( 'Pull Right', 'shortcode-ui-example', 'shortcode-ui' ) ),
 					)
 				),
 			),
 		),
 		array(
-			'label'       => esc_html__( 'Year', 'shortcode-ui-example' ),
-			'description' => esc_html__( 'Optional. The year the quotation is from.', 'shortcode-ui-example' ),
+			'label'       => esc_html__( 'Year', 'shortcode-ui-example', 'shortcode-ui' ),
+			'description' => esc_html__( 'Optional. The year the quotation is from.', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'        => 'year',
 			'type'        => 'number',
 			'meta'        => array(
@@ -257,7 +257,7 @@ function shortcode_ui_dev_advanced_example() {
 		/*
 		 * How the shortcode should be labeled in the UI. Required argument.
 		 */
-		'label' => esc_html__( 'Shortcake Dev', 'shortcode-ui-example' ),
+		'label' => esc_html__( 'Shortcake Dev', 'shortcode-ui-example', 'shortcode-ui' ),
 
 		/*
 		 * Include an icon with your shortcode. Optional.
@@ -276,8 +276,8 @@ function shortcode_ui_dev_advanced_example() {
 		 * data present will be backed-up during editing.
 		 */
 		'inner_content' => array(
-			'label'        => esc_html__( 'Quote', 'shortcode-ui-example' ),
-			'description'  => esc_html__( 'Include a statement from someone famous.', 'shortcode-ui-example' ),
+			'label'        => esc_html__( 'Quote', 'shortcode-ui-example', 'shortcode-ui' ),
+			'description'  => esc_html__( 'Include a statement from someone famous.', 'shortcode-ui-example', 'shortcode-ui' ),
 		),
 
 		/*
@@ -349,19 +349,19 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 		<p style="margin:0; padding: 0;">
 
 			<?php if ( ! empty( $content ) ) : ?>
-			<b><?php esc_html_e( 'Content:', 'shortcode-ui-example' ); ?></b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
+			<b><?php esc_html_e( 'Content:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo wpautop( wp_kses_post( $content ) ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['source'] ) ) : ?>
-			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( $attr['source'] ); ?></br>
+			<b><?php esc_html_e( 'Source:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo wp_kses_post( $attr['source'] ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['attachment'] ) ) : ?>
-			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ) ); ?></br>
+			<b><?php esc_html_e( 'Image:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo wp_kses_post( wp_get_attachment_image( $attr['attachment'], array( 50, 50 ) ) ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['gallery'] ) ) : ?>
-				<b><?php esc_html_e( 'Gallery:', 'shortcode-ui-example' ); ?></b>
+				<b><?php esc_html_e( 'Gallery:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b>
 				<?php foreach ( explode( ',', $attr['gallery'] ) as $attachment ) : ?>
 					 <?php echo wp_kses_post( wp_get_attachment_image( $attachment, array( 50, 50 ) ) ); ?>
 				<?php endforeach; ?>
@@ -369,27 +369,27 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['page'] ) ) : ?>
-				<b><?php esc_html_e( 'Pages:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['page'] ) ); ?></br>
+				<b><?php esc_html_e( 'Pages:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo esc_html( implode( ', ', $attr['page'] ) ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['term'] ) ) : ?>
-				<b><?php esc_html_e( 'Terms:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['term'] ) ); ?></br>
+				<b><?php esc_html_e( 'Terms:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo esc_html( implode( ', ', $attr['term'] ) ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['users'] ) ) : ?>
-				<b><?php esc_html_e( 'Users:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( implode( ', ', $attr['users'] ) ); ?></br>
+				<b><?php esc_html_e( 'Users:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo esc_html( implode( ', ', $attr['users'] ) ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['color'] ) ) : ?>
-				<b><?php esc_html_e( 'Color:', 'shortcode-ui-example' ); ?></b> <span style="display: inline-block; width: 1.5em; height: 1.5em; vertical-align: bottom; background-color: <?php echo esc_html( $attr['color'] ); ?>"></span></br>
+				<b><?php esc_html_e( 'Color:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <span style="display: inline-block; width: 1.5em; height: 1.5em; vertical-align: bottom; background-color: <?php echo esc_html( $attr['color'] ); ?>"></span></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['alignment'] ) ) : ?>
-				<b><?php esc_html_e( 'Alignment:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( $attr['alignment'] ); ?></br>
+				<b><?php esc_html_e( 'Alignment:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo esc_html( $attr['alignment'] ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['year'] ) ) : ?>
-				<b><?php esc_html_e( 'Year:', 'shortcode-ui-example' ); ?></b> <?php echo esc_html( $attr['year'] ); ?></br>
+				<b><?php esc_html_e( 'Year:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo esc_html( $attr['year'] ); ?></br>
 			<?php endif; ?>
 
 		</p>
