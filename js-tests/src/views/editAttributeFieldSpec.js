@@ -89,4 +89,36 @@ describe( 'Edit Attribute Field', function(){
 		});
 	});
 
+	describe( 'Select field with null attribute', function() {
+		var selectFieldAttribute, selectFieldView, selectFieldModel;
+
+		selectFieldAttribute = {
+			attr: 'select_field',
+			label: 'Select Attribute Field',
+			type: 'select',
+			options: {
+				one: 'one',
+				two: 'two',
+				'': 'no value',
+				three: 'three'
+			}
+		};
+
+		shortcodeData.attrs = [ selectFieldAttribute ];
+		shortcodeModel = new Shortcode( shortcodeData );
+
+		selectFieldModel = new ShortcodeAttribute(
+			shortcodeModel.get('attrs').models[0].attributes
+		);
+		selectFieldView = new EditAttributeField({ model: selectFieldModel });
+		selectFieldView.shortcode = shortcodeModel;
+		selectFieldView.template = selectFieldView.triggerCallbacks =  function( data ) {};
+		selectFieldView.template = function( data ) {};
+
+		it( 'should not use first option as the default if an empty option is set', function() {
+			selectFieldView.render();
+			expect( selectFieldModel.get( 'value' ) ).toBe( '' );
+		});
+	});
+
 });
