@@ -612,6 +612,75 @@ describe( 'Edit Attribute Field', function(){
 		spyOn( window, 'attr1RenderCallback' );
 	});
 
+	describe( 'Select field', function() {
+		var selectFieldAttribute, selectFieldView, selectFieldModel;
+
+		selectFieldAttribute = {
+			attr: 'select_field',
+			label: 'Select Attribute Field',
+			type: 'select',
+			options: {
+				one: 'one',
+				two: 'two',
+				three: 'three'
+			}
+		};
+
+		shortcodeData.attrs = [ selectFieldAttribute ];
+		shortcodeModel = new Shortcode( shortcodeData );
+
+		selectFieldModel = new ShortcodeAttribute(
+			shortcodeModel.get('attrs').models[0].attributes
+		);
+		selectFieldView = new EditAttributeField({ model: selectFieldModel });
+		selectFieldView.shortcode = shortcodeModel;
+		selectFieldView.template = selectFieldView.triggerCallbacks =  function( data ) {};
+		selectFieldView.template = function( data ) {};
+
+		it( 'should use first option as the default if no empty option is set', function() {
+			selectFieldView.render();
+			expect( selectFieldModel.get( 'value' ) ).toBe( 'one' );
+		});
+
+		it( 'should respect selected value if one is already set', function() {
+			selectFieldView.setValue( 'two' );
+			selectFieldView.render();
+			expect( selectFieldModel.get( 'value' ) ).toBe( 'two' );
+		});
+	});
+
+	describe( 'Select field with null attribute', function() {
+		var selectFieldAttribute, selectFieldView, selectFieldModel;
+
+		selectFieldAttribute = {
+			attr: 'select_field',
+			label: 'Select Attribute Field',
+			type: 'select',
+			options: {
+				one: 'one',
+				two: 'two',
+				'': 'no value',
+				three: 'three'
+			}
+		};
+
+		shortcodeData.attrs = [ selectFieldAttribute ];
+		shortcodeModel = new Shortcode( shortcodeData );
+
+		selectFieldModel = new ShortcodeAttribute(
+			shortcodeModel.get('attrs').models[0].attributes
+		);
+		selectFieldView = new EditAttributeField({ model: selectFieldModel });
+		selectFieldView.shortcode = shortcodeModel;
+		selectFieldView.template = selectFieldView.triggerCallbacks =  function( data ) {};
+		selectFieldView.template = function( data ) {};
+
+		it( 'should not use first option as the default if an empty option is set', function() {
+			selectFieldView.render();
+			expect( selectFieldModel.get( 'value' ) ).toBe( '' );
+		});
+	});
+
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -1257,6 +1326,15 @@ var editAttributeField = Backbone.View.extend( {
 		// Ensure options are formatted correctly.
 		if ( 'options' in data ) {
 			data.options = this.parseOptions( data.options );
+		}
+
+		// Ensure default value for select field.
+		if ( 'select' === data.type && '' === this.model.get( 'value' ) && ! _.findWhere( data.options, { value: '' } ) ) {
+			var firstVisibleOption = _.first( data.options );
+			if ( 'undefined' !== typeof firstVisibleOption.value ) {
+				this.setValue( firstVisibleOption.value );
+				data.value = firstVisibleOption.value;
+			}
 		}
 
 		this.$el.html( this.template( data ) );
