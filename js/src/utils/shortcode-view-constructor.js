@@ -165,13 +165,25 @@ var shortcodeViewConstructor = {
 		var currentShortcode = this.parseShortcodeString( shortcodeString );
 
 		if ( currentShortcode ) {
+			var wp_media_frame,
+				options = {
+					frame : "post",
+					state : 'shortcode-ui',
+					currentShortcode : currentShortcode
+				};
 
-			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
-				frame : "post",
-				state : 'shortcode-ui',
-				currentShortcode : currentShortcode,
-			});
+			// Remove Add Shortcode UI model frame to avoid duplicate markup of shortcode.
+			if ( wp.media.frames.wp_media_new_frame ) {
+				wp.media.frames.wp_media_new_frame.remove();
+				wp.media.frames.wp_media_new_frame = '';
+			}
 
+			if ( wp.media.frames.wp_media_frame ) {
+				// Use the existing model frame if its already initialize.
+				wp_media_frame = wp.media.frames.wp_media_frame;
+			} else {
+				wp_media_frame = wp.media.frames.wp_media_frame = wp.media(options);
+			}
 			wp_media_frame.open();
 
 			/* Trigger render_edit */
