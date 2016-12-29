@@ -79,9 +79,7 @@ var MediaController = wp.media.controller.State.extend({
 		 * Filter run before a shortcode is sent to the editor. Can be used for
 		 * client-side validation before closing the media modal.
 		 *
-		 * Called as `shortcode_ui.send_to_editor`.
-		 *
-		 *
+		 * Called as `shortcode-ui.send_to_editor`.
 		 *
 		 * @param $.Deferred A promise which is expected to either resolve if
 		 *                   the shortcode can be sent to the editor, or reject
@@ -90,7 +88,7 @@ var MediaController = wp.media.controller.State.extend({
 		 */
 		var sendToEditor$ = wp.shortcake.hooks.applyFilters( 'shortcode-ui.send_to_editor', okToInsert$, shortcode );
 
-		// Unless a filter has ch, resolve the promise, sending the shortcode to the editor.
+		// Unless a filter has interfered, resolve the promise, sending the shortcode to the editor.
 		setTimeout( function() { okToInsert$.resolve(true); } );
 
 		sendToEditor$.then(
