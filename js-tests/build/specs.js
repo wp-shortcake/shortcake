@@ -833,7 +833,12 @@ Shortcode = Backbone.Model.extend({
 
 		this.get( 'attrs' ).each( function( attr ) {
 
-			// Skip empty attributes.
+			// Send 'true' and 'false' as checkbox values if 'explicitbool' option is on
+			if ( attr.get( 'explicitbool' ) && 'boolean' === typeof attr.get( 'value' ) ) {
+				attr.set( 'value', attr.get( 'value' ) ? 'true' : 'false' );
+			}
+
+			// Otherwise, skip empty or false attributes.
 			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
 				return;
 			}
