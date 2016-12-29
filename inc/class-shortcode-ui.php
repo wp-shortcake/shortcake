@@ -452,7 +452,7 @@ class Shortcode_UI {
 			$default = isset( $fields[ $attr['type'] ]['encode'] ) ? $fields[ $attr['type'] ]['encode'] : false;
 			$encoded = isset( $attr['encode'] ) ? $attr['encode'] : $default;
 
-			$explictbool = isset( $attr['explicitbool'] ) ? $attr['explicitbool'] : false;
+			$explicitbool = isset( $attr['explicitbool'] ) ? $attr['explicitbool'] : false;
 
 			if ( $encoded && isset( $out[ $attr['attr'] ] ) ) {
 				$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
