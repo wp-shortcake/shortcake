@@ -36,6 +36,7 @@ module.exports = Shortcodes;
 },{"./../models/shortcode.js":6}],3:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
     wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
     sui = require('./../utils/sui.js'),
     Shortcodes = require('./../collections/shortcodes.js');
@@ -70,12 +71,35 @@ var MediaController = wp.media.controller.State.extend({
 	},
 
 	insert: function() {
+		var self = this;
 		var shortcode = this.props.get('currentShortcode');
-		if ( shortcode ) {
-			send_to_editor( shortcode.formatShortcode() );
-			this.reset();
-			this.frame.close();
-		}
+		var okToInsert$ = $.Deferred();
+
+		/*
+		 * Filter run before a shortcode is sent to the editor. Can be used for
+		 * client-side validation before closing the media modal.
+		 *
+		 * Called as `shortcode_ui.send_to_editor`.
+		 *
+		 *
+		 *
+		 * @param $.Deferred A promise which is expected to either resolve if
+		 *                   the shortcode can be sent to the editor, or reject
+		 *                   if not.
+		 * @param Shortcode  The current shortcode model.
+		 */
+		var sendToEditor$ = wp.shortcake.hooks.applyFilters( 'shortcode-ui.send_to_editor', okToInsert$, shortcode );
+
+		// Unless a filter has ch, resolve the promise, sending the shortcode to the editor.
+		setTimeout( function() { okToInsert$.resolve(true); } );
+
+		sendToEditor$.then(
+			function() {
+				send_to_editor( shortcode.formatShortcode() );
+				self.reset();
+				self.frame.close();
+			}
+		);
 	},
 
 	reset: function() {
