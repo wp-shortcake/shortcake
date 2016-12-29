@@ -458,7 +458,7 @@ class Shortcode_UI {
 				$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
 			}
 
-			if ( $explicitbool && in_array( $out[ $attr['attr'] ], array( 'true', 'false' ) ) ) {
+			if ( $explicitbool && in_array( $out[ $attr['attr'] ], array( 'true', 'false' ), true ) ) {
 				$out[ $attr['attr'] ] = $this->explicitbool( $out[ $attr['attr'] ] );
 			}
 		}
