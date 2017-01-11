@@ -156,6 +156,12 @@ function shortcode_ui_dev_advanced_example() {
 	 */
 	$fields = array(
 		array(
+			'label'       => esc_html__( 'Display for logged-in users?', 'shortcode-ui-example' ),
+			'attr'        => 'checkbox',
+			'type'        => 'checkbox',
+			'explicitbool' => true,
+		),
+		array(
 			'label'       => esc_html__( 'Attachment', 'shortcode-ui-example' ),
 			'attr'        => 'attachment',
 			'type'        => 'attachment',

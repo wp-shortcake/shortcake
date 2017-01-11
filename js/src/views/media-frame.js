@@ -29,11 +29,21 @@ var mediaFrame = postMediaFrame.extend( {
 			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
 		}
 
+		if ( this.frame ) {
+			this.frame.dispose();
+		}
+
 		this.mediaController = new MediaController( opts );
 
-		if ( 'currentShortcode' in this.options ) {
-			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
+		console.log( arguments, this.options, this.mediaController );
+
+		if ( 'currentShortcode' in arguments[0] ) {
+			this.mediaController.props.set( 'currentShortcode', this.options.currentShortcode );
 			this.mediaController.props.set( 'action', 'update' );
+		} else {
+			this.mediaController.props.unset( 'currentShortcode' );
+			this.mediaController.props.set( 'action', 'insert' );
+			this.mediaController.reset();
 		}
 
 		this.states.add([ this.mediaController ]);
@@ -56,6 +66,18 @@ var mediaFrame = postMediaFrame.extend( {
 			this.mediaController.reset();
 			this.contentRender( 'shortcode-ui', 'insert' );
 		}
+	},
+
+	reset: function() {
+		if ( 'currentShortcode' in this.options ) {
+			delete this.options.currentShortcode;
+		}
+
+		this.options.title = shortcodeUIData.strings.media_frame_menu_insert_label;
+		this.resetMediaController();
+		console.log( this );
+		//this.contentRender( 'shortcode-ui', 'insert' );
+		//this.renderShortcodeUIMenu();
 	},
 
 	contentRender : function( id, tab ) {

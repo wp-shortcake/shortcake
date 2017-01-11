@@ -25,7 +25,7 @@ $(document).ready(function(){
 	$(document.body).on( 'click', '.shortcake-add-post-element', function( event ) {
 		var elem = $( event.currentTarget ),
 			editor = elem.data('editor'),
-			wp_media_new_frame,
+			wp_media_frame,
 			options = {
 				frame: 'post',
 				state: 'shortcode-ui',
@@ -41,19 +41,21 @@ $(document).ready(function(){
 		elem.blur();
 
 		// Remove Edit Shortcode UI model frame to avoid duplicate markup of shortcode.
+		//if ( wp.media.frames.wp_media_frame ) {
+			//wp.media.frames.wp_media_frame.remove();
+			//delete wp.media.frames.wp_media_frame;
+		//}
+
 		if ( wp.media.frames.wp_media_frame ) {
-			wp.media.frames.wp_media_frame.remove();
-			wp.media.frames.wp_media_frame = '';
-		}
-
-		if ( wp.media.frames.wp_media_new_frame ) {
 			// Use the existing model frame if its already initialize.
-			wp_media_new_frame = wp.media.frames.wp_media_new_frame;
+			wp_media_frame = wp.media.frames.wp_media_frame;
+			wp_media_frame.reset();
 		} else {
-			wp_media_new_frame = wp.media.frames.wp_media_new_frame = wp.media(options);
+			wp_media_frame = wp.media.frames.wp_media_frame = wp.media.editor.add( editor, options );
 		}
 
-		wp_media_new_frame.open();
+		wp_media_frame.open( editor, options );
+		//wp_media_new_frame.open();
 	} );
 
 });

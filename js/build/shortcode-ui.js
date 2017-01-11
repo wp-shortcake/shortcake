@@ -282,7 +282,7 @@ $(document).ready(function(){
 	$(document.body).on( 'click', '.shortcake-add-post-element', function( event ) {
 		var elem = $( event.currentTarget ),
 			editor = elem.data('editor'),
-			wp_media_new_frame,
+			wp_media_frame,
 			options = {
 				frame: 'post',
 				state: 'shortcode-ui',
@@ -298,19 +298,21 @@ $(document).ready(function(){
 		elem.blur();
 
 		// Remove Edit Shortcode UI model frame to avoid duplicate markup of shortcode.
+		//if ( wp.media.frames.wp_media_frame ) {
+			//wp.media.frames.wp_media_frame.remove();
+			//delete wp.media.frames.wp_media_frame;
+		//}
+
 		if ( wp.media.frames.wp_media_frame ) {
-			wp.media.frames.wp_media_frame.remove();
-			wp.media.frames.wp_media_frame = '';
-		}
-
-		if ( wp.media.frames.wp_media_new_frame ) {
 			// Use the existing model frame if its already initialize.
-			wp_media_new_frame = wp.media.frames.wp_media_new_frame;
+			wp_media_frame = wp.media.frames.wp_media_frame;
+			wp_media_frame.reset();
 		} else {
-			wp_media_new_frame = wp.media.frames.wp_media_new_frame = wp.media(options);
+			wp_media_frame = wp.media.frames.wp_media_frame = wp.media.editor.add( editor, options );
 		}
 
-		wp_media_new_frame.open();
+		wp_media_frame.open( editor, options );
+		//wp_media_new_frame.open();
 	} );
 
 });
@@ -606,19 +608,13 @@ var shortcodeViewConstructor = {
 					currentShortcode : currentShortcode
 				};
 
-			// Remove Add Shortcode UI model frame to avoid duplicate markup of shortcode.
-			if ( wp.media.frames.wp_media_new_frame ) {
-				wp.media.frames.wp_media_new_frame.remove();
-				wp.media.frames.wp_media_new_frame = '';
-			}
-
 			if ( wp.media.frames.wp_media_frame ) {
-				// Use the existing model frame if its already initialize.
+				// Use the existing model frame if its already initialized.
 				wp_media_frame = wp.media.frames.wp_media_frame;
 			} else {
-				wp_media_frame = wp.media.frames.wp_media_frame = wp.media(options);
+				wp_media_frame = wp.media.frames.wp_media_frame = wp.media.editor.add( window.wpActiveEditor, options );
 			}
-			wp_media_frame.open();
+			wp_media_frame.open( window.wpActiveEditor, options );
 
 			/* Trigger render_edit */
 			/*
@@ -1501,11 +1497,21 @@ var mediaFrame = postMediaFrame.extend( {
 			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
 		}
 
+		if ( this.frame ) {
+			this.frame.dispose();
+		}
+
 		this.mediaController = new MediaController( opts );
 
-		if ( 'currentShortcode' in this.options ) {
-			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
+		console.log( arguments, this.options, this.mediaController );
+
+		if ( 'currentShortcode' in arguments[0] ) {
+			this.mediaController.props.set( 'currentShortcode', this.options.currentShortcode );
 			this.mediaController.props.set( 'action', 'update' );
+		} else {
+			this.mediaController.props.unset( 'currentShortcode' );
+			this.mediaController.props.set( 'action', 'insert' );
+			this.mediaController.reset();
 		}
 
 		this.states.add([ this.mediaController ]);
@@ -1528,6 +1534,18 @@ var mediaFrame = postMediaFrame.extend( {
 			this.mediaController.reset();
 			this.contentRender( 'shortcode-ui', 'insert' );
 		}
+	},
+
+	reset: function() {
+		if ( 'currentShortcode' in this.options ) {
+			delete this.options.currentShortcode;
+		}
+
+		this.options.title = shortcodeUIData.strings.media_frame_menu_insert_label;
+		this.resetMediaController();
+		console.log( this );
+		//this.contentRender( 'shortcode-ui', 'insert' );
+		//this.renderShortcodeUIMenu();
 	},
 
 	contentRender : function( id, tab ) {

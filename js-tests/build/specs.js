@@ -1172,19 +1172,13 @@ var shortcodeViewConstructor = {
 					currentShortcode : currentShortcode
 				};
 
-			// Remove Add Shortcode UI model frame to avoid duplicate markup of shortcode.
-			if ( wp.media.frames.wp_media_new_frame ) {
-				wp.media.frames.wp_media_new_frame.remove();
-				wp.media.frames.wp_media_new_frame = '';
-			}
-
 			if ( wp.media.frames.wp_media_frame ) {
-				// Use the existing model frame if its already initialize.
+				// Use the existing model frame if its already initialized.
 				wp_media_frame = wp.media.frames.wp_media_frame;
 			} else {
-				wp_media_frame = wp.media.frames.wp_media_frame = wp.media(options);
+				wp_media_frame = wp.media.frames.wp_media_frame = wp.media.editor.add( window.wpActiveEditor, options );
 			}
-			wp_media_frame.open();
+			wp_media_frame.open( window.wpActiveEditor, options );
 
 			/* Trigger render_edit */
 			/*
