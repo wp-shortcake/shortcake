@@ -166,13 +166,20 @@ var shortcodeViewConstructor = {
 
 		if ( currentShortcode ) {
 
-			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
-				frame : "post",
-				state : 'shortcode-ui',
-				currentShortcode : currentShortcode,
-			});
+			var frame = wp.media.editor.get( window.wpActiveEditor );
 
-			wp_media_frame.open();
+			if ( frame ) {
+				frame.mediaController.setActionUpdate( currentShortcode );
+				frame.setState( 'shortcode-ui' );
+				frame.content.render();
+				frame.open();
+			} else {
+				frame = wp.media.editor.open( window.wpActiveEditor, {
+					frame : "post",
+					state : 'shortcode-ui',
+					currentShortcode : currentShortcode,
+				});
+			}
 
 			/* Trigger render_edit */
 			/*
