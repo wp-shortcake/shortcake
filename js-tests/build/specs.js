@@ -1181,6 +1181,11 @@ var shortcodeViewConstructor = {
 				});
 			}
 
+			// Make sure to reset state when closed.
+			frame.once( 'close submit', function() {
+				frame.setState( 'insert' );
+			} );
+
 			/* Trigger render_edit */
 			/*
 			 * Action run after an edit shortcode overlay is rendered.
