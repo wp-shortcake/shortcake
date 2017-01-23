@@ -33,7 +33,6 @@ var mediaFrame = postMediaFrame.extend( {
 
 		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
 		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
-		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
 		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
 	},
@@ -60,13 +59,11 @@ var mediaFrame = postMediaFrame.extend( {
 		);
 	},
 
-	toolbarRender: function( toolbar ) {},
-
 	toolbarCreate : function( toolbar ) {
 
 		var text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
 
-		if ( 'currentShortcode' in this.options ) {
+		if ( this.state().props.get('currentShortcode') ) {
 			text = shortcodeUIData.strings.media_frame_toolbar_update_label;
 		}
 
