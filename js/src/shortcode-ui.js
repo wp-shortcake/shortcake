@@ -46,8 +46,13 @@ $(document).ready(function(){
 			frame.content.render();
 			frame.open();
 		} else {
-			wp.media.editor.open( editor, options );
+			frame = wp.media.editor.open( editor, options );
 		}
+
+		// Make sure to reset state when closed.
+		frame.once( 'close submit', function() {
+			frame.setState( 'insert' );
+		} );
 
 	} );
 
