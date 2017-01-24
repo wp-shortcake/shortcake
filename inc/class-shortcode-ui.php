@@ -248,7 +248,8 @@ class Shortcode_UI {
 			'strings'         => array(
 				'media_frame_title'                 => __( 'Insert Post Element', 'shortcode-ui' ),
 				'media_frame_menu_insert_label'     => __( 'Insert Post Element', 'shortcode-ui' ),
-				'media_frame_menu_update_label'     => __( '%s Details', 'shortcode-ui' ), // Substituted in JS
+				/* Translators: Ignore placeholder. This is replaced with the Shortcode name string in JS */
+				'media_frame_menu_update_label'     => __( '%s Details', 'shortcode-ui' ),
 				'media_frame_toolbar_insert_label'  => __( 'Insert Element', 'shortcode-ui' ),
 				'media_frame_toolbar_update_label'  => __( 'Update', 'shortcode-ui' ),
 				'media_frame_no_attributes_message' => __( 'There are no attributes to configure for this Post Element.', 'shortcode-ui' ),

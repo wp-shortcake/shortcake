@@ -62,13 +62,14 @@ function shortcode_ui_load_textdomain() {
 	$path = dirname( __FILE__ ) . '/languages';
 	// Load the textdomain according to the plugin first
 	$mofile = $domain . '-' . $locale . '.mo';
-	if ( $loaded = load_textdomain( $domain, $path . '/' . $mofile ) ) {
-		return;
+	$loaded = load_textdomain( $domain, $path . '/' . $mofile );
+
+	// If not loaded, load from the languages directory
+	if ( ! $loaded ) {
+		$mofile = WP_LANG_DIR . '/plugins/' . $mofile;
+		load_textdomain( $domain, $mofile );
 	}
 
-	// Otherwise, load from the languages directory
-	$mofile = WP_LANG_DIR . '/plugins/' . $mofile;
-	load_textdomain( $domain, $mofile );
 }
 
 /**
