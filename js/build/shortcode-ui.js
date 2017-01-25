@@ -88,6 +88,14 @@ var MediaController = wp.media.controller.State.extend({
 		this.attributes.title = shortcodeUIData.strings.media_frame_menu_insert_label;
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'action', 'select' );
+
+		// Update menuItem text.
+		var menuItem = this.frame.menu.get().get('shortcode-ui');
+		menuItem.options.text = this.attributes.title;
+		menuItem.render();
+
+		this.frame.setState( 'shortcode-ui' );
+		this.frame.render();
 	},
 
 	setActionUpdate: function( currentShortcode ) {
@@ -101,6 +109,9 @@ var MediaController = wp.media.controller.State.extend({
 		// If a new frame is being created, it may not exist yet.
 		// Defer to ensure it does.
 		_.defer( function() {
+
+			this.frame.setState( 'shortcode-ui' );
+			this.frame.content.render();
 
 			this.toggleSidebar( true );
 
@@ -331,8 +342,6 @@ $(document).ready(function(){
 
 		if ( frame ) {
 			frame.mediaController.setActionSelect();
-			frame.setState( 'shortcode-ui' );
-			frame.content.render();
 			frame.open();
 		} else {
 			frame = wp.media.editor.open( editor, options );
@@ -636,8 +645,6 @@ var shortcodeViewConstructor = {
 
 			if ( frame ) {
 				frame.mediaController.setActionUpdate( currentShortcode );
-				frame.setState( 'shortcode-ui' );
-				frame.content.render();
 				frame.open();
 			} else {
 				frame = wp.media.editor.open( window.wpActiveEditor, {

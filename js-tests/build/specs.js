@@ -1170,8 +1170,6 @@ var shortcodeViewConstructor = {
 
 			if ( frame ) {
 				frame.mediaController.setActionUpdate( currentShortcode );
-				frame.setState( 'shortcode-ui' );
-				frame.content.render();
 				frame.open();
 			} else {
 				frame = wp.media.editor.open( window.wpActiveEditor, {
