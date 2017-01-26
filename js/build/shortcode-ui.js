@@ -763,20 +763,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	},
 
 	/**
-	 * Updates any fetched attachment models in the class attachment cache.
-	 *
-	 * This cache is exposed for convenience in listener functions that need to
-	 * access fields from it.
-	 *
-	 * @return null
-	 */
-	updateCache: function() {
-		_.each( this.currentSelection.models, function( model ) {
-			editAttributeFieldAttachment.addToCache( model.attributes.id, model.attributes );
-		} );
-	},
-
-	/**
 	 * Update the field attachment.
 	 * Re-renders UI.
 	 * If ID is empty - does nothing.
@@ -786,7 +772,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	updateValue: function() {
 		var value = this.currentSelection.pluck( 'id' );
 		this.setValue( value );
-		this.updateCache();
 		this.triggerCallbacks();
 	},
 
@@ -926,33 +911,20 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 }, {
 
-	_idCache: {},
-
 	/**
-	 * Set a fetched attachment model in the _idCache lookup.
-	 *
-	 * @param int Attachment ID
-	 * @param {Object} attachment model attributes
-	 */
-	addToCache: function( id, attachment ) {
-		this._idCache[ id ] = attachment;
-	},
-
-	/**
-	 * Get an attachment model from the _idCache lookup.
+	 * Get the Backbone model attributes of an attachment.
 	 *
 	 * Prior to 0.7.0, this method was exposed as a public class
-	 * method and used internally to get attachment details from the `_idCache`
-	 * store.
+	 * method and used internally to get attachment details from
+	 * the `_idCache` store.
 	 *
 	 * @deprecated Not used internally since 0.7.0
 	 */
 	getFromCache: function( id ) {
-		if ( 'undefined' === typeof this._idCache[ id ] ) {
-			return false;
+		if ( wp.media.attachment( id ) ) {
+			return wp.media.attachment( id ).attributes;
 		}
-
-		return this._idCache[ id ];
+		return false;
 	},
 
 });
