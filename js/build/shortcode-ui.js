@@ -724,6 +724,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		self.initSelection();
 
+		self.currentSelection.on( 'all', this.updateCache );
+
 		self.currentSelection.on( 'all', this.updateValue );
 		self.currentSelection.on( 'add', this._renderPreview );
 		self.currentSelection.on( 'reset', this._renderAll );
@@ -754,12 +756,26 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 			this.currentSelection.add( model );
 
-			// Re-render after attachments have synced.
+			// Re-render after attachments have synced, and add to cache.
 			model.fetch();
 			model.on( 'sync', this._renderAll );
 
 		}.bind(this) );
 
+	},
+
+	/**
+	 * Updates any fetched attachment models in the class attachment cache.
+	 *
+	 * This cache is exposed for convenience in listener functions that need to
+	 * access fields from it.
+	 *
+	 * @return null
+	 */
+	updateCache: function() {
+		_.each( this.currentSelection.models, function( model ) {
+			editAttributeFieldAttachment.addToCache( model.attributes.id, model.attributes );
+		} );
 	},
 
 	/**
@@ -907,6 +923,37 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			this.currentSelection.remove( target );
 		}
 
+	},
+
+}, {
+
+	_idCache: {},
+
+	/**
+	 * Set a fetched attachment model in the _idCache lookup.
+	 *
+	 * @param int Attachment ID
+	 * @param {Object} attachment model attributes
+	 */
+	addToCache: function( id, attachment ) {
+		this._idCache[ id ] = attachment;
+	},
+
+	/**
+	 * Get an attachment model from the _idCache lookup.
+	 *
+	 * Prior to 0.7.0, this method was exposed as a public class
+	 * method and used internally to get attachment details from the `_idCache`
+	 * store.
+	 *
+	 * @deprecated Not used internally since 0.7.0
+	 */
+	getFromCache: function( id ) {
+		if ( 'undefined' === typeof this._idCache[ id ] ) {
+			return false;
+		}
+
+		return this._idCache[ id ];
 	},
 
 });
