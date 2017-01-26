@@ -22,8 +22,6 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		self.initSelection();
 
-		self.currentSelection.on( 'all', this.updateCache );
-
 		self.currentSelection.on( 'all', this.updateValue );
 		self.currentSelection.on( 'add', this._renderPreview );
 		self.currentSelection.on( 'reset', this._renderAll );
@@ -86,6 +84,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 	updateValue: function() {
 		var value = this.currentSelection.pluck( 'id' );
 		this.setValue( value );
+		this.updateCache();
 		this.triggerCallbacks();
 	},
 
