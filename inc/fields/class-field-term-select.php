@@ -155,7 +155,7 @@ class Shortcode_UI_Field_Term_Select {
 			$args['offset'] = ( $page - 1 ) * $response['items_per_page'];
 		}
 
-		$results = get_terms( $args );
+		$results = get_terms( $taxonomy_type, $args );
 
 		foreach ( $results as $result ) {
 			array_push( $response['items'], array( 'id' => $result->term_id, 'text' => html_entity_decode( $result->name ) ) );
