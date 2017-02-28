@@ -1768,7 +1768,8 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 
 		this.preselect( $field );
 
-		var $fieldSelect2 = $field.select2({
+                var select2 = jQuery().select2v4 ? 'select2v4' : 'select2';
+                var $fieldSelect2 = $field[select2]({
 			placeholder: "Search",
 			multiple: this.model.get( 'multiple' ),
 
@@ -1834,7 +1835,8 @@ sui.controllers.MediaController = mediaController.extend({
 	},
 
 	destroySelect2UI: function() {
-		$fieldSelect2.select2( 'close' );
+                var select2 = jQuery().select2v4 ? 'select2v4' : 'select2';
+                $fieldSelect2[select2]( 'close' );
 	}
 
 });

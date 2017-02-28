@@ -38,8 +38,10 @@ class Shortcode_UI_Field_Post_Select {
 
 	public function action_enqueue_shortcode_ui() {
 
-		wp_enqueue_script( 'select2' );
-		wp_enqueue_style( 'select2' );
+		$noconflict = defined('SELECT2_NOCONFLICT') && SELECT2_NOCONFLICT;
+
+		wp_enqueue_script(  $noconflict ? 'select2v4' : 'select2' );
+		wp_enqueue_style(  $noconflict ? 'select2v4' : 'select2' );
 
 		wp_localize_script( 'shortcode-ui', 'shortcodeUiPostFieldData', array(
 			'nonce' => wp_create_nonce( 'shortcode_ui_field_post_select' ),
