@@ -198,14 +198,14 @@ class Shortcode_UI {
 		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
 
 		$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		$noconflict = defined('SELECT2_NOCONFLICT') && SELECT2_NOCONFLICT;
+		$noconflict = defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT;
 
 		wp_register_script( $noconflict ? 'select2v4' : 'select2',
 			trailingslashit( $this->plugin_url ) . "lib/select2/js/select2.full{$min}.js",
 			array( 'jquery', 'jquery-ui-sortable' ), '4.0.3'
 		);
 
-		if($noconflict){
+		if( $noconflict ){
 			 wp_add_inline_script( 'select2v4', 'var existingSelect2 = jQuery.fn.select2 || null; if (existingSelect2) { delete jQuery.fn.select2; }', 'before' );
 			 wp_add_inline_script( 'select2v4', 'jQuery.fn.select2v4 = jQuery.fn.select2; if (existingSelect2) { delete jQuery.fn.select2; jQuery.fn.select2 = existingSelect2; }', 'after' );
 		}
