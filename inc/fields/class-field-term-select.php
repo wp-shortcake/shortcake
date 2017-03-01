@@ -97,7 +97,13 @@ class Field_Term_Select {
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
 		$search              = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
-		$response            = array( 'items' => array(), 'found_items' => 0, 'items_per_page' => 10, 'page' => $page );
+
+		$response = array(
+			'items'          => array(),
+			'found_items'    => 0,
+			'items_per_page' => 10,
+			'page'           => $page,
+		);
 
 		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_term_select' ) ) {
 			wp_send_json_error( $response );
@@ -159,7 +165,12 @@ class Field_Term_Select {
 		$results = get_terms( $args );
 
 		foreach ( $results as $result ) {
-			array_push( $response['items'], array( 'id' => $result->term_id, 'text' => html_entity_decode( $result->name ) ) );
+			array_push( $response['items'],
+				array(
+					'id'   => $result->term_id,
+					'text' => html_entity_decode( $result->name ),
+				)
+			);
 		}
 
 		wp_send_json_success( $response );
