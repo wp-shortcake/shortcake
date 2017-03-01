@@ -38,7 +38,7 @@ class Shortcode_UI {
 	private static $instance;
 
 	/**
-	 * Select2 handle
+	 * Select2 library handle.
 	 *
 	 * @access public
 	 * @var string
@@ -67,10 +67,6 @@ class Shortcode_UI {
 		$this->plugin_version = SHORTCODE_UI_VERSION;
 		$this->plugin_dir     = plugin_dir_path( dirname( __FILE__ ) );
 		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
-
-		if(defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT){
-			self::$select2_handle = 'select2v4';
-		}
 	}
 
 	/**

@@ -52,10 +52,8 @@ class Shortcode_UI_Field_Term_Select {
 	 */
 	public function action_enqueue_shortcode_ui() {
 
-		$noconflict = defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT;
-
-		wp_enqueue_script( $noconflict ? 'select2v4' : 'select2' );
-		wp_enqueue_style( $noconflict ? 'select2v4' : 'select2' );
+		wp_enqueue_script( Shortcode_UI::$select2_handle );
+		wp_enqueue_style( Shortcode_UI::$select2_handle );
 
 		wp_localize_script( 'shortcode-ui', 'shortcodeUiTermFieldData', array(
 			'nonce' => wp_create_nonce( 'shortcode_ui_field_term_select' ),

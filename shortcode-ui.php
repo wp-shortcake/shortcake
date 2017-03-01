@@ -39,6 +39,11 @@ add_action( 'init', 'shortcode_ui_init', 5 );
  * @return null
  */
 function shortcode_ui_init() {
+
+	if(defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT){
+		Shortcode_UI::$select2_handle = 'select2v4';
+	}
+
 	$shortcode_ui     = Shortcode_UI::get_instance();
 	$fields           = Shortcode_UI_Fields::get_instance();
 	$attachment_field = Shortcake_Field_Attachment::get_instance();
