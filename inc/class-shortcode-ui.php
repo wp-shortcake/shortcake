@@ -38,6 +38,14 @@ class Shortcode_UI {
 	private static $instance;
 
 	/**
+	 * Select2 handle
+	 *
+	 * @access public
+	 * @var string
+	 */
+	public static $select2_handle = 'select2';
+
+	/**
 	 * Get instance of Shortcake controller.
 	 *
 	 * Instantiates object on the fly when not already loaded.
@@ -59,6 +67,10 @@ class Shortcode_UI {
 		$this->plugin_version = SHORTCODE_UI_VERSION;
 		$this->plugin_dir     = plugin_dir_path( dirname( __FILE__ ) );
 		$this->plugin_url     = plugin_dir_url( dirname( __FILE__ ) );
+
+		if(defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT){
+			self::$select2_handle = 'select2v4';
+		}
 	}
 
 	/**
@@ -198,19 +210,18 @@ class Shortcode_UI {
 		add_editor_style( trailingslashit( $this->plugin_url ) . 'css/shortcode-ui-editor-styles.css' );
 
 		$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		$noconflict = defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT;
 
-		wp_register_script( $noconflict ? 'select2v4' : 'select2',
+		wp_register_script( self::$select2_handle,
 			trailingslashit( $this->plugin_url ) . "lib/select2/js/select2.full{$min}.js",
 			array( 'jquery', 'jquery-ui-sortable' ), '4.0.3'
 		);
 
-		if( $noconflict ){
-			 wp_add_inline_script( 'select2v4', 'var existingSelect2 = jQuery.fn.select2 || null; if (existingSelect2) { delete jQuery.fn.select2; }', 'before' );
-			 wp_add_inline_script( 'select2v4', 'jQuery.fn.select2v4 = jQuery.fn.select2; if (existingSelect2) { delete jQuery.fn.select2; jQuery.fn.select2 = existingSelect2; }', 'after' );
+		if( self::$select2_handle !== 'select2' ){
+			 wp_add_inline_script( self::$select2_handle, 'var existingSelect2 = jQuery.fn.select2 || null; if (existingSelect2) { delete jQuery.fn.select2; }', 'before' );
+			 wp_add_inline_script( self::$select2_handle, 'jQuery.fn.'.self::$select2_handle.' = jQuery.fn.select2; if (existingSelect2) { delete jQuery.fn.select2; jQuery.fn.select2 = existingSelect2; }', 'after' );
 		}
 
-		wp_register_style( $noconflict ? 'select2v4' : 'select2',
+		wp_register_style( self::$select2_handle,
 			trailingslashit( $this->plugin_url ) . "lib/select2/css/select2{$min}.css",
 			null, '4.0.3'
 		);
@@ -267,6 +278,7 @@ class Shortcode_UI {
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
 			),
+			'select2_handle' => self::$select2_handle
 		) );
 
 		// add templates to the footer, instead of where we're at now
