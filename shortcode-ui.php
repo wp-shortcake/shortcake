@@ -41,11 +41,11 @@ add_action( 'init', 'shortcode_ui_init', 5 );
 function shortcode_ui_init() {
 	$shortcode_ui     = Shortcode_UI::get_instance();
 	$fields           = Shortcode_UI_Fields::get_instance();
-	$attachment_field = Shortcake_Field_Attachment::get_instance();
-	$color_field      = Shortcake_Field_Color::get_instance();
-	$post_field       = Shortcode_UI_Field_Post_Select::get_instance();
-	$term_field       = Shortcode_UI_Field_Term_Select::get_instance();
-	$user_field       = Shortcode_UI_Field_User_Select::get_instance();
+	$attachment_field = Shortcode_UI\Field_Attachment::get_instance();
+	$color_field      = Shortcode_UI\Field_Color::get_instance();
+	$post_field       = Shortcode_UI\Field_Post_Select::get_instance();
+	$term_field       = Shortcode_UI\Field_Term_Select::get_instance();
+	$user_field       = Shortcode_UI\Field_User_Select::get_instance();
 }
 
 /**

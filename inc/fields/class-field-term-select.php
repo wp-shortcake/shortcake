@@ -1,6 +1,7 @@
 <?php
+namespace Shortcode_UI;
 
-class Shortcode_UI_Field_Term_Select {
+class Field_Term_Select {
 
 	private static $instance;
 
@@ -102,7 +103,7 @@ class Shortcode_UI_Field_Term_Select {
 			wp_send_json_error( $response );
 		}
 
-		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
+		$shortcodes = \Shortcode_UI::get_instance()->get_shortcodes();
 
 		// Shortcode not found.
 		if ( ! isset( $shortcodes[ $requested_shortcode ] ) ) {

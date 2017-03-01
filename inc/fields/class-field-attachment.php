@@ -1,9 +1,10 @@
 <?php
+namespace Shortcode_UI;
 
 /**
  * Primary controller class for Shortcake Attachment Field
  */
-class Shortcake_Field_Attachment {
+class Field_Attachment {
 
 	/**
 	 * Shortcake Attachment Field controller instance.

@@ -1,6 +1,7 @@
 <?php
+namespace Shortcode_UI;
 
-class Shortcode_UI_Field_Post_Select {
+class Field_Post_Select {
 
 	private static $instance;
 
@@ -83,7 +84,7 @@ class Shortcode_UI_Field_Post_Select {
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 		$response            = array( 'items' => array(), 'found_items' => 0, 'items_per_page' => 0 );
 
-		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
+		$shortcodes = \Shortcode_UI::get_instance()->get_shortcodes();
 
 		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_post_select' ) ) {
 			wp_send_json_error( $response );
