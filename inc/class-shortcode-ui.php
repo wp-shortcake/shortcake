@@ -214,7 +214,7 @@ class Shortcode_UI {
 
 		if( self::$select2_handle !== 'select2' ){
 			 wp_add_inline_script( self::$select2_handle, 'var existingSelect2 = jQuery.fn.select2 || null; if (existingSelect2) { delete jQuery.fn.select2; }', 'before' );
-			 wp_add_inline_script( self::$select2_handle, 'jQuery.fn.'.self::$select2_handle.' = jQuery.fn.select2; if (existingSelect2) { delete jQuery.fn.select2; jQuery.fn.select2 = existingSelect2; }', 'after' );
+			 wp_add_inline_script( self::$select2_handle, 'jQuery.fn[ shortcodeUIData.select2_handle ] = jQuery.fn.select2; if (existingSelect2) { delete jQuery.fn.select2; jQuery.fn.select2 = existingSelect2; }', 'after' );
 		}
 
 		wp_register_style( self::$select2_handle,
