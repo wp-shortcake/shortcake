@@ -103,7 +103,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 
 		this.preselect( $field );
 
-		var $fieldSelect2 = $field.select2({
+		var $fieldSelect2 = $field[ shortcodeUIData.select2_handle ]({
 			placeholder: "Search",
 			multiple: this.model.get( 'multiple' ),
 
@@ -134,6 +134,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 				},
 				cache: true
 			},
+
 			escapeMarkup: function( markup ) { return markup; },
 			minimumInputLength: 1,
 			templateResult: this.templateResult,
@@ -169,8 +170,7 @@ sui.controllers.MediaController = mediaController.extend({
 	},
 
 	destroySelect2UI: function() {
-		$fieldSelect2.select2( 'close' );
+		$fieldSelect2[ shortcodeUIData.select2_handle ]( 'close' );
 	}
 
 });
-
