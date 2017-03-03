@@ -212,7 +212,7 @@ class Shortcode_UI {
 			array( 'jquery', 'jquery-ui-sortable' ), '4.0.3'
 		);
 
-		if( self::$select2_handle !== 'select2' ){
+		if ( 'select2' !== self::$select2_handle ) {
 			 wp_add_inline_script( self::$select2_handle, 'var existingSelect2 = jQuery.fn.select2 || null; if (existingSelect2) { delete jQuery.fn.select2; }', 'before' );
 			 wp_add_inline_script( self::$select2_handle, 'jQuery.fn[ shortcodeUIData.select2_handle ] = jQuery.fn.select2; if (existingSelect2) { delete jQuery.fn.select2; jQuery.fn.select2 = existingSelect2; }', 'after' );
 		}
@@ -270,11 +270,11 @@ class Shortcode_UI {
 				'search_placeholder'                => __( 'Search', 'shortcode-ui' ),
 				'insert_content_label'              => __( 'Insert Content', 'shortcode-ui' ),
 			),
-			'nonces'     => array(
+			'nonces'          => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
 			),
-			'select2_handle' => self::$select2_handle
+			'select2_handle'  => self::$select2_handle,
 		) );
 
 		// add templates to the footer, instead of where we're at now

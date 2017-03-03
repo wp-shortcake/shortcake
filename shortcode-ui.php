@@ -40,7 +40,7 @@ add_action( 'init', 'shortcode_ui_init', 5 );
  */
 function shortcode_ui_init() {
 
-	if(defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT){
+	if ( defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT ) {
 		Shortcode_UI::$select2_handle = 'select2v4';
 	}
 
