@@ -1,13 +1,12 @@
 <?php
-namespace Shortcode_UI;
 
 /**
- * Primary controller class for Shortcake Attachment Field
+ * Primary controller class for Shortcode UI Attachment Field
  */
-class Field_Attachment {
+class Shortcode_UI_Field_Attachment {
 
 	/**
-	 * Shortcake Attachment Field controller instance.
+	 * Shortcode UI Attachment Field controller instance.
 	 *
 	 * @access private
 	 * @var object
@@ -36,11 +35,11 @@ class Field_Attachment {
 	);
 
 	/**
-	 * Get instance of Shortcake Attachment Field controller.
+	 * Get instance of Shortcode UI Attachment Field controller.
 	 *
 	 * Instantiates object on the fly when not already loaded.
 	 *
-	 * @return object
+	 * @return Shortcode_UI_Field_Attachment
 	 */
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {
@@ -70,7 +69,7 @@ class Field_Attachment {
 	}
 
 	/**
-	 * Add localization data needed for Shortcake Attachment Field
+	 * Add localization data needed for Shortcode UI Attachment Field
 	 */
 	public function action_enqueue_shortcode_ui() {
 

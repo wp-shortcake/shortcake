@@ -1,15 +1,12 @@
 <?php
-namespace Shortcode_UI;
-
-use Shortcode_UI;
 
 /**
- * Primary controller class for Shortcake Color Field
+ * Primary controller class for Shortcode UI Color Field
  */
-class Field_Color {
+class Shortcode_UI_Field_Color {
 
 	/**
-	 * Shortcake Color Field controller instance.
+	 * Shortcode UI Color Field controller instance.
 	 *
 	 * @access private
 	 * @var object
@@ -38,7 +35,7 @@ class Field_Color {
 	);
 
 	/**
-	 * Get instance of Shortcake Color Field controller.
+	 * Get instance of Shortcode UI Color Field controller.
 	 *
 	 * Instantiates object on the fly when not already loaded.
 	 *

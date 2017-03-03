@@ -23,11 +23,11 @@ define( 'SHORTCODE_UI_VERSION', '0.7.0' );
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-attachment.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-color.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-post-select.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-term-select.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-user-select.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-attachment.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-color.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-post-select.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-term-select.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-user-select.php';
 
 add_action( 'init', 'shortcode_ui_load_textdomain' );
 
@@ -46,11 +46,11 @@ function shortcode_ui_init() {
 
 	$shortcode_ui     = Shortcode_UI::get_instance();
 	$fields           = Shortcode_UI_Fields::get_instance();
-	$attachment_field = Shortcode_UI\Field_Attachment::get_instance();
-	$color_field      = Shortcode_UI\Field_Color::get_instance();
-	$post_field       = Shortcode_UI\Field_Post_Select::get_instance();
-	$term_field       = Shortcode_UI\Field_Term_Select::get_instance();
-	$user_field       = Shortcode_UI\Field_User_Select::get_instance();
+	$attachment_field = Shortcode_UI_Field_Attachment::get_instance();
+	$color_field      = Shortcode_UI_Field_Color::get_instance();
+	$post_field       = Shortcode_UI_Field_Post_Select::get_instance();
+	$term_field       = Shortcode_UI_Field_Term_Select::get_instance();
+	$user_field       = Shortcode_UI_Field_User_Select::get_instance();
 }
 
 /**

@@ -1,9 +1,6 @@
 <?php
-namespace Shortcode_UI;
 
-use Shortcode_UI;
-
-class Field_Term_Select {
+class Shortcode_UI_Field_Term_Select {
 
 	private static $instance;
 
@@ -20,7 +17,7 @@ class Field_Term_Select {
 
 	/**
 	 * Setup the instance.
-	 * @return Shortcode_UI\Field_Term_Select
+	 * @return Shortcode_UI_Field_Term_Select
 	 */
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {

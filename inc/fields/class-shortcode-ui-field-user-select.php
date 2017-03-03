@@ -1,10 +1,6 @@
 <?php
-namespace Shortcode_UI;
 
-use Shortcode_UI;
-use WP_User_Query;
-
-class Field_User_Select {
+class Shortcode_UI_Field_User_Select {
 
 	private static $instance;
 
@@ -22,7 +18,7 @@ class Field_User_Select {
 	/**
 	 * Setup the instance.
 	 *
-	 * @return Shortcode_UI\Field_User_Select
+	 * @return Shortcode_UI_Field_User_Select
 	 */
 	public static function get_instance() {
 
