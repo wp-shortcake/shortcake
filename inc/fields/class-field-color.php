@@ -1,6 +1,8 @@
 <?php
 namespace Shortcode_UI;
 
+use Shortcode_UI;
+
 /**
  * Primary controller class for Shortcake Color Field
  */
@@ -65,7 +67,7 @@ class Field_Color {
 	 */
 	private function color_attribute_present() {
 
-		foreach ( \Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
+		foreach ( Shortcode_UI::get_instance()->get_shortcodes() as $shortcode ) {
 
 			if ( empty( $shortcode['attrs'] ) ) {
 				continue;

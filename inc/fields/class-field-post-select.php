@@ -1,6 +1,8 @@
 <?php
 namespace Shortcode_UI;
 
+use Shortcode_UI;
+
 class Field_Post_Select {
 
 	private static $instance;
@@ -16,6 +18,10 @@ class Field_Post_Select {
 		),
 	);
 
+	/**
+	 * Setup the instance.
+	 * @return Shortcode_UI\Field_Post_Select
+	 */
 	public static function get_instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self;
@@ -89,7 +95,7 @@ class Field_Post_Select {
 			'items_per_page' => 0,
 		);
 
-		$shortcodes = \Shortcode_UI::get_instance()->get_shortcodes();
+		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 
 		if ( ! wp_verify_nonce( $nonce, 'shortcode_ui_field_post_select' ) ) {
 			wp_send_json_error( $response );
