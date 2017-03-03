@@ -31,6 +31,16 @@ New in 0.4.0 is the ability to [attach javascript functions to event attribute u
 
 Shortcake doesn't support custom key=>value pairs as shortcode attributes because it isn't a great user experience.
 
+= After upgrading to Shortcake 0.7.x, some of the shortcode UI fields (post select, user select, etc) don't work as expected. What can I do? =
+
+In version 0.7.0, we updated to the most recent branch of the Select2 library, which provides the enhanced select fields in these field types. This causes a known conflict with plugins that enqueue older versions of Select2. (Popular plugins with known conflicts include WooCommerce and Advanced Custom Fields Pro, among others.)
+
+If you find that you're experiencing conflicts with these plugins, you can set a flag to load select2 in a distinct namespace by defining the constant `SELECT2_NOCONFLICT` in your wp-config.php (or anywhere that's defined before the 'init' hook.)
+
+`
+define( 'SELECT2_NOCONFLICT', true );
+`
+
 == Running tests ==
 
 We have test coverage for PHP using PHPunit, and JavaScript using Jasmine.
