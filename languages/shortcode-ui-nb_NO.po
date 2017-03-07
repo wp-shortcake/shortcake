@@ -1,0 +1,184 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shortcode-"
+"ui\n"
+"POT-Creation-Date: 2017-03-07 12:35+0100\n"
+"PO-Revision-Date: 2017-03-07 12:47+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.12\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: dev.php:68
+msgid ""
+"Shortcode UI plugin must be active for Shortcode UI Example plugin to "
+"function."
+msgstr ""
+"Shortcode UI plugin må være aktivert for at Shortcode UI Example "
+"plugin skal fungere."
+
+#: dev.php:119
+msgid "Shortcake With No Attributes"
+msgstr "Shortcake uten attributter"
+
+#: dev.php:159
+msgid "Attachment"
+msgstr "Vedlegg"
+
+#: dev.php:169 dev.php:170
+msgid "Select Image"
+msgstr "Velg bilde"
+
+#: dev.php:173
+msgid "Citation Source"
+msgstr "Kilde"
+
+#: dev.php:178
+msgid "Test placeholder"
+msgstr "Test placeholder"
+
+#: dev.php:183
+msgid "Select Page"
+msgstr "Velg Side"
+
+#: dev.php:190
+msgid "Background Color"
+msgstr "Bagrunnsfarge"
+
+#: dev.php:195
+msgid "Hex color code"
+msgstr "Fargens hex kode verdi"
+
+#: dev.php:199
+msgid "Alignment"
+msgstr "Justering"
+
+#: dev.php:200
+msgid ""
+"Whether the quotation should be displayed as pull-left, pull-right, or "
+"neither."
+msgstr "Om sitat skal vises som venstre, høyre eller ingen av de."
+
+#: dev.php:204
+msgid "None"
+msgstr "Ingen"
+
+#: dev.php:205
+msgid "Pull Left"
+msgstr "Ventrejuster"
+
+#: dev.php:206
+msgid "Pull Right"
+msgstr "Høyrejuster"
+
+#: dev.php:210
+msgid "Year"
+msgstr "År"
+
+#: dev.php:211
+msgid "Optional. The year the quotation is from."
+msgstr "Valgfri. Året sitatet er fra."
+
+#: dev.php:230
+msgid "Shortcake Dev"
+msgstr "Shortcake Dev"
+
+#: dev.php:249
+msgid "Quote"
+msgstr "Sitat"
+
+#: dev.php:250
+msgid "Include a statement from someone famous."
+msgstr "Inkluder påstand fra noen berømt."
+
+#: dev.php:288
+msgid "Content:"
+msgstr "Innhold:"
+
+#: dev.php:289
+msgid "Source:"
+msgstr "Kilde:"
+
+#: dev.php:290
+msgid "Image:"
+msgstr "Bilde:"
+
+#: inc/class-shortcode-ui.php:109
+msgid "Inner Content"
+msgstr "Indre innhold:"
+
+#: inc/class-shortcode-ui.php:236 inc/class-shortcode-ui.php:237
+msgid "Insert Post Element"
+msgstr "Sett inn Innlegg-element"
+
+#: inc/class-shortcode-ui.php:238
+msgid "%s Details"
+msgstr "%s Detaljer"
+
+#: inc/class-shortcode-ui.php:239
+msgid "Insert Element"
+msgstr "Sett inn element"
+
+#: inc/class-shortcode-ui.php:240
+msgid "Update"
+msgstr "Oppdater"
+
+#: inc/class-shortcode-ui.php:241
+msgid "There are no attributes to configure for this Post Element."
+msgstr ""
+"Det er ingen attributter for å konfigurere dette Innleggselementet."
+
+#: inc/class-shortcode-ui.php:242
+msgid "Failed to load preview"
+msgstr "Fikk ikke lastet forhåndsvisning"
+
+#: inc/class-shortcode-ui.php:243
+msgid "Search"
+msgstr "Søk"
+
+#: inc/class-shortcode-ui.php:244
+msgid "Insert Content"
+msgstr "Sett inn innhold"
+
+#: inc/class-shortcode-ui.php:339
+msgid "Something's rotten in the state of Denmark"
+msgstr "Noe er rottent i Dannmark"
+
+#: inc/fields/class-field-attachment.php:79
+#: inc/fields/class-field-attachment.php:80
+msgid "Select Attachment"
+msgstr "Velg vedlegg"
+
+#: inc/fields/class-field-attachment.php:104
+msgid "Thumbnail Details"
+msgstr "Thumbnail detaljer"
+
+#: inc/fields/class-field-attachment.php:109
+msgid "Edit Attachment"
+msgstr "Endre vedlegg"
+
+#: inc/templates/edit-form.tpl.php:3
+msgid "Back to list"
+msgstr "Tilbake til listen"
+
+#. Plugin Name of the plugin/theme
+msgid "Shortcake (Shortcode UI)"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "User Interface for adding shortcodes."
+msgstr "Brukergrensesnitt for å legge til shortcodes."
+
+#. Author of the plugin/theme
+msgid "Fusion Engineering and community"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://next.fusion.net/tag/shortcode-ui/"
+msgstr ""
