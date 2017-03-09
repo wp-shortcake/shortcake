@@ -58,7 +58,7 @@
 						<# }); #>
 					</optgroup>
 				<# } else { #>
-					<option value="{{ option.value }}" <# if ( option.value === data.value ){ print('selected'); } #>>{{ option.label }}</option>
+					<option value="{{ option.value }}" <# if ( ! _.isEmpty( _.filter( _.isArray( data.value ) ? data.value : data.value.split(','), function(val) { return val === option.value; } ) ) ) { print('selected'); } #>>{{ option.label }}</option>
 				<# } #>
 
 			<# }); #>
