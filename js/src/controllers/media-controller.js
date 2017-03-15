@@ -1,4 +1,5 @@
 var Backbone = require('backbone'),
+	$ = require('jquery'),
     wp = require('wp'),
     sui = require('sui-utils/sui'),
     Shortcodes = require('sui-collections/shortcodes');
@@ -33,12 +34,33 @@ var MediaController = wp.media.controller.State.extend({
 	},
 
 	insert: function() {
+		var self = this;
 		var shortcode = this.props.get('currentShortcode');
-		if ( shortcode ) {
-			send_to_editor( shortcode.formatShortcode() );
-			this.reset();
-			this.frame.close();
-		}
+		var okToInsert$ = $.Deferred();
+
+		/*
+		 * Filter run before a shortcode is sent to the editor. Can be used for
+		 * client-side validation before closing the media modal.
+		 *
+		 * Called as `shortcode-ui.send_to_editor`.
+		 *
+		 * @param $.Deferred A promise which is expected to either resolve if
+		 *                   the shortcode can be sent to the editor, or reject
+		 *                   if not.
+		 * @param Shortcode  The current shortcode model.
+		 */
+		var sendToEditor$ = wp.shortcake.hooks.applyFilters( 'shortcode-ui.send_to_editor', okToInsert$, shortcode );
+
+		// Unless a filter has interfered, resolve the promise, sending the shortcode to the editor.
+		setTimeout( function() { okToInsert$.resolve(true); } );
+
+		sendToEditor$.then(
+			function() {
+				send_to_editor( shortcode.formatShortcode() );
+				self.reset();
+				self.frame.close();
+			}
+		);
 	},
 
 	reset: function() {
