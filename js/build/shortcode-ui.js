@@ -282,6 +282,7 @@ $(document).ready(function(){
 	$(document.body).on( 'click', '.shortcake-add-post-element', function( event ) {
 		var elem = $( event.currentTarget ),
 			editor = elem.data('editor'),
+			wp_media_new_frame,
 			options = {
 				frame: 'post',
 				state: 'shortcode-ui',
@@ -296,8 +297,20 @@ $(document).ready(function(){
 		// See: https://core.trac.wordpress.org/ticket/22445
 		elem.blur();
 
-		wp.media.editor.remove( editor );
-		wp.media.editor.open( editor, options );
+		// Remove Edit Shortcode UI model frame to avoid duplicate markup of shortcode.
+		if ( wp.media.frames.wp_media_frame ) {
+			wp.media.frames.wp_media_frame.remove();
+			wp.media.frames.wp_media_frame = '';
+		}
+
+		if ( wp.media.frames.wp_media_new_frame ) {
+			// Use the existing model frame if its already initialize.
+			wp_media_new_frame = wp.media.frames.wp_media_new_frame;
+		} else {
+			wp_media_new_frame = wp.media.frames.wp_media_new_frame = wp.media(options);
+		}
+
+		wp_media_new_frame.open();
 	} );
 
 });
@@ -586,13 +599,25 @@ var shortcodeViewConstructor = {
 		var currentShortcode = this.parseShortcodeString( shortcodeString );
 
 		if ( currentShortcode ) {
+			var wp_media_frame,
+				options = {
+					frame : "post",
+					state : 'shortcode-ui',
+					currentShortcode : currentShortcode
+				};
 
-			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
-				frame : "post",
-				state : 'shortcode-ui',
-				currentShortcode : currentShortcode,
-			});
+			// Remove Add Shortcode UI model frame to avoid duplicate markup of shortcode.
+			if ( wp.media.frames.wp_media_new_frame ) {
+				wp.media.frames.wp_media_new_frame.remove();
+				wp.media.frames.wp_media_new_frame = '';
+			}
 
+			if ( wp.media.frames.wp_media_frame ) {
+				// Use the existing model frame if its already initialize.
+				wp_media_frame = wp.media.frames.wp_media_frame;
+			} else {
+				wp_media_frame = wp.media.frames.wp_media_frame = wp.media(options);
+			}
 			wp_media_frame.open();
 
 			/* Trigger render_edit */
