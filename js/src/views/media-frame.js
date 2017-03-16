@@ -13,41 +13,33 @@ var mediaFrame = postMediaFrame.extend( {
 
 		var id = 'shortcode-ui';
 
-		var opts = {
-			id      : id,
-			search  : true,
-			router  : false,
-			toolbar : id + '-toolbar',
-			menu    : 'default',
-			title   : shortcodeUIData.strings.media_frame_menu_insert_label,
-			tabs    : [ 'insert' ],
-			priority:  66,
-			content : id + '-content-insert',
-		};
+		this.mediaController = new MediaController({
+			id       : id,
+			search   : true,
+			router   : false,
+			toolbar  : id + '-toolbar',
+			menu     : 'default',
+			title    : shortcodeUIData.strings.media_frame_menu_insert_label,
+			tabs     : [ 'insert' ],
+			priority :  66,
+			content  : id + '-content-insert',
+		});
 
 		if ( 'currentShortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
-		}
-
-		this.mediaController = new MediaController( opts );
-
-		if ( 'currentShortcode' in this.options ) {
-			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
-			this.mediaController.props.set( 'action', 'update' );
+			this.mediaController.setActionUpdate( this.options.currentShortcode );
 		}
 
 		this.states.add([ this.mediaController ]);
 
 		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
 		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
-		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
 		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
 	},
 
 	events: function() {
 		return _.extend( {}, postMediaFrame.prototype.events, {
-			'click .media-menu-item'    : 'resetMediaController',
+			'click .media-menu-item' : 'resetMediaController',
 		} );
 	},
 
@@ -67,15 +59,15 @@ var mediaFrame = postMediaFrame.extend( {
 		);
 	},
 
-	toolbarRender: function( toolbar ) {},
-
 	toolbarCreate : function( toolbar ) {
+
 		var text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
-		if ( 'currentShortcode' in this.options ) {
+
+		if ( this.state().props.get('currentShortcode') ) {
 			text = shortcodeUIData.strings.media_frame_toolbar_update_label;
 		}
 
-		toolbar.view = new  Toolbar( {
+		toolbar.view = new Toolbar( {
 			controller : this,
 			items: {
 				insert: {
@@ -98,17 +90,6 @@ var mediaFrame = postMediaFrame.extend( {
 				priority: 65
 			})
 		});
-
-		// Hide menu if editing.
-		// @todo - fix this.
-		// This is a hack.
-		// I just can't work out how to do it properly...
-		if ( view.controller.state().props && view.controller.state().props.get( 'currentShortcode' ) ) {
-			window.setTimeout( function() {
-				view.controller.$el.addClass( 'hide-menu' );
-			} );
-		}
-
 	},
 
 	insertAction: function() {

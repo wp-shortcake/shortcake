@@ -23,8 +23,10 @@ $(document).ready(function(){
 	} );
 
 	$(document.body).on( 'click', '.shortcake-add-post-element', function( event ) {
-		var elem = $( event.currentTarget ),
-			editor = elem.data('editor'),
+
+		var $el     = $( event.currentTarget ),
+			editor  = $el.data('editor'),
+			frame   = wp.media.editor.get( editor ),
 			options = {
 				frame: 'post',
 				state: 'shortcode-ui',
@@ -35,12 +37,25 @@ $(document).ready(function(){
 
 		// Remove focus from the `.shortcake-add-post-element` button.
 		// Prevents Opera from showing the outline of the button above the modal.
-		//
 		// See: https://core.trac.wordpress.org/ticket/22445
-		elem.blur();
+		$el.blur();
 
-		wp.media.editor.remove( editor );
-		wp.media.editor.open( editor, options );
+		if ( frame ) {
+			frame.mediaController.setActionSelect();
+			frame.open();
+		} else {
+			frame = wp.media.editor.open( editor, options );
+		}
+
+		// Make sure to reset state when closed.
+		frame.once( 'close submit', function() {
+			frame.state().props.set('currentShortcode', false);
+			var menuItem = frame.menu.get().get('shortcode-ui');
+			menuItem.options.text = shortcodeUIData.strings.media_frame_title;
+			menuItem.render();
+			frame.setState( 'insert' );
+		} );
+
 	} );
 
 });
