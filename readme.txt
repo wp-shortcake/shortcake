@@ -27,9 +27,9 @@ New in 0.4.0 is the ability to [attach javascript functions to event attribute u
 
 == Frequently Asked Questions ==
 
-= How do I register UI for arbitrary key=>value pairs as shortcode attributes? =
+= How do I register UI for arbitrary key/value pairs as shortcode attributes? =
 
-Shortcake doesn't support custom key=>value pairs as shortcode attributes because it isn't a great user experience.
+Shortcake doesn't support custom key => value pairs as shortcode attributes because it isn't a great user experience.
 
 = After upgrading to Shortcake 0.7.x, some of the shortcode UI fields (post select, user select, etc) don't work as expected. What can I do? =
 
