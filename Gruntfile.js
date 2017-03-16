@@ -73,7 +73,7 @@ module.exports = function( grunt ) {
 				src: './'
 			},
 			options: {
-				bin: "vendor/bin/phpcs --extensions=php --ignore=\"*/vendor/*,*/node_modules/*,dev.php\"",
+				bin: "vendor/bin/phpcs --extensions=php --ignore=\"*/php-tests/*,*/vendor/*,*/node_modules/*,dev.php\"",
 				standard: "phpcs.ruleset.xml"
 			}
 		},

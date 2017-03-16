@@ -23,11 +23,11 @@ define( 'SHORTCODE_UI_VERSION', '0.7.1' );
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-attachment.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-color.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-post-select.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-term-select.php';
-require_once dirname( __FILE__ ) . '/inc/fields/class-field-user-select.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-attachment.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-color.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-post-select.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-term-select.php';
+require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-field-user-select.php';
 
 add_action( 'init', 'shortcode_ui_load_textdomain' );
 
@@ -39,10 +39,15 @@ add_action( 'init', 'shortcode_ui_init', 5 );
  * @return null
  */
 function shortcode_ui_init() {
+
+	if ( defined( 'SELECT2_NOCONFLICT' ) && SELECT2_NOCONFLICT ) {
+		Shortcode_UI::$select2_handle = 'select2v4';
+	}
+
 	$shortcode_ui     = Shortcode_UI::get_instance();
 	$fields           = Shortcode_UI_Fields::get_instance();
-	$attachment_field = Shortcake_Field_Attachment::get_instance();
-	$color_field      = Shortcake_Field_Color::get_instance();
+	$attachment_field = Shortcode_UI_Field_Attachment::get_instance();
+	$color_field      = Shortcode_UI_Field_Color::get_instance();
 	$post_field       = Shortcode_UI_Field_Post_Select::get_instance();
 	$term_field       = Shortcode_UI_Field_Term_Select::get_instance();
 	$user_field       = Shortcode_UI_Field_User_Select::get_instance();
@@ -62,13 +67,14 @@ function shortcode_ui_load_textdomain() {
 	$path = dirname( __FILE__ ) . '/languages';
 	// Load the textdomain according to the plugin first
 	$mofile = $domain . '-' . $locale . '.mo';
-	if ( $loaded = load_textdomain( $domain, $path . '/' . $mofile ) ) {
-		return;
+	$loaded = load_textdomain( $domain, $path . '/' . $mofile );
+
+	// If not loaded, load from the languages directory
+	if ( ! $loaded ) {
+		$mofile = WP_LANG_DIR . '/plugins/' . $mofile;
+		load_textdomain( $domain, $mofile );
 	}
 
-	// Otherwise, load from the languages directory
-	$mofile = WP_LANG_DIR . '/plugins/' . $mofile;
-	load_textdomain( $domain, $mofile );
 }
 
 /**

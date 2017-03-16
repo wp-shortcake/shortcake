@@ -58,8 +58,8 @@ class Shortcode_UI_Field_User_Select {
 	 */
 	public function action_enqueue_shortcode_ui() {
 
-		wp_enqueue_script( 'select2' );
-		wp_enqueue_style( 'select2' );
+		wp_enqueue_script( Shortcode_UI::$select2_handle );
+		wp_enqueue_style( Shortcode_UI::$select2_handle );
 
 		wp_localize_script( 'shortcode-ui', 'shortcodeUiUserFieldData', array(
 			'nonce' => wp_create_nonce( 'shortcode_ui_field_user_select' ),
@@ -101,7 +101,12 @@ class Shortcode_UI_Field_User_Select {
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( wp_unslash( $_GET['attr'] ) ) : null;
 		$page                = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : null;
 		$search_str          = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : null;
-		$response            = array( 'items' => array(), 'found_items' => 0, 'items_per_page' => 0 );
+
+		$response = array(
+			'items'          => array(),
+			'found_items'    => 0,
+			'items_per_page' => 0,
+		);
 
 		$include = null;
 		if ( isset( $_GET['include'] ) ) {
@@ -151,10 +156,12 @@ class Shortcode_UI_Field_User_Select {
 		$query = new WP_User_Query( $query_args );
 
 		foreach ( $query->get_results() as $user ) {
-			array_push( $response['items'], array(
-				'id'   => $user->ID,
-				'text' => html_entity_decode( $user->display_name ),
-			) );
+			array_push( $response['items'],
+				array(
+					'id'   => $user->ID,
+					'text' => html_entity_decode( $user->display_name ),
+				)
+			);
 		}
 
 		$response['found_items']    = $query->get_total();

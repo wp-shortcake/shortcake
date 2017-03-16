@@ -166,13 +166,27 @@ var shortcodeViewConstructor = {
 
 		if ( currentShortcode ) {
 
-			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
-				frame : "post",
-				state : 'shortcode-ui',
-				currentShortcode : currentShortcode,
-			});
+			var frame = wp.media.editor.get( window.wpActiveEditor );
 
-			wp_media_frame.open();
+			if ( frame ) {
+				frame.mediaController.setActionUpdate( currentShortcode );
+				frame.open();
+			} else {
+				frame = wp.media.editor.open( window.wpActiveEditor, {
+					frame : "post",
+					state : 'shortcode-ui',
+					currentShortcode : currentShortcode,
+				});
+			}
+
+			// Make sure to reset state when closed.
+			frame.once( 'close submit', function() {
+				frame.state().props.set('currentShortcode', false);
+				var menuItem = frame.menu.get().get('shortcode-ui');
+				menuItem.options.text = shortcodeUIData.strings.media_frame_title;
+				menuItem.render();
+				frame.setState( 'insert' );
+			} );
 
 			/* Trigger render_edit */
 			/*

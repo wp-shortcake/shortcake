@@ -82,7 +82,7 @@ var Shortcode_UI = Backbone.View.extend({
 	},
 
 	select: function(e) {
-		this.controller.props.set( 'action', 'insert' );
+
 		var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 		var shortcode = sui.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
 
@@ -90,6 +90,7 @@ var Shortcode_UI = Backbone.View.extend({
 			return;
 		}
 
+		this.controller.props.set( 'action', 'insert' );
 		this.controller.props.set( 'currentShortcode', shortcode.clone() );
 
 		this.render();

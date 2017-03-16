@@ -38,6 +38,14 @@ class Shortcode_UI {
 	private static $instance;
 
 	/**
+	 * Select2 library handle.
+	 *
+	 * @access public
+	 * @var string
+	 */
+	public static $select2_handle = 'select2';
+
+	/**
 	 * Get instance of Shortcake controller.
 	 *
 	 * Instantiates object on the fly when not already loaded.
@@ -199,12 +207,17 @@ class Shortcode_UI {
 
 		$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-		wp_register_script( 'select2',
+		wp_register_script( self::$select2_handle,
 			trailingslashit( $this->plugin_url ) . "lib/select2/js/select2.full{$min}.js",
 			array( 'jquery', 'jquery-ui-sortable' ), '4.0.3'
 		);
 
-		wp_register_style( 'select2',
+		if ( 'select2' !== self::$select2_handle ) {
+			 wp_add_inline_script( self::$select2_handle, 'var existingSelect2 = jQuery.fn.select2 || null; if (existingSelect2) { delete jQuery.fn.select2; }', 'before' );
+			 wp_add_inline_script( self::$select2_handle, 'jQuery.fn[ shortcodeUIData.select2_handle ] = jQuery.fn.select2; if (existingSelect2) { delete jQuery.fn.select2; jQuery.fn.select2 = existingSelect2; }', 'after' );
+		}
+
+		wp_register_style( self::$select2_handle,
 			trailingslashit( $this->plugin_url ) . "lib/select2/css/select2{$min}.css",
 			null, '4.0.3'
 		);
@@ -248,7 +261,8 @@ class Shortcode_UI {
 			'strings'         => array(
 				'media_frame_title'                 => __( 'Insert Post Element', 'shortcode-ui' ),
 				'media_frame_menu_insert_label'     => __( 'Insert Post Element', 'shortcode-ui' ),
-				'media_frame_menu_update_label'     => __( '%s Details', 'shortcode-ui' ), // Substituted in JS
+				/* Translators: Ignore placeholder. This is replaced with the Shortcode name string in JS */
+				'media_frame_menu_update_label'     => __( '%s Details', 'shortcode-ui' ),
 				'media_frame_toolbar_insert_label'  => __( 'Insert Element', 'shortcode-ui' ),
 				'media_frame_toolbar_update_label'  => __( 'Update', 'shortcode-ui' ),
 				'media_frame_no_attributes_message' => __( 'There are no attributes to configure for this Post Element.', 'shortcode-ui' ),
@@ -256,10 +270,11 @@ class Shortcode_UI {
 				'search_placeholder'                => __( 'Search', 'shortcode-ui' ),
 				'insert_content_label'              => __( 'Insert Content', 'shortcode-ui' ),
 			),
-			'nonces'     => array(
+			'nonces'          => array(
 				'preview'        => wp_create_nonce( 'shortcode-ui-preview' ),
 				'thumbnailImage' => wp_create_nonce( 'shortcode-ui-get-thumbnail-image' ),
 			),
+			'select2_handle'  => self::$select2_handle,
 		) );
 
 		// add templates to the footer, instead of where we're at now

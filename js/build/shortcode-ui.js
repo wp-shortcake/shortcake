@@ -36,9 +36,9 @@ module.exports = Shortcodes;
 },{"./../models/shortcode.js":6}],3:[function(require,module,exports){
 (function (global){
 var Backbone = (typeof window !== "undefined" ? window['Backbone'] : typeof global !== "undefined" ? global['Backbone'] : null),
-    wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
-    sui = require('./../utils/sui.js'),
-    Shortcodes = require('./../collections/shortcodes.js');
+	wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "undefined" ? global['wp'] : null),
+	sui = require('./../utils/sui.js'),
+	Shortcodes = require('./../collections/shortcodes.js');
 
 var MediaController = wp.media.controller.State.extend({
 
@@ -82,6 +82,49 @@ var MediaController = wp.media.controller.State.extend({
 		this.props.set( 'action', 'select' );
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'search', null );
+	},
+
+	setActionSelect: function() {
+		this.attributes.title = shortcodeUIData.strings.media_frame_menu_insert_label;
+		this.props.set( 'currentShortcode', null );
+		this.props.set( 'action', 'select' );
+
+		// Update menuItem text.
+		var menuItem = this.frame.menu.get().get('shortcode-ui');
+		menuItem.options.text = this.attributes.title;
+		menuItem.render();
+
+		this.frame.setState( 'shortcode-ui' );
+		this.frame.render();
+	},
+
+	setActionUpdate: function( currentShortcode ) {
+
+		this.attributes.title = shortcodeUIData.strings.media_frame_menu_update_label;
+		this.attributes.title = this.attributes.title.replace( /%s/, currentShortcode.attributes.label );
+
+		this.props.set( 'currentShortcode', currentShortcode );
+		this.props.set( 'action', 'update' );
+
+		// If a new frame is being created, it may not exist yet.
+		// Defer to ensure it does.
+		_.defer( function() {
+
+			this.frame.setState( 'shortcode-ui' );
+			this.frame.content.render();
+
+			this.toggleSidebar( true );
+
+			this.frame.once( 'close', function() {
+				this.frame.mediaController.toggleSidebar( false );
+			}.bind( this ) );
+
+		}.bind( this ) );
+
+	},
+
+	toggleSidebar: function( show ) {
+		this.frame.$el.toggleClass( 'hide-menu', show );
 	},
 
 });
@@ -280,8 +323,10 @@ $(document).ready(function(){
 	} );
 
 	$(document.body).on( 'click', '.shortcake-add-post-element', function( event ) {
-		var elem = $( event.currentTarget ),
-			editor = elem.data('editor'),
+
+		var $el     = $( event.currentTarget ),
+			editor  = $el.data('editor'),
+			frame   = wp.media.editor.get( editor ),
 			options = {
 				frame: 'post',
 				state: 'shortcode-ui',
@@ -292,12 +337,25 @@ $(document).ready(function(){
 
 		// Remove focus from the `.shortcake-add-post-element` button.
 		// Prevents Opera from showing the outline of the button above the modal.
-		//
 		// See: https://core.trac.wordpress.org/ticket/22445
-		elem.blur();
+		$el.blur();
 
-		wp.media.editor.remove( editor );
-		wp.media.editor.open( editor, options );
+		if ( frame ) {
+			frame.mediaController.setActionSelect();
+			frame.open();
+		} else {
+			frame = wp.media.editor.open( editor, options );
+		}
+
+		// Make sure to reset state when closed.
+		frame.once( 'close submit', function() {
+			frame.state().props.set('currentShortcode', false);
+			var menuItem = frame.menu.get().get('shortcode-ui');
+			menuItem.options.text = shortcodeUIData.strings.media_frame_title;
+			menuItem.render();
+			frame.setState( 'insert' );
+		} );
+
 	} );
 
 });
@@ -587,13 +645,27 @@ var shortcodeViewConstructor = {
 
 		if ( currentShortcode ) {
 
-			var wp_media_frame = wp.media.frames.wp_media_frame = wp.media({
-				frame : "post",
-				state : 'shortcode-ui',
-				currentShortcode : currentShortcode,
-			});
+			var frame = wp.media.editor.get( window.wpActiveEditor );
 
-			wp_media_frame.open();
+			if ( frame ) {
+				frame.mediaController.setActionUpdate( currentShortcode );
+				frame.open();
+			} else {
+				frame = wp.media.editor.open( window.wpActiveEditor, {
+					frame : "post",
+					state : 'shortcode-ui',
+					currentShortcode : currentShortcode,
+				});
+			}
+
+			// Make sure to reset state when closed.
+			frame.once( 'close submit', function() {
+				frame.state().props.set('currentShortcode', false);
+				var menuItem = frame.menu.get().get('shortcode-ui');
+				menuItem.options.text = shortcodeUIData.strings.media_frame_title;
+				menuItem.render();
+				frame.setState( 'insert' );
+			} );
 
 			/* Trigger render_edit */
 			/*
@@ -1460,41 +1532,33 @@ var mediaFrame = postMediaFrame.extend( {
 
 		var id = 'shortcode-ui';
 
-		var opts = {
-			id      : id,
-			search  : true,
-			router  : false,
-			toolbar : id + '-toolbar',
-			menu    : 'default',
-			title   : shortcodeUIData.strings.media_frame_menu_insert_label,
-			tabs    : [ 'insert' ],
-			priority:  66,
-			content : id + '-content-insert',
-		};
+		this.mediaController = new MediaController({
+			id       : id,
+			search   : true,
+			router   : false,
+			toolbar  : id + '-toolbar',
+			menu     : 'default',
+			title    : shortcodeUIData.strings.media_frame_menu_insert_label,
+			tabs     : [ 'insert' ],
+			priority :  66,
+			content  : id + '-content-insert',
+		});
 
 		if ( 'currentShortcode' in this.options ) {
-			opts.title = shortcodeUIData.strings.media_frame_menu_update_label.replace( /%s/, this.options.currentShortcode.attributes.label );
-		}
-
-		this.mediaController = new MediaController( opts );
-
-		if ( 'currentShortcode' in this.options ) {
-			this.mediaController.props.set( 'currentShortcode', arguments[0].currentShortcode );
-			this.mediaController.props.set( 'action', 'update' );
+			this.mediaController.setActionUpdate( this.options.currentShortcode );
 		}
 
 		this.states.add([ this.mediaController ]);
 
 		this.on( 'content:render:' + id + '-content-insert', _.bind( this.contentRender, this, 'shortcode-ui', 'insert' ) );
 		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
-		this.on( 'toolbar:render:' + id + '-toolbar', this.toolbarRender, this );
 		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
 	},
 
 	events: function() {
 		return _.extend( {}, postMediaFrame.prototype.events, {
-			'click .media-menu-item'    : 'resetMediaController',
+			'click .media-menu-item' : 'resetMediaController',
 		} );
 	},
 
@@ -1514,15 +1578,15 @@ var mediaFrame = postMediaFrame.extend( {
 		);
 	},
 
-	toolbarRender: function( toolbar ) {},
-
 	toolbarCreate : function( toolbar ) {
+
 		var text = shortcodeUIData.strings.media_frame_toolbar_insert_label;
-		if ( 'currentShortcode' in this.options ) {
+
+		if ( this.state().props.get('currentShortcode') ) {
 			text = shortcodeUIData.strings.media_frame_toolbar_update_label;
 		}
 
-		toolbar.view = new  Toolbar( {
+		toolbar.view = new Toolbar( {
 			controller : this,
 			items: {
 				insert: {
@@ -1545,17 +1609,6 @@ var mediaFrame = postMediaFrame.extend( {
 				priority: 65
 			})
 		});
-
-		// Hide menu if editing.
-		// @todo - fix this.
-		// This is a hack.
-		// I just can't work out how to do it properly...
-		if ( view.controller.state().props && view.controller.state().props.get( 'currentShortcode' ) ) {
-			window.setTimeout( function() {
-				view.controller.$el.addClass( 'hide-menu' );
-			} );
-		}
-
 	},
 
 	insertAction: function() {
@@ -1768,7 +1821,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 
 		this.preselect( $field );
 
-		var $fieldSelect2 = $field.select2({
+                var $fieldSelect2 = $field[ shortcodeUIData.select2_handle ]({
 			placeholder: "Search",
 			multiple: this.model.get( 'multiple' ),
 
@@ -1834,7 +1887,7 @@ sui.controllers.MediaController = mediaController.extend({
 	},
 
 	destroySelect2UI: function() {
-		$fieldSelect2.select2( 'close' );
+                $fieldSelect2[ shortcodeUIData.select2_handle ]( 'close' );
 	}
 
 });
@@ -1927,7 +1980,7 @@ var Shortcode_UI = Backbone.View.extend({
 	},
 
 	select: function(e) {
-		this.controller.props.set( 'action', 'insert' );
+
 		var target    = $(e.currentTarget).closest( '.shortcode-list-item' );
 		var shortcode = sui.shortcodes.findWhere( { shortcode_tag: target.attr( 'data-shortcode' ) } );
 
@@ -1935,6 +1988,7 @@ var Shortcode_UI = Backbone.View.extend({
 			return;
 		}
 
+		this.controller.props.set( 'action', 'insert' );
 		this.controller.props.set( 'currentShortcode', shortcode.clone() );
 
 		this.render();
