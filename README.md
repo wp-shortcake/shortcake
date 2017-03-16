@@ -3,7 +3,7 @@
 **Tags:** shortcodes  
 **Requires at least:** 4.5  
 **Tested up to:** 4.7  
-**Stable tag:** 0.7.0  
+**Stable tag:** 0.7.1  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -27,9 +27,9 @@ New in 0.4.0 is the ability to [attach javascript functions to event attribute u
 
 ## Frequently Asked Questions ##
 
-= How do I register UI for arbitrary key=>value pairs as shortcode attributes? =
+### How do I register UI for arbitrary key/value pairs as shortcode attributes? ###
 
-Shortcake doesn't support custom key=>value pairs as shortcode attributes because it isn't a great user experience.
+Shortcake doesn't support custom key => value pairs as shortcode attributes because it isn't a great user experience.
 
 ### After upgrading to Shortcake 0.7.x, some of the shortcode UI fields (post select, user select, etc) don't work as expected. What can I do? ###
 
@@ -75,6 +75,16 @@ We've removed the compatibility shim for the `placeholder` attribute argument. Y
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 
 ## Changelog ##
+
+### 0.7.1 (December 16, 2016) ###
+* Change shortcode formatting to add a space before the self-closing trailing slash.
+* Fix alignment of attachment previews with long filenames.
+* Bug fix: Set an initial value on select fields (previously, no value would be set for a select field unless the user interacts with the field).
+* Enhancement/fix: Reuse one copy of the media modal and reset its state upon closing, rather than creating duplicate markup each time the modal is accessed.
+* Compatability: Uses "full" version of select2.js 4.0.3 to prevent plugin conflicts with other plugins which expect the full version to be enqueued.
+* Compatability: Add `SELECT2_NOCONFLICT` flag to load Select2 in a unique namespace to prevent conflicts with other plugins which are loading select2.js version 3.
+* Added Norwegian translation.
+* Multiple coding style fixes.
 
 ### 0.7.0 (November 18, 2016) ###
 * Adds "Add post element" button to media buttons - one click to open the shortcode list, rather than clicking "Add media" button and then finding "insert post element" in the menu.
@@ -196,7 +206,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 * Supports all HTML5 input types for form fields.
 * Shortcode preview tab within the editing experience.
-* Re-labeled the UI around “Post Elements”, which is more descriptive than “Content Items.”
+ }* Re-labeled the UI around “Post Elements”, which is more descriptive than “Content Items.”
 * Many bug fixes.
 * [Full release notes](http://next.fusion.net/2014/12/23/shortcake-v0-1-0-live-previews-fieldmanager-integration/).
 
