@@ -73,11 +73,43 @@ class Shortcode_UI {
 	 * Setup plugin actions.
 	 */
 	private function setup_actions() {
+		add_action( 'admin_notices',             array( $this, 'action_admin_notices' ) );
 		add_action( 'admin_enqueue_scripts',     array( $this, 'action_admin_enqueue_scripts' ) );
 		add_action( 'wp_enqueue_editor',         array( $this, 'action_wp_enqueue_editor' ) );
 		add_action( 'media_buttons',             array( $this, 'action_media_buttons' ) );
 		add_action( 'wp_ajax_bulk_do_shortcode', array( $this, 'handle_ajax_bulk_do_shortcode' ) );
 		add_filter( 'wp_editor_settings',        array( $this, 'filter_wp_editor_settings' ), 10, 2 );
+	}
+
+	/**
+	 * Display an admin notice on activation.
+	 *
+	 * If no shortcodes with Shortcake UI are registered, this Will display a link to the plugin's wiki for examples.
+	 * If there are already plugins with UI registered, will just display a success message.
+	 *
+	 * @return void
+	 */
+	public function action_admin_notices() {
+		if ( ! get_option( 'shortcode_ui_activation_notice' ) ) {
+			return;
+		}
+
+		$shortcodes_with_ui = $this->get_shortcodes();
+
+		if ( empty( $shortcodes_with_ui ) ) {
+			echo '<div class="notice notice-warning is-dismissable"><p>'.
+				sprintf(
+					__( 'The Shortcode UI plugin will not do anything unless UI is registered for shortcodes through a theme or plugins. For examples, see <a href="%s" target="_blank">here</a>.', 'shortcode-ui' ),
+					'https://github.com/wp-shortcake/shortcake/wiki/Shortcode-UI-Examples'
+				) .
+				'</p></div>' . "\n";
+		} else {
+			echo '<div class="notice notice-info is-dismissable"><p>'.
+				esc_html__( 'That\'s all! Try out the shortcode UI through the "Add Post element" button in the post edit screen.', 'shortcode-ui' ) .
+				'</p></div>' . "\n";
+		}
+
+		delete_option( 'shortcode_ui_activation_notice' );
 	}
 
 	/**

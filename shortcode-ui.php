@@ -111,6 +111,17 @@ function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) 
 }
 
 /**
+ * Display an admin notice on activating the plugin if no shortcodes with UI are available.
+ *
+ * @return void
+ */
+function shortcode_ui_activation_notice() {
+	update_option( 'shortcode_ui_activation_notice', true );
+}
+
+register_activation_hook( __FILE__, 'shortcode_ui_activation_notice' );
+
+/**
  * Get register UI args by shortcode tag
  *
  * @param  string $shortcode_tag
