@@ -3,71 +3,203 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shortcake (Shortcode UI) 0.6.0-alpha\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shortcode-ui\n"
-"POT-Creation-Date: 2016-03-23 17:25+0200\n"
+"POT-Creation-Date: 2017-03-29 13:09+0300\n"
+"PO-Revision-Date: 2017-03-29 13:11+0300\n"
+"Last-Translator: Teemu Suoranta <teemu@aucor.fi>\n"
+"Language-Team: \n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-03-23 18:03+0200\n"
-"Language-Team: \n"
-"X-Generator: Poedit 1.8.7\n"
-"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c\n"
+"X-Generator: Poedit 2.0\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
+"_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
+"esc_html_x:1,2c\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"Last-Translator: Teemu Suoranta <teemu@aucor.fi>\n"
-"Language: fi\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: dev.php:75
+#: dev.php:68
+msgid ""
+"Shortcode UI plugin must be active for Shortcode UI Example plugin to "
+"function."
+msgstr ""
+
+#: dev.php:119
+msgid "Shortcake With No Attributes"
+msgstr ""
+
+#: dev.php:159
 msgid "Attachment"
 msgstr "Liitetiedosto"
 
-#: dev.php:79 dev.php:80
+#: dev.php:169 dev.php:170
 msgid "Select Image"
 msgstr "Valitse kuva"
 
-#: dev.php:83
+#: dev.php:175
+msgid "You can select multiple images."
+msgstr ""
+
+#: dev.php:183
 msgid "Citation Source"
 msgstr "Lainauksen lähde"
 
-#: inc/class-shortcode-ui.php:109
+#: dev.php:188
+msgid "Test placeholder"
+msgstr ""
+
+#: dev.php:193
+#, fuzzy
+#| msgid "Select Image"
+msgid "Select Page"
+msgstr "Valitse kuva"
+
+#: dev.php:200
+#, fuzzy
+#| msgid "Select Image"
+msgid "Select Term"
+msgstr "Valitse kuva"
+
+#: dev.php:207
+msgid "User Select"
+msgstr ""
+
+#: dev.php:213
+msgid "Color"
+msgstr ""
+
+#: dev.php:218
+msgid "Hex color code"
+msgstr ""
+
+#: dev.php:222
+msgid "Alignment"
+msgstr ""
+
+#: dev.php:223
+msgid ""
+"Whether the quotation should be displayed as pull-left, pull-right, or "
+"neither."
+msgstr ""
+
+#: dev.php:227
+msgid "None"
+msgstr ""
+
+#: dev.php:228 dev.php:233
+msgid "Pull Left"
+msgstr ""
+
+#: dev.php:229 dev.php:234
+msgid "Pull Right"
+msgstr ""
+
+#: dev.php:240
+msgid "Year"
+msgstr ""
+
+#: dev.php:241
+msgid "Optional. The year the quotation is from."
+msgstr ""
+
+#: dev.php:260
+msgid "Shortcake Dev"
+msgstr ""
+
+#: dev.php:279
+msgid "Quote"
+msgstr ""
+
+#: dev.php:280
+msgid "Include a statement from someone famous."
+msgstr ""
+
+#: dev.php:352
+#, fuzzy
+#| msgid "Inner Content"
+msgid "Content:"
+msgstr "Sisempi sisältö"
+
+#: dev.php:356
+msgid "Source:"
+msgstr ""
+
+#: dev.php:360
+msgid "Image:"
+msgstr ""
+
+#: dev.php:364
+msgid "Gallery:"
+msgstr ""
+
+#: dev.php:372
+msgid "Pages:"
+msgstr ""
+
+#: dev.php:376
+msgid "Terms:"
+msgstr ""
+
+#: dev.php:380
+msgid "Users:"
+msgstr ""
+
+#: dev.php:384
+msgid "Color:"
+msgstr ""
+
+#: dev.php:388
+msgid "Alignment:"
+msgstr ""
+
+#: dev.php:392
+msgid "Year:"
+msgstr ""
+
+#: inc/class-shortcode-ui.php:110
 msgid "Inner Content"
 msgstr "Sisempi sisältö"
 
-#: inc/class-shortcode-ui.php:220 inc/class-shortcode-ui.php:221
+#: inc/class-shortcode-ui.php:249 inc/class-shortcode-ui.php:250
 msgid "Insert Post Element"
 msgstr "Lisää sisältöelementti"
 
-#: inc/class-shortcode-ui.php:222
+#: inc/class-shortcode-ui.php:251
 msgid "%s Details"
 msgstr "%s tiedot"
 
-#: inc/class-shortcode-ui.php:223
+#: inc/class-shortcode-ui.php:252
 msgid "Insert Element"
 msgstr "Lisää elementti"
 
-#: inc/class-shortcode-ui.php:224
+#: inc/class-shortcode-ui.php:253
 msgid "Update"
 msgstr "Päivitä"
 
-#: inc/class-shortcode-ui.php:225
+#: inc/class-shortcode-ui.php:254
 msgid "There are no attributes to configure for this Post Element."
 msgstr "Tässä sisältöelementissä ei ole muokattavia asetuksia."
 
-#: inc/class-shortcode-ui.php:226
+#: inc/class-shortcode-ui.php:255
 msgid "Failed to load preview"
 msgstr "Esikatselun lataus epäonnistui"
 
-#: inc/class-shortcode-ui.php:227
+#: inc/class-shortcode-ui.php:256
 msgid "Search"
 msgstr "Etsi"
 
-#: inc/class-shortcode-ui.php:228
+#: inc/class-shortcode-ui.php:257
 msgid "Insert Content"
 msgstr "Lisää sisältö"
 
-#: inc/class-shortcode-ui.php:323
+#: inc/class-shortcode-ui.php:297
+msgid "Add Post Element"
+msgstr "Lisää sisältöelementti"
+
+#: inc/class-shortcode-ui.php:365
 msgid "Something's rotten in the state of Denmark"
 msgstr "Jotain mätää Tanskanmaalla"
 
@@ -75,14 +207,6 @@ msgstr "Jotain mätää Tanskanmaalla"
 #: inc/fields/class-field-attachment.php:80
 msgid "Select Attachment"
 msgstr "Valitse liitetiedosto"
-
-#: inc/fields/class-field-attachment.php:104
-msgid "Thumbnail Details"
-msgstr "Liitteen tiedot"
-
-#: inc/fields/class-field-attachment.php:109
-msgid "Edit Attachment"
-msgstr "Muokkaa liitetiedostoa"
 
 #: inc/templates/edit-form.tpl.php:3
 msgid "Back to list"
@@ -103,3 +227,9 @@ msgstr "Fusion Engineering ja yhteisö"
 #. Author URI of the plugin/theme
 msgid "http://next.fusion.net/tag/shortcode-ui/"
 msgstr "http://next.fusion.net/tag/shortcode-ui/"
+
+#~ msgid "Thumbnail Details"
+#~ msgstr "Liitteen tiedot"
+
+#~ msgid "Edit Attachment"
+#~ msgstr "Muokkaa liitetiedostoa"
