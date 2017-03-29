@@ -94,9 +94,7 @@ class Shortcode_UI {
 			return;
 		}
 
-		$shortcodes_with_ui = $this->get_shortcodes();
-
-		if ( empty( $shortcodes_with_ui ) ) {
+		if ( ! $this->has_shortcodes() ) {
 			echo '<div class="notice notice-warning is-dismissable"><p>'.
 				sprintf(
 					__( 'The Shortcode UI plugin will not do anything unless UI is registered for shortcodes through a theme or plugins. For examples, see <a href="%s" target="_blank">here</a>.', 'shortcode-ui' ),
@@ -211,6 +209,15 @@ class Shortcode_UI {
 		}
 
 		return $shortcodes;
+	}
+
+	/**
+	 * Whether any shortcodes with UI are registered
+	 *
+	 * @return bool
+	 */
+	public function has_shortcodes() {
+		return ! empty( $this->get_shortcodes() );
 	}
 
 	/**
@@ -337,6 +344,10 @@ class Shortcode_UI {
 	 * Output an "Add Post Element" button with the media buttons.
 	 */
 	public function action_media_buttons( $editor_id ) {
+		if ( ! $this->has_shortcodes() ) {
+			return;
+		}
+
 		printf( '<button type="button" class="button shortcake-add-post-element" data-editor="%s">' .
 			'<span class="wp-media-buttons-icon dashicons dashicons-migrate"></span> %s' .
 			'</button>',
