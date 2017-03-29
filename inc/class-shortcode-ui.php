@@ -95,14 +95,23 @@ class Shortcode_UI {
 		}
 
 		if ( ! $this->has_shortcodes() ) {
-			echo '<div class="notice notice-warning is-dismissable"><p>'.
+			echo '<div class="notice notice-warning is-dismissable"><p>' .
 				sprintf(
-					__( 'The Shortcode UI plugin will not do anything unless UI is registered for shortcodes through a theme or plugins. For examples, see <a href="%s" target="_blank">here</a>.', 'shortcode-ui' ),
+					wp_kses(
+						/* Translators: link to plugin wiki page with examples of shortcodes supporting Shortcake UI */
+						__( 'The Shortcode UI plugin will not do anything unless UI is registered for shortcodes through a theme or plugins. For examples, see <a href="%s" target="_blank">here</a>.', 'shortcode-ui' ),
+						array(
+							'a' => array(
+								'href' => array(),
+								'target' => array(),
+							),
+						)
+					),
 					'https://github.com/wp-shortcake/shortcake/wiki/Shortcode-UI-Examples'
 				) .
 				'</p></div>' . "\n";
 		} else {
-			echo '<div class="notice notice-info is-dismissable"><p>'.
+			echo '<div class="notice notice-info is-dismissable"><p>' .
 				esc_html__( 'That\'s all! Try out the shortcode UI through the "Add Post element" button in the post edit screen.', 'shortcode-ui' ) .
 				'</p></div>' . "\n";
 		}
