@@ -54,7 +54,7 @@
 				<# if ( 'options' in option && 'label' in option ) { #>
 					<optgroup label="{{ option.label }}">
 						<# _.each( option.options, function( optgroupOption ) { #>
-							<option value="{{ optgroupOption.value }}" <# if ( optgroupOption.value === data.value ){ print('selected'); } #>>{{ optgroupOption.label }}</option>
+							<option value="{{ optgroupOption.value }}" <# if ( ! _.isEmpty( _.filter( data.value, function(val) { return val === optgroupOption.value; } ) ) ) { print('selected'); } #>>{{ optgroupOption.label }}</option>
 						<# }); #>
 					</optgroup>
 				<# } else { #>
