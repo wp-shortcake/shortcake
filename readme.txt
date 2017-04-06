@@ -68,7 +68,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 == Changelog ==
 
-= 0.7.1 (December 16, 2016) =
+= 0.7.1 (March 16, 2017) =
 * Change shortcode formatting to add a space before the self-closing trailing slash.
 * Fix alignment of attachment previews with long filenames.
 * Bug fix: Set an initial value on select fields (previously, no value would be set for a select field unless the user interacts with the field).
