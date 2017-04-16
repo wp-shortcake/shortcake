@@ -124,6 +124,13 @@ class Shortcode_UI {
 			$args['attrs'] = array();
 		}
 
+		foreach ( $args['attrs'] as &$attr ) {
+			if ( 'select' === $attr['type'] && ! isset( $attr['value'] ) ) {
+				$_shortcodes = array_keys( $attr['options'] );
+				$attr['value'] = array_shift( $_shortcodes );
+			}
+		}
+
 		$args['shortcode_tag'] = $shortcode_tag;
 		$this->shortcodes[ $shortcode_tag ] = $args;
 
