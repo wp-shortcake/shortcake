@@ -20,6 +20,16 @@ $(document).ready(function(){
 				shortcodeViewConstructor
 			);
 		}
+		if(typeof wa_fronted !== 'undefined'){
+			wa_fronted.add_filter('shortcode_actions', function(shortcodes){
+				shortcodes = shortcodes || [];
+				shortcodes.push(shortcode.get('shortcode_tag'));
+				return shortcodes;
+			});
+			wa_fronted.add_action('shortcode_action_' + shortcode.get('shortcode_tag'), function(selected_shortcode, element){
+				shortcodeViewConstructor.edit(selected_shortcode);
+			});
+		}
 	} );
 
 	$(document.body).on( 'click', '.shortcake-add-post-element', function( event ) {
