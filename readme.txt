@@ -69,9 +69,9 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 == Changelog ==
 
 = 0.7.2 (April 24, 2017) =
-* Bugfix: Fix behavior in WordPress 4.7.4 where editing a shortcode would insert a new shortcode into the editor rather than updating the shortcode being edited.
-* Bugfix: The replacement used to escape precent (%) characters in attributes only replaced the first appearance
-* Bugfix: For select fields with multiple=true, allow multiple options to be selected by default
+* Bug fix: Fix behavior in WordPress 4.7.4 where editing a shortcode would insert a new shortcode into the editor rather than updating the shortcode being edited.
+* Bug fix: The replacement used to escape percent (%) characters in attributes only replaced the first appearance
+* Bug fix: For select fields with multiple=true, allow multiple options to be selected by default
 * Added i18n for all strings in attachment field template
 * Added Finnish translation
 
