@@ -10,8 +10,7 @@ var MediaController = wp.media.controller.State.extend({
 		this.props = new Backbone.Model({
 			currentShortcode: null,
 			action: 'select',
-			search: null,
-			insertCallback: this.insertCallback,
+			search: null
 		});
 
 		this.props.on( 'change:action', this.refresh, this );
@@ -34,34 +33,18 @@ var MediaController = wp.media.controller.State.extend({
 	},
 
 	insert: function() {
-		var shortcode      = this.props.get( 'currentShortcode' );
-		var insertCallback = this.props.get( 'insertCallback' );
-
-		if ( shortcode && insertCallback ) {
-			insertCallback( shortcode );
+		var shortcode = this.props.get('currentShortcode');
+		if ( shortcode ) {
+			send_to_editor( shortcode.formatShortcode() );
+			this.reset();
+			this.frame.close();
 		}
-
-		this.reset();
-		this.resetState();
-		this.frame.close();
-	},
-
-	insertCallback: function( shortcode ) {
-		window.send_to_editor( shortcode.formatShortcode() );
 	},
 
 	reset: function() {
 		this.props.set( 'action', 'select' );
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'search', null );
-		this.props.set( 'insertCallback', this.insertCallback );
-	},
-
-	resetState: function() {
-		var menuItem = this.frame.menu.get().get('shortcode-ui');
-		menuItem.options.text = shortcodeUIData.strings.media_frame_title;
-		menuItem.render();
-		this.frame.setState( 'insert' );
 	},
 
 	setActionSelect: function() {

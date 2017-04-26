@@ -47,8 +47,7 @@ var MediaController = wp.media.controller.State.extend({
 		this.props = new Backbone.Model({
 			currentShortcode: null,
 			action: 'select',
-			search: null,
-			insertCallback: this.insertCallback,
+			search: null
 		});
 
 		this.props.on( 'change:action', this.refresh, this );
@@ -71,34 +70,18 @@ var MediaController = wp.media.controller.State.extend({
 	},
 
 	insert: function() {
-		var shortcode      = this.props.get( 'currentShortcode' );
-		var insertCallback = this.props.get( 'insertCallback' );
-
-		if ( shortcode && insertCallback ) {
-			insertCallback( shortcode );
+		var shortcode = this.props.get('currentShortcode');
+		if ( shortcode ) {
+			send_to_editor( shortcode.formatShortcode() );
+			this.reset();
+			this.frame.close();
 		}
-
-		this.reset();
-		this.resetState();
-		this.frame.close();
-	},
-
-	insertCallback: function( shortcode ) {
-		window.send_to_editor( shortcode.formatShortcode() );
 	},
 
 	reset: function() {
 		this.props.set( 'action', 'select' );
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'search', null );
-		this.props.set( 'insertCallback', this.insertCallback );
-	},
-
-	resetState: function() {
-		var menuItem = this.frame.menu.get().get('shortcode-ui');
-		menuItem.options.text = shortcodeUIData.strings.media_frame_title;
-		menuItem.render();
-		this.frame.setState( 'insert' );
 	},
 
 	setActionSelect: function() {
@@ -656,7 +639,7 @@ var shortcodeViewConstructor = {
 	 *
 	 * @param {string} shortcodeString String representation of the shortcode
 	 */
-	edit: function( shortcodeString, update ) {
+	edit: function( shortcodeString ) {
 
 		var currentShortcode = this.parseShortcodeString( shortcodeString );
 
@@ -675,8 +658,13 @@ var shortcodeViewConstructor = {
 				});
 			}
 
-			frame.mediaController.props.set( 'insertCallback', function( shortcode ) {
-				update( shortcode.formatShortcode() );
+			// Make sure to reset state when closed.
+			frame.once( 'close submit', function() {
+				frame.state().props.set('currentShortcode', false);
+				var menuItem = frame.menu.get().get('shortcode-ui');
+				menuItem.options.text = shortcodeUIData.strings.media_frame_title;
+				menuItem.render();
+				frame.setState( 'insert' );
 			} );
 
 			/* Trigger render_edit */
@@ -1833,7 +1821,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 
 		this.preselect( $field );
 
-		var $fieldSelect2 = $field[ shortcodeUIData.select2_handle ]({
+                var $fieldSelect2 = $field[ shortcodeUIData.select2_handle ]({
 			placeholder: "Search",
 			multiple: this.model.get( 'multiple' ),
 
@@ -1864,7 +1852,6 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 				},
 				cache: true
 			},
-
 			escapeMarkup: function( markup ) { return markup; },
 			minimumInputLength: 1,
 			templateResult: this.templateResult,
@@ -1900,10 +1887,11 @@ sui.controllers.MediaController = mediaController.extend({
 	},
 
 	destroySelect2UI: function() {
-		$fieldSelect2[ shortcodeUIData.select2_handle ]( 'close' );
+                $fieldSelect2[ shortcodeUIData.select2_handle ]( 'close' );
 	}
 
 });
+
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":10}],24:[function(require,module,exports){
