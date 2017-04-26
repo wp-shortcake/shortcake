@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Shortcake (Shortcode UI)
- * Version: 0.7.1
+ * Version: 0.7.2
  * Description: User Interface for adding shortcodes.
  * Author: Fusion Engineering and community
  * Author URI: http://next.fusion.net/tag/shortcode-ui/

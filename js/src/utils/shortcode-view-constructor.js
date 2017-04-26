@@ -160,7 +160,7 @@ var shortcodeViewConstructor = {
 	 *
 	 * @param {string} shortcodeString String representation of the shortcode
 	 */
-	edit: function( shortcodeString ) {
+	edit: function( shortcodeString, update ) {
 
 		var currentShortcode = this.parseShortcodeString( shortcodeString );
 
@@ -179,13 +179,8 @@ var shortcodeViewConstructor = {
 				});
 			}
 
-			// Make sure to reset state when closed.
-			frame.once( 'close submit', function() {
-				frame.state().props.set('currentShortcode', false);
-				var menuItem = frame.menu.get().get('shortcode-ui');
-				menuItem.options.text = shortcodeUIData.strings.media_frame_title;
-				menuItem.render();
-				frame.setState( 'insert' );
+			frame.mediaController.props.set( 'insertCallback', function( shortcode ) {
+				update( shortcode.formatShortcode() );
 			} );
 
 			/* Trigger render_edit */
