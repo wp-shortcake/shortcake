@@ -2,8 +2,8 @@
 **Contributors:** fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov, bronsonquick, dashaluna, mehigh, sc0ttkclark, kraftner, pravdomil  
 **Tags:** shortcodes  
 **Requires at least:** 4.5  
-**Tested up to:** 4.7  
-**Stable tag:** 0.7.1  
+**Tested up to:** 4.7.4  
+**Stable tag:** 0.7.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -75,6 +75,13 @@ We've removed the compatibility shim for the `placeholder` attribute argument. Y
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 
 ## Changelog ##
+
+### 0.7.2 (April 24, 2017) ###
+* Bugfix: Fix behavior in WordPress 4.7.4 where editing a shortcode would insert a new shortcode into the editor rather than updating the shortcode being edited.
+* Bugfix: The replacement used to escape precent (%) characters in attributes only replaced the first appearance
+* Bugfix: For select fields with multiple=true, allow multiple options to be selected by default
+* Added i18n for all strings in attachment field template
+* Added Finnish translation
 
 ### 0.7.1 (March 16, 2017) ###
 * Change shortcode formatting to add a space before the self-closing trailing slash.
