@@ -226,7 +226,7 @@ class Shortcode_UI {
 	 * @return bool
 	 */
 	public function has_shortcodes() {
-		return ( bool ) $this->get_shortcodes();
+		return (bool) $this->get_shortcodes();
 	}
 
 	/**
