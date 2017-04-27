@@ -1439,6 +1439,16 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 			t.views.add( '.edit-shortcode-form-fields', messageView );
 		}
 
+		jQuery('body').on('keyup.editShortcodeForm', function(e) { t.possiblySelect(e); });
+	},
+
+	possiblySelect: function(e) {
+		console.log( jQuery(document.activeElement) );
+		if ( ! this.$el.is(':visible') ) {
+			jQuery('body').unbind('keyup.editShortcodeForm');
+		} else if ( e.keyCode == 13 ) {
+			console.log( 'shortcode inserted here' );
+		}
 	},
 
 });
