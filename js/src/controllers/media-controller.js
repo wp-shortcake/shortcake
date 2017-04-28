@@ -15,7 +15,13 @@ var MediaController = wp.media.controller.State.extend({
 		});
 
 		this.props.on( 'change:action', this.refresh, this );
+		this.on( 'activate', this.activate, this );
 
+	},
+
+	activate: function() {
+		var $el = this.frame.$el;
+		_.defer( function() { $el.addClass( 'hide-router' ); } );
 	},
 
 	refresh: function() {
