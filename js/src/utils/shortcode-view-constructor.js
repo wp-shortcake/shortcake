@@ -170,12 +170,14 @@ var shortcodeViewConstructor = {
 
 			if ( frame ) {
 				frame.mediaController.setActionUpdate( currentShortcode );
+				frame.mediaController.props.set( 'editor', wpActiveEditor );
 				frame.open();
 			} else {
 				frame = wp.media.editor.open( window.wpActiveEditor, {
 					frame : "post",
 					state : 'shortcode-ui',
 					currentShortcode : currentShortcode,
+					editor : wpActiveEditor,
 				});
 			}
 

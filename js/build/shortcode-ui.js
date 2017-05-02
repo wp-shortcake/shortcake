@@ -49,6 +49,7 @@ var MediaController = wp.media.controller.State.extend({
 			action: 'select',
 			search: null,
 			insertCallback: this.insertCallback,
+			editor: wpActiveEditor,
 		});
 
 		this.props.on( 'change:action', this.refresh, this );
@@ -79,6 +80,8 @@ var MediaController = wp.media.controller.State.extend({
 	insert: function() {
 		var shortcode      = this.props.get( 'currentShortcode' );
 		var insertCallback = this.props.get( 'insertCallback' );
+
+		window.wpActiveEditor = this.props.get( 'editor' );
 
 		if ( shortcode && insertCallback ) {
 			insertCallback( shortcode );
@@ -356,7 +359,8 @@ $(document).ready(function(){
 			options = {
 				frame: 'post',
 				state: 'shortcode-ui',
-				title: shortcodeUIData.strings.media_frame_title
+				title: shortcodeUIData.strings.media_frame_title,
+				editor: this.dataset.editor
 			};
 
 		event.preventDefault();
@@ -368,6 +372,7 @@ $(document).ready(function(){
 
 		if ( frame ) {
 			frame.mediaController.setActionSelect();
+			frame.mediaController.props.set( 'editor', this.dataset.editor );
 			frame.open();
 		} else {
 			frame = wp.media.editor.open( editor, options );
@@ -672,12 +677,14 @@ var shortcodeViewConstructor = {
 
 			if ( frame ) {
 				frame.mediaController.setActionUpdate( currentShortcode );
+				frame.mediaController.props.set( 'editor', wpActiveEditor );
 				frame.open();
 			} else {
 				frame = wp.media.editor.open( window.wpActiveEditor, {
 					frame : "post",
 					state : 'shortcode-ui',
 					currentShortcode : currentShortcode,
+					editor : wpActiveEditor,
 				});
 			}
 
