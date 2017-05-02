@@ -192,10 +192,6 @@ describe( 'Shortcode View Constructor', function(){
 			},
 			'content' : 'burrito'
 		};
-		var ShortcodeViewConstructorWithoutFetch = ShortcodeViewConstructor;
-		ShortcodeViewConstructorWithoutFetch.delayedFetch = function() {
-			return new $.Deferred();
-		};
 		ShortcodeViewConstructor.initialize();
 		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
 	});
@@ -226,10 +222,6 @@ describe( 'Shortcode View Constructor', function(){
 				},
 				'numeric' : [],
 			},
-		};
-		var ShortcodeViewConstructorWithoutFetch = ShortcodeViewConstructor;
-		ShortcodeViewConstructorWithoutFetch.delayedFetch = function() {
-			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
 		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana" /]' );
