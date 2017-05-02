@@ -180,7 +180,7 @@ var shortcodeViewConstructor = {
 			}
 
 			frame.mediaController.props.set( 'insertCallback', function( shortcode ) {
-				update( shortcode.formatShortcode() );
+				update( shortcode.formatShortcode(), true );
 			} );
 
 			// Make sure to reset state when closed.
