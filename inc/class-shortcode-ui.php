@@ -112,7 +112,7 @@ class Shortcode_UI {
 				'</p></div>' . "\n";
 		} else {
 			echo '<div class="notice notice-info is-dismissable"><p>' .
-				esc_html__( 'That\'s all! Try out the shortcode UI through the "Add Post element" button in the post edit screen.', 'shortcode-ui' ) .
+				esc_html__( 'Shortcode UI is installed. Try out the shortcode UI through the "Add Post element" button in the post edit screen.', 'shortcode-ui' ) .
 				'</p></div>' . "\n";
 		}
 
