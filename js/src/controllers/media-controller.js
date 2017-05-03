@@ -99,6 +99,9 @@ var MediaController = wp.media.controller.State.extend({
 				this.frame.mediaController.toggleSidebar( false );
 			}.bind( this ) );
 
+			var hookName = 'shortcode-ui.after_set_action_update';
+			wp.shortcake.hooks.doAction( hookName, currentShortcode );
+
 		}.bind( this ) );
 
 	},
