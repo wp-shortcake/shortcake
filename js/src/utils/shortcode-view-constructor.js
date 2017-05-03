@@ -186,7 +186,6 @@ var shortcodeViewConstructor = {
 			// Make sure to reset state when closed.
 			frame.once( 'close submit', function() {
 				frame.mediaController.reset();
-				frame.mediaController.resetState();
 			} );
 
 			/* Trigger render_edit */
