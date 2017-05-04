@@ -145,8 +145,7 @@ var MediaController = wp.media.controller.State.extend({
 			 *           Reference to the shortcode model used in this overlay.
 			 */
 			var hookName = 'shortcode-ui.render_edit';
-			var shortcodeModel = this.shortcodeModel;
-			wp.shortcake.hooks.doAction( hookName, shortcodeModel );
+			wp.shortcake.hooks.doAction( hookName, currentShortcode );
 
 		}.bind( this ) );
 
