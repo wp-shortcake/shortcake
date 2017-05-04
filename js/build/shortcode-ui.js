@@ -140,6 +140,17 @@ var MediaController = wp.media.controller.State.extend({
 				this.frame.mediaController.toggleSidebar( false );
 			}.bind( this ) );
 
+			/*
+			 * Action run after an edit shortcode overlay is rendered.
+			 *
+			 * Called as `shortcode-ui.render_edit`.
+			 *
+			 * @param shortcodeModel (object)
+			 *           Reference to the shortcode model used in this overlay.
+			 */
+			var hookName = 'shortcode-ui.render_edit';
+			wp.shortcake.hooks.doAction( hookName, currentShortcode );
+
 		}.bind( this ) );
 
 	},
@@ -683,20 +694,6 @@ var shortcodeViewConstructor = {
 			frame.once( 'close submit', function() {
 				frame.mediaController.reset();
 			} );
-
-			/* Trigger render_edit */
-			/*
-			 * Action run after an edit shortcode overlay is rendered.
-			 *
-			 * Called as `shortcode-ui.render_edit`.
-			 *
-			 * @param shortcodeModel (object)
-			 *           Reference to the shortcode model used in this overlay.
-			 */
-			var hookName = 'shortcode-ui.render_edit';
-			var shortcodeModel = this.shortcodeModel;
-			wp.shortcake.hooks.doAction( hookName, shortcodeModel );
-
 		}
 
 	},
