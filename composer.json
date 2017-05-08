@@ -1,8 +1,9 @@
 {
-    "name": "fusioneng/Shortcake",
+    "name": "fusioneng/shortcake",
     "description": "Shortcake makes using WordPress shortcodes a piece of cake.",
     "type": "wordpress-plugin",
     "homepage": "https://github.com/fusioneng/Shortcake",
+    "license": "GPL-2.0+",
     "authors": [
         {
             "name": "Fusion",
@@ -11,7 +12,7 @@
         }
     ],
     "require-dev": {
-        "squizlabs/php_codesniffer": "2.x-dev",
+        "squizlabs/php_codesniffer": "2.9.*",
         "wp-coding-standards/wpcs": "dev-develop"
     },
     "scripts": {
