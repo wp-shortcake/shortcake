@@ -137,11 +137,21 @@ class Shortcode_UI_Field_Post_Select {
 
 		$query = new WP_Query( $query_args );
 
+		$is_multiple_post_types = count( $query->get( 'post_type' ) ) > 1;
+
 		foreach ( $query->posts as $post_id ) {
+			$post_type     = get_post_type( $post_id );
+			$post_type_obj = get_post_type_object( $post_type);
+
+			$text = html_entity_decode( get_the_title( $post_id ) );
+
+			if ( $is_multiple_post_types && $post_type_obj ) {
+				$text .= sprintf( ' (%1$s)', $post_type_obj->labels->singular_name );
+			}
 			array_push( $response['items'],
 				array(
 					'id'   => $post_id,
-					'text' => html_entity_decode( get_the_title( $post_id ) ),
+					'text' => $text,
 				)
 			);
 		}
