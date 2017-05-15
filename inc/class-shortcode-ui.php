@@ -391,6 +391,8 @@ class Shortcode_UI {
 	 * @return string                 the template contents
 	 */
 	public function get_view( $template ) {
+		
+		$template = apply_filters( 'shortcode_ui_view_template', $template );
 
 		if ( ! file_exists( $template ) ) {
 
