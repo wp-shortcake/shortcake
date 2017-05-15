@@ -141,7 +141,7 @@ class Shortcode_UI_Field_Post_Select {
 
 		foreach ( $query->posts as $post_id ) {
 			$post_type     = get_post_type( $post_id );
-			$post_type_obj = get_post_type_object( $post_type);
+			$post_type_obj = get_post_type_object( $post_type );
 
 			$text = html_entity_decode( get_the_title( $post_id ) );
 
