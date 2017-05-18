@@ -836,7 +836,7 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 			this.currentSelection.add( model );
 
-			// Re-render after attachments have synced.
+			// Re-render after attachments have synced, and add to cache.
 			model.fetch();
 			model.on( 'sync', this._renderAll );
 
@@ -989,6 +989,24 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 			this.currentSelection.remove( target );
 		}
 
+	},
+
+}, {
+
+	/**
+	 * Get the Backbone model attributes of an attachment.
+	 *
+	 * Prior to 0.7.0, this method was exposed as a public class
+	 * method and used internally to get attachment details from
+	 * the `_idCache` store.
+	 *
+	 * @deprecated Not used internally since 0.7.0
+	 */
+	getFromCache: function( id ) {
+		if ( wp.media.attachment( id ) ) {
+			return wp.media.attachment( id ).attributes;
+		}
+		return false;
 	},
 
 });
