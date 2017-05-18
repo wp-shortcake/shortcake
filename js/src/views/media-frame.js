@@ -7,6 +7,11 @@ var wp = require('wp'),
 var postMediaFrame = wp.media.view.MediaFrame.Post;
 var mediaFrame = postMediaFrame.extend( {
 
+	events: _.extend( {}, postMediaFrame.prototype.events, {
+			'click .media-menu-item' : 'resetMediaController',
+		}
+	),
+
 	initialize: function() {
 
 		postMediaFrame.prototype.initialize.apply( this, arguments );
@@ -35,12 +40,6 @@ var mediaFrame = postMediaFrame.extend( {
 		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
 		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
-	},
-
-	events: function() {
-		return _.extend( {}, postMediaFrame.prototype.events, {
-			'click .media-menu-item' : 'resetMediaController',
-		} );
 	},
 
 	resetMediaController: function( event ) {
