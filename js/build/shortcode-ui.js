@@ -52,7 +52,13 @@ var MediaController = wp.media.controller.State.extend({
 		});
 
 		this.props.on( 'change:action', this.refresh, this );
+		this.on( 'activate', this.activate, this );
 
+	},
+
+	activate: function() {
+		var $el = this.frame.$el;
+		_.defer( function() { $el.addClass( 'hide-router' ); } );
 	},
 
 	refresh: function() {
@@ -79,7 +85,6 @@ var MediaController = wp.media.controller.State.extend({
 		}
 
 		this.reset();
-		this.resetState();
 		this.frame.close();
 	},
 
@@ -92,12 +97,11 @@ var MediaController = wp.media.controller.State.extend({
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'search', null );
 		this.props.set( 'insertCallback', this.insertCallback );
-	},
 
-	resetState: function() {
 		var menuItem = this.frame.menu.get().get('shortcode-ui');
 		menuItem.options.text = shortcodeUIData.strings.media_frame_title;
 		menuItem.render();
+
 		this.frame.setState( 'insert' );
 	},
 
@@ -377,11 +381,7 @@ $(document).ready(function(){
 
 		// Make sure to reset state when closed.
 		frame.once( 'close submit', function() {
-			frame.state().props.set('currentShortcode', false);
-			var menuItem = frame.menu.get().get('shortcode-ui');
-			menuItem.options.text = shortcodeUIData.strings.media_frame_title;
-			menuItem.render();
-			frame.setState( 'insert' );
+			frame.mediaController.reset();
 		} );
 
 	} );
@@ -690,6 +690,10 @@ var shortcodeViewConstructor = {
 				update( shortcode.formatShortcode() );
 			} );
 
+			// Make sure to reset state when closed.
+			frame.once( 'close submit', function() {
+				frame.mediaController.reset();
+			} );
 		}
 
 	},
