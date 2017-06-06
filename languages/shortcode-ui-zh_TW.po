@@ -15,7 +15,7 @@ msgstr ""
 "X-Poedit-KeywordsList: "
 "__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
 "attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
-"Language: zh_CN\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Country: United States\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -29,12 +29,12 @@ msgid ""
 "Shortcode UI plugin must be active for Shortcode UI Example plugin to "
 "function."
 msgstr ""
-"请启用 Shortcode UI 以容许 Shortcode UI Example plugin "
-"函数."
+"請啟用 Shortcode UI 以容許 Shortcode UI Example plugin "
+"函數."
 
 #: dev.php:119
 msgid "Shortcake With No Attributes"
-msgstr "没有属性的 Shortcake"
+msgstr "沒有屬性的 Shortcake"
 
 #: dev.php:159
 msgid "Attachment"
@@ -42,55 +42,55 @@ msgstr "附件"
 
 #: dev.php:169 dev.php:170
 msgid "Select Image"
-msgstr "挑选图片"
+msgstr "挑選圖片"
 
 #: dev.php:175
 msgid "You can select multiple images."
-msgstr "你可以选多于一张图片"
+msgstr "你可以選多於一張圖片"
 
 #: dev.php:183
 msgid "Citation Source"
-msgstr "引用来源"
+msgstr "引用來源"
 
 #: dev.php:188
 msgid "Test placeholder"
-msgstr "测试占位符"
+msgstr "測試佔位符"
 
 #: dev.php:193
 msgid "Select Page"
-msgstr "选择页面"
+msgstr "選擇頁面"
 
 #: dev.php:200
 msgid "Select Term"
-msgstr "选择团队"
+msgstr "選擇團隊"
 
 #: dev.php:207
 msgid "User Select"
-msgstr "选择用户"
+msgstr "選擇用戶"
 
 #: dev.php:213
 msgid "Color"
-msgstr "颜色"
+msgstr "顏色"
 
 #: dev.php:218
 msgid "Hex color code"
-msgstr "Hex 颜色代码"
+msgstr "Hex 顏色代碼"
 
 #: dev.php:222
 msgid "Alignment"
-msgstr "对准"
+msgstr "對準"
 
 #: dev.php:223
 msgid ""
 "Whether the quotation should be displayed as pull-left, pull-right, or "
 "neither."
 msgstr ""
-"引文应靠左，靠右，或"
-"两者都不是。"
+"引文應靠左，靠右，或"
+"兩者都不是。"
 
 #: dev.php:227
 msgid "None"
-msgstr "没有"
+msgstr "沒有"
 
 #: dev.php:228 dev.php:233
 msgid "Pull Left"
@@ -106,11 +106,11 @@ msgstr "年"
 
 #: dev.php:241
 msgid "Optional. The year the quotation is from."
-msgstr "可选的。引文的年份。"
+msgstr "可選的。引文的年份。"
 
 #: dev.php:260
 msgid "Shortcake Dev"
-msgstr "Shortcake 开发"
+msgstr "Shortcake 開發"
 
 #: dev.php:279
 msgid "Quote"
@@ -122,23 +122,23 @@ msgstr "加入一句名人名言。"
 
 #: dev.php:352
 msgid "Content:"
-msgstr "内容："
+msgstr "內容："
 
 #: dev.php:356
 msgid "Source:"
-msgstr "来源："
+msgstr "來源："
 
 #: dev.php:360
 msgid "Image:"
-msgstr "图片："
+msgstr "圖片："
 
 #: dev.php:364
 msgid "Gallery:"
-msgstr "图库："
+msgstr "圖庫："
 
 #: dev.php:372
 msgid "Pages:"
-msgstr "页面："
+msgstr "頁面："
 
 #: dev.php:376
 msgid "Terms:"
@@ -146,15 +146,15 @@ msgstr "Terms："
 
 #: dev.php:380
 msgid "Users:"
-msgstr "用户："
+msgstr "用戶："
 
 #: dev.php:384
 msgid "Color:"
-msgstr "颜色："
+msgstr "顏色："
 
 #: dev.php:388
 msgid "Alignment:"
-msgstr "对准："
+msgstr "對準："
 
 #: dev.php:392
 msgid "Year:"
@@ -162,7 +162,7 @@ msgstr "年份："
 
 #: inc/class-shortcode-ui.php:118
 msgid "Inner Content"
-msgstr "内文："
+msgstr "內文："
 
 #: inc/class-shortcode-ui.php:262 inc/class-shortcode-ui.php:263
 msgid "Insert Post Element"
@@ -172,7 +172,7 @@ msgstr "插入帖子元件"
 #. Translators: Ignore placeholder. This is replaced with the Shortcode name
 #. string in JS
 msgid "%s Details"
-msgstr "%s 详情"
+msgstr "%s 詳情"
 
 #: inc/class-shortcode-ui.php:266
 msgid "Insert Element"
@@ -184,19 +184,19 @@ msgstr "更新"
 
 #: inc/class-shortcode-ui.php:268
 msgid "There are no attributes to configure for this Post Element."
-msgstr "此元件没有需要设置的属性。"
+msgstr "此元件沒有需要設置的屬性。"
 
 #: inc/class-shortcode-ui.php:269
 msgid "Failed to load preview"
-msgstr "预览载入失败"
+msgstr "預覽載入失敗"
 
 #: inc/class-shortcode-ui.php:270
 msgid "Search"
-msgstr "搜寻"
+msgstr "搜尋"
 
 #: inc/class-shortcode-ui.php:271
 msgid "Insert Content"
-msgstr "插入内容"
+msgstr "插入內容"
 
 #: inc/class-shortcode-ui.php:312
 msgid "Add Post Element"
@@ -209,15 +209,15 @@ msgstr ""
 #: inc/fields/class-shortcode-ui-field-attachment.php:79
 #: inc/fields/class-shortcode-ui-field-attachment.php:80
 msgid "Select Attachment"
-msgstr "选择附件"
+msgstr "選擇附件"
 
 #: inc/fields/class-shortcode-ui-field-attachment.php:138
 msgid "Attachment Details"
-msgstr "附件详情"
+msgstr "附件詳情"
 
 #: inc/fields/class-shortcode-ui-field-attachment.php:145
 msgid "Edit Attachment"
-msgstr "编辑附件"
+msgstr "編輯附件"
 
 #: inc/templates/edit-form.tpl.php:3
 msgid "Back to list"
@@ -229,11 +229,11 @@ msgstr "Shortcake (Shortcode UI)"
 
 #. Description of the plugin/theme
 msgid "User Interface for adding shortcodes."
-msgstr "用于加入簡碼的用户界面。"
+msgstr "用於加入簡碼的用戶界面。"
 
 #. Author of the plugin/theme
 msgid "Fusion Engineering and community"
-msgstr "Fusion Engineering 及其社区"
+msgstr "Fusion Engineering 及其社區"
 
 #. Author URI of the plugin/theme
 msgid "http://next.fusion.net/tag/shortcode-ui/"
