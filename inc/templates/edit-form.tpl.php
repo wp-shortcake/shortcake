@@ -54,11 +54,11 @@
 				<# if ( 'options' in option && 'label' in option ) { #>
 					<optgroup label="{{ option.label }}">
 						<# _.each( option.options, function( optgroupOption ) { #>
-							<option value="{{ optgroupOption.value }}" <# if ( ! _.isEmpty( _.filter( data.value, function(val) { return val === optgroupOption.value; } ) ) ) { print('selected'); } #>>{{ optgroupOption.label }}</option>
+							<option value="{{ optgroupOption.value }}" <# if ( ! _.isEmpty( _.filter( _.isArray( data.value ) ? data.value : data.value.split(), function(val) { return val === optgroupOption.value; } ) ) ) { print('selected'); } #>>{{ optgroupOption.label }}</option>
 						<# }); #>
 					</optgroup>
 				<# } else { #>
-					<option value="{{ option.value }}" <# if ( ! _.isEmpty( _.filter( data.value, function(val) { return val === option.value; } ) ) ) { print('selected'); } #>>{{ option.label }}</option>
+					<option value="{{ option.value }}" <# if ( ! _.isEmpty( _.filter( _.isArray( data.value ) ? data.value : data.value.split(), function(val) { return val === option.value; } ) ) ) { print('selected'); } #>>{{ option.label }}</option>
 				<# } #>
 
 			<# }); #>
