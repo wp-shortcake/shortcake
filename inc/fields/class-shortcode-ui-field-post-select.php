@@ -85,6 +85,7 @@ class Shortcode_UI_Field_Post_Select {
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
+		$postid              = isset( $_GET['postid'] ) ? absint( $_GET['postid'] ) : 0;
 
 		$response            = array(
 			'items'          => array(),
@@ -134,6 +135,8 @@ class Shortcode_UI_Field_Post_Select {
 			$query_args['orderby']  = 'post__in';
 			$query_args['ignore_sticky_posts'] = true;
 		}
+
+		$query_args = apply_filters( 'shortcode_ui_post_field_query_args', $query_args, $postid );
 
 		$query = new WP_Query( $query_args );
 

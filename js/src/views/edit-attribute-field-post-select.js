@@ -10,6 +10,7 @@ sui.views.editAttributeFieldPostSelect = sui.views.editAttributeSelect2Field.ext
 	ajaxData: {
 		action    : 'shortcode_ui_post_field',
 		nonce     : shortcodeUiPostFieldData.nonce,
+		postid    : $( '#post_ID' ).val(),
 	},
 
 	events: {
