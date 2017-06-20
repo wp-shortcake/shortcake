@@ -51,7 +51,6 @@ var MediaController = wp.media.controller.State.extend({
 		}
 
 		this.reset();
-		this.resetState();
 		this.frame.close();
 	},
 
@@ -64,12 +63,11 @@ var MediaController = wp.media.controller.State.extend({
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'search', null );
 		this.props.set( 'insertCallback', this.insertCallback );
-	},
 
-	resetState: function() {
 		var menuItem = this.frame.menu.get().get('shortcode-ui');
 		menuItem.options.text = shortcodeUIData.strings.media_frame_title;
 		menuItem.render();
+
 		this.frame.setState( 'insert' );
 	},
 

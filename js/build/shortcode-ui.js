@@ -88,7 +88,6 @@ var MediaController = wp.media.controller.State.extend({
 		}
 
 		this.reset();
-		this.resetState();
 		this.frame.close();
 	},
 
@@ -101,12 +100,11 @@ var MediaController = wp.media.controller.State.extend({
 		this.props.set( 'currentShortcode', null );
 		this.props.set( 'search', null );
 		this.props.set( 'insertCallback', this.insertCallback );
-	},
 
-	resetState: function() {
 		var menuItem = this.frame.menu.get().get('shortcode-ui');
 		menuItem.options.text = shortcodeUIData.strings.media_frame_title;
 		menuItem.render();
+
 		this.frame.setState( 'insert' );
 	},
 
@@ -398,7 +396,6 @@ $(document).ready(function(){
 		// Make sure to reset state when closed.
 		frame.once( 'close submit', function() {
 			frame.mediaController.reset();
-			frame.mediaController.resetState();
 		} );
 
 	} );
@@ -712,7 +709,6 @@ var shortcodeViewConstructor = {
 			// Make sure to reset state when closed.
 			frame.once( 'close submit', function() {
 				frame.mediaController.reset();
-				frame.mediaController.resetState();
 			} );
 		}
 
@@ -1560,6 +1556,11 @@ var wp = (typeof window !== "undefined" ? window['wp'] : typeof global !== "unde
 var postMediaFrame = wp.media.view.MediaFrame.Post;
 var mediaFrame = postMediaFrame.extend( {
 
+	events: _.extend( {}, postMediaFrame.prototype.events, {
+			'click .media-menu-item' : 'resetMediaController',
+		}
+	),
+
 	initialize: function() {
 
 		postMediaFrame.prototype.initialize.apply( this, arguments );
@@ -1588,12 +1589,6 @@ var mediaFrame = postMediaFrame.extend( {
 		this.on( 'toolbar:create:' + id + '-toolbar', this.toolbarCreate, this );
 		this.on( 'menu:render:default', this.renderShortcodeUIMenu );
 
-	},
-
-	events: function() {
-		return _.extend( {}, postMediaFrame.prototype.events, {
-			'click .media-menu-item' : 'resetMediaController',
-		} );
 	},
 
 	resetMediaController: function( event ) {
