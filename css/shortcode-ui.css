@@ -239,7 +239,7 @@
   border-color: #5b9dd9;
   box-shadow: 0 0 2px rgba(30, 140, 190, 0.8); }
 
-.select2-container {
+.select2-container--shortcake {
   z-index: 160000;
   max-width: 300px; }
 
