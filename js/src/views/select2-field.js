@@ -106,6 +106,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 		var $fieldSelect2 = $field[ shortcodeUIData.select2_handle ]({
 			placeholder: "Search",
 			multiple: this.model.get( 'multiple' ),
+			theme: $.fn.select2.defaults.defaults.theme + ' select2-container--shortcake',
 
 			ajax: {
 				url: ajaxurl,
