@@ -21,9 +21,9 @@ describe( 'Shortcode View Constructor', function(){
 			]
 		};
 		sui.shortcodes.add( data );
-		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
+		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_inner_content foo=\'bar\']burrito[/no_inner_content]' );
 		var _shortcode = $.extend( true, {}, shortcode );
-		expect( _shortcode.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_inner_content foo=\'bar\']burrito[/no_inner_content]' );
 		ShortcodeViewConstructor.shortcode = {
 			'type' : 'single',
 			'tag' : 'no_inner_content',
@@ -40,7 +40,7 @@ describe( 'Shortcode View Constructor', function(){
 			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
-		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_inner_content foo=\'bar\']burrito[/no_inner_content]' );
 	});
 
 	it( 'Persists custom attribute when parsing a shortcode without the attribute defined in UI', function() {
@@ -56,9 +56,9 @@ describe( 'Shortcode View Constructor', function(){
 			]
 		};
 		sui.shortcodes.add( data );
-		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
+		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo=\'bar\' bar=\'banana\']' );
 		var _shortcode = $.extend( true, {}, shortcode );
-		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana" /]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo=\'bar\' bar=\'banana\' /]' );
 		ShortcodeViewConstructor.shortcode = {
 			'type' : 'single',
 			'tag' : 'no_custom_attribute',
@@ -75,7 +75,7 @@ describe( 'Shortcode View Constructor', function(){
 			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
-		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana" /]' );
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo=\'bar\' bar=\'banana\' /]' );
 	});
 
 	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){

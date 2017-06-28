@@ -115,11 +115,11 @@ describe( "Shortcode Model", function() {
 		var _shortcode = jQuery.extend( true, {}, shortcode );
 
 		// Test with attribute and with content.
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]test content[/test_shortcode]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr=\'test value\']test content[/test_shortcode]' );
 
 		// Test without content.
 		_shortcode.get('inner_content').unset( 'value' );
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value" /]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr=\'test value\' /]' );
 
 		// Test without attributes
 		_shortcode.get( 'attrs' ).first().unset( 'value' );
@@ -145,7 +145,7 @@ describe( "Shortcode Model", function() {
 		});
 
 		formatted = shortcode_encoded_attribute.formatShortcode();
-		expected  = '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E" /]';
+		expected  = '[test_shortcode_encoded attr=\'%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E\' /]';
 		expect( formatted ).toEqual( expected );
 
 	});
@@ -178,9 +178,9 @@ describe( 'Shortcode View Constructor', function(){
 			]
 		};
 		sui.shortcodes.add( data );
-		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
+		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_inner_content foo=\'bar\']burrito[/no_inner_content]' );
 		var _shortcode = $.extend( true, {}, shortcode );
-		expect( _shortcode.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_inner_content foo=\'bar\']burrito[/no_inner_content]' );
 		ShortcodeViewConstructor.shortcode = {
 			'type' : 'single',
 			'tag' : 'no_inner_content',
@@ -197,7 +197,7 @@ describe( 'Shortcode View Constructor', function(){
 			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
-		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_inner_content foo="bar"]burrito[/no_inner_content]' );
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_inner_content foo=\'bar\']burrito[/no_inner_content]' );
 	});
 
 	it( 'Persists custom attribute when parsing a shortcode without the attribute defined in UI', function() {
@@ -213,9 +213,9 @@ describe( 'Shortcode View Constructor', function(){
 			]
 		};
 		sui.shortcodes.add( data );
-		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo="bar" bar="banana"]' );
+		var shortcode = ShortcodeViewConstructor.parseShortcodeString( '[no_custom_attribute foo=\'bar\' bar=\'banana\']' );
 		var _shortcode = $.extend( true, {}, shortcode );
-		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana" /]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[no_custom_attribute foo=\'bar\' bar=\'banana\' /]' );
 		ShortcodeViewConstructor.shortcode = {
 			'type' : 'single',
 			'tag' : 'no_custom_attribute',
@@ -232,7 +232,7 @@ describe( 'Shortcode View Constructor', function(){
 			return new $.Deferred();
 		};
 		ShortcodeViewConstructor.initialize();
-		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo="bar" bar="banana" /]' );
+		expect( ShortcodeViewConstructor.shortcodeModel.formatShortcode() ).toEqual( '[no_custom_attribute foo=\'bar\' bar=\'banana\' /]' );
 	});
 
 	it( 'Reverses the effect of core adding wpautop to shortcode inner content', function(){
@@ -843,12 +843,19 @@ Shortcode = Backbone.Model.extend({
 				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ).replace( /%/g, "&#37;" ) ) ), { silent: true } );
 			}
 
-			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+      //Replace characters that we can't keep.
+      if($.type(attr.get( 'value' )) === "string") {
+        attr.set( 'value', attr.get('value').replace(/\[/g, '_') );
+        attr.set( 'value', attr.get('value').replace(/\]/g, '_') );
+        attr.set( 'value', attr.get('value').replace(/\'/g, '') );
+      }
+
+			attrs.push( attr.get( 'attr' ) + '=\'' + attr.get( 'value' ) + '\'' );
 
 		} );
 
 		$.each( this.get( 'attributes_backup' ), function( key, value){
-			attrs.push( key + '="' + value + '"' );
+			attrs.push( key + '=\'' + value + '\'' );
 		});
 
 		if ( this.get( 'inner_content' ) ) {

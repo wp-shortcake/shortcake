@@ -58,11 +58,11 @@ describe( "Shortcode Model", function() {
 		var _shortcode = jQuery.extend( true, {}, shortcode );
 
 		// Test with attribute and with content.
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value"]test content[/test_shortcode]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr=\'test value\']test content[/test_shortcode]' );
 
 		// Test without content.
 		_shortcode.get('inner_content').unset( 'value' );
-		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr="test value" /]' );
+		expect( _shortcode.formatShortcode() ).toEqual( '[test_shortcode attr=\'test value\' /]' );
 
 		// Test without attributes
 		_shortcode.get( 'attrs' ).first().unset( 'value' );
@@ -88,7 +88,7 @@ describe( "Shortcode Model", function() {
 		});
 
 		formatted = shortcode_encoded_attribute.formatShortcode();
-		expected  = '[test_shortcode_encoded attr="%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E" /]';
+		expected  = '[test_shortcode_encoded attr=\'%3Cb%20class%3D%22foo%22%3Ebar%3C%2Fb%3E\' /]';
 		expect( formatted ).toEqual( expected );
 
 	});

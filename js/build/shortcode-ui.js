@@ -289,12 +289,19 @@ Shortcode = Backbone.Model.extend({
 				attr.set( 'value', encodeURIComponent( decodeURIComponent( attr.get( 'value' ).replace( /%/g, "&#37;" ) ) ), { silent: true } );
 			}
 
-			attrs.push( attr.get( 'attr' ) + '="' + attr.get( 'value' ) + '"' );
+      //Replace characters that we can't keep.
+      if($.type(attr.get( 'value' )) === "string") {
+        attr.set( 'value', attr.get('value').replace(/\[/g, '_') );
+        attr.set( 'value', attr.get('value').replace(/\]/g, '_') );
+        attr.set( 'value', attr.get('value').replace(/\'/g, '') );
+      }
+
+			attrs.push( attr.get( 'attr' ) + '=\'' + attr.get( 'value' ) + '\'' );
 
 		} );
 
 		$.each( this.get( 'attributes_backup' ), function( key, value){
-			attrs.push( key + '="' + value + '"' );
+			attrs.push( key + '=\'' + value + '\'' );
 		});
 
 		if ( this.get( 'inner_content' ) ) {
