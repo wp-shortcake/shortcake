@@ -43,8 +43,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 			var request = {
 				include   : _preselected,
 				shortcode : this.shortcode.get( 'shortcode_tag'),
-				attr      : this.model.get( 'attr' ),
-				postid    : $( '#post_ID' ).val()
+				attr      : this.model.get( 'attr' )
 			};
 
 			$.get( ajaxurl, $.extend( request, this.ajaxData ),
@@ -117,7 +116,8 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 						s         : params.term, // search term
 						page      : params.page,
 						shortcode : self.shortcode.get( 'shortcode_tag'),
-						attr      : self.model.get( 'attr' )
+						attr      : self.model.get( 'attr' ),
+						postid    : $( '#post_ID' ).val()
 					}, self.ajaxData );
 				},
 				processResults: function (response, params) {
