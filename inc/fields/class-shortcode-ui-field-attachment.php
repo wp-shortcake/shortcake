@@ -106,7 +106,7 @@ class Shortcode_UI_Field_Attachment {
 
 					<button class="button button-small remove" data-id="{{ data.id }}">×</button>
 
-					<# if ( data.type === 'image' && data.sizes && data.sizes.thumbnail ) { #>
+					<# if ( data.sizes && data.sizes.thumbnail ) { #>
 						<div class="thumbnail">
 							<div class="centered">
 								<img src="{{ data.sizes.thumbnail.url }}" alt="" width="{{ data.sizes.thumbnail.width }}" height="{{ data.sizes.thumbnail.height }}" />

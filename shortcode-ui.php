@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Shortcake (Shortcode UI)
- * Version: 0.7.1
+ * Version: 0.7.2
  * Description: User Interface for adding shortcodes.
  * Author: Fusion Engineering and community
  * Author URI: http://next.fusion.net/tag/shortcode-ui/
@@ -19,7 +19,7 @@
  * GNU General Public License for more details.
  */
 
-define( 'SHORTCODE_UI_VERSION', '0.7.1' );
+define( 'SHORTCODE_UI_VERSION', '0.7.2' );
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
@@ -109,6 +109,17 @@ function shortcode_ui_register_for_shortcode( $shortcode_tag, $args = array() ) 
 
 	Shortcode_UI::get_instance()->register_shortcode_ui( $shortcode_tag, $args );
 }
+
+/**
+ * Display an admin notice on activating the plugin if no shortcodes with UI are available.
+ *
+ * @return void
+ */
+function shortcode_ui_activation_notice() {
+	update_option( 'shortcode_ui_activation_notice', true );
+}
+
+register_activation_hook( __FILE__, 'shortcode_ui_activation_notice' );
 
 /**
  * Get register UI args by shortcode tag

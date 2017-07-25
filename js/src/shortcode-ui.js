@@ -49,11 +49,7 @@ $(document).ready(function(){
 
 		// Make sure to reset state when closed.
 		frame.once( 'close submit', function() {
-			frame.state().props.set('currentShortcode', false);
-			var menuItem = frame.menu.get().get('shortcode-ui');
-			menuItem.options.text = shortcodeUIData.strings.media_frame_title;
-			menuItem.render();
-			frame.setState( 'insert' );
+			frame.mediaController.reset();
 		} );
 
 	} );
