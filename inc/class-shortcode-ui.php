@@ -462,6 +462,7 @@ class Shortcode_UI {
 	 * Get a bunch of shortcodes to render in MCE preview.
 	 */
 	public function handle_ajax_bulk_do_shortcode() {
+		check_ajax_referer( 'shortcode-ui-preview', 'nonce' );
 
 		if ( is_array( $_POST['queries'] ) ) {
 
