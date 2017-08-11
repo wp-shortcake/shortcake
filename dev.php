@@ -199,7 +199,7 @@ function shortcode_ui_dev_advanced_example() {
 		array(
 			'label'    => __( 'Select Tag', 'shortcode-ui-example', 'shortcode-ui' ),
 			'attr'     => 'tag',
-			'type'     => 'tag_select',
+			'type'     => 'term_select',
 			'taxonomy' => 'post_tag',
 			'multiple' => true,
 		),
