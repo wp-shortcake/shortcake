@@ -68,8 +68,9 @@ Shortcode = Backbone.Model.extend({
 
 		this.get( 'attrs' ).each( function( attr ) {
 
+			console.log( attr.get('attr'), attr.get('value') );
 			// Skip empty attributes.
-			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
+			if ( ! attr.get( 'value' ) || attr.get( 'value' ).length < 1 ) {
 				return;
 			}
 
