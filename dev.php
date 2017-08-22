@@ -21,8 +21,8 @@
 
 /*
  * This plugin handles the registration of two shortcodes, and the related Shortcode UI:
- *  a. [shortcode-no-attributes] - a shortcode with a minimal UI example that has no user inputs.
- *  b. [shortcode_dev] - a shortcode with a selection of user inputs.
+ *  a. [shortcake-no-attributes] - a shortcode with a minimal UI example that has no user inputs.
+ *  b. [shortcake_dev] - a shortcode with a selection of user inputs.
  *
  * The plugin is broken down into four stages:
  *  0. Check to see if Shortcake is running, with an admin notice if not.
