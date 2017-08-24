@@ -495,7 +495,7 @@ class Shortcode_UI {
 	}
 
 	/**
-	 * Decode any encoded attributes.
+	 * Decode any encoded attributes, and convert true/false strings to their boolean equivalents.
 	 *
 	 * @param array $out   The output array of shortcode attributes.
 	 * @param array $pairs The supported attributes and their defaults.
@@ -520,8 +520,14 @@ class Shortcode_UI {
 			$default = isset( $fields[ $attr['type'] ]['encode'] ) ? $fields[ $attr['type'] ]['encode'] : false;
 			$encoded = isset( $attr['encode'] ) ? $attr['encode'] : $default;
 
+			$explicitbool = isset( $attr['explicitbool'] ) ? $attr['explicitbool'] : false;
+
 			if ( $encoded && isset( $out[ $attr['attr'] ] ) ) {
 				$out[ $attr['attr'] ] = rawurldecode( $out[ $attr['attr'] ] );
+			}
+
+			if ( $explicitbool && in_array( $out[ $attr['attr'] ], array( 'true', 'false' ), true ) ) {
+				$out[ $attr['attr'] ] = $this->explicitbool( $out[ $attr['attr'] ] );
 			}
 		}
 
@@ -529,4 +535,19 @@ class Shortcode_UI {
 
 	}
 
+	/**
+	 * Convert 'true' or 'false' strings to their boolean equivalent.
+	 *
+	 * @param string Expected to be either 'true' or 'false'
+	 * @return bool
+	 */
+	private function explicitbool( $bool_string ) {
+		if ( 'true' === $bool_string ) {
+			return true;
+		}
+		if ( 'false' === $bool_string ) {
+			return false;
+		}
+		return null;
+	}
 }
