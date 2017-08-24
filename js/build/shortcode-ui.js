@@ -891,6 +891,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 
 		this._renderAll();
 
+        this.triggerCallbacks();
+
 	},
 
 	_renderAll: function() {
