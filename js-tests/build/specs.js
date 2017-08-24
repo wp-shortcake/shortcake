@@ -1109,7 +1109,7 @@ var shortcodeViewConstructor = {
 
 			if ( attr && attr.get('encode') ) {
 				value = decodeURIComponent( value );
-				value = value.replace( "&#37;", "%" );
+				value = value.replace( /&#37;/g, "%" );
 			}
 
 			if ( attr ) {

@@ -592,7 +592,7 @@ var shortcodeViewConstructor = {
 
 			if ( attr && attr.get('encode') ) {
 				value = decodeURIComponent( value );
-				value = value.replace( "&#37;", "%" );
+				value = value.replace( /&#37;/g, "%" );
 			}
 
 			if ( attr ) {
@@ -890,6 +890,8 @@ var editAttributeFieldAttachment = sui.views.editAttributeField.extend( {
 		}.bind( this ) );
 
 		this._renderAll();
+
+        this.triggerCallbacks();
 
 	},
 
