@@ -280,7 +280,7 @@ Shortcode = Backbone.Model.extend({
 		this.get( 'attrs' ).each( function( attr ) {
 
 			// Skip empty attributes.
-			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
+			if ( ! attr.get( 'value' ) || attr.get( 'value' ).length < 1 ) {
 				return;
 			}
 
@@ -1753,6 +1753,11 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 	 */
 	inputChanged: function(e) {
 		var _selected = $( e.currentTarget ).val();
+
+		// Empty fields will have null values. We don't want to coerce that to the string "null".
+		if ( _selected === null ) {
+			_selected = '';
+		}
 
 		// Store multiple selections as comma-delimited list
 		if ( Array.isArray( _selected ) ) {
