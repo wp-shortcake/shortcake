@@ -21,7 +21,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 		var _selected = $( e.currentTarget ).val();
 
 		// Empty fields will have null values. We don't want to coerce that to the string "null".
-		if ( _selected == null ) {
+		if ( _selected === null ) {
 			_selected = '';
 		}
 
@@ -29,7 +29,6 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 		if ( Array.isArray( _selected ) ) {
 			_selected = _selected.join( ',' );
 		}
-
 
 		this.setValue( String( _selected ) );
 		this.triggerCallbacks();
