@@ -76,6 +76,17 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 
 ## Changelog ##
 
+### 0.7.3 (September 5, 2017) ###
+* Security: Use nonce validation in ajax render shortcode callback to protect against CSRF.
+* Bug fix: Make sure that the same js hooks fire on all field types.
+* Bug fix: Fix bugs affecting multiple select fields (values could not be unset once set, and multiple default values couldn't be set).
+* Bug fix: Prevent encoded fields containing two percent characters from breaking.
+* Bug fix: Fix some issues where the media modal state was not reset properly if a shortcode was closed without saving.
+* Enhancement: When post_select field is selecting from more than one post type, show the post type alongside the post name for easier selection.
+* Enhancement: Show attachment thumbnails for any attachment type, not just images.
+* Enhancement: Add more helpful error messages if no shortcodes with Shortcake UI are registered.
+* Update Norwegian translation
+
 ### 0.7.2 (April 24, 2017) ###
 * Bug fix: Fix behavior in WordPress 4.7.4 where editing a shortcode would insert a new shortcode into the editor rather than updating the shortcode being edited.
 * Bug fix: The replacement used to escape percent (%) characters in attributes only replaced the first appearance
