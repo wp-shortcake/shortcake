@@ -69,7 +69,7 @@ install_test_suite() {
 	# set up testing suite if it doesn't yet exist
 	if [ ! -d $WP_TESTS_DIR ]; then
 		# set up testing suite
-		mkdir -p $WP_TESTS_DIR
+		mkdir -p $WP_TESTS_DIR/data/themedir1
 		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
 	fi
 
