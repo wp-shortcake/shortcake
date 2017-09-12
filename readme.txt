@@ -74,6 +74,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Bug fix: Fix bugs affecting multiple select fields (values could not be unset once set, and multiple default values couldn't be set).
 * Bug fix: Prevent encoded fields containing two percent characters from breaking.
 * Bug fix: Fix some issues where the media modal state was not reset properly if a shortcode was closed without saving.
+* Bug fix: Support cases where there are multiple WP_Editor instances on a page, and make sure that the shortcode being edited is sent to the correct page.
 * Enhancement: When post_select field is selecting from more than one post type, show the post type alongside the post name for easier selection.
 * Enhancement: Show attachment thumbnails for any attachment type, not just images.
 * Enhancement: Add more helpful error messages if no shortcodes with Shortcake UI are registered.
