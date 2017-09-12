@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Shortcake (Shortcode UI)
- * Version: 0.7.2
+ * Version: 0.7.3
  * Description: User Interface for adding shortcodes.
  * Author: Fusion Engineering and community
  * Author URI: http://next.fusion.net/tag/shortcode-ui/
@@ -19,7 +19,7 @@
  * GNU General Public License for more details.
  */
 
-define( 'SHORTCODE_UI_VERSION', '0.7.2' );
+define( 'SHORTCODE_UI_VERSION', '0.7.3' );
 
 require_once dirname( __FILE__ ) . '/inc/class-shortcode-ui.php';
 require_once dirname( __FILE__ ) . '/inc/fields/class-shortcode-ui-fields.php';
