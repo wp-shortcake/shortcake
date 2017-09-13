@@ -1091,7 +1091,7 @@ sui.views.editAttributeFieldPostSelect = sui.views.editAttributeSelect2Field.ext
 
 	ajaxData: {
 		action    : 'shortcode_ui_post_field',
-		nonce     : shortcodeUiPostFieldData.nonce,
+		nonce     : shortcodeUiPostFieldData.nonce
 	},
 
 	events: {
@@ -1872,7 +1872,8 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 						s         : params.term, // search term
 						page      : params.page,
 						shortcode : self.shortcode.get( 'shortcode_tag'),
-						attr      : self.model.get( 'attr' )
+						attr      : self.model.get( 'attr' ),
+						postid    : $( '#post_ID' ).val()
 					}, self.ajaxData );
 				},
 				processResults: function (response, params) {
