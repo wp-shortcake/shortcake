@@ -148,7 +148,10 @@ class Shortcode_UI_Field_Term_Select {
 			$response['terms_per_page'] = 10;
 		}
 
-		$num_results = wp_count_terms( $taxonomy_type, $args );
+    // wp_count_terms relies on a string and uses the get_terms method anyway, so let's just cut to the chase
+    $num_results = get_terms( $taxonomy_type, array_merge( $args, [
+      'fields' => 'count',
+    ] ) );
 
 		if ( empty( $num_results ) ) {
 			wp_send_json_error();
@@ -167,7 +170,7 @@ class Shortcode_UI_Field_Term_Select {
 			array_push( $response['items'],
 				array(
 					'id'   => $result->term_id,
-					'text' => html_entity_decode( $result->name ),
+          'text' => html_entity_decode( $result->name . ' - ' . $result->slug . ' (' . $result->taxonomy . ')' ),
 				)
 			);
 		}
