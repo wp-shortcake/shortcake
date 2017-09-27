@@ -143,11 +143,12 @@ class Shortcode_UI_Field_Post_Select {
 			$post_type     = get_post_type( $post_id );
 			$post_type_obj = get_post_type_object( $post_type );
 
-			$text = html_entity_decode( get_the_title( $post_id ) . ' - ' . get_post_field( 'post_name', $post_id ) );
+			$text = html_entity_decode( get_the_title( $post_id ) );
 
 			if ( $is_multiple_post_types && $post_type_obj ) {
-				$text .= sprintf( ' (%1$s)', $post_type_obj->labels->singular_name );
+				$text .= sprintf( '- %1$s (%2$s)', get_post_field( 'post_name', $post_id ), $post_type_obj->labels->singular_name );
 			}
+
 			array_push( $response['items'],
 				array(
 					'id'   => $post_id,

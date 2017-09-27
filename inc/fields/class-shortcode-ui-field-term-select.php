@@ -164,13 +164,29 @@ class Shortcode_UI_Field_Term_Select {
 			$args['offset'] = ( $page - 1 ) * $response['items_per_page'];
 		}
 
+    $is_multiple_taxonomies = count( $args['taxonomy'] ) > 1;
+		$taxonomies = [];
+		if ( $is_multiple_taxonomies )
+    {
+      foreach ( $args['taxonomy'] as $tax_slug )
+      {
+        $taxonomies[ $tax_slug ] = get_taxonomy( $tax_slug );
+      }
+    }
+
 		$results = get_terms( $args );
 
 		foreach ( $results as $result ) {
+		  $text = html_entity_decode( $result->name );
+
+      if ( $is_multiple_taxonomies ) {
+				$text .= sprintf( ' - %1%s (%2$s)', $result->slug, $taxonomies[ $result->taxonomy ]->labels->singular_name );
+			}
+
 			array_push( $response['items'],
 				array(
 					'id'   => $result->term_id,
-          'text' => html_entity_decode( $result->name . ' - ' . $result->slug . ' (' . $result->taxonomy . ')' ),
+          'text' => $text,
 				)
 			);
 		}
