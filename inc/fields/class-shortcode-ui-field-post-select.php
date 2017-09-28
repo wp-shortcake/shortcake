@@ -58,15 +58,15 @@ class Shortcode_UI_Field_Post_Select {
 
 		?>
 
-		<script type="text/html" id="tmpl-shortcode-ui-field-post-select">
-			<div class="field-block shortcode-ui-field-post-select shortcode-ui-attribute-{{ data.attr }}">
-				<label for="{{ data.id }}">{{{ data.label }}}</label>
-				<select id="{{ data.id }}" name="{{ data.name }}" class="shortcode-ui-post-select" ></select>
-				<# if ( typeof data.description == 'string' && data.description.length ) { #>
-					<p class="description">{{{ data.description }}}</p>
-				<# } #>
-			</div>
-		</script>
+      <script type="text/html" id="tmpl-shortcode-ui-field-post-select">
+        <div class="field-block shortcode-ui-field-post-select shortcode-ui-attribute-{{ data.attr }}">
+          <label for="{{ data.id }}">{{{ data.label }}}</label>
+          <select id="{{ data.id }}" name="{{ data.name }}" class="shortcode-ui-post-select" ></select>
+          <# if ( typeof data.description == 'string' && data.description.length ) { #>
+            <p class="description">{{{ data.description }}}</p>
+            <# } #>
+        </div>
+      </script>
 
 		<?php
 	}

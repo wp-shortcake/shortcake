@@ -67,15 +67,15 @@ class Shortcode_UI_Field_Term_Select {
 
 		?>
 
-		<script type="text/html" id="tmpl-shortcode-ui-field-term-select">
-			<div class="field-block shortcode-ui-field-term-select shortcode-ui-attribute-{{ data.attr }}">
-				<label for="{{ data.id }}">{{{ data.label }}}</label>
-				<select name="{{ data.attr }}" id="{{ data.id }}" class="shortcode-ui-term-select"></select>
-				<# if ( typeof data.description == 'string' && data.description.length ) { #>
-					<p class="description">{{{ data.description }}}</p>
-				<# } #>
-			</div>
-		</script>
+      <script type="text/html" id="tmpl-shortcode-ui-field-term-select">
+        <div class="field-block shortcode-ui-field-term-select shortcode-ui-attribute-{{ data.attr }}">
+          <label for="{{ data.id }}">{{{ data.label }}}</label>
+          <select name="{{ data.attr }}" id="{{ data.id }}" class="shortcode-ui-term-select"></select>
+          <# if ( typeof data.description == 'string' && data.description.length ) { #>
+            <p class="description">{{{ data.description }}}</p>
+            <# } #>
+        </div>
+      </script>
 
 		<?php
 	}
@@ -148,10 +148,10 @@ class Shortcode_UI_Field_Term_Select {
 			$response['terms_per_page'] = 10;
 		}
 
-    // wp_count_terms relies on a string and uses the get_terms method anyway, so let's just cut to the chase
-    $num_results = get_terms( $taxonomy_type, array_merge( $args, [
-      'fields' => 'count',
-    ] ) );
+		// wp_count_terms relies on a string and uses the get_terms method anyway, so let's just cut to the chase
+		$num_results = get_terms( $taxonomy_type, array_merge( $args, [
+			'fields' => 'count',
+		] ) );
 
 		if ( empty( $num_results ) ) {
 			wp_send_json_error();
@@ -164,29 +164,29 @@ class Shortcode_UI_Field_Term_Select {
 			$args['offset'] = ( $page - 1 ) * $response['items_per_page'];
 		}
 
-    $is_multiple_taxonomies = count( $args['taxonomy'] ) > 1;
+		$is_multiple_taxonomies = count( $args['taxonomy'] ) > 1;
 		$taxonomies = [];
 		if ( $is_multiple_taxonomies )
-    {
-      foreach ( $args['taxonomy'] as $tax_slug )
-      {
-        $taxonomies[ $tax_slug ] = get_taxonomy( $tax_slug );
-      }
-    }
+		{
+			foreach ( $args['taxonomy'] as $tax_slug )
+			{
+				$taxonomies[ $tax_slug ] = get_taxonomy( $tax_slug );
+			}
+		}
 
 		$results = get_terms( $args );
 
 		foreach ( $results as $result ) {
-		  $text = html_entity_decode( $result->name );
+			$text = html_entity_decode( $result->name );
 
-      if ( $is_multiple_taxonomies ) {
+			if ( $is_multiple_taxonomies ) {
 				$text .= sprintf( ' - %1%s (%2$s)', $result->slug, $taxonomies[ $result->taxonomy ]->labels->singular_name );
 			}
 
 			array_push( $response['items'],
 				array(
 					'id'   => $result->term_id,
-          'text' => $text,
+					'text' => $text,
 				)
 			);
 		}
