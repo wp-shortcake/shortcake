@@ -50,7 +50,7 @@ var editAttributeField = Backbone.View.extend( {
 		// Ensure default value for select field.
 		if ( 'select' === data.type && '' === this.model.get( 'value' ) && ! _.findWhere( data.options, { value: '' } ) ) {
 			var firstVisibleOption = _.first( data.options );
-			if ( 'undefined' !== typeof firstVisibleOption.value ) {
+			if ( firstVisibleOption && 'undefined' !== typeof firstVisibleOption.value ) {
 				this.setValue( firstVisibleOption.value );
 				data.value = firstVisibleOption.value;
 			}
