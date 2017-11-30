@@ -64,7 +64,7 @@ function shortcode_ui_load_textdomain() {
 	$locale = get_locale();
 	$domain = 'shortcode-ui';
 	$locale = apply_filters( 'plugin_locale', $locale, $domain );
-	$path = dirname( __FILE__ ) . '/languages';
+	$path   = dirname( __FILE__ ) . '/languages';
 	// Load the textdomain according to the plugin first
 	$mofile = $domain . '-' . $locale . '.mo';
 	$loaded = load_textdomain( $domain, $path . '/' . $mofile );
