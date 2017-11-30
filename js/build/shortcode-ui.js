@@ -1464,7 +1464,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 });
 
-module.exports = EditShortcodeForm;
+module.exports = sui.views.EditShortcodeForm = EditShortcodeForm;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":10,"./edit-attribute-field-attachment.js":11,"./edit-attribute-field-color.js":12,"./edit-attribute-field-post-select.js":13,"./edit-attribute-field-term-select.js":14,"./edit-attribute-field-user-select.js":15,"./edit-attribute-field.js":16}],18:[function(require,module,exports){
