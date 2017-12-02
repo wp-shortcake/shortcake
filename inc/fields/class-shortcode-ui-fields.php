@@ -32,32 +32,32 @@ class Shortcode_UI_Fields {
 	 * @var array
 	 */
 	private $fields = array(
-		'text' => array(),
+		'text'     => array(),
 		'textarea' => array(
 			'template' => 'shortcode-ui-field-textarea',
 		),
-		'url' => array(
+		'url'      => array(
 			'template' => 'shortcode-ui-field-url',
 		),
-		'select' => array(
+		'select'   => array(
 			'template' => 'shortcode-ui-field-select',
 		),
 		'checkbox' => array(
 			'template' => 'shortcode-ui-field-checkbox',
 		),
-		'radio' => array(
+		'radio'    => array(
 			'template' => 'shortcode-ui-field-radio',
 		),
-		'email' => array(
+		'email'    => array(
 			'template' => 'shortcode-ui-field-email',
 		),
-		'number' => array(
+		'number'   => array(
 			'template' => 'shortcode-ui-field-number',
 		),
-		'date' => array(
+		'date'     => array(
 			'template' => 'shortcode-ui-field-date',
 		),
-		'range' => array(
+		'range'    => array(
 			'template' => 'shortcode-ui-field-range',
 		),
 	);
