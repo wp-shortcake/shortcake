@@ -5,7 +5,7 @@ class Shortcode_UI_Field_User_Select {
 	private static $instance;
 
 	// All registered user fields.
-	private $user_fields  = array();
+	private $user_fields = array();
 
 	// Field Settings.
 	private $fields = array(
@@ -34,11 +34,11 @@ class Shortcode_UI_Field_User_Select {
 	 */
 	private function setup_actions() {
 
-		add_filter( 'shortcode_ui_fields',             array( $this, 'filter_shortcode_ui_fields' ) );
-		add_action( 'enqueue_shortcode_ui',            array( $this, 'action_enqueue_shortcode_ui' ) );
+		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
+		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_user_field', array( $this, 'action_wp_ajax_shortcode_ui_user_field' ) );
 		add_action( 'wp_ajax_shortcode_ui_user_field_preselect', array( $this, 'action_wp_ajax_shortcode_ui_user_field_preselect' ) );
-		add_action( 'shortcode_ui_loaded_editor',      array( $this, 'action_shortcode_ui_loaded_editor' ) );
+		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 	}
 
 	/**
@@ -61,9 +61,11 @@ class Shortcode_UI_Field_User_Select {
 		wp_enqueue_script( Shortcode_UI::$select2_handle );
 		wp_enqueue_style( Shortcode_UI::$select2_handle );
 
-		wp_localize_script( 'shortcode-ui', 'shortcodeUiUserFieldData', array(
-			'nonce' => wp_create_nonce( 'shortcode_ui_field_user_select' ),
-		) );
+		wp_localize_script(
+			'shortcode-ui', 'shortcodeUiUserFieldData', array(
+				'nonce' => wp_create_nonce( 'shortcode_ui_field_user_select' ),
+			)
+		);
 	}
 
 	/**
@@ -156,7 +158,8 @@ class Shortcode_UI_Field_User_Select {
 		$query = new WP_User_Query( $query_args );
 
 		foreach ( $query->get_results() as $user ) {
-			array_push( $response['items'],
+			array_push(
+				$response['items'],
 				array(
 					'id'   => $user->ID,
 					'text' => html_entity_decode( $user->display_name ),

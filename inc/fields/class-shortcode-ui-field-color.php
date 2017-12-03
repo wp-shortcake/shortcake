@@ -19,7 +19,7 @@ class Shortcode_UI_Field_Color {
 	 * @access private
 	 * @var array
 	 */
-	private $post_fields  = array();
+	private $post_fields = array();
 
 	/**
 	 * Settings for the Color Field.
