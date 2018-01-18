@@ -21,8 +21,8 @@
 
 /*
  * This plugin handles the registration of two shortcodes, and the related Shortcode UI:
- *  a. [shortcode-no-attributes] - a shortcode with a minimal UI example that has no user inputs.
- *  b. [shortcode_dev] - a shortcode with a selection of user inputs.
+ *  a. [shortcake-no-attributes] - a shortcode with a minimal UI example that has no user inputs.
+ *  b. [shortcake_dev] - a shortcode with a selection of user inputs.
  *
  * The plugin is broken down into four stages:
  *  0. Check to see if Shortcake is running, with an admin notice if not.
@@ -197,8 +197,8 @@ function shortcode_ui_dev_advanced_example() {
 			'multiple' => true,
 		),
 		array(
-			'label'    => __( 'Select Term', 'shortcode-ui-example', 'shortcode-ui' ),
-			'attr'     => 'term',
+			'label'    => __( 'Select Tag', 'shortcode-ui-example', 'shortcode-ui' ),
+			'attr'     => 'tag',
 			'type'     => 'term_select',
 			'taxonomy' => 'post_tag',
 			'multiple' => true,
@@ -234,6 +234,21 @@ function shortcode_ui_dev_advanced_example() {
 						array( 'value' => 'right-2', 'label' => esc_html__( 'Pull Right', 'shortcode-ui-example', 'shortcode-ui' ) ),
 					)
 				),
+			),
+		),
+		array(
+			'label'       => esc_html__( 'CSS Classes', 'shortcode-ui-example', 'shortcode-ui' ),
+			'description' => esc_html__( 'Which classes the shortcode should get.', 'shortcode-ui-example', 'shortcode-ui' ),
+			'attr'        => 'classes',
+			'type'        => 'select',
+			/**
+			 * Use this to allow for multiple selections – similar to `'multiple' => true'`.
+			 */
+			'meta' => array( 'multiple' => true ),
+			'options'     => array(
+				array( 'value' => '', 'label' => esc_html__( 'Default', 'shortcode-ui-example', 'shortcode-ui' ) ),
+				array( 'value' => 'bold', 'label' => esc_html__( 'Bold', 'shortcode-ui-example', 'shortcode-ui' ) ),
+				array( 'value' => 'italic', 'label' => esc_html__( 'Italic', 'shortcode-ui-example', 'shortcode-ui' ) ),
 			),
 		),
 		array(
@@ -314,6 +329,7 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 		'users'      => '',
 		'color'      => '',
 		'alignment'  => '',
+		'classes'  => '',
 		'year'       => '',
 	), $attr, $shortcode_tag );
 
@@ -386,6 +402,10 @@ function shortcode_ui_dev_shortcode( $attr, $content, $shortcode_tag ) {
 
 			<?php if ( ! empty( $attr['alignment'] ) ) : ?>
 				<b><?php esc_html_e( 'Alignment:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo esc_html( $attr['alignment'] ); ?></br>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $attr['classes'] ) ) : ?>
+				<b><?php esc_html_e( 'Classes:', 'shortcode-ui-example', 'shortcode-ui' ); ?></b> <?php echo esc_html( $attr['classes'] ); ?></br>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $attr['year'] ) ) : ?>

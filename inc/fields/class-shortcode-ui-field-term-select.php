@@ -5,7 +5,7 @@ class Shortcode_UI_Field_Term_Select {
 	private static $instance;
 
 	// All registered post fields.
-	private $post_fields  = array();
+	private $post_fields = array();
 
 	// Field Settings.
 	private $fields = array(
@@ -31,10 +31,10 @@ class Shortcode_UI_Field_Term_Select {
 	 * Add the required actions and filters.
 	 */
 	private function setup_actions() {
-		add_filter( 'shortcode_ui_fields',             array( $this, 'filter_shortcode_ui_fields' ) );
-		add_action( 'enqueue_shortcode_ui',            array( $this, 'action_enqueue_shortcode_ui' ) );
+		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
+		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_term_field', array( $this, 'action_wp_ajax_shortcode_ui_term_field' ) );
-		add_action( 'shortcode_ui_loaded_editor',      array( $this, 'action_shortcode_ui_loaded_editor' ) );
+		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 	}
 
 	/**
@@ -55,9 +55,11 @@ class Shortcode_UI_Field_Term_Select {
 		wp_enqueue_script( Shortcode_UI::$select2_handle );
 		wp_enqueue_style( Shortcode_UI::$select2_handle );
 
-		wp_localize_script( 'shortcode-ui', 'shortcodeUiTermFieldData', array(
-			'nonce' => wp_create_nonce( 'shortcode_ui_field_term_select' ),
-		) );
+		wp_localize_script(
+			'shortcode-ui', 'shortcodeUiTermFieldData', array(
+				'nonce' => wp_create_nonce( 'shortcode_ui_field_term_select' ),
+			)
+		);
 	}
 
 	/**
@@ -135,16 +137,16 @@ class Shortcode_UI_Field_Term_Select {
 		$args['number']     = 10;
 
 		if ( ! empty( $_GET['include'] ) ) {
-			$term__in = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
-			$args['number'] = count( $term__in );
+			$term__in        = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
+			$args['number']  = count( $term__in );
 			$args['include'] = array_map( 'intval', $term__in );
-			$args['orderby']  = 'tag__in';
+			$args['orderby'] = 'tag__in';
 		}
 
 		$term_search_min_chars = (int) apply_filters( 'term_search_min_chars', 2, $taxonomy_type, $search );
 
 		if ( ( 0 !== $term_search_min_chars ) || ( strlen( $search ) > $term_search_min_chars ) ) {
-			$args['name__like'] = $search;
+			$args['name__like']         = $search;
 			$response['terms_per_page'] = 10;
 		}
 
@@ -164,7 +166,8 @@ class Shortcode_UI_Field_Term_Select {
 		$results = get_terms( $args );
 
 		foreach ( $results as $result ) {
-			array_push( $response['items'],
+			array_push(
+				$response['items'],
 				array(
 					'id'   => $result->term_id,
 					'text' => html_entity_decode( $result->name ),

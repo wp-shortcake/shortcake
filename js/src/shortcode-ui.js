@@ -30,7 +30,8 @@ $(document).ready(function(){
 			options = {
 				frame: 'post',
 				state: 'shortcode-ui',
-				title: shortcodeUIData.strings.media_frame_title
+				title: shortcodeUIData.strings.media_frame_title,
+				editor: this.dataset.editor
 			};
 
 		event.preventDefault();
@@ -42,6 +43,7 @@ $(document).ready(function(){
 
 		if ( frame ) {
 			frame.mediaController.setActionSelect();
+			frame.mediaController.props.set( 'editor', this.dataset.editor );
 			frame.open();
 		} else {
 			frame = wp.media.editor.open( editor, options );

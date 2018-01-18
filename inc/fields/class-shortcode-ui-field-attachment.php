@@ -19,7 +19,7 @@ class Shortcode_UI_Field_Attachment {
 	 * @access private
 	 * @var array
 	 */
-	private $post_fields  = array();
+	private $post_fields = array();
 
 	/**
 	 * Settings for the Attachment Field.
@@ -73,13 +73,15 @@ class Shortcode_UI_Field_Attachment {
 	 */
 	public function action_enqueue_shortcode_ui() {
 
-		wp_localize_script( 'shortcode-ui', 'ShortcakeImageFieldData', array(
-			'defaultArgs' => array(
-				'libraryType' => null, // array of mime types. eg image, image/jpg, application, application/pdf.
-				'addButton'   => __( 'Select Attachment', 'shortcode-ui' ),
-				'frameTitle'  => __( 'Select Attachment', 'shortcode-ui' ),
-			),
-		) );
+		wp_localize_script(
+			'shortcode-ui', 'ShortcakeImageFieldData', array(
+				'defaultArgs' => array(
+					'libraryType' => null, // array of mime types. eg image, image/jpg, application, application/pdf.
+					'addButton'   => __( 'Select Attachment', 'shortcode-ui' ),
+					'frameTitle'  => __( 'Select Attachment', 'shortcode-ui' ),
+				),
+			)
+		);
 	}
 
 	/**

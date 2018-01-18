@@ -1,5 +1,7 @@
 .edit-shortcode-form {
 	.select2-container {
+		z-index: 160000; // Make sure Select2 UI is visible above media modal
+		width: 300px;
 		min-width: 300px;
 	}
 
@@ -8,7 +10,8 @@
 		-webkit-transition: none;
 	}
 
-	.select2-drop {
+	.select2-dropdown {
+		transform: translateY(-2px); // Account for container border radius in select2--default theme
 		z-index: 160001;
 	}
 
@@ -40,11 +43,3 @@
 
 }
 
-.select2-container {
-	z-index: 160000; // Make sure Select2 UI is visible above media modal
-	max-width: 300px;
-}
-
-.select2-results li {
-	margin: 0;
-}
