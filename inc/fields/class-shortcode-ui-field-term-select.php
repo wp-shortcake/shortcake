@@ -93,11 +93,11 @@ class Shortcode_UI_Field_Term_Select {
 	 */
 	public function action_wp_ajax_shortcode_ui_term_field() {
 
-		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : null;
-		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( wp_unslash( $_GET['shortcode'] ) ) : null;
-		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( wp_unslash( $_GET['attr'] ) ) : null;
-		$page                = isset( $_GET['page'] ) ? absint( wp_unslash( $_GET['page'] ) ) : null;
-		$search              = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
+		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
+		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
+		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
+		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
+		$search              = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 
 		$response = array(
 			'items'          => array(),
@@ -137,10 +137,9 @@ class Shortcode_UI_Field_Term_Select {
 		$args['number']     = 10;
 
 		if ( ! empty( $_GET['include'] ) ) {
-			$term__in = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] ); // @codingStandardsIgnoreLine
-
+			$term__in        = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
 			$args['number']  = count( $term__in );
-			$args['include'] = array_map( 'intval', stripslashes_deep( $term__in ) );
+			$args['include'] = array_map( 'intval', $term__in );
 			$args['orderby'] = 'tag__in';
 		}
 

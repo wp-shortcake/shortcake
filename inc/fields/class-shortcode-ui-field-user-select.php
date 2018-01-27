@@ -113,7 +113,7 @@ class Shortcode_UI_Field_User_Select {
 		$include = null;
 		if ( isset( $_GET['include'] ) ) {
 			// Make sure include is always an array & sanitize its values.
-			$include = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] ); // @codingStandardsIgnoreLine
+			$include = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
 			$include = array_map( 'absint', stripslashes_deep( $include ) );
 		}
 
