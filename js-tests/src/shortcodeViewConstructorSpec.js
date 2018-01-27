@@ -186,6 +186,30 @@ describe( 'Shortcode View Constructor', function(){
 
 	});
 
+	it( 'Can correctly decode encoded attribute values.', function() {
+		sui.shortcodes.add({
+			label: 'Shortcode with Encoded attribute values',
+			shortcode_tag: 'encoded_attrs',
+			attrs: [
+				{
+					attr:    'foo',
+					type:    'text',
+					encode:  true,
+				}
+			]
+		});
+		var shortcode = {
+			'type':  'single',
+			'tag':   'encoded_attrs',
+			'attrs': {
+				'named': {
+					'foo': 'This%20100%26%2337%3B%20encoded%20attr%20has%20a%20percent%20%22%26%2337%3B%22%20character%20in%20it.',
+				},
+			},
+		};
 
-
+		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
+		expect( model.get('attrs').first().get('value') )
+			.toEqual( 'This 100% encoded attr has a percent "%" character in it.' );
+	});
 });

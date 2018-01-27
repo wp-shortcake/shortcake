@@ -343,8 +343,32 @@ describe( 'Shortcode View Constructor', function(){
 
 	});
 
+	it( 'Can correctly decode encoded attribute values.', function() {
+		sui.shortcodes.add({
+			label: 'Shortcode with Encoded attribute values',
+			shortcode_tag: 'encoded_attrs',
+			attrs: [
+				{
+					attr:    'foo',
+					type:    'text',
+					encode:  true,
+				}
+			]
+		});
+		var shortcode = {
+			'type':  'single',
+			'tag':   'encoded_attrs',
+			'attrs': {
+				'named': {
+					'foo': 'This%20100%26%2337%3B%20encoded%20attr%20has%20a%20percent%20%22%26%2337%3B%22%20character%20in%20it.',
+				},
+			},
+		};
 
-
+		var model = ShortcodeViewConstructor.getShortcodeModel( shortcode );
+		expect( model.get('attrs').first().get('value') )
+			.toEqual( 'This 100% encoded attr has a percent "%" character in it.' );
+	});
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -834,7 +858,7 @@ Shortcode = Backbone.Model.extend({
 		this.get( 'attrs' ).each( function( attr ) {
 
 			// Skip empty attributes.
-			if ( ! attr.get( 'value' ) ||  attr.get( 'value' ).length < 1 ) {
+			if ( ! attr.get( 'value' ) || attr.get( 'value' ).length < 1 ) {
 				return;
 			}
 
@@ -968,7 +992,8 @@ var Fetcher = (function() {
 		}
 
 		var request = wp.ajax.post( 'bulk_do_shortcode', {
-			queries: _.pluck( fetcher.queries, 'query' )
+			queries: _.pluck( fetcher.queries, 'query' ),
+			nonce: shortcodeUIData.nonces.preview
 		});
 
 		request.done( function( responseData ) {
@@ -1084,7 +1109,7 @@ var shortcodeViewConstructor = {
 
 			if ( attr && attr.get('encode') ) {
 				value = decodeURIComponent( value );
-				value = value.replace( "&#37;", "%" );
+				value = value.replace( /&#37;/g, "%" );
 			}
 
 			if ( attr ) {
@@ -1170,12 +1195,14 @@ var shortcodeViewConstructor = {
 
 			if ( frame ) {
 				frame.mediaController.setActionUpdate( currentShortcode );
+				frame.mediaController.props.set( 'editor', wpActiveEditor );
 				frame.open();
 			} else {
 				frame = wp.media.editor.open( window.wpActiveEditor, {
 					frame : "post",
 					state : 'shortcode-ui',
 					currentShortcode : currentShortcode,
+					editor : wpActiveEditor,
 				});
 			}
 

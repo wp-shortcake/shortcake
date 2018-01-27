@@ -5,7 +5,7 @@ class Shortcode_UI_Field_Post_Select {
 	private static $instance;
 
 	// All registered post fields.
-	private $post_fields  = array();
+	private $post_fields = array();
 
 	// Field Settings.
 	private $fields = array(
@@ -45,9 +45,11 @@ class Shortcode_UI_Field_Post_Select {
 		wp_enqueue_script( Shortcode_UI::$select2_handle );
 		wp_enqueue_style( Shortcode_UI::$select2_handle );
 
-		wp_localize_script( 'shortcode-ui', 'shortcodeUiPostFieldData', array(
-			'nonce' => wp_create_nonce( 'shortcode_ui_field_post_select' ),
-		) );
+		wp_localize_script(
+			'shortcode-ui', 'shortcodeUiPostFieldData', array(
+				'nonce' => wp_create_nonce( 'shortcode_ui_field_post_select' ),
+			)
+		);
 
 	}
 
@@ -86,7 +88,7 @@ class Shortcode_UI_Field_Post_Select {
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 
-		$response            = array(
+		$response = array(
 			'items'          => array(),
 			'found_items'    => 0,
 			'items_per_page' => 0,
@@ -129,19 +131,30 @@ class Shortcode_UI_Field_Post_Select {
 		}
 
 		if ( ! empty( $_GET['include'] ) ) {
-			$post__in = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
-			$query_args['post__in'] = array_map( 'intval', $post__in );
-			$query_args['orderby']  = 'post__in';
+			$post__in                          = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
+			$query_args['post__in']            = array_map( 'intval', $post__in );
+			$query_args['orderby']             = 'post__in';
 			$query_args['ignore_sticky_posts'] = true;
 		}
 
-		$query = new WP_Query( $query_args );
+		$query                  = new WP_Query( $query_args );
+		$post_types             = $query->get( 'post_type' );
+		$is_multiple_post_types = count( $post_types ) > 1 || 'any' === $post_types;
 
 		foreach ( $query->posts as $post_id ) {
-			array_push( $response['items'],
+			$post_type     = get_post_type( $post_id );
+			$post_type_obj = get_post_type_object( $post_type );
+
+			$text = html_entity_decode( get_the_title( $post_id ) );
+
+			if ( $is_multiple_post_types && $post_type_obj ) {
+				$text .= sprintf( ' (%1$s)', $post_type_obj->labels->singular_name );
+			}
+			array_push(
+				$response['items'],
 				array(
 					'id'   => $post_id,
-					'text' => html_entity_decode( get_the_title( $post_id ) ),
+					'text' => $text,
 				)
 			);
 		}

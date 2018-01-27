@@ -2,9 +2,9 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Shortcake (Shortcode UI) 0.7.2\n"
+"Project-Id-Version: Shortcake (Shortcode UI) 0.7.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shortcode-ui\n"
-"POT-Creation-Date: 2017-04-26 19:49:27+00:00\n"
+"POT-Creation-Date: 2017-09-05 19:14:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Select Image"
 msgstr ""
 
-#: dev.php:175
+#: dev.php:175 test-shortcodes.php:79
 msgid "You can select multiple images."
 msgstr ""
 
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Citation Source"
 msgstr ""
 
-#: dev.php:188
+#: dev.php:188 test-shortcodes.php:89
 msgid "Test placeholder"
 msgstr ""
 
@@ -59,7 +59,7 @@ msgid "Select Page"
 msgstr ""
 
 #: dev.php:200
-msgid "Select Term"
+msgid "Select Tag"
 msgstr ""
 
 #: dev.php:207
@@ -97,108 +97,147 @@ msgid "Pull Right"
 msgstr ""
 
 #: dev.php:240
-msgid "Year"
+msgid "CSS Classes"
 msgstr ""
 
 #: dev.php:241
+msgid "Which classes the shortcode should get."
+msgstr ""
+
+#: dev.php:249
+msgid "Default"
+msgstr ""
+
+#: dev.php:250
+msgid "Bold"
+msgstr ""
+
+#: dev.php:251
+msgid "Italic"
+msgstr ""
+
+#: dev.php:255
+msgid "Year"
+msgstr ""
+
+#: dev.php:256
 msgid "Optional. The year the quotation is from."
 msgstr ""
 
-#: dev.php:260
+#: dev.php:275 test-shortcodes.php:47
 msgid "Shortcake Dev"
 msgstr ""
 
-#: dev.php:279
+#: dev.php:294 test-shortcodes.php:66
 msgid "Quote"
 msgstr ""
 
-#: dev.php:280
+#: dev.php:295 test-shortcodes.php:67
 msgid "Include a statement from someone famous."
 msgstr ""
 
-#: dev.php:352
+#: dev.php:368 test-shortcodes.php:151
 msgid "Content:"
 msgstr ""
 
-#: dev.php:356
+#: dev.php:372 test-shortcodes.php:155
 msgid "Source:"
 msgstr ""
 
-#: dev.php:360
+#: dev.php:376 test-shortcodes.php:159
 msgid "Image:"
 msgstr ""
 
-#: dev.php:364
+#: dev.php:380 test-shortcodes.php:163
 msgid "Gallery:"
 msgstr ""
 
-#: dev.php:372
+#: dev.php:388 test-shortcodes.php:171
 msgid "Pages:"
 msgstr ""
 
-#: dev.php:376
+#: dev.php:392 test-shortcodes.php:175
 msgid "Terms:"
 msgstr ""
 
-#: dev.php:380
+#: dev.php:396 test-shortcodes.php:179
 msgid "Users:"
 msgstr ""
 
-#: dev.php:384
+#: dev.php:400 test-shortcodes.php:183
 msgid "Color:"
 msgstr ""
 
-#: dev.php:388
+#: dev.php:404 test-shortcodes.php:187
 msgid "Alignment:"
 msgstr ""
 
-#: dev.php:392
+#: dev.php:408
+msgid "Classes:"
+msgstr ""
+
+#: dev.php:412 test-shortcodes.php:191
 msgid "Year:"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:118
+#: inc/class-shortcode-ui.php:102
+#. Translators: link to plugin wiki page with examples of shortcodes supporting
+#. Shortcake UI
+msgid ""
+"The Shortcode UI plugin will not do anything unless UI is registered for "
+"shortcodes through a theme or plugins. For examples, see <a href=\"%s\" "
+"target=\"_blank\">here</a>."
+msgstr ""
+
+#: inc/class-shortcode-ui.php:115
+msgid ""
+"Shortcode UI is installed. Try out the shortcode UI through the \"Add Post "
+"element\" button in the post edit screen."
+msgstr ""
+
+#: inc/class-shortcode-ui.php:157
 msgid "Inner Content"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:262 inc/class-shortcode-ui.php:263
+#: inc/class-shortcode-ui.php:310 inc/class-shortcode-ui.php:311
 msgid "Insert Post Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:265
+#: inc/class-shortcode-ui.php:313
 #. Translators: Ignore placeholder. This is replaced with the Shortcode name
 #. string in JS
 msgid "%s Details"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:266
+#: inc/class-shortcode-ui.php:314
 msgid "Insert Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:267
+#: inc/class-shortcode-ui.php:315
 msgid "Update"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:268
+#: inc/class-shortcode-ui.php:316
 msgid "There are no attributes to configure for this Post Element."
 msgstr ""
 
-#: inc/class-shortcode-ui.php:269
+#: inc/class-shortcode-ui.php:317
 msgid "Failed to load preview"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:270
+#: inc/class-shortcode-ui.php:318
 msgid "Search"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:271
+#: inc/class-shortcode-ui.php:319
 msgid "Insert Content"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:312
+#: inc/class-shortcode-ui.php:364
 msgid "Add Post Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:380
+#: inc/class-shortcode-ui.php:432
 msgid "Something's rotten in the state of Denmark"
 msgstr ""
 
@@ -217,6 +256,10 @@ msgstr ""
 
 #: inc/templates/edit-form.tpl.php:3
 msgid "Back to list"
+msgstr ""
+
+#: test-shortcodes.php:84
+msgid "Label"
 msgstr ""
 
 #. Plugin Name of the plugin/theme

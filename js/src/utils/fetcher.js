@@ -82,7 +82,8 @@ var Fetcher = (function() {
 		}
 
 		var request = wp.ajax.post( 'bulk_do_shortcode', {
-			queries: _.pluck( fetcher.queries, 'query' )
+			queries: _.pluck( fetcher.queries, 'query' ),
+			nonce: shortcodeUIData.nonces.preview
 		});
 
 		request.done( function( responseData ) {

@@ -79,4 +79,4 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 });
 
-module.exports = EditShortcodeForm;
+module.exports = sui.views.EditShortcodeForm = EditShortcodeForm;

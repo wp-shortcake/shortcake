@@ -12,6 +12,7 @@ var MediaController = wp.media.controller.State.extend({
 			action: 'select',
 			search: null,
 			insertCallback: this.insertCallback,
+			editor: wpActiveEditor,
 		});
 
 		this.props.on( 'change:action', this.refresh, this );
@@ -42,6 +43,8 @@ var MediaController = wp.media.controller.State.extend({
 	insert: function() {
 		var shortcode      = this.props.get( 'currentShortcode' );
 		var insertCallback = this.props.get( 'insertCallback' );
+
+		this.setActiveEditor( this.props.get( 'editor' ) );
 
 		if ( shortcode && insertCallback ) {
 			insertCallback( shortcode );
@@ -122,6 +125,15 @@ var MediaController = wp.media.controller.State.extend({
 		this.frame.$el.toggleClass( 'hide-menu', show );
 	},
 
+	setActiveEditor: function( editorId ) {
+		var editor = tinymce.get( editorId );
+
+		if ( editor ) {
+			tinymce.setActive( editor );
+		}
+
+		window.wpActiveEditor = editorId;
+	},
 });
 
 sui.controllers.MediaController = MediaController;
