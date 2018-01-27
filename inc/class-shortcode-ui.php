@@ -469,11 +469,13 @@ class Shortcode_UI {
 	public function handle_ajax_bulk_do_shortcode() {
 		check_ajax_referer( 'shortcode-ui-preview', 'nonce' );
 
-		if ( is_array( $_POST['queries'] ) ) {
+		if ( isset( $_POST['queries'] ) && is_array( $_POST['queries'] ) ) {
+
+			$posted_queries = stripslashes_deep( $_POST['queries'] ); // @codingStandardsIgnoreLine
 
 			$responses = array();
 
-			foreach ( $_POST['queries'] as $posted_query ) {
+			foreach ( $posted_queries as $posted_query ) {
 
 				// Don't sanitize shortcodes — can contain HTML kses doesn't allow (e.g. sourcecode shortcode)
 				if ( ! empty( $posted_query['shortcode'] ) ) {

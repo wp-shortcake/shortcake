@@ -84,9 +84,9 @@ class Shortcode_UI_Field_Post_Select {
 	 */
 	public function action_wp_ajax_shortcode_ui_post_field() {
 
-		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
-		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
-		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
+		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : null;
+		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( wp_unslash( $_GET['shortcode'] ) ) : null;
+		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( wp_unslash( $_GET['attr'] ) ) : null;
 
 		$response = array(
 			'items'          => array(),
@@ -123,16 +123,17 @@ class Shortcode_UI_Field_Post_Select {
 		$query_args['perm']   = 'readable';
 
 		if ( isset( $_GET['page'] ) ) {
-			$query_args['paged'] = sanitize_text_field( $_GET['page'] );
+			$query_args['paged'] = sanitize_text_field( wp_unslash( $_GET['page'] ) );
 		}
 
 		if ( ! empty( $_GET['s'] ) ) {
-			$query_args['s'] = sanitize_text_field( $_GET['s'] );
+			$query_args['s'] = sanitize_text_field( wp_unslash( $_GET['s'] ) );
 		}
 
 		if ( ! empty( $_GET['include'] ) ) {
-			$post__in                          = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
-			$query_args['post__in']            = array_map( 'intval', $post__in );
+			$post__in = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] ); // @codingStandardsIgnoreLine
+
+			$query_args['post__in']            = array_map( 'intval', stripslashes_deep( $post__in ) );
 			$query_args['orderby']             = 'post__in';
 			$query_args['ignore_sticky_posts'] = true;
 		}
