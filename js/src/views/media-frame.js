@@ -50,6 +50,7 @@ var mediaFrame = postMediaFrame.extend( {
 	},
 
 	contentRender : function( id, tab ) {
+		this.setState( 'shortcode-ui' );
 		this.content.set(
 			new Shortcode_UI( {
 				controller: this,
