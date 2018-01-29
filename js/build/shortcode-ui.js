@@ -106,6 +106,7 @@ var MediaController = wp.media.controller.State.extend({
 		menuItem.render();
 
 		this.frame.setState( 'insert' );
+		this.frame.uploader.uploader.uploader.init();
 	},
 
 	setActionSelect: function() {
