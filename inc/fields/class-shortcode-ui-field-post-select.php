@@ -28,18 +28,20 @@ class Shortcode_UI_Field_Post_Select {
 	}
 
 	private function setup_actions() {
-
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_post_field', array( $this, 'action_wp_ajax_shortcode_ui_post_field' ) );
 		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
-
 	}
 
 	public function filter_shortcode_ui_fields( $fields ) {
 		return array_merge( $fields, $this->fields );
 	}
 
+	/**
+	 * Enqueue Select2, create localization data, and enqueue template to be
+	 * output in the footer.
+	 */
 	public function action_enqueue_shortcode_ui() {
 
 		wp_enqueue_script( Shortcode_UI::$select2_handle );
@@ -51,15 +53,14 @@ class Shortcode_UI_Field_Post_Select {
 			)
 		);
 
+		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
 	}
 
 	/**
-	 * Output styles and templates used by post select field.
+	 * Output template used by post select field.
 	 */
-	public function action_shortcode_ui_loaded_editor() {
-
+	public function action_admin_print_footer_scripts() {
 		?>
-
 		<script type="text/html" id="tmpl-shortcode-ui-field-post-select">
 			<div class="field-block shortcode-ui-field-post-select shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.id }}">{{{ data.label }}}</label>
@@ -69,7 +70,6 @@ class Shortcode_UI_Field_Post_Select {
 				<# } #>
 			</div>
 		</script>
-
 		<?php
 	}
 

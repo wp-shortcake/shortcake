@@ -38,7 +38,6 @@ class Shortcode_UI_Field_User_Select {
 		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_user_field', array( $this, 'action_wp_ajax_shortcode_ui_user_field' ) );
 		add_action( 'wp_ajax_shortcode_ui_user_field_preselect', array( $this, 'action_wp_ajax_shortcode_ui_user_field_preselect' ) );
-		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 	}
 
 	/**
@@ -54,7 +53,7 @@ class Shortcode_UI_Field_User_Select {
 	}
 
 	/**
-	 * Add Select2 for our UI.
+	 * Add Select2 for our UI, and enqueue field templates.
 	 */
 	public function action_enqueue_shortcode_ui() {
 
@@ -66,12 +65,14 @@ class Shortcode_UI_Field_User_Select {
 				'nonce' => wp_create_nonce( 'shortcode_ui_field_user_select' ),
 			)
 		);
+
+		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
 	}
 
 	/**
-	 * Output styles and templates used by user select field.
+	 * Output templates used by user select field.
 	 */
-	public function action_shortcode_ui_loaded_editor() {
+	public function action_admin_print_footer_scripts() {
 		?>
 
 		<script type="text/html" id="tmpl-shortcode-ui-field-user-select">

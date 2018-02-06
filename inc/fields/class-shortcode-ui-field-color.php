@@ -54,7 +54,7 @@ class Shortcode_UI_Field_Color {
 	 */
 	private function setup_actions() {
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
-		add_action( 'shortcode_ui_loaded_editor', array( $this, 'load_template' ) );
+		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 	}
 
 	/**
@@ -95,10 +95,10 @@ class Shortcode_UI_Field_Color {
 	}
 
 	/**
-	 * Output templates used by the color field.
+	 * Enqueue necessary scripts and styles, if required, and enqueue template
+	 * to be output in the footer.
 	 */
-	public function load_template() {
-
+	public function action_enqueue_shortcode_ui() {
 		if ( ! $this->color_attribute_present() ) {
 			return;
 		}
@@ -106,8 +106,14 @@ class Shortcode_UI_Field_Color {
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'wp-color-picker' );
 
-		?>
+		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
+	}
 
+	/**
+	 * Output the field template.
+	 */
+	public function action_admin_print_footer_scripts() {
+		?>
 		<script type="text/html" id="tmpl-fusion-shortcake-field-color">
 			<div class="field-block shortcode-ui-field-color shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.attr }}">{{{ data.label }}}</label>
@@ -117,8 +123,6 @@ class Shortcode_UI_Field_Color {
 				<# } #>
 			</div>
 		</script>
-
 		<?php
 	}
-
 }

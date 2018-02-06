@@ -34,7 +34,6 @@ class Shortcode_UI_Field_Term_Select {
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
 		add_action( 'wp_ajax_shortcode_ui_term_field', array( $this, 'action_wp_ajax_shortcode_ui_term_field' ) );
-		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 	}
 
 	/**
@@ -48,7 +47,7 @@ class Shortcode_UI_Field_Term_Select {
 	}
 
 	/**
-	 * Add Select2 for our UI.
+	 * Add Select2 for our UI, and enqueue templates.
 	 */
 	public function action_enqueue_shortcode_ui() {
 
@@ -60,15 +59,15 @@ class Shortcode_UI_Field_Term_Select {
 				'nonce' => wp_create_nonce( 'shortcode_ui_field_term_select' ),
 			)
 		);
+
+		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
 	}
 
 	/**
 	 * Output styles and templates used by post select field.
 	 */
-	public function action_shortcode_ui_loaded_editor() {
-
+	public function action_admin_print_footer_scripts() {
 		?>
-
 		<script type="text/html" id="tmpl-shortcode-ui-field-term-select">
 			<div class="field-block shortcode-ui-field-term-select shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.id }}">{{{ data.label }}}</label>

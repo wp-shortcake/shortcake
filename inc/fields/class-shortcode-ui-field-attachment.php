@@ -55,7 +55,6 @@ class Shortcode_UI_Field_Attachment {
 	private function setup_actions() {
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
 		add_action( 'enqueue_shortcode_ui', array( $this, 'action_enqueue_shortcode_ui' ) );
-		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 	}
 
 	/**
@@ -69,10 +68,10 @@ class Shortcode_UI_Field_Attachment {
 	}
 
 	/**
-	 * Add localization data needed for Shortcode UI Attachment Field
+	 * Add localization data needed for Shortcode UI Attachment Field, and
+	 * enqueue templates to be output in the footer.
 	 */
 	public function action_enqueue_shortcode_ui() {
-
 		wp_localize_script(
 			'shortcode-ui', 'ShortcakeImageFieldData', array(
 				'defaultArgs' => array(
@@ -82,15 +81,15 @@ class Shortcode_UI_Field_Attachment {
 				),
 			)
 		);
+
+		add_action( 'admin_print_footer_scripts', array( $this, 'action_admin_print_footer_scripts' ) );
 	}
 
 	/**
 	 * Output templates used by post select field.
 	 */
-	public function action_shortcode_ui_loaded_editor() {
-
+	public function action_admin_print_footer_scripts() {
 		?>
-
 		<script type="text/html" id="tmpl-fusion-shortcake-field-attachment">
 			<div class="field-block shortcode-ui-field-attachment shortcode-ui-attribute-{{ data.attr }}">
 				<label for="{{ data.attr }}">{{{ data.label }}}</label>
@@ -101,7 +100,6 @@ class Shortcode_UI_Field_Attachment {
 				<div class="attachment-previews"></div>
 			</div>
 		</script>
-
 		<script type="text/html" id="tmpl-shortcake-image-preview">
 			<div class="shortcake-attachment-preview">
 				<div class="shortcake-attachment-preview-container attachment-preview attachment <# if ( data.type === 'image' && ! data.sizes ) { #>loading<# } #>">
@@ -133,9 +131,7 @@ class Shortcode_UI_Field_Attachment {
 							<div class="attachment-preview-loading"><ins></ins></div>
 						</div>
 					<# } #>
-
 				</div>
-
 				<div class="thumbnail-details-container has-attachment">
 					<strong><?php esc_html_e( 'Attachment Details', 'shortcode-ui' ); ?></strong>
 					<div class="filename">{{ data.filename }}</div>
@@ -148,7 +144,6 @@ class Shortcode_UI_Field_Attachment {
 				</div>
 			</div>
 		</script>
-
 		<?php
 	}
 
