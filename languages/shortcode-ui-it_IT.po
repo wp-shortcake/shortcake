@@ -43,7 +43,7 @@ msgstr "Seleziona Immagine"
 
 #: dev.php:175 test-shortcodes.php:79
 msgid "You can select multiple images."
-msgstr "Puoi selezionare immagine multiple."
+msgstr "Puoi selezionare immagini multiple."
 
 #: dev.php:183
 msgid "Citation Source"
@@ -82,7 +82,7 @@ msgid ""
 "Whether the quotation should be displayed as pull-left, pull-right, or "
 "neither."
 msgstr ""
-"Come la quotazione dovrebbe essere mostrata con allineamento a destra o "
+"Come la citazione dovrebbe essere mostrata con allineamento a destra o "
 "sinistra o nessuno."
 
 #: dev.php:227
@@ -103,7 +103,7 @@ msgstr "Classi CSS"
 
 #: dev.php:241
 msgid "Which classes the shortcode should get."
-msgstr "Quale classi necessita lo shortcode."
+msgstr "Quali classi necessita lo shortcode."
 
 #: dev.php:249
 msgid "Default"
@@ -190,7 +190,7 @@ msgid ""
 "target=\"_blank\">here</a>."
 msgstr ""
 "Il plugin Shortcode UI non farà niente alla interfaccia finché gli "
-"shrtocode non saranno registrati da un tema o plugin. Per esempio vedi <a "
+"shortocode non saranno registrati da un tema o plugin. Per esempio vedi <a "
 "href=\"%s\" target=\"_blank\">qui</a>."
 
 #: inc/class-shortcode-ui.php:115
