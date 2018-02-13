@@ -189,7 +189,7 @@ msgid ""
 "shortcodes through a theme or plugins. For examples, see <a href=\"%s\" "
 "target=\"_blank\">here</a>."
 msgstr ""
-"Il plugin Shortcode UI non farà niente alla interfaccia finché gli "
+"Il plugin Shortcode UI non farà niente all'interfaccia finché gli "
 "shortocode non saranno registrati da un tema o plugin. Per esempio vedi <a "
 "href=\"%s\" target=\"_blank\">qui</a>."
 
@@ -198,7 +198,7 @@ msgid ""
 "Shortcode UI is installed. Try out the shortcode UI through the \"Add Post "
 "element\" button in the post edit screen."
 msgstr ""
-"Shortcode UI è installato. Prova la interfaccia shortcode con il pulsante "
+"Shortcode UI è installato. Prova l'interfaccia shortcode con il pulsante "
 "\"Inserisci Elemento nel Post\" nella schermata di modifica."
 
 #: inc/class-shortcode-ui.php:157
