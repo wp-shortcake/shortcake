@@ -2,94 +2,108 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Shortcode UI vv0.3-beta1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-04-27 19:20:49+0000\n"
+"POT-Creation-Date: 2018-02-21 21:03+0100\n"
+"PO-Revision-Date: 2018-02-21 21:13+0100\n"
 "Last-Translator: youssou <youssouhaagsman@gmail.com>\n"
 "Language-Team: \n"
+"Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: CSL v1.x\n"
-"X-Poedit-Language: Dutch\n"
-"X-Poedit-Country: NETHERLANDS\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
-"X-Poedit-Basepath: ../\n"
-"X-Poedit-Bookmarks: \n"
+"X-Generator: Poedit 1.8.7.1\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"esc_html__\n"
+"X-Poedit-Basepath: ..\n"
+"X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Textdomain-Support: yes"
 
-#: inc/class-shortcode-ui.php:40
-#@ shortcode-ui
+#: inc/class-shortcode-ui.php:102
+#, php-format
+msgid ""
+"The Shortcode UI plugin will not do anything unless UI is registered for "
+"shortcodes through a theme or plugins. For examples, see <a href=\"%s\" "
+"target=\"_blank\">here</a>."
+msgstr ""
+
+#: inc/class-shortcode-ui.php:115
+msgid ""
+"Shortcode UI is installed. Try out the shortcode UI through the \"Add Post "
+"element\" button in the post edit screen."
+msgstr ""
+
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:157
 msgid "Inner Content"
 msgstr "Ingesloten inhoud"
 
-#: inc/class-shortcode-ui.php:105
-#: inc/class-shortcode-ui.php:106
-#@ shortcode-ui
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:310 inc/class-shortcode-ui.php:311
 msgid "Insert Post Element"
 msgstr "Berichtelement invoegen"
 
-#: inc/class-shortcode-ui.php:107
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:313
 #, php-format
-#@ shortcode-ui
 msgid "%s Details"
 msgstr "%s details"
 
-#: inc/class-shortcode-ui.php:108
-#@ shortcode-ui
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:314
 msgid "Insert Element"
 msgstr "Element invoegen"
 
-#: inc/class-shortcode-ui.php:109
-#@ shortcode-ui
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:315
 msgid "Update"
 msgstr "Updaten"
 
-#: inc/class-shortcode-ui.php:110
-#@ shortcode-ui
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:316
 msgid "There are no attributes to configure for this Post Element."
-msgstr "Er zijn geen attributen die bewerkt kunnen worden voor dit berichtelement."
+msgstr ""
+"Er zijn geen attributen die bewerkt kunnen worden voor dit berichtelement."
 
-#: inc/class-shortcode-ui.php:111
-#@ shortcode-ui
-msgid "Edit"
-msgstr "Bewerken"
-
-#: inc/class-shortcode-ui.php:112
-#@ shortcode-ui
-msgid "Preview"
-msgstr "Voorbeeld"
-
-#: inc/class-shortcode-ui.php:113
-#@ shortcode-ui
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:317
 msgid "Failed to load preview"
 msgstr "Laden van voorbeeld mislukt"
 
-#: inc/class-shortcode-ui.php:114
-#@ shortcode-ui
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:318
 msgid "Search"
 msgstr "Zoeken"
 
-#: inc/class-shortcode-ui.php:115
-#@ shortcode-ui
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:319
 msgid "Insert Content"
 msgstr "Inhoud invoegen"
 
-#: inc/class-shortcode-ui.php:209
-#@ shortcode-ui
+#: inc/class-shortcode-ui.php:364
+msgid "Add Post Element"
+msgstr "Berichtelement invoegen"
+
+# @ shortcode-ui
+#: inc/class-shortcode-ui.php:432
 msgid "Something's rotten in the state of Denmark"
 msgstr "Iets is er rot in Denemarkens staat"
 
-#: inc/fields/class-field-attachment.php:47
-#: inc/fields/class-field-attachment.php:48
-#@ shortcode-ui
+# @ shortcode-ui
+#: inc/fields/class-shortcode-ui-field-attachment.php:79
+#: inc/fields/class-shortcode-ui-field-attachment.php:80
 msgid "Select Attachment"
 msgstr "Selecteer bijlage"
 
-#: inc/templates/edit-form.tpl.php:3
-#@ shortcode-ui
-msgid "Back to list"
-msgstr "Terug naar lijst"
+# @ shortcode-ui
+#~ msgid "Edit"
+#~ msgstr "Bewerken"
 
+# @ shortcode-ui
+#~ msgid "Preview"
+#~ msgstr "Voorbeeld"
+
+# @ shortcode-ui
+#~ msgid "Back to list"
+#~ msgstr "Terug naar lijst"
