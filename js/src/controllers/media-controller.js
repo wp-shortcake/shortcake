@@ -41,7 +41,7 @@ var MediaController = wp.media.controller.State.extend({
 	},
 
 	insert: function() {
-		var shortcode	  = this.props.get( 'currentShortcode' );
+		var shortcode      = this.props.get( 'currentShortcode' );
 		var insertCallback = this.props.get( 'insertCallback' );
 
 		this.setActiveEditor( this.props.get( 'editor' ) );
