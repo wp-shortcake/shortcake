@@ -105,6 +105,19 @@ var MediaController = wp.media.controller.State.extend({
 
 			this.frame.once( 'close', function() {
 				this.frame.mediaController.toggleSidebar( false );
+				/* Trigger render_closed */
+				/*
+				 * Action run after the shortcode overlay is closed.
+				 *
+				 * Called as `shortcode-ui.render_closed`.
+				 *
+				 * @param shortcodeModel (object)
+				 *		   Reference to the shortcode model used in this overlay.
+				 */
+				var hookName = 'shortcode-ui.render_closed';
+				var shortcodeModel = this.frame.mediaController.props.get( 'currentShortcode' );
+				wp.shortcake.hooks.doAction( hookName, shortcodeModel );
+
 			}.bind( this ) );
 
 			/*
@@ -113,7 +126,7 @@ var MediaController = wp.media.controller.State.extend({
 			 * Called as `shortcode-ui.render_edit`.
 			 *
 			 * @param shortcodeModel (object)
-			 *           Reference to the shortcode model used in this overlay.
+			 *		   Reference to the shortcode model used in this overlay.
 			 */
 			var hookName = 'shortcode-ui.render_edit';
 			wp.shortcake.hooks.doAction( hookName, currentShortcode );
