@@ -106,6 +106,7 @@ var MediaController = wp.media.controller.State.extend({
 		menuItem.render();
 
 		this.frame.setState( 'insert' );
+		this.frame.uploader.uploader.uploader.init();
 	},
 
 	setActionSelect: function() {
@@ -141,6 +142,19 @@ var MediaController = wp.media.controller.State.extend({
 
 			this.frame.once( 'close', function() {
 				this.frame.mediaController.toggleSidebar( false );
+				/* Trigger render_closed */
+				/*
+				 * Action run after the shortcode overlay is closed.
+				 *
+				 * Called as `shortcode-ui.render_closed`.
+				 *
+				 * @param shortcodeModel (object)
+				 *		   Reference to the shortcode model used in this overlay.
+				 */
+				var hookName = 'shortcode-ui.render_closed';
+				var shortcodeModel = this.frame.mediaController.props.get( 'currentShortcode' );
+				wp.shortcake.hooks.doAction( hookName, shortcodeModel );
+
 			}.bind( this ) );
 
 			/*
@@ -149,7 +163,7 @@ var MediaController = wp.media.controller.State.extend({
 			 * Called as `shortcode-ui.render_edit`.
 			 *
 			 * @param shortcodeModel (object)
-			 *           Reference to the shortcode model used in this overlay.
+			 *		   Reference to the shortcode model used in this overlay.
 			 */
 			var hookName = 'shortcode-ui.render_edit';
 			wp.shortcake.hooks.doAction( hookName, currentShortcode );
@@ -1464,7 +1478,7 @@ var EditShortcodeForm = wp.Backbone.View.extend({
 
 });
 
-module.exports = EditShortcodeForm;
+module.exports = sui.views.EditShortcodeForm = EditShortcodeForm;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./../utils/sui.js":10,"./edit-attribute-field-attachment.js":11,"./edit-attribute-field-color.js":12,"./edit-attribute-field-post-select.js":13,"./edit-attribute-field-term-select.js":14,"./edit-attribute-field-user-select.js":15,"./edit-attribute-field.js":16}],18:[function(require,module,exports){
@@ -1602,6 +1616,7 @@ var mediaFrame = postMediaFrame.extend( {
 	},
 
 	contentRender : function( id, tab ) {
+		this.setState( 'shortcode-ui' );
 		this.content.set(
 			new Shortcode_UI( {
 				controller: this,
