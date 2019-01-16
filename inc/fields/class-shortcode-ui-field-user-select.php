@@ -73,7 +73,7 @@ class Shortcode_UI_Field_User_Select {
 	 */
 	public function action_shortcode_ui_loaded_editor() {
 		add_action( 'admin_print_footer_scripts', array( $this, 'output_templates' ) );
-    }
+	}
 
 	/**
 	 * Output templates used by user select field.
