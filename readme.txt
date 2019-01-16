@@ -71,9 +71,9 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 = 0.7.4 (January 16, 2019) =
 * Block editor compatability: prevent templates from being output before the document head, which forced the browser into quirksmode, breaking some CSS styles in the block editor.
 * Bug fix: the above bugfix.
-* Bug fix: Fix a javascript error which would cause the Insert Post Element modal to be blank if any shortcode contains a select field with no visible options and no default set..
+* Bug fix: Fix a javascript error which would cause the Insert Post Element modal to be blank if any shortcode contains a select field with no visible options and no default set.
 * Bug fix: Fix a bug where the "Select Files" button in the media controller became unresponsive after a post element has been inserted.
-* Enhancement: add an optional "allow clear" field attribute to be passed to select2 fields (post, user, or term select) so that multi-select fields can be cleared with a single click. (defaults to false and should not affect existing fields).
+* Enhancement: add an optional "allow clear" field attribute to be passed to select2 fields (post, user, or term select) so that multi-select fields can be cleared with a single click. (This option defaults to off and should not affect existing fields.)
 
 = 0.7.3 (September 5, 2017) =
 * Security: Use nonce validation in ajax render shortcode callback to protect against CSRF.
