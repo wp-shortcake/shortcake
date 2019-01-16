@@ -55,7 +55,8 @@ Jasmine tests can be run using `grunt jasmine` and are also run as part of the `
 ![Without Shortcake, shortcodes have a minimal UI.](https://ps.w.org/shortcode-ui/trunk/screenshot-1.png)
 
 ### 2. But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view. ###
-![But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view.](https://ps.w.org/shortcode-ui/trunk/screenshot-2.png
+![But with Shortcake, TinyMCE will render the shortcode in a TinyMCE view.](https://ps.w.org/shortcode-ui/trunk/screenshot-2.png)
+
 ### 3. And add a user-friendly UI to edit shortcode content and attributes. ###
 ![And add a user-friendly UI to edit shortcode content and attributes.](https://ps.w.org/shortcode-ui/trunk/screenshot-3.png)
 
