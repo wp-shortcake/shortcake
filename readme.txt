@@ -2,8 +2,8 @@
 Contributors: fusionengineering, mattheu, danielbachhuber, zebulonj, goldenapples, jitendraharpalani, sanchothefat, bfintal, davisshaver, garyj, mte90, fredserva, khromov, bronsonquick, dashaluna, mehigh, sc0ttkclark, kraftner, pravdomil
 Tags: shortcodes
 Requires at least: 4.5
-Tested up to: 4.8.1
-Stable tag: 0.7.3
+Tested up to: 5.0.3
+Stable tag: 0.7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,13 @@ We've removed the compatibility shim for the `placeholder` attribute argument. Y
 We've removed the compatibility shim for the magical `content` attribute. If you were using this to support editing inner content, you'll need to change your UI registration to use `inner_content`.
 
 == Changelog ==
+
+= 0.7.4 (January 16, 2019) =
+* Block editor compatability: prevent templates from being output before the document head, which forced the browser into quirksmode, breaking some CSS styles in the block editor.
+* Bug fix: the above bugfix.
+* Bug fix: Fix a javascript error which would cause the Insert Post Element modal to be blank if any shortcode contains a select field with no visible options and no default set.
+* Bug fix: Fix a bug where the "Select Files" button in the media controller became unresponsive after a post element has been inserted.
+* Enhancement: add an optional "allow clear" field attribute to be passed to select2 fields (post, user, or term select) so that multi-select fields can be cleared with a single click. (This option defaults to off and should not affect existing fields.)
 
 = 0.7.3 (September 5, 2017) =
 * Security: Use nonce validation in ajax render shortcode callback to protect against CSRF.
