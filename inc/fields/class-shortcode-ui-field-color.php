@@ -54,7 +54,7 @@ class Shortcode_UI_Field_Color {
 	 */
 	private function setup_actions() {
 		add_filter( 'shortcode_ui_fields', array( $this, 'filter_shortcode_ui_fields' ) );
-		add_action( 'shortcode_ui_loaded_editor', array( $this, 'load_template' ) );
+		add_action( 'shortcode_ui_loaded_editor', array( $this, 'action_shortcode_ui_loaded_editor' ) );
 	}
 
 	/**
@@ -95,9 +95,9 @@ class Shortcode_UI_Field_Color {
 	}
 
 	/**
-	 * Output templates used by the color field.
+	 * Prepare to output the templates required for this field in the footer.
 	 */
-	public function load_template() {
+	public function action_shortcode_ui_loaded_editor() {
 
 		if ( ! $this->color_attribute_present() ) {
 			return;
@@ -106,6 +106,13 @@ class Shortcode_UI_Field_Color {
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'wp-color-picker' );
 
+		add_action( 'admin_print_footer_scripts', array( $this, 'output_templates' ) );
+	}
+
+	/**
+	 * Output templates used by the color field.
+	 */
+	public function output_templates() {
 		?>
 
 		<script type="text/html" id="tmpl-fusion-shortcake-field-color">
