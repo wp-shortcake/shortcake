@@ -171,7 +171,7 @@ module.exports = function( grunt ) {
 					'README.md': 'readme.txt'
 				},
 				options: {
-					screenshot_url: 'https://s.w.org/plugins/shortcode-ui/{screenshot}.png',
+					screenshot_url: 'https://ps.w.org/shortcode-ui/trunk/{screenshot}.png',
 				}
 			},
 		},
