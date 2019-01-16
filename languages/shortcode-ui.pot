@@ -1,14 +1,14 @@
-# Copyright (C) 2017 Fusion Engineering and community
+# Copyright (C) 2019 Fusion Engineering and community
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Shortcake (Shortcode UI) 0.7.3\n"
+"Project-Id-Version: Shortcake (Shortcode UI) 0.7.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/shortcode-ui\n"
-"POT-Creation-Date: 2017-09-05 19:14:53+00:00\n"
+"POT-Creation-Date: 2019-01-16 22:36:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Select Image"
 msgstr ""
 
-#: dev.php:175 test-shortcodes.php:79
+#: dev.php:175
 msgid "You can select multiple images."
 msgstr ""
 
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Citation Source"
 msgstr ""
 
-#: dev.php:188 test-shortcodes.php:89
+#: dev.php:188
 msgid "Test placeholder"
 msgstr ""
 
@@ -124,51 +124,51 @@ msgstr ""
 msgid "Optional. The year the quotation is from."
 msgstr ""
 
-#: dev.php:275 test-shortcodes.php:47
+#: dev.php:275
 msgid "Shortcake Dev"
 msgstr ""
 
-#: dev.php:294 test-shortcodes.php:66
+#: dev.php:294
 msgid "Quote"
 msgstr ""
 
-#: dev.php:295 test-shortcodes.php:67
+#: dev.php:295
 msgid "Include a statement from someone famous."
 msgstr ""
 
-#: dev.php:368 test-shortcodes.php:151
+#: dev.php:368
 msgid "Content:"
 msgstr ""
 
-#: dev.php:372 test-shortcodes.php:155
+#: dev.php:372
 msgid "Source:"
 msgstr ""
 
-#: dev.php:376 test-shortcodes.php:159
+#: dev.php:376
 msgid "Image:"
 msgstr ""
 
-#: dev.php:380 test-shortcodes.php:163
+#: dev.php:380
 msgid "Gallery:"
 msgstr ""
 
-#: dev.php:388 test-shortcodes.php:171
+#: dev.php:388
 msgid "Pages:"
 msgstr ""
 
-#: dev.php:392 test-shortcodes.php:175
+#: dev.php:392
 msgid "Terms:"
 msgstr ""
 
-#: dev.php:396 test-shortcodes.php:179
+#: dev.php:396
 msgid "Users:"
 msgstr ""
 
-#: dev.php:400 test-shortcodes.php:183
+#: dev.php:400
 msgid "Color:"
 msgstr ""
 
-#: dev.php:404 test-shortcodes.php:187
+#: dev.php:404
 msgid "Alignment:"
 msgstr ""
 
@@ -176,7 +176,7 @@ msgstr ""
 msgid "Classes:"
 msgstr ""
 
-#: dev.php:412 test-shortcodes.php:191
+#: dev.php:412
 msgid "Year:"
 msgstr ""
 
@@ -199,67 +199,63 @@ msgstr ""
 msgid "Inner Content"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:310 inc/class-shortcode-ui.php:311
+#: inc/class-shortcode-ui.php:313 inc/class-shortcode-ui.php:314
 msgid "Insert Post Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:313
+#: inc/class-shortcode-ui.php:316
 #. Translators: Ignore placeholder. This is replaced with the Shortcode name
 #. string in JS
 msgid "%s Details"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:314
+#: inc/class-shortcode-ui.php:317
 msgid "Insert Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:315
+#: inc/class-shortcode-ui.php:318
 msgid "Update"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:316
+#: inc/class-shortcode-ui.php:319
 msgid "There are no attributes to configure for this Post Element."
 msgstr ""
 
-#: inc/class-shortcode-ui.php:317
+#: inc/class-shortcode-ui.php:320
 msgid "Failed to load preview"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:318
+#: inc/class-shortcode-ui.php:321
 msgid "Search"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:319
+#: inc/class-shortcode-ui.php:322
 msgid "Insert Content"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:364
+#: inc/class-shortcode-ui.php:369
 msgid "Add Post Element"
 msgstr ""
 
-#: inc/class-shortcode-ui.php:432
+#: inc/class-shortcode-ui.php:437
 msgid "Something's rotten in the state of Denmark"
 msgstr ""
 
-#: inc/fields/class-shortcode-ui-field-attachment.php:79
 #: inc/fields/class-shortcode-ui-field-attachment.php:80
+#: inc/fields/class-shortcode-ui-field-attachment.php:81
 msgid "Select Attachment"
 msgstr ""
 
-#: inc/fields/class-shortcode-ui-field-attachment.php:138
+#: inc/fields/class-shortcode-ui-field-attachment.php:146
 msgid "Attachment Details"
 msgstr ""
 
-#: inc/fields/class-shortcode-ui-field-attachment.php:145
+#: inc/fields/class-shortcode-ui-field-attachment.php:153
 msgid "Edit Attachment"
 msgstr ""
 
 #: inc/templates/edit-form.tpl.php:3
 msgid "Back to list"
-msgstr ""
-
-#: test-shortcodes.php:84
-msgid "Label"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
