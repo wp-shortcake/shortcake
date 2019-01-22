@@ -69,7 +69,7 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 == Changelog ==
 
 = 0.7.4 (January 16, 2019) =
-* Block editor compatability: prevent templates from being output before the document head, which forced the browser into quirksmode, breaking some CSS styles in the block editor.
+* Block editor compatibility: prevent templates from being output before the document head, which forced the browser into quirksmode, breaking some CSS styles in the block editor.
 * Bug fix: the above bugfix.
 * Bug fix: Fix a javascript error which would cause the Insert Post Element modal to be blank if any shortcode contains a select field with no visible options and no default set.
 * Bug fix: Fix a bug where the "Select Files" button in the media controller became unresponsive after a post element has been inserted.
@@ -99,8 +99,8 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Fix alignment of attachment previews with long filenames.
 * Bug fix: Set an initial value on select fields (previously, no value would be set for a select field unless the user interacts with the field).
 * Enhancement/fix: Reuse one copy of the media modal and reset its state upon closing, rather than creating duplicate markup each time the modal is accessed.
-* Compatability: Uses "full" version of select2.js 4.0.3 to prevent plugin conflicts with other plugins which expect the full version to be enqueued.
-* Compatability: Add `SELECT2_NOCONFLICT` flag to load Select2 in a unique namespace to prevent conflicts with other plugins which are loading select2.js version 3.
+* Compatibility: Uses "full" version of select2.js 4.0.3 to prevent plugin conflicts with other plugins which expect the full version to be enqueued.
+* Compatibility: Add `SELECT2_NOCONFLICT` flag to load Select2 in a unique namespace to prevent conflicts with other plugins which are loading select2.js version 3.
 * Added Norwegian translation.
 * Multiple coding style fixes.
 
@@ -118,8 +118,8 @@ We've removed the compatibility shim for the magical `content` attribute. If you
 * Bug fix: fix issue where it takes two clicks on a shortcode in editor to bring up the Edit Shortcode modal.
 * Bug fix: fix issue when searching for shortcodes by name where if multiple shortcodes start with the search string, only the first is returned.
 * Bug fix: only output a description field on an attribute if it's not empty.
-* Compatability: Remove shims for handling the media modal in WP 4.1 and 4.2.
-* Compatability: Upgrade Select2 library to 4.0.3 to avoid conflicts with other plugins which use the latest version of Select2.
+* Compatibility: Remove shims for handling the media modal in WP 4.1 and 4.2.
+* Compatibility: Upgrade Select2 library to 4.0.3 to avoid conflicts with other plugins which use the latest version of Select2.
 * Added Turkish translation.
 * Added Finnish translation.
 * Added Swedish translation.
