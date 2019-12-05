@@ -12,7 +12,7 @@ var MediaController = wp.media.controller.State.extend({
 			action: 'select',
 			search: null,
 			insertCallback: this.insertCallback,
-			editor: wpActiveEditor,
+			editor: window.wpActiveEditor ? window.wpActiveEditor : null,
 		});
 
 		this.props.on( 'change:action', this.refresh, this );
