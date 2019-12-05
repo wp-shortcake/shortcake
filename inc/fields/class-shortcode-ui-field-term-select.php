@@ -99,11 +99,13 @@ class Shortcode_UI_Field_Term_Select {
 	 */
 	public function action_wp_ajax_shortcode_ui_term_field() {
 
+		$args                = array();
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
 		$search              = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
+		$include             = isset( $_GET['include']) ? $_GET['input'] : array();
 
 		$response = array(
 			'items'          => array(),
@@ -142,10 +144,13 @@ class Shortcode_UI_Field_Term_Select {
 		$args['hide_empty'] = false;
 		$args['number']     = 10;
 
-		if ( ! empty( $_GET['include'] ) ) {
-			$term__in        = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
+		if ( ! empty( $include ) ) {
+			$term__in        = is_array( $include ) ? $include : (array) explode( ',', sanitize_text_field( $include ) );
+			$term__in        = array_map( 'intval', $term__in );
+			unset( $include );
+
 			$args['number']  = count( $term__in );
-			$args['include'] = array_map( 'intval', $term__in );
+			$args['include'] = $term__in;
 			$args['orderby'] = 'tag__in';
 		}
 

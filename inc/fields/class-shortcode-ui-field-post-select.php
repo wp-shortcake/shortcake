@@ -93,6 +93,8 @@ class Shortcode_UI_Field_Post_Select {
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
+		$include             = isset( $_GET['include']) ? $_GET['input'] : array();
+
 
 		$response = array(
 			'items'          => array(),
@@ -136,9 +138,12 @@ class Shortcode_UI_Field_Post_Select {
 			$query_args['s'] = sanitize_text_field( $_GET['s'] );
 		}
 
-		if ( ! empty( $_GET['include'] ) ) {
-			$post__in                          = is_array( $_GET['include'] ) ? $_GET['include'] : explode( ',', $_GET['include'] );
-			$query_args['post__in']            = array_map( 'intval', $post__in );
+		if ( ! empty( $include ) ) {
+			$post__in        = is_array( $include ) ? $include : (array) explode( ',', sanitize_text_field( $include ) );
+			$post__in        = array_map( 'intval', $post__in );
+			unset( $include );
+
+			$query_args['post__in']            = $post__in;
 			$query_args['orderby']             = 'post__in';
 			$query_args['ignore_sticky_posts'] = true;
 		}
