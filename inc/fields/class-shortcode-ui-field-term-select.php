@@ -105,7 +105,7 @@ class Shortcode_UI_Field_Term_Select {
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
 		$search              = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
-		$include             = isset( $_GET['include']) ? $_GET['input'] : array();
+		$include             = isset( $_GET['include'] ) ? $_GET['include'] : array();
 
 		$response = array(
 			'items'          => array(),

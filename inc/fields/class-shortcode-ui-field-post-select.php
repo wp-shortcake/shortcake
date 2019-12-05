@@ -93,7 +93,7 @@ class Shortcode_UI_Field_Post_Select {
 		$nonce               = isset( $_GET['nonce'] ) ? sanitize_text_field( $_GET['nonce'] ) : null;
 		$requested_shortcode = isset( $_GET['shortcode'] ) ? sanitize_text_field( $_GET['shortcode'] ) : null;
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
-		$include             = isset( $_GET['include']) ? $_GET['input'] : array();
+		$include             = isset( $_GET['include'] ) ? $_GET['include'] : array();
 
 
 		$response = array(
