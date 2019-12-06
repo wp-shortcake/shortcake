@@ -98,7 +98,7 @@ class Shortcode_UI_Field_Post_Select {
 		if ( ! is_array( $include ) ) {
 			$include = (array) explode( ',', filter_input( INPUT_GET, 'include', FILTER_SANITIZE_STRING ) );
 		}
-		$include = array_map( 'intval', $include );
+		$include = array_filter( array_map( 'intval', $include ) );
 
 		$response = array(
 			'items'          => array(),
