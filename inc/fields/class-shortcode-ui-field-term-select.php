@@ -105,7 +105,12 @@ class Shortcode_UI_Field_Term_Select {
 		$requested_attr      = isset( $_GET['attr'] ) ? sanitize_text_field( $_GET['attr'] ) : null;
 		$page                = isset( $_GET['page'] ) ? absint( $_GET['page'] ) : null;
 		$search              = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
-		$include             = isset( $_GET['include'] ) ? $_GET['include'] : array();
+
+		$include = filter_input( INPUT_GET, 'include', FILTER_SANITIZE_NUMBER_INT, FILTER_REQUIRE_ARRAY );
+		if ( ! is_array( $include ) ) {
+			$include = (array) explode( ',', filter_input( INPUT_GET, 'include', FILTER_SANITIZE_STRING ) );
+		}
+		$include = array_map( 'intval', $include );
 
 		$response = array(
 			'items'          => array(),
@@ -145,12 +150,8 @@ class Shortcode_UI_Field_Term_Select {
 		$args['number']     = 10;
 
 		if ( ! empty( $include ) ) {
-			$term__in        = is_array( $include ) ? $include : (array) explode( ',', sanitize_text_field( $include ) );
-			$term__in        = array_map( 'intval', $term__in );
-			unset( $include );
-
-			$args['number']  = count( $term__in );
-			$args['include'] = $term__in;
+			$args['number']  = count( $include );
+			$args['include'] = $include;
 			$args['orderby'] = 'tag__in';
 		}
 
