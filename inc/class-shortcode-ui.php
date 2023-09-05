@@ -6,6 +6,14 @@
 class Shortcode_UI {
 
 	/**
+	 * Plugin version.
+	 *
+	 * @access private
+	 * @var string
+	 */
+	private $plugin_version;
+
+	/**
 	 * Path to the plugin directory.
 	 *
 	 * @access private
