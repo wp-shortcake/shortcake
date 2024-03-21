@@ -109,7 +109,9 @@ var MediaController = wp.media.controller.State.extend({
 		}
 
 		this.frame.setState( 'insert' );
-		this.frame.uploader.uploader.uploader.init();
+		// This string is duplicating "Uploading images"
+		// This bug has appeared from fix issue https://github.com/wp-shortcake/shortcake/issues/788
+		//this.frame.uploader.uploader.uploader.init();
 	},
 
 	setActionSelect: function() {
@@ -409,6 +411,18 @@ $(document).ready(function(){
 		} else {
 			frame = wp.media.editor.open( editor, options );
 		}
+
+		// This feature fixed some bugs:
+		// 	- duplicate images while loading https://wordpress.org/support/topic/weird-conflict-shortcake-ui-arve-plugins-images-being-uploaded-multiple-times/
+		//	- fix unclickable button, after insert shortcake shortcode https://github.com/wp-shortcake/shortcake/issues/788
+		// This fix on based solution "zoliszabo (@zoliszabo)", but with my changes (Fix zoliszabo has errors duplicating upload-window on each image)
+		// Because I have hung initialization uploader on click's event ".shortcake-add-post-element"
+		// ( https://github.com/zoliszabo/shortcake/commit/32097ce6989509558bbcdab5906aa43474bebef8 ).
+		frame.uploader.uploader.uploader.setOption(
+			'runtimes',
+			frame.uploader.uploader.uploader.getOption('runtimes'),
+			false
+		);
 
 		// Make sure to reset state when closed.
 		frame.once( 'close submit', function() {
@@ -1535,7 +1549,7 @@ var insertShortcodeList = wp.Backbone.View.extend({
 		this.displayShortcodes( options );
 
 	},
-	
+
 	refresh: function( shortcodeData ) {
 		var options;
 		if ( shortcodeData instanceof Backbone.Collection ) {
@@ -1545,10 +1559,10 @@ var insertShortcodeList = wp.Backbone.View.extend({
 		}
 		this.displayShortcodes( options );
 	},
-	
+
 	displayShortcodes: function(options) {
 		var t = this;
-		
+
 		t.$el.find('.add-shortcode-list').html('');
 		t.options = {};
 		t.options.shortcodes = options.shortcodes;
@@ -1725,10 +1739,10 @@ var SearchShortcode = wp.media.view.Search.extend({
 	tagName:   'input',
 	className: 'search',
 	id:        'media-search-input',
-	
+
 	initialize: function( options ) {
 		this.shortcodeList = options.shortcodeList;
-	}, 
+	},
 
 	attributes: {
 		type:        'search',
@@ -1746,7 +1760,7 @@ var SearchShortcode = wp.media.view.Search.extend({
 		this.el.value = this.model.escape('search');
 		return this;
 	},
-	
+
 	refreshShortcodes: function( shortcodeData ) {
 		this.shortcodeList.refresh( shortcodeData );
 	},
@@ -1859,7 +1873,7 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 	render: function() {
 
 		var self = this,
-			defaults = { 
+			defaults = {
 				multiple: false,
 				allowClear: false
 			};
