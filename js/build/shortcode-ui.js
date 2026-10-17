@@ -1120,11 +1120,11 @@ sui.views.editAttributeFieldPostSelect = sui.views.editAttributeSelect2Field.ext
 			return post.text;
 		}
 
-var $markup = $('<div />')
-.addClass('clearfix select2-result-selectable')
-.text(post.text);
+		var $markup = $('<div />')
+			.addClass('clearfix select2-result-selectable')
+			.text(post.text);
 
-return $markup;
+		return $markup;
 	},
 
 	templateSelection: function( post, container ) {
@@ -1160,11 +1160,11 @@ sui.views.editAttributeFieldTermSelect = sui.views.editAttributeSelect2Field.ext
 			return post.text;
 		}
 
-var $markup = $('<div />')
-.addClass('clearfix select2-result-selectable')
-.text(post.text);
+		var $markup = $('<div />')
+			.addClass('clearfix select2-result-selectable')
+			.text(post.text);
 
-return $markup;
+		return $markup;
 	},
 
 	templateSelection: function( post, container ) {
@@ -1199,11 +1199,11 @@ sui.views.editAttributeFieldUserSelect = sui.views.editAttributeSelect2Field.ext
 			return user.text;
 		}
 
-var $markup = $('<div />')
-.addClass('clearfix select2-result-selectable')
-.text(user.text);
+		var $markup = $('<div />')
+			.addClass('clearfix select2-result-selectable')
+			.text(user.text);
 
-return $markup;
+		return $markup;
 	},
 
 	templateSelection: function( user, container ) {
