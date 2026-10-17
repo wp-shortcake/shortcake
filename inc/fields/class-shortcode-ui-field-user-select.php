@@ -128,6 +128,10 @@ class Shortcode_UI_Field_User_Select {
 			wp_send_json_error( $response );
 		}
 
+		if ( ! current_user_can( 'list_users' ) ) {
+			wp_send_json_error( $response );
+		}
+
 		$shortcodes = Shortcode_UI::get_instance()->get_shortcodes();
 
 		// Shortcode not found.
@@ -148,10 +152,23 @@ class Shortcode_UI_Field_User_Select {
 		}
 
 		// Supports WP_User_Query query args.
+		$field_found = false;
 		foreach ( $shortcode['attrs'] as $attr ) {
-			if ( $attr['attr'] === $requested_attr && isset( $attr['query'] ) ) {
-				$query_args = $attr['query'];
+			if (
+				isset( $attr['attr'], $attr['type'] ) &&
+				$attr['attr'] === $requested_attr &&
+				'user_select' === $attr['type']
+			) {
+				$field_found = true;
+				if ( isset( $attr['query'] ) ) {
+					$query_args = $attr['query'];
+				}
+				break;
 			}
+		}
+
+		if ( ! $field_found ) {
+			wp_send_json_error( $response );
 		}
 
 		if ( $page ) {
