@@ -145,7 +145,6 @@ sui.views.editAttributeSelect2Field = sui.views.editAttributeField.extend( {
 				cache: true
 			},
 
-			escapeMarkup: function( markup ) { return markup; },
 			minimumInputLength: 1,
 			templateResult: this.templateResult,
 			templateSelection: this.templateSelection,

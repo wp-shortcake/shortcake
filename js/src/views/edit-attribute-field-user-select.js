@@ -21,11 +21,11 @@ sui.views.editAttributeFieldUserSelect = sui.views.editAttributeSelect2Field.ext
 			return user.text;
 		}
 
-		var markup = '<div class="clearfix select2-result-selectable">' +
-			user.text +
-		'</div>';
+		var $markup = $('<div />')
+			.addClass('clearfix select2-result-selectable')
+			.text(user.text);
 
-		return markup;
+		return $markup;
 	},
 
 	templateSelection: function( user, container ) {
